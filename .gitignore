@@ -1,0 +1,9 @@
+# Dependencies
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+dist/
+node_modules/
+.eslintcache

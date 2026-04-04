@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+anthropic
+python-dotenv
+pydantic
+python-multipart
+PyPDF2
+Pillow
+httpx
+slowapi
+aiofiles
