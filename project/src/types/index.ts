@@ -3,6 +3,12 @@ export interface UserData {
   class: number;
   subjects: string[];
   school?: string;
+  examBoard?: string;
+  preferredLanguage?: string;
+  preferredPace?: string;
+  confidenceLevel?: string;
+  revisionFrequency?: string;
+  parentEmail?: string;
   isPremium?: boolean;
   questionsToday?: number;
   uploadsToday?: number;
@@ -10,6 +16,10 @@ export interface UserData {
   totalQuestions?: number;
   chaptersStudied?: number;
   averageScore?: number;
+  learningStyle?: string;
+  goal?: string;
+  studyHours?: string;
+  focusAreas?: string;
 }
 
 export interface Message {
@@ -56,4 +66,14 @@ export interface SubjectStats {
   questionsAsked: number;
   chaptersStudied: number;
   averageScore?: number;
+}
+
+export interface BookmarkItem {
+  id: string;
+  type: 'answer' | 'flashcard' | 'summary' | 'formula' | 'plan' | 'practice' | 'upload';
+  subject: string;
+  chapter: string;
+  question?: string;
+  answer: string;
+  createdAt: number;
 }

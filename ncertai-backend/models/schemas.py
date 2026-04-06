@@ -7,6 +7,7 @@ class QARequest(BaseModel):
     chapter: str
     question: str
     conversation_history: Optional[List[Dict[str, str]]] = []
+    learner_profile: Optional[Dict[str, str]] = None
 
 class QAResponse(BaseModel):
     answer: str
@@ -34,7 +35,138 @@ class GradeResponse(BaseModel):
     total_marks: int
     feedback: str
     model_answer: str
+    micro_explanation: Optional[str] = None
+    related_question: Optional[str] = None
+    flashcard_due: Optional[str] = None
+    weak_skill: Optional[str] = None
+
+
+class ChapterReadinessResponse(BaseModel):
+    chapter: str
+    readiness_score: int
+    accuracy: int
+    recency: int
+    speed: int
+    confidence: int
+    priority: str
+
+
+class ResourceStackResponse(BaseModel):
+    chapter: str
+    subject: str
+    textbook_section: str
+    explanation: str
+    worksheet: dict
+    test: dict
+
+
+class StudyNotificationItem(BaseModel):
+    title: str
+    message: str
+    severity: str
+    action: str
+
+
+class StudyNotificationResponse(BaseModel):
+    notifications: List[StudyNotificationItem]
+
+
+class MockScheduleResponse(BaseModel):
+    next_mock_date: str
+    difficulty: str
+    readiness_score: int
+    weak_skills: List[str]
+    recovery_plan: List[str]
 
 class UploadResponse(BaseModel):
     analysis: str
     extracted_text: str
+
+
+class SummaryRequest(BaseModel):
+    class_num: str
+    subject: str
+    chapter: str
+    detail_level: str = "standard"  # short | standard | deep
+    max_points: int = 6
+    learner_profile: Optional[Dict[str, str]] = None
+
+
+class SummaryResponse(BaseModel):
+    summary: str
+
+
+class FormulaSheetRequest(BaseModel):
+    class_num: str
+    subject: str
+    chapter: str
+    formula_count: int = 12
+    include_examples: bool = True
+    learner_profile: Optional[Dict[str, str]] = None
+
+
+class FormulaSheetResponse(BaseModel):
+    sheet: str
+
+
+class FlashcardRequest(BaseModel):
+    class_num: str
+    subject: str
+    chapter: str
+    count: int = 8
+
+
+class FlashcardItem(BaseModel):
+    question: str
+    answer: str
+
+
+class FlashcardResponse(BaseModel):
+    flashcards: List[FlashcardItem]
+
+
+class DailyPlanRequest(BaseModel):
+    class_num: str
+    subjects: List[str]
+    weak_topics: List[str] = []
+    exam_date: Optional[str] = None
+    task_count: int = 7
+    plan_depth: str = "balanced"  # lite | balanced | intensive
+    learner_profile: Optional[Dict[str, str]] = None
+
+
+class DailyPlanResponse(BaseModel):
+    plan: str
+
+
+class VideoStoryboardRequest(BaseModel):
+    class_num: str
+    subject: str
+    chapter: str
+    topic: str
+    duration_seconds: int = 90
+    style: str = "concept-first"
+    broll_mode: str = "balanced"  # minimal | balanced | aggressive
+    montage_level: str = "single"  # single | light | dynamic
+    min_external_segments: int = 1
+
+
+class MindmapRequest(BaseModel):
+    class_num: str
+    subject: str
+    chapter: str
+    topic: str
+    depth: str = "balanced"  # lite | balanced | deep
+    image_style: str = "clean educational diagram"
+
+
+class VideoRenderPackageRequest(BaseModel):
+    class_num: str
+    subject: str
+    chapter: str
+    topic: str
+    duration_seconds: int = 90
+    style: str = "concept-first"
+    broll_mode: str = "balanced"  # minimal | balanced | aggressive
+    montage_level: str = "single"  # single | light | dynamic
+    min_external_segments: int = 1

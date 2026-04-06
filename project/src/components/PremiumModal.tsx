@@ -46,9 +46,9 @@ export const PremiumModal = ({ isOpen, onClose, feature }: PremiumModalProps) =>
 
         <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl p-4 text-center">
           <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-            ₹499<span className="text-lg font-normal text-gray-500">/month</span>
+            50 AED<span className="text-lg font-normal text-gray-500">/month</span>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">or ₹3,999/year (save 33%)</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Center plan: 350 AED/month</p>
         </div>
 
         <div className="space-y-2">

@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @media (min-width: 768px) {
+        body[data-clarity-sidebar]>#root>div {
+            padding-left: calc(var(--clarity-sidebar-width, 0px) + 1rem);
+        }
+    }
+}

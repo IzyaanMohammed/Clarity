@@ -1,0 +1,162 @@
+[
+    {
+        "id": "cbse10sci2024-light-1",
+        "class_num": "10",
+        "subject": "Science",
+        "chapter": "Light - Reflection and Refraction",
+        "board": "CBSE",
+        "year": 2024,
+        "difficulty": "Medium",
+        "questions": [
+            "Draw a ray diagram to show image formation by a convex lens for an object placed between F and 2F.",
+            "State two differences between a real image and a virtual image.",
+            "A lens has power +2.5 D. Calculate its focal length.",
+            "Explain with reason why stars appear twinkling in the night sky.",
+            "Define refractive index and write its SI unit status."
+        ]
+    },
+    {
+        "id": "cbse10sci2023-electricity-1",
+        "class_num": "10",
+        "subject": "Science",
+        "chapter": "Electricity",
+        "board": "CBSE",
+        "year": 2023,
+        "difficulty": "Medium",
+        "questions": [
+            "Define electric power and state its SI unit.",
+            "A current of 0.5 A flows through a resistor for 10 minutes. Calculate the charge passed.",
+            "State Ohm's law and draw a circuit diagram to verify it experimentally.",
+            "Two resistors of 4 ohm and 6 ohm are connected in series. Find equivalent resistance.",
+            "Why are heating elements made of alloys rather than pure metals?"
+        ]
+    },
+    {
+        "id": "cbse10math2024-triangles-1",
+        "class_num": "10",
+        "subject": "Maths",
+        "chapter": "Triangles",
+        "board": "CBSE",
+        "year": 2024,
+        "difficulty": "Hard",
+        "questions": [
+            "Prove that if a line is drawn parallel to one side of a triangle, then it divides the other two sides in the same ratio.",
+            "In triangle ABC, DE is parallel to BC and AD:DB = 3:2. Find AE:EC.",
+            "State and prove the Pythagoras theorem.",
+            "If two triangles are similar, establish relation between their areas and corresponding sides.",
+            "A 15 m long ladder reaches a window 12 m above the ground. Find the distance of ladder base from the wall."
+        ]
+    },
+    {
+        "id": "cbse10sst2022-constitution-1",
+        "class_num": "10",
+        "subject": "Social Science",
+        "chapter": "Power Sharing",
+        "board": "CBSE",
+        "year": 2022,
+        "difficulty": "Easy",
+        "questions": [
+            "What is horizontal distribution of power?",
+            "How is power sharing beneficial in democracy? Explain any three points.",
+            "Mention one prudential and one moral reason for power sharing.",
+            "Differentiate between majoritarianism and power sharing.",
+            "Explain the power-sharing arrangement in Belgium."
+        ]
+    },
+    {
+        "id": "cbse12phy2024-electrostatics-1",
+        "class_num": "12",
+        "subject": "Physics",
+        "chapter": "Electrostatics",
+        "board": "CBSE",
+        "year": 2024,
+        "difficulty": "Hard",
+        "questions": [
+            "State Gauss's theorem in electrostatics and write its mathematical form.",
+            "Derive the expression for electric field due to an infinitely long straight charged wire.",
+            "Two point charges +2 microC and -3 microC are placed 10 cm apart. Find the point where electric field is zero.",
+            "Define electric dipole moment and write its SI unit.",
+            "Why is electric field inside a conductor zero in electrostatic equilibrium?"
+        ]
+    },
+    {
+        "id": "cbse12chem2023-electrochem-1",
+        "class_num": "12",
+        "subject": "Chemistry",
+        "chapter": "Electrochemistry",
+        "board": "CBSE",
+        "year": 2023,
+        "difficulty": "Medium",
+        "questions": [
+            "State Nernst equation and explain each term.",
+            "Calculate EMF of Daniell cell when concentration of Zn2+ is 0.1 M and Cu2+ is 1 M.",
+            "What is conductivity? Distinguish between specific conductance and molar conductivity.",
+            "Why does molar conductivity increase with dilution for weak electrolytes?",
+            "Write any two applications of electrolysis in industry."
+        ]
+    },
+    {
+        "id": "cbse12bio2024-genetics-1",
+        "class_num": "12",
+        "subject": "Biology",
+        "chapter": "Principles of Inheritance and Variation",
+        "board": "CBSE",
+        "year": 2024,
+        "difficulty": "Medium",
+        "questions": [
+            "State Mendel's law of segregation.",
+            "Differentiate between incomplete dominance and codominance with one example each.",
+            "Explain test cross and why it is useful.",
+            "Describe chromosomal theory of inheritance.",
+            "A heterozygous tall plant is crossed with a dwarf plant. Predict phenotypic ratio."
+        ]
+    },
+    {
+        "id": "cbse11math2023-limits-1",
+        "class_num": "11",
+        "subject": "Maths",
+        "chapter": "Limits and Derivatives",
+        "board": "CBSE",
+        "year": 2023,
+        "difficulty": "Medium",
+        "questions": [
+            "Find limit x->0 of sinx/x.",
+            "Evaluate limit x->a of (x^2-a^2)/(x-a).",
+            "Define derivative of a function from first principles.",
+            "Differentiate x^3 + 2x^2 - 5x + 7 with respect to x.",
+            "Explain geometric meaning of derivative at a point."
+        ]
+    },
+    {
+        "id": "cbse11phy2022-motion-1",
+        "class_num": "11",
+        "subject": "Physics",
+        "chapter": "Motion in a Straight Line",
+        "board": "CBSE",
+        "year": 2022,
+        "difficulty": "Easy",
+        "questions": [
+            "Define average velocity and instantaneous velocity.",
+            "What is acceleration due to gravity near Earth's surface?",
+            "A car starts from rest and acquires a velocity of 20 m/s in 5 s. Find acceleration.",
+            "Draw position-time graph for uniform motion and interpret slope.",
+            "Differentiate between speed and velocity with examples."
+        ]
+    },
+    {
+        "id": "cbse9sci2024-cell-1",
+        "class_num": "9",
+        "subject": "Science",
+        "chapter": "The Fundamental Unit of Life",
+        "board": "CBSE",
+        "year": 2024,
+        "difficulty": "Easy",
+        "questions": [
+            "Name the organelle known as powerhouse of the cell and state its function.",
+            "Differentiate between plant cell and animal cell (any two points).",
+            "What is osmosis? Give one example from daily life.",
+            "Draw and label a neat diagram of a plant cell.",
+            "Why is plasma membrane called selectively permeable membrane?"
+        ]
+    }
+]

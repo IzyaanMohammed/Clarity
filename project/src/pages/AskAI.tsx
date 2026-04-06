@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Send, Paperclip, RefreshCw, Lightbulb, Sparkles, ArrowLeft, Bot, User, BookOpen } from 'lucide-react';
+import { Send, Paperclip, RefreshCw, Sparkles, ArrowLeft, Bot, User, BookOpen, Award, Zap, BookmarkPlus, Info } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import toast from 'react-hot-toast';
@@ -8,10 +8,10 @@ import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { PremiumModal } from '../components/PremiumModal';
-import { NCERT_CHAPTERS } from '../constants/ncert';
-import { getUser, incrementDailyQuestion, checkDailyLimits, addActivity, incrementDailyUpload } from '../utils/storage';
-import { askQuestion, uploadFile, logProgress } from '../api';
+import { addBookmark, getUser, incrementDailyQuestion, checkDailyLimits, incrementDailyUpload, saveStudyMaterialIfNew, type StudyMaterialItem } from '../utils/storage';
+import { askQuestionStream, uploadFile, logProgress, saveMaterialToDatabase } from '../api';
 import { Message } from '../types';
+import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
 
 export const AskAI = () => {
   const location = useLocation();
@@ -26,41 +26,72 @@ export const AskAI = () => {
   const [selectedChapter, setSelectedChapter] = useState(location.state?.chapter || '');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [markMode, setMarkMode] = useState<'1-mark' | '3-mark' | '5-mark'>('3-mark');
   const [isLoading, setIsLoading] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   // Autonomous Data Fetching
   const classKey = (user?.class || '10').toString();
-  const availableChapters = NCERT_CHAPTERS[classKey]?.[selectedSubject] || [];
+  const { subjectsForClass, chaptersForSubject } = useCurriculumCatalog(classKey);
+  const availableChapters = useMemo(
+    () => chaptersForSubject(selectedSubject),
+    [chaptersForSubject, selectedSubject]
+  );
 
   useEffect(() => {
     // Auto-select first chapter if none selected or if subject changed
     if (availableChapters.length > 0 && (!selectedChapter || !availableChapters.includes(selectedChapter))) {
       setSelectedChapter(availableChapters[0]);
     }
-  }, [selectedSubject, availableChapters]);
+  }, [selectedSubject, selectedChapter, availableChapters]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const quickActions = [
-    { label: 'Summarize Chapter', prompt: `Summarize the chapter "${selectedChapter}" in 5 crisp bullet points.` },
-    { label: 'Most Important Qs', prompt: `What are the 3 most important questions from "${selectedChapter}" for the board exam?` },
-    { label: 'Numerical Steps', prompt: `Show me the step-by-step method to solve numericals in "${selectedChapter}".` },
-    { label: 'Socratic Guide', prompt: `Help me understand "${selectedChapter}" by asking me questions one by one.` },
+    {
+      label: 'Summarize Chapter',
+      prompt: `Summarize the chapter "${selectedChapter}" in 5 crisp bullet points for CBSE boards.`,
+    },
+    {
+      label: 'Most Important Qs',
+      prompt: `What are the 3 most important questions from "${selectedChapter}" for the board exam? Include expected marks.`,
+    },
+    {
+      label: 'Numerical Steps',
+      prompt: `Show me the step-by-step method to solve numericals in "${selectedChapter}".`,
+    },
+    {
+      label: 'Explain Like I\'m 14',
+      prompt: `Explain "${selectedChapter}" like I am 14 years old using real-life analogies and simple language. End with one exam tip.`,
+    },
+    {
+      label: 'Formula Drill',
+      prompt: `Create a compact formula + definition sheet for "${selectedChapter}" with common mistakes students make in exams.`,
+    },
+    {
+      label: 'Socratic Guide',
+      prompt: `Help me understand "${selectedChapter}" by asking me questions one by one. Start with the basics.`,
+    },
   ];
 
   const handleSendMessage = async (customMessage?: string) => {
     const messageText = customMessage || input.trim();
     if (!messageText) return;
+    const enrichedMessage = customMessage
+      ? messageText
+      : `[${markMode}] ${messageText} Please answer strictly in ${markMode} CBSE format.`;
 
-    // Autonomous fallback: Ensure a chapter is always selected
-    let currentChapter = selectedChapter;
-    if (!currentChapter && availableChapters.length > 0) {
-      currentChapter = availableChapters[0];
-      setSelectedChapter(currentChapter);
+    if (!selectedSubject) {
+      toast.error('Please select subject before sending your question.');
+      return;
     }
+    if (!selectedChapter) {
+      toast.error('Please select chapter before sending your question.');
+      return;
+    }
+    const currentChapter = selectedChapter;
 
     const limits = checkDailyLimits(user);
     if (!limits.canAsk) {
@@ -70,7 +101,7 @@ export const AskAI = () => {
 
     const userMessage: Message = {
       role: 'user',
-      content: messageText,
+      content: enrichedMessage,
       timestamp: Date.now(),
     };
 
@@ -84,42 +115,92 @@ export const AskAI = () => {
         content: msg.content,
       }));
 
-      const response = await askQuestion({
+      const payload = {
         class_num: classKey,
         subject: selectedSubject,
         chapter: currentChapter,
-        question: messageText,
+        question: enrichedMessage,
         conversation_history: conversationHistory,
-      });
+        learner_profile: {
+          learning_style: user?.learningStyle || '',
+          goal: user?.goal || '',
+          study_hours: user?.studyHours || '',
+          focus_areas: user?.focusAreas || '',
+          exam_board: user?.examBoard || 'CBSE',
+          preferred_language: user?.preferredLanguage || 'English',
+          preferred_pace: user?.preferredPace || 'Balanced',
+          confidence_level: user?.confidenceLevel || 'Average confidence',
+          revision_frequency: user?.revisionFrequency || 'Alternate days',
+        },
+      };
 
       const aiMessage: Message = {
         role: 'assistant',
-        content: response.answer,
+        content: '',
         timestamp: Date.now(),
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+      let streamedAnswer = '';
+
+      await askQuestionStream(payload, (token) => {
+        streamedAnswer += token;
+        setMessages((prev) => {
+          const next = [...prev];
+          const lastIndex = next.length - 1;
+          if (lastIndex >= 0 && next[lastIndex].role === 'assistant') {
+            next[lastIndex] = {
+              ...next[lastIndex],
+              content: `${next[lastIndex].content}${token}`,
+            };
+          }
+          return next;
+        });
+      });
+
+      if (streamedAnswer.trim()) {
+        const material: StudyMaterialItem = {
+          id: `ask_${Date.now()}`,
+          type: 'answer',
+          title: `AI Answer: ${selectedChapter || 'General'}`,
+          subject: selectedSubject,
+          chapter: currentChapter || selectedChapter || 'General',
+          content: `Question:\n${enrichedMessage}\n\nAnswer:\n${streamedAnswer}`,
+          createdAt: Date.now(),
+        };
+        saveStudyMaterialIfNew(material);
+        try {
+          await saveMaterialToDatabase(material);
+        } catch {
+          // Keep local save even if network sync fails.
+        }
+      }
+
       incrementDailyQuestion();
-      
+
       if (user?.name) {
         logProgress({
-          user_id: user.name,
           action: 'question',
           subject: selectedSubject,
           chapter: currentChapter
         });
       }
-    } catch (error: any) {
-      console.error("API Error details:", error.response?.data || error);
-      const errorMessage = error.response?.data?.detail || "Connection to AI server failed. Check your API key.";
-      toast.error(`API Error: ${errorMessage}`);
-      
-      // Fallback message in the chat
-      setMessages((prev) => [...prev, {
-        role: 'assistant',
-        content: `💡 **Tutor Nudge:** I'm having trouble with the main server. Please check if your API Key is valid or has enough credits!`,
-        timestamp: Date.now()
-      }]);
+    } catch (error: unknown) {
+      console.error('API Error:', error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Connection to AI server failed. Is the backend running on port 8000?';
+      toast.error(errorMessage);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: `💡 **Tutor Nudge:** I'm having trouble connecting. Make sure the backend is running — \`uvicorn main:app --port 8000\``,
+          timestamp: Date.now(),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -135,16 +216,24 @@ export const AskAI = () => {
       return;
     }
 
+    if (!selectedSubject || !selectedChapter) {
+      toast.error('Please select subject and chapter before uploading.');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const response = await uploadFile(file, "Summarize this study material and explain key concepts.");
-      
+      const response = await uploadFile(
+        file,
+        'Analyze this study material. Identify the chapter and topic, explain the key concepts, and give me exam tips.'
+      );
+
       const userMessage: Message = {
         role: 'user',
         content: `📁 **Uploaded File:** ${file.name}\n\n*System automatically analyzing context...*`,
         timestamp: Date.now(),
       };
-      
+
       const aiMessage: Message = {
         role: 'assistant',
         content: response.analysis,
@@ -152,11 +241,45 @@ export const AskAI = () => {
       };
 
       setMessages((prev) => [...prev, userMessage, aiMessage]);
+
+      const material: StudyMaterialItem = {
+        id: `upload_${Date.now()}`,
+        type: 'upload',
+        title: `Upload Analysis: ${file.name}`,
+        subject: selectedSubject,
+        chapter: selectedChapter || 'Uploaded Material',
+        content: `Extracted Text:\n${response.extracted_text || ''}\n\nAI Analysis:\n${response.analysis}`,
+        createdAt: Date.now(),
+      };
+      saveStudyMaterialIfNew(material);
+      try {
+        await saveMaterialToDatabase(material);
+      } catch {
+        // Keep local save if server sync temporarily fails.
+      }
+
       incrementDailyUpload();
-    } catch (error) {
+    } catch {
       toast.error('Vision analysis failed.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const saveAnswerBookmark = (content: string, index: number) => {
+    const added = addBookmark({
+      id: `bm_${Date.now()}_${index}`,
+      type: 'answer',
+      subject: selectedSubject,
+      chapter: selectedChapter,
+      question: messages[index - 1]?.role === 'user' ? messages[index - 1].content : undefined,
+      answer: content,
+      createdAt: Date.now(),
+    });
+    if (added) {
+      toast.success('Saved to Revise Later');
+    } else {
+      toast('Already bookmarked');
     }
   };
 
@@ -167,10 +290,10 @@ export const AskAI = () => {
         {/* New Prominent Autonomous Header */}
         <div className="flex flex-col lg:row md:flex-row md:items-center justify-between gap-6 mb-10">
           <div className="flex items-center gap-5">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              onClick={() => navigate(-1)} 
+            <Button
+              variant="outline"
+              size="md"
+              onClick={() => navigate(-1)}
               className="rounded-2xl w-12 h-12 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm hover:scale-105 transition-transform"
             >
               <ArrowLeft size={20} className="text-slate-600 dark:text-slate-300" />
@@ -199,10 +322,10 @@ export const AskAI = () => {
                 }}
                 className="bg-transparent border-none text-sm font-black text-slate-800 dark:text-slate-100 focus:ring-0 outline-none cursor-pointer min-w-[100px]"
               >
-                {user?.subjects.map((sub: string) => <option key={sub} value={sub}>{sub}</option>)}
+                {(user?.subjects || subjectsForClass).map((sub: string) => <option key={sub} value={sub}>{sub}</option>)}
               </select>
             </div>
-            
+
             <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Chapter</span>
               <select
@@ -213,8 +336,53 @@ export const AskAI = () => {
                 {availableChapters.map((ch: string) => <option key={ch} value={ch}>{ch}</option>)}
               </select>
             </div>
+
+            <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Answer Mode</span>
+              <select
+                value={markMode}
+                onChange={(e) => setMarkMode(e.target.value as '1-mark' | '3-mark' | '5-mark')}
+                className="bg-transparent border-none text-sm font-black text-[#1D9E75] focus:ring-0 outline-none cursor-pointer"
+              >
+                <option value="1-mark">1 Mark</option>
+                <option value="3-mark">3 Marks</option>
+                <option value="5-mark">5 Marks</option>
+              </select>
+            </div>
           </div>
         </div>
+
+        {/* Context Guidance Card */}
+        <Card className="mb-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-800 rounded-[32px]">
+          <div className="flex gap-4 items-start">
+            <div className="p-3 bg-emerald-200 dark:bg-emerald-900/50 rounded-2xl flex-shrink-0">
+              <Info className="text-emerald-700 dark:text-emerald-400" size={24} />
+            </div>
+            <div className="flex-1">
+              <h4 className="font-black text-emerald-900 dark:text-emerald-300 mb-3 text-lg">Mark Mode Guide</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <p className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-2">📝 1-Mark Answers</p>
+                  <p className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                    <strong>Crisp definition:</strong> "Photosynthesis is the process of converting light into chemical energy" (1-2 sentences max)
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-2">📋 3-Mark Answers</p>
+                  <p className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                    <strong>3 Key points:</strong> Introduction + 2 main points with examples + conclusion (3-5 sentences)
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-2">📚 5-Mark Answers</p>
+                  <p className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                    <strong>Full explanation:</strong> Intro + diagram/steps + 4+ points + real-world example + conclusion
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[calc(100vh-220px)]">
           <div className="lg:col-span-3 flex flex-col gap-4">
@@ -238,7 +406,7 @@ export const AskAI = () => {
                         I've loaded the NCERT curriculum. What should we tackle first?
                       </p>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                       {quickActions.map((action) => (
                         <button
                           key={action.label}
@@ -254,21 +422,30 @@ export const AskAI = () => {
                 ) : (
                   messages.map((msg, index) => (
                     <div key={index} className={`flex gap-5 ${msg.role === 'user' ? 'flex-row-reverse' : ''} animate-in slide-in-from-bottom-4 duration-300`}>
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg ${
-                        msg.role === 'user' ? 'bg-slate-900 text-white' : 'bg-[#1D9E75] text-white'
-                      }`}>
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg ${msg.role === 'user' ? 'bg-slate-900 text-white' : 'bg-[#1D9E75] text-white'
+                        }`}>
                         {msg.role === 'user' ? <User size={24} /> : <Bot size={24} />}
                       </div>
-                      <div className={`max-w-[85%] p-6 rounded-[32px] shadow-sm ${
-                        msg.role === 'user'
-                          ? 'bg-[#1D9E75] text-white rounded-tr-none shadow-emerald-200 dark:shadow-none'
-                          : 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none border border-slate-100 dark:border-slate-700'
-                      }`}>
+                      <div className={`max-w-[85%] p-6 rounded-[32px] shadow-sm ${msg.role === 'user'
+                        ? 'bg-[#1D9E75] text-white rounded-tr-none shadow-emerald-200 dark:shadow-none'
+                        : 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none border border-slate-100 dark:border-slate-700'
+                        }`}>
                         <div className="prose dark:prose-invert max-w-none text-inherit leading-relaxed font-medium">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {msg.content}
                           </ReactMarkdown>
                         </div>
+                        {msg.role === 'assistant' && msg.content.trim().length > 0 && (
+                          <div className="mt-4 flex justify-end">
+                            <button
+                              onClick={() => saveAnswerBookmark(msg.content, index)}
+                              className="text-xs font-bold flex items-center gap-1 text-slate-500 hover:text-[#1D9E75]"
+                            >
+                              <BookmarkPlus size={14} />
+                              Save
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))
@@ -285,7 +462,7 @@ export const AskAI = () => {
               {/* Redesigned Input Bar */}
               <div className="p-8 bg-slate-50/50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 backdrop-blur-xl">
                 <div className="relative max-w-4xl mx-auto group">
-                  <button 
+                  <button
                     onClick={() => fileInputRef.current?.click()}
                     className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-slate-400 hover:text-[#1D9E75] transition-all bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:scale-110 active:scale-90 border border-slate-100 dark:border-slate-700"
                   >
@@ -345,8 +522,8 @@ export const AskAI = () => {
                   { icon: <Zap />, label: 'Cheat Sheet', desc: 'Formulas', prompt: `Create a one-page cheat sheet for "${selectedChapter}" including all formulas and key definitions.` },
                   { icon: <Sparkles />, label: 'Vision Scan', desc: 'Handwritten Notes', action: () => fileInputRef.current?.click() },
                 ].map((tool, i) => (
-                  <button 
-                    key={i} 
+                  <button
+                    key={i}
                     onClick={() => tool.prompt ? handleSendMessage(tool.prompt) : tool.action?.()}
                     className="w-full p-5 rounded-[24px] border border-slate-50 dark:border-slate-800 hover:border-[#1D9E75] hover:bg-[#1D9E75]/5 text-left transition-all group flex items-center gap-4"
                   >
@@ -364,9 +541,11 @@ export const AskAI = () => {
           </div>
         </div>
       </div>
-      <PremiumModal isOpen={showPremiumModal} onClose={() => setShowPremiumModal(false)} />
+      <PremiumModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        feature="Higher daily AI usage"
+      />
     </div>
   );
 };
-
-import { Award, Zap, ClipboardList } from 'lucide-react';

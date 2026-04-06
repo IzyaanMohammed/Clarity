@@ -1,0 +1,34 @@
+{
+    "worksheets": [
+        {
+            "id": "starter_cbse9_science",
+            "title": "Starter Set: Class 9 Science Board Worksheet",
+            "class_num": "9",
+            "subject": "Science",
+            "chapter": "Matter in Our Surroundings",
+            "question_type": "past-paper",
+            "difficulty": "Medium",
+            "num_questions": 10,
+            "board": "CBSE",
+            "year": 2024,
+            "source_url": "https://cbseacademic.nic.in/",
+            "pdf_url": "https://cbseacademic.nic.in/library/index.html",
+            "questions": []
+        },
+        {
+            "id": "starter_cbse9_math",
+            "title": "Starter Set: Class 9 Mathematics Mixed Worksheet",
+            "class_num": "9",
+            "subject": "Mathematics",
+            "chapter": "Number Systems",
+            "question_type": "mixed",
+            "difficulty": "Medium",
+            "num_questions": 10,
+            "board": "CBSE",
+            "year": 2024,
+            "source_url": "https://cbseacademic.nic.in/",
+            "pdf_url": "https://cbseacademic.nic.in/library/index.html",
+            "questions": []
+        }
+    ]
+}
