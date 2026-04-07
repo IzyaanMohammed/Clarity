@@ -559,8 +559,13 @@ class HighQualityVideoGenerator:
         base = motion_filters.get(motion_name, motion_filters["zoom_in"]).format(fps=fps)
         return f"{base},fade=t=in:st=0:d=0.35,fade=t=out:st={out_start:.2f}:d=0.45,format=yuv420p"
 
+    def _escape_ffmpeg_path(self, path: str) -> str:
+        """Escape file paths for ffmpeg filter arguments (not shell escaping)."""
+        return str(path or "").replace("\\", "/").replace(":", "\\:")
+
     def _subtitle_drawtext_filter(self, title: str, bullets: list[str], fontfile: str) -> str:
         """Create a burned-in caption strip for a slide clip."""
+        safe_font = self._escape_ffmpeg_path(fontfile)
         caption_lines = [title.strip()]
         for bullet in bullets[:2]:
             clean = str(bullet).strip()
@@ -568,13 +573,14 @@ class HighQualityVideoGenerator:
                 caption_lines.append(clean)
         caption_text = "\\n".join(caption_lines[:3]).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
         return (
-            f"drawtext=fontfile='{fontfile}':text='{caption_text}':"
+            f"drawtext=fontfile='{safe_font}':text='{caption_text}':"
             "fontcolor=white:fontsize=28:box=1:boxcolor=0x00000088:boxborderw=18:"
             "x=(w-text_w)/2:y=h-140"
         )
 
     def _cinematic_video_filter(self, duration: float, title: str, bullets: list[str], fontfile: str) -> str:
         """Video clip filter chain: crop/grade + cinematic bars + lesson text overlay."""
+        safe_font = self._escape_ffmpeg_path(fontfile)
         top_text = str(title or "").strip().replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
         hook = str((bullets[0] if bullets else "")).strip()
         hook_text = hook.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
@@ -585,8 +591,8 @@ class HighQualityVideoGenerator:
             "eq=saturation=1.18:contrast=1.08:brightness=-0.02,"
             "drawbox=x=0:y=0:w=iw:h=84:color=black@0.42:t=fill,"
             "drawbox=x=0:y=ih-170:w=iw:h=170:color=black@0.46:t=fill,"
-            f"drawtext=fontfile='{fontfile}':text='{top_text}':fontcolor=white:fontsize=44:x=56:y=22,"
-            f"drawtext=fontfile='{fontfile}':text='{hook_text}':fontcolor=white:fontsize=30:x=56:y=h-126,"
+            f"drawtext=fontfile='{safe_font}':text='{top_text}':fontcolor=white:fontsize=44:x=56:y=22,"
+            f"drawtext=fontfile='{safe_font}':text='{hook_text}':fontcolor=white:fontsize=30:x=56:y=h-126,"
             f"fade=t=in:st=0:d=0.35,fade=t=out:st={out_start:.2f}:d=0.45,format=yuv420p"
         )
 
@@ -726,6 +732,7 @@ class HighQualityVideoGenerator:
         subtitles_enabled: bool,
         narration_enabled: bool,
         external_video_count: int,
+        procedural_broll_count: int,
         broll_mode: str,
         montage_level: str,
         montage_segments_total: int,
@@ -749,12 +756,15 @@ class HighQualityVideoGenerator:
         ]
         if montage_segments_total > max(slides_count, 1):
             features_enabled.append("multi_clip_montage")
+        if procedural_broll_count > 0:
+            features_enabled.append("procedural_cinematic_fallback")
         payload = {
             "slides_count": slides_count,
             "motion_template": motion_template,
             "subtitles_enabled": subtitles_enabled,
             "narration_enabled": narration_enabled,
             "external_video_count": external_video_count,
+            "procedural_broll_count": procedural_broll_count,
             "broll_mode": broll_mode,
             "montage_level": montage_level,
             "montage_segments_total": montage_segments_total,
@@ -800,8 +810,10 @@ class HighQualityVideoGenerator:
         durations: list[float] = []
         clip_paths: list[Path] = []
         external_video_count = 0
+        procedural_broll_count = 0
         montage_segments_total = 0
         for index, frame_path in enumerate(frame_files):
+            clip_path = clips_dir / f"clip_{index + 1:03d}.mp4"
             bullets = []
             slide_title = ""
             slide_query = topic
@@ -811,6 +823,7 @@ class HighQualityVideoGenerator:
                 slide_title = slides[index][0]
                 slide_query = f"{subject} {chapter} {slide_title}".strip()
                 duration = self._slide_duration(bullets, duration_per_frame)
+            durations.append(duration)
             segment_target = max(self._montage_segment_target(montage_level), min_external_segments or 0)
             candidate_paths: list[Path] = []
             for query in self._video_query_variants(slide_query, broll_mode):
@@ -891,18 +904,30 @@ class HighQualityVideoGenerator:
                     continue
 
             motion_name = self._motion_name(index, motion_template)
-            vf = self._motion_filter(motion_name, fps=fps, duration=duration)
-            if slides and index < len(slides):
-                slide_title_fallback, _slide_subtitle, slide_bullets, _accent, _footer = slides[index]
-                subtitle_filter = self._subtitle_drawtext_filter(slide_title_fallback, slide_bullets, fontfile)
-                vf = f"{vf},{subtitle_filter}"
+            top_text = (slide_title or "Concept Focus").replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+            hook_text = (str((bullets[0] if bullets else "Core concept explanation")).strip()).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+            motion_vf = self._motion_filter(motion_name, fps=fps, duration=duration)
+            complex_filter = (
+                f"[1:v]{motion_vf}[bg];"
+                "[0:v]scale=1080:608,format=rgba,colorchannelmixer=aa=0.85[card];"
+                "[bg][card]overlay=(W-w)/2:(H-h)/2,"
+                "drawbox=x=0:y=0:w=iw:h=88:color=black@0.34:t=fill,"
+                "drawbox=x=0:y=ih-152:w=iw:h=152:color=black@0.40:t=fill,"
+                f"drawtext=fontfile='{fontfile}':text='{top_text}':fontcolor=white:fontsize=40:x=52:y=20,"
+                f"drawtext=fontfile='{fontfile}':text='{hook_text}':fontcolor=white:fontsize=28:x=52:y=h-116,"
+                "format=yuv420p[v]"
+            )
             command = [
                 ffmpeg,
                 "-y",
                 "-loop", "1",
                 "-t", f"{duration:.2f}",
                 "-i", str(frame_path),
-                "-vf", vf,
+                "-f", "lavfi",
+                "-t", f"{duration:.2f}",
+                "-i", f"testsrc2=size=1280x720:rate={fps}",
+                "-filter_complex", complex_filter,
+                "-map", "[v]",
                 "-r", str(fps),
                 "-c:v", "libx264",
                 "-preset", "medium",
@@ -915,6 +940,7 @@ class HighQualityVideoGenerator:
             result = subprocess.run(command, capture_output=True, text=True)
             if result.returncode != 0:
                 raise RuntimeError(f"Failed to render motion clip {index + 1}: {result.stderr[-500:]}")
+            procedural_broll_count += 1
             clip_paths.append(clip_path)
 
         concat_file = self.temp_dir / "concat_list.txt"
@@ -1014,6 +1040,7 @@ class HighQualityVideoGenerator:
             subtitles_enabled=subtitles_enabled,
             narration_enabled=narration_enabled,
             external_video_count=external_video_count,
+            procedural_broll_count=procedural_broll_count,
             broll_mode=broll_mode,
             montage_level=montage_level,
             montage_segments_total=montage_segments_total,

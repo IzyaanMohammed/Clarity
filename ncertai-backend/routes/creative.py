@@ -385,6 +385,26 @@ async def _make_video_from_topic(request: VideoRenderPackageRequest) -> Path:
         except Exception:
             return 0
 
+    def _write_fallback_manifest(video_path: Path) -> None:
+        manifest_path = video_path.with_suffix(".manifest.json")
+        payload = {
+            "slides_count": len(slides or []),
+            "motion_template": "fallback-zoompan",
+            "subtitles_enabled": False,
+            "narration_enabled": False,
+            "external_video_count": 0,
+            "procedural_broll_count": max(1, len(slides or [])),
+            "broll_mode": request.broll_mode,
+            "montage_level": request.montage_level,
+            "montage_segments_total": 0,
+            "features_enabled": [
+                "fallback_zoompan_render",
+                "telemetry_manifest_written",
+            ],
+            "output_file": str(video_path),
+        }
+        manifest_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
     async def _render_once(render_request: VideoRenderPackageRequest) -> Path:
         attempt_generator = HighQualityVideoGenerator(temp_dir=temp_dir)
         title = slides[0][0] if slides else f"{render_request.subject}: {render_request.topic}"
@@ -464,6 +484,7 @@ async def _make_video_from_topic(request: VideoRenderPackageRequest) -> Path:
 
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode == 0 and out_file.exists() and out_file.stat().st_size > 0:
+            _write_fallback_manifest(out_file)
             return out_file
 
         raise HTTPException(status_code=500, detail=f"Video render failed (fallback): {result.stderr[-300:]}")
@@ -478,6 +499,7 @@ def _video_manifest_headers(video_path: Path) -> dict[str, str]:
             return headers
         payload = json.loads(manifest_path.read_text(encoding="utf-8"))
         headers["X-External-Video-Count"] = str(int(payload.get("external_video_count", 0)))
+        headers["X-Procedural-Broll-Count"] = str(int(payload.get("procedural_broll_count", 0)))
         headers["X-Montage-Segments"] = str(int(payload.get("montage_segments_total", 0)))
         headers["X-Broll-Mode"] = str(payload.get("broll_mode", "balanced"))
         headers["X-Montage-Level"] = str(payload.get("montage_level", "single"))

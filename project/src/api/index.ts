@@ -354,6 +354,7 @@ export interface GeneratedVideoResult {
   blob: Blob;
   meta: {
     externalVideoCount: number;
+    proceduralBrollCount: number;
     montageSegments: number;
     brollMode: string;
     montageLevel: string;
@@ -845,6 +846,7 @@ export const generateVideoFile = async (
   });
   const headers = response.headers || {};
   const externalVideoCount = Number(headers['x-external-video-count'] || 0);
+  const proceduralBrollCount = Number(headers['x-procedural-broll-count'] || 0);
   const montageSegments = Number(headers['x-montage-segments'] || 0);
   const brollMode = String(headers['x-broll-mode'] || payload.broll_mode || 'balanced');
   const montageLevel = String(headers['x-montage-level'] || payload.montage_level || 'single');
@@ -852,6 +854,7 @@ export const generateVideoFile = async (
     blob: response.data,
     meta: {
       externalVideoCount,
+      proceduralBrollCount,
       montageSegments,
       brollMode,
       montageLevel,

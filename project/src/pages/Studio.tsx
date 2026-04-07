@@ -29,6 +29,7 @@ export const Studio = () => {
     const [videoError, setVideoError] = useState('');
     const [videoMeta, setVideoMeta] = useState<{
         externalVideoCount: number;
+        proceduralBrollCount: number;
         montageSegments: number;
         brollMode: string;
         montageLevel: string;
@@ -82,6 +83,7 @@ export const Studio = () => {
                 blob: Blob;
                 meta: {
                     externalVideoCount: number;
+                    proceduralBrollCount: number;
                     montageSegments: number;
                     brollMode: string;
                     montageLevel: string;
@@ -336,7 +338,7 @@ export const Studio = () => {
                                         <p className="text-sm font-black uppercase tracking-wider text-[#1D9E75]">Video ready</p>
                                         {videoMeta && (
                                             <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/80 dark:bg-emerald-900/20 px-4 py-3 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-                                                External segments: {videoMeta.externalVideoCount} • Montage segments: {videoMeta.montageSegments} • Mode: {videoMeta.brollMode}/{videoMeta.montageLevel} • Min target: {videoMeta.minExternalSegments}
+                                                External segments: {videoMeta.externalVideoCount} • Procedural motion: {videoMeta.proceduralBrollCount} • Montage segments: {videoMeta.montageSegments} • Mode: {videoMeta.brollMode}/{videoMeta.montageLevel} • Min target: {videoMeta.minExternalSegments}
                                             </div>
                                         )}
                                         <video
