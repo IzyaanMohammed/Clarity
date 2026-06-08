@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Send, Paperclip, RefreshCw, Sparkles, ArrowLeft, Bot, User, BookOpen, Award, Zap, BookmarkPlus, Info } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { PremiumModal } from '../components/PremiumModal';
 import { addBookmark, getUser, incrementDailyQuestion, checkDailyLimits, incrementDailyUpload, saveStudyMaterialIfNew, type StudyMaterialItem } from '../utils/storage';
 import { askQuestionStream, uploadFile, logProgress, saveMaterialToDatabase } from '../api';
@@ -20,15 +19,40 @@ export const AskAI = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const savedSession = useMemo(() => {
+    if (location.state?.subject || location.state?.chapter) {
+      return null;
+    }
+    try {
+      const data = localStorage.getItem('clarity_ask_ai_state');
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  }, [location.state]);
+
   const [selectedSubject, setSelectedSubject] = useState(
-    location.state?.subject || user?.subjects[0] || 'Science'
+    location.state?.subject || savedSession?.selectedSubject || user?.subjects[0] || 'Science'
   );
-  const [selectedChapter, setSelectedChapter] = useState(location.state?.chapter || '');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [markMode, setMarkMode] = useState<'1-mark' | '3-mark' | '5-mark'>('3-mark');
+  const [selectedChapter, setSelectedChapter] = useState(
+    location.state?.chapter || savedSession?.selectedChapter || ''
+  );
+  const [messages, setMessages] = useState<Message[]>(savedSession?.messages || []);
+  const [input, setInput] = useState(savedSession?.input || '');
+  const [markMode, setMarkMode] = useState<'1-mark' | '3-mark' | '5-mark'>(savedSession?.markMode || '3-mark');
   const [isLoading, setIsLoading] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+
+  useEffect(() => {
+    const data = {
+      selectedSubject,
+      selectedChapter,
+      messages,
+      input,
+      markMode,
+    };
+    localStorage.setItem('clarity_ask_ai_state', JSON.stringify(data));
+  }, [selectedSubject, selectedChapter, messages, input, markMode]);
 
   // Autonomous Data Fetching
   const classKey = (user?.class || '10').toString();
@@ -48,6 +72,13 @@ export const AskAI = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  useEffect(() => {
+    const prefilled = (location.state?.prompt || '').toString().trim();
+    if (prefilled) {
+      setInput(prefilled);
+    }
+  }, [location.state]);
 
   const quickActions = [
     {
@@ -126,6 +157,7 @@ export const AskAI = () => {
           goal: user?.goal || '',
           study_hours: user?.studyHours || '',
           focus_areas: user?.focusAreas || '',
+          focus_chapters: JSON.stringify(user?.focusChapters || {}),
           exam_board: user?.examBoard || 'CBSE',
           preferred_language: user?.preferredLanguage || 'English',
           preferred_pace: user?.preferredPace || 'Balanced',
@@ -430,11 +462,7 @@ export const AskAI = () => {
                         ? 'bg-[#1D9E75] text-white rounded-tr-none shadow-emerald-200 dark:shadow-none'
                         : 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none border border-slate-100 dark:border-slate-700'
                         }`}>
-                        <div className="prose dark:prose-invert max-w-none text-inherit leading-relaxed font-medium">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {msg.content}
-                          </ReactMarkdown>
-                        </div>
+                        <MarkdownContent content={msg.content} className="text-inherit leading-relaxed font-medium" />
                         {msg.role === 'assistant' && msg.content.trim().length > 0 && (
                           <div className="mt-4 flex justify-end">
                             <button

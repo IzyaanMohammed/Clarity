@@ -26,6 +26,7 @@ import routes.summary as summary  # noqa: E402
 import routes.upload as upload  # noqa: E402
 import routes.creative as creative  # noqa: E402
 import routes.progress as progress  # noqa: E402
+from services.database import set_user_subscription_tier, upsert_parent_account  # noqa: E402
 
 
 async def mock_ask_openrouter(messages, task_type="smart"):
@@ -120,6 +121,43 @@ def patch_dependencies() -> None:
     creative.ask_openrouter = mock_ask_openrouter
     creative.ask_openrouter_stream = mock_ask_openrouter_stream
 
+    import services.paypal as paypal
+    async def mock_get_paypal_access_token():
+        return "mock_paypal_token"
+    async def mock_create_paypal_subscription(username, plan, success_url, cancel_url):
+        return {
+            "subscription_id": "I-MOCKSUBSCRIPTIONID",
+            "approve_url": "https://www.sandbox.paypal.com/checkoutnow?token=mock_token",
+            "status": "APPROVAL_PENDING"
+        }
+    paypal.get_paypal_access_token = mock_get_paypal_access_token
+    paypal.create_paypal_subscription = mock_create_paypal_subscription
+
+    practice.get_best_cbse_videos = lambda subject, grade, chapter, limit=5: {
+        "query": f"class {grade} {subject} {chapter} ncert explanation",
+        "query_url": "https://www.youtube.com/results?search_query=class+10+science+nutrition",
+        "videos": [
+            {
+                "title": "NCERT Nutrition in Plants and Animals",
+                "channel": "Clarity Demo",
+                "duration": "12:34",
+                "views": "100000",
+                "published": "1 year ago",
+                "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "embed_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                "embed_code": "<iframe src='https://www.youtube.com/embed/dQw4w9WgXcQ' loading='lazy' allowfullscreen></iframe>",
+                "search_source": "smoke_mock",
+            }
+        ],
+    }
+    practice._fetch_video_transcript_entries = lambda _video_id: [
+        {"start": 8.0, "duration": 4.0, "text": "Nutrition is the process of obtaining food."},
+        {"start": 28.0, "duration": 5.0, "text": "Autotrophic nutrition uses sunlight and chlorophyll."},
+        {"start": 48.0, "duration": 6.0, "text": "Photosynthesis converts carbon dioxide and water into glucose and oxygen."},
+        {"start": 73.0, "duration": 6.0, "text": "Heterotrophic nutrition includes holozoic, saprophytic, and parasitic modes."},
+        {"start": 101.0, "duration": 5.0, "text": "Exam answers should include NCERT keywords and one clear example."},
+    ]
+
     progress.generate_parent_report = lambda user_id: f"Report for {user_id}: steady progress."
     progress.send_parent_report_email = lambda user_id, parent_email, report_text: {
         "sent": True,
@@ -155,6 +193,7 @@ def main() -> int:
         "class": 10,
         "subjects": ["Science"],
         "school": "Smoke School",
+        "parentEmail": "smokeparent@example.com",
     }
     register_resp = client.post(
         "/api/v1/auth/register",
@@ -176,6 +215,19 @@ def main() -> int:
         return 1
 
     auth_headers = {"Authorization": f"Bearer {token}"}
+
+    # Parent portal auth flow with deterministic credentials for smoke checks.
+    parent_password = "parentSmoke123!"
+    upsert_parent_account(auth_profile["name"], auth_profile["parentEmail"], parent_password)
+    parent_login_resp = client.post(
+        "/api/v1/auth/parent/login",
+        json={"email": auth_profile["parentEmail"], "password": parent_password},
+    )
+    if parent_login_resp.status_code != 200:
+        print("FAIL auth.parent.login", parent_login_resp.status_code)
+        return 1
+    parent_token = parent_login_resp.json().get("token", "")
+    parent_headers = {"Authorization": f"Bearer {parent_token}"}
 
     qa_payload = {
         "class_num": "10",
@@ -208,15 +260,52 @@ def main() -> int:
     checks = [
         check(client, "root", "get", "/"),
         check(client, "health", "get", "/health"),
+        check(client, "auth.me.unauthorized", "get", "/api/v1/auth/me", expected_statuses=(401,)),
+        check(client, "progress.log.unauthorized", "post", "/api/v1/progress/log", json={
+            "action": "question", "subject": "Science", "chapter": "Life Processes", "score": 80
+        }, expected_statuses=(401,)),
+        check(client, "progress.analytics.unauthorized", "get", "/api/v1/progress/analytics", expected_statuses=(401,)),
+        check(client, "creative.video.unauthorized", "post", "/api/v1/creative/video-file", json=creative_payload, expected_statuses=(401,)),
         check(client, "qa.ask", "post", "/api/v1/chat/ask", json=qa_payload),
         check(client, "qa.ask-stream", "post", "/api/v1/chat/ask-stream", json=qa_payload),
+        check(client, "auth.me", "get", "/api/v1/auth/me", headers=auth_headers),
+        check(client, "auth.billing-config", "get", "/api/v1/auth/billing/config"),
+        check(client, "auth.billing.checkout", "post", "/api/v1/auth/billing/checkout", headers=auth_headers, json={"plan": "pro"}, expected_statuses=(200, 503)),
+        check(client, "auth.parent.portal-summary", "get", "/api/v1/progress/parent-portal/summary", headers=parent_headers),
+        check(client, "auth.parent.logout", "post", "/api/v1/auth/parent/logout", headers=parent_headers),
         check(client, "practice.generate", "post", "/api/v1/practice/generate", json=practice_payload),
+        check(client, "practice.generate-stream", "post", "/api/v1/practice/generate-stream", json=practice_payload),
+        check(client, "practice.video-resource-stack.unauthorized", "get", "/api/v1/practice/video-resource-stack", params={
+            "class_num": "10", "subject": "Science", "chapter": "Life Processes"
+        }, expected_statuses=(401,)),
+        check(client, "practice.video-resource-stack", "get", "/api/v1/practice/video-resource-stack", params={
+            "class_num": "10", "subject": "Science", "chapter": "Life Processes"
+        }, headers=auth_headers),
+        check(client, "practice.video-learning-assist.unauthorized", "get", "/api/v1/practice/video-learning-assist", params={
+            "class_num": "10", "subject": "Science", "chapter": "Life Processes", "video_id": "dQw4w9WgXcQ"
+        }, expected_statuses=(401,)),
         check(client, "practice.grade", "post", "/api/v1/practice/grade", json={
             "question": "Define nutrition.",
             "user_answer": "Nutrition is obtaining food.",
             "class_num": "10",
             "subject": "Science",
             "marks_available": 5,
+        }),
+        check(client, "practice.grade-stream", "post", "/api/v1/practice/grade-stream", json={
+            "question": "Define nutrition.",
+            "user_answer": "Nutrition is obtaining food.",
+            "class_num": "10",
+            "subject": "Science",
+            "marks_available": 5,
+        }),
+        check(client, "practice.explain-question", "get", "/api/v1/practice/explain-question", params={
+            "subject": "Science",
+            "chapter": "Life Processes",
+            "question": "What is nutrition?",
+        }),
+        check(client, "auth.diagnostic.questions", "get", "/api/v1/auth/diagnostic/questions", params={
+            "class_num": "10",
+            "subject": "mixed",
         }),
         check(client, "summary.chapter", "post", "/api/v1/summary/chapter-summary", json={
             "class_num": "10", "subject": "Science", "chapter": "Life Processes"
@@ -231,10 +320,151 @@ def main() -> int:
         check(client, "progress.log", "post", "/api/v1/progress/log", json={
             "action": "question", "subject": "Science", "chapter": "Life Processes", "score": 80
         }, headers=auth_headers),
+        check(client, "progress.analytics", "get", "/api/v1/progress/analytics", headers=auth_headers),
+        check(client, "progress.recommendations", "get", "/api/v1/progress/recommendations", headers=auth_headers),
         check(client, "creative.video", "post", "/api/v1/creative/video-file", json=creative_payload, headers=auth_headers),
         check(client, "creative.video-manim", "post", "/api/v1/creative/video-file-manim", json=creative_payload, headers=auth_headers),
         check(client, "creative.mindmap", "post", "/api/v1/creative/mindmap-image", json=creative_payload, headers=auth_headers),
     ]
+
+    # Contract check for embed-first frontend behavior.
+    video_stack_resp = client.get(
+        "/api/v1/practice/video-resource-stack",
+        params={"class_num": "10", "subject": "Science", "chapter": "Life Processes"},
+        headers=auth_headers,
+    )
+    video_stack_ok = False
+    if video_stack_resp.status_code == 200:
+        payload = video_stack_resp.json()
+        videos = payload.get("videos", [])
+        first = videos[0] if videos else {}
+        video_stack_ok = bool(videos) and bool(first.get("embed_url") or first.get("embed_code"))
+    print(("OK" if video_stack_ok else "FAIL"), "practice.video-resource-stack.embed-contract", video_stack_resp.status_code)
+    checks.append(video_stack_ok)
+
+    # Diagnostic submit with live question ids/options from contract endpoint.
+    diagnostic_questions = client.get(
+        "/api/v1/auth/diagnostic/questions",
+        params={"class_num": "10", "subject": "mixed"},
+    )
+    diag_submit_ok = False
+    if diagnostic_questions.status_code == 200:
+        payload = diagnostic_questions.json()
+        answers = []
+        for item in payload.get("questions", []):
+            options = item.get("options", [])
+            selected = options[0].get("key") if options else "A"
+            answers.append({"question_id": item.get("id"), "selected_option": selected})
+        diag_resp = client.post(
+            "/api/v1/auth/diagnostic",
+            json={"class_num": "10", "subject": "mixed", "answers": answers},
+            headers=auth_headers,
+        )
+        diag_submit_ok = diag_resp.status_code == 200
+        print(("OK" if diag_submit_ok else "FAIL"), "auth.diagnostic.submit", diag_resp.status_code)
+    else:
+        print("FAIL", "auth.diagnostic.questions.prep", diagnostic_questions.status_code)
+    checks.append(diag_submit_ok)
+
+    # Video learning assist is gated to paid tiers (pro/pro_max).
+    set_user_subscription_tier(auth_profile["name"], "free")
+    video_assist_free_resp = client.get(
+        "/api/v1/practice/video-learning-assist",
+        params={
+            "class_num": "10",
+            "subject": "Science",
+            "chapter": "Life Processes",
+            "video_id": "dQw4w9WgXcQ",
+        },
+        headers=auth_headers,
+    )
+    video_assist_free_ok = video_assist_free_resp.status_code == 403
+    print(("OK" if video_assist_free_ok else "FAIL"), "practice.video-learning-assist.free-tier", video_assist_free_resp.status_code)
+    checks.append(video_assist_free_ok)
+
+    set_user_subscription_tier(auth_profile["name"], "pro")
+    video_assist_pro_resp = client.get(
+        "/api/v1/practice/video-learning-assist",
+        params={
+            "class_num": "10",
+            "subject": "Science",
+            "chapter": "Life Processes",
+            "video_id": "dQw4w9WgXcQ",
+        },
+        headers=auth_headers,
+    )
+    video_assist_pro_ok = False
+    if video_assist_pro_resp.status_code == 200:
+        payload = video_assist_pro_resp.json()
+        video_assist_pro_ok = bool(payload.get("key_moments")) and len(payload.get("quiz", [])) == 3
+    print(("OK" if video_assist_pro_ok else "FAIL"), "practice.video-learning-assist.pro-tier", video_assist_pro_resp.status_code)
+    checks.append(video_assist_pro_ok)
+
+    # Tier-gated checks: deny on free, allow on pro_max.
+    set_user_subscription_tier(auth_profile["name"], "free")
+    free_tier_resp = client.post(
+        "/api/v1/practice/exam-simulation/start",
+        json={
+            "class_num": "10",
+            "subject": "Science",
+            "chapter": "Life Processes",
+            "mode": "section-drill",
+            "duration_minutes": 30,
+            "question_count": 3,
+        },
+        headers=auth_headers,
+    )
+    free_tier_ok = free_tier_resp.status_code == 403
+    print(("OK" if free_tier_ok else "FAIL"), "practice.exam-simulation.start.free-tier", free_tier_resp.status_code)
+    checks.append(free_tier_ok)
+
+    set_user_subscription_tier(auth_profile["name"], "pro_max")
+    pro_start_resp = client.post(
+        "/api/v1/practice/exam-simulation/start",
+        json={
+            "class_num": "10",
+            "subject": "Science",
+            "chapter": "Life Processes",
+            "mode": "section-drill",
+            "duration_minutes": 30,
+            "question_count": 3,
+        },
+        headers=auth_headers,
+    )
+    pro_start_ok = pro_start_resp.status_code == 200
+    print(("OK" if pro_start_ok else "FAIL"), "practice.exam-simulation.start.pro-max", pro_start_resp.status_code)
+    checks.append(pro_start_ok)
+
+    pro_submit_ok = False
+    if pro_start_ok:
+        payload = pro_start_resp.json()
+        questions = payload.get("questions", [])
+        answers = [
+            {
+                "question_id": q.get("question_id", ""),
+                "question": q.get("question", ""),
+                "marks_available": int(q.get("marks", 5) or 5),
+                "answer_text": "Board-style answer with key points and one example.",
+            }
+            for q in questions
+        ]
+        pro_submit_resp = client.post(
+            "/api/v1/practice/exam-simulation/submit",
+            json={
+                "session_id": payload.get("session_id"),
+                "class_num": "10",
+                "subject": "Science",
+                "scope": payload.get("scope", "single-chapter"),
+                "chapter": "Life Processes",
+                "chapters": payload.get("chapters", ["Life Processes"]),
+                "mode": "section-drill",
+                "answers": answers,
+            },
+            headers=auth_headers,
+        )
+        pro_submit_ok = pro_submit_resp.status_code == 200
+        print(("OK" if pro_submit_ok else "FAIL"), "practice.exam-simulation.submit.pro-max", pro_submit_resp.status_code)
+    checks.append(pro_submit_ok)
 
     total = len(checks)
     failed = total - sum(1 for ok in checks if ok)

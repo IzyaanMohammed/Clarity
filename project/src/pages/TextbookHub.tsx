@@ -9,12 +9,14 @@ import {
     Library,
     Rocket,
     FileText,
+    Trash2,
+    Upload,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { getUser } from '../utils/storage';
+import { getUser, getAuthToken } from '../utils/storage';
 import { type NcertBook } from '../constants/books';
 import {
     buildNcertChapterUrl,
@@ -22,7 +24,109 @@ import {
     getReadableMirrorUrl,
     getStudyResources,
 } from '../utils/studyResources';
-import { askQuestionStream } from '../api';
+import {
+    askQuestionStream,
+    uploadCustomTextbook,
+    getCustomTextbooks,
+    deleteCustomTextbook,
+    getCustomTextbookContent,
+    getTextbookContent,
+    type CustomTextbookItem
+} from '../api';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
+
+// Helper to format raw text extracted from PDF
+const formatRawTextbookText = (text: string): string => {
+    if (!text) return '';
+    if (/#+\s/.test(text) || /\*\*/.test(text) || /^\s*[-*+•]\s/m.test(text)) {
+        return text;
+    }
+    
+    let rawLines = text.replace(/\r\n/g, '\n').split('\n');
+    let formattedLines: string[] = [];
+    let currentParagraph: string[] = [];
+    
+    const isGarbageLine = (line: string): boolean => {
+        const t = line.trim();
+        if (!t) return false;
+        // Page numbers
+        if (/^\d+$/.test(t)) return true;
+        // NCERT rationalization text e.g., "Rationalised 2023-24"
+        if (/rationalised/i.test(t) && /\d{4}/.test(t)) return true;
+        // NCERT site links
+        if (/ncert/i.test(t) && /nic\.in/i.test(t)) return true;
+        // Repetitive textbook header/footers
+        const lower = t.toLowerCase();
+        if (lower === 'science' || lower === 'mathematics' || lower === 'social science') return true;
+        if (/^chapter\s+\d+$/i.test(t)) return true;
+        return false;
+    };
+
+    for (let i = 0; i < rawLines.length; i++) {
+        let line = rawLines[i].trim();
+        
+        if (isGarbageLine(line)) {
+            if (currentParagraph.length > 0) {
+                formattedLines.push(currentParagraph.join(' '));
+                currentParagraph = [];
+            }
+            continue;
+        }
+        
+        if (!line) {
+            if (currentParagraph.length > 0) {
+                formattedLines.push(currentParagraph.join(' '));
+                currentParagraph = [];
+            }
+            continue;
+        }
+
+        // Check if it's a header
+        const isHeader = /^\d+(\.\d+)*\s+[A-Za-z]/.test(line) || 
+                         (/^[A-Z\s\-:\(\),]{5,60}$/.test(line) && line.length > 5);
+
+        // Check if it's a list item
+        const isListItem = /^\s*([-*+•]|\d+\.\s|\([a-z0-9]+\)\s)/i.test(rawLines[i]);
+
+        if (isHeader) {
+            if (currentParagraph.length > 0) {
+                formattedLines.push(currentParagraph.join(' '));
+                currentParagraph = [];
+            }
+            formattedLines.push(`\n## ${line}\n`);
+        } else if (isListItem) {
+            if (currentParagraph.length > 0) {
+                formattedLines.push(currentParagraph.join(' '));
+                currentParagraph = [];
+            }
+            formattedLines.push(rawLines[i]);
+        } else {
+            // Normal text line. De-hyphenate if last word ends with a hyphen
+            if (currentParagraph.length > 0) {
+                let lastIdx = currentParagraph.length - 1;
+                let lastWord = currentParagraph[lastIdx];
+                if (lastWord.endsWith('-')) {
+                    const firstWord = line.split(/\s+/)[0];
+                    currentParagraph[lastIdx] = lastWord.slice(0, -1) + firstWord;
+                    const rest = line.split(/\s+/).slice(1).join(' ');
+                    if (rest) {
+                        currentParagraph.push(rest);
+                    }
+                } else {
+                    currentParagraph.push(line);
+                }
+            } else {
+                currentParagraph.push(line);
+            }
+        }
+    }
+    
+    if (currentParagraph.length > 0) {
+        formattedLines.push(currentParagraph.join(' '));
+    }
+    
+    return formattedLines.join('\n\n').replace(/\n{3,}/g, '\n\n');
+};
 
 // Coach cache key format: `class_subject_chapter`
 const coachCache = new Map<string, { content: string; timestamp: number }>();
@@ -48,6 +152,253 @@ export const TextbookHub = () => {
     const [coachPlan, setCoachPlan] = useState('');
     const [coachLoading, setCoachLoading] = useState(false);
     const [coachCached, setCoachCached] = useState(false);
+
+    const [customBooks, setCustomBooks] = useState<CustomTextbookItem[]>([]);
+    const [loadingCustom, setLoadingCustom] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [uploadFiles, setUploadFiles] = useState<File[]>([]);
+    const [fileTopics, setFileTopics] = useState<Record<string, string>>({});
+    const [isDragOver, setIsDragOver] = useState(false);
+
+    // Textbook Viewer States
+    const [viewerOpen, setViewerOpen] = useState(false);
+    const [viewerTitle, setViewerTitle] = useState('');
+    const [layoutMode, setLayoutMode] = useState<'split' | 'pdf' | 'text'>('split');
+    const [viewerPdfUrl, setViewerPdfUrl] = useState('');          // blob: URL or empty
+    const [viewerPdfLoading, setViewerPdfLoading] = useState(false);
+    const [viewerPdfError, setViewerPdfError] = useState('');
+    const [viewerText, setViewerText] = useState('');
+    const [loadingViewerText, setLoadingViewerText] = useState(false);
+    const [selectedText, setSelectedText] = useState('');
+    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+    const [showContextMenu, setShowContextMenu] = useState(false);
+    const [aiResponse, setAiResponse] = useState('');
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiActionName, setAiActionName] = useState('');
+
+    /**
+     * Fetch a PDF from the backend with auth, create a blob: URL.
+     * Blob URLs bypass X-Frame-Options completely — the browser never applies
+     * same-origin or frame restrictions to blob: URLs created in the same document.
+     */
+    const fetchPdfBlob = async (apiPath: string): Promise<string> => {
+        const token = getAuthToken();
+        const res = await fetch(apiPath, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (!res.ok) throw new Error(`PDF fetch failed: ${res.status} ${res.statusText}`);
+        const blob = await res.blob();
+        return URL.createObjectURL(blob);
+    };
+
+    /** Revoke old blob URL and reset PDF viewer state */
+    const resetPdfViewer = () => {
+        if (viewerPdfUrl.startsWith('blob:')) URL.revokeObjectURL(viewerPdfUrl);
+        setViewerPdfUrl('');
+        setViewerPdfError('');
+        setViewerPdfLoading(false);
+    };
+
+    const closeViewer = () => {
+        resetPdfViewer();
+        setViewerOpen(false);
+        setViewerText('');
+        setAiResponse('');
+        setAiActionName('');
+        setShowContextMenu(false);
+    };
+
+    const getBookCode = (url: string): string => {
+        const match = url.match(/[?&]([a-z0-9]+)=/i);
+        return match ? match[1] : '';
+    };
+
+    const openNcertViewer = async () => {
+        if (!selectedBook || !selectedChapter) return;
+        resetPdfViewer();
+        setViewerOpen(true);
+        setViewerTitle(`${selectedBook.title} - ${selectedChapter}`);
+        setLayoutMode('split');  // Split view defaults so PDF is always shown alongside text
+        setViewerText('');
+        setAiResponse('');
+        setAiActionName('');
+        setShowContextMenu(false);
+
+        // chapterIndex is 1-based; clamp to at least 1 in case of lookup miss
+        const safeChapterNum = Math.max(1, chapterIndex);
+        const bookCode = getBookCode(selectedBook.url);
+
+        // Load PDF as blob — downloads from ncert.nic.in/textbook/pdf/<code><nn>.pdf
+        const apiPath = `/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${safeChapterNum}`;
+        setViewerPdfLoading(true);
+        fetchPdfBlob(apiPath)
+            .then(blobUrl => setViewerPdfUrl(blobUrl))
+            .catch(() => {
+                // Fallback directly to the proxied API endpoint if blob creation fails
+                setViewerPdfUrl(apiPath);
+            })
+            .finally(() => setViewerPdfLoading(false));
+
+        // Load text in background — extracted from the actual NCERT PDF
+        // Use a large limit so full chapter text is included
+        setLoadingViewerText(true);
+        try {
+            const res = await getTextbookContent(selectedBook.url, 100000, safeChapterNum);
+            setViewerText(formatRawTextbookText(res.content));
+        } catch (err) {
+            setViewerText('');
+        } finally {
+            setLoadingViewerText(false);
+        }
+    };
+
+
+    const openCustomViewer = async (book: CustomTextbookItem) => {
+        resetPdfViewer();
+        setViewerOpen(true);
+        setViewerTitle(book.filename);
+        setLayoutMode('split');  // Split view defaults so PDF is always shown alongside text
+        setViewerText('');
+        setAiResponse('');
+        setAiActionName('');
+        setShowContextMenu(false);
+
+        // Fetch PDF as blob using Authorization header — avoids 401 from token query param
+        const apiPath = `/api/v1/upload/custom-textbook/${book.id}/pdf`;
+        const token = getAuthToken();
+        const fallbackUrl = `/api/v1/upload/custom-textbook/${book.id}/pdf?token=${token}`;
+        setViewerPdfLoading(true);
+        fetchPdfBlob(apiPath)
+            .then(blobUrl => setViewerPdfUrl(blobUrl))
+            .catch(() => {
+                // Fallback to direct iframe src with token query param if blob fails
+                setViewerPdfUrl(fallbackUrl);
+            })
+            .finally(() => setViewerPdfLoading(false));
+
+        setLoadingViewerText(true);
+        try {
+            const res = await getCustomTextbookContent(book.id);
+            setViewerText(formatRawTextbookText(res.content));
+        } catch (err) {
+            toast.error('Failed to load textbook text');
+        } finally {
+            setLoadingViewerText(false);
+        }
+    };
+
+    const handleMouseUp = (e: React.MouseEvent) => {
+        const selection = window.getSelection();
+        if (!selection) return;
+        const text = selection.toString().trim();
+        if (text) {
+            setSelectedText(text);
+            setMenuPosition({ x: e.clientX, y: e.clientY });
+            setShowContextMenu(true);
+        } else {
+            setShowContextMenu(false);
+        }
+    };
+
+    const runAiAction = async (action: string, prompt: string) => {
+        setAiActionName(action);
+        setAiResponse('');
+        setAiLoading(true);
+        setShowContextMenu(false);
+        
+        try {
+            let fullText = '';
+            await askQuestionStream(
+                {
+                    class_num: classFilter,
+                    subject: resources.subject,
+                    chapter: selectedChapter || 'General',
+                    question: `${prompt}\n\nExcerpt from textbook: "${selectedText}"`,
+                },
+                (token) => {
+                    fullText += token;
+                    setAiResponse(fullText);
+                }
+            );
+        } catch (err) {
+            toast.error('AI action failed');
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
+    const loadCustomBooks = async () => {
+        setLoadingCustom(true);
+        try {
+            const res = await getCustomTextbooks({
+                class_num: Number(classFilter),
+                subject: subjectFilter
+            });
+            setCustomBooks(res.textbooks || []);
+        } catch (err) {
+            console.error('Failed to load custom textbooks', err);
+        } finally {
+            setLoadingCustom(false);
+        }
+    };
+
+    useEffect(() => {
+        loadCustomBooks();
+    }, [classFilter, subjectFilter]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const filesArray = Array.from(e.target.files);
+            setUploadFiles(prev => [...prev, ...filesArray]);
+            
+            const newTopics = { ...fileTopics };
+            filesArray.forEach(file => {
+                const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+                const cleanName = nameWithoutExt
+                    .replace(/[_-]/g, " ")
+                    .replace(/\b\w/g, c => c.toUpperCase());
+                newTopics[file.name] = cleanName;
+            });
+            setFileTopics(newTopics);
+        }
+    };
+
+    const handleUploadAll = async () => {
+        if (uploadFiles.length === 0) return;
+        setUploading(true);
+        const toastId = toast.loading(`Uploading ${uploadFiles.length} file(s)...`);
+        
+        try {
+            for (const file of uploadFiles) {
+                const topic = fileTopics[file.name] || selectedChapter || 'General';
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('class_num', classFilter);
+                formData.append('subject', subjectFilter);
+                formData.append('chapter', topic);
+                
+                await uploadCustomTextbook(formData);
+            }
+            toast.success('All files uploaded successfully!', { id: toastId });
+            setUploadFiles([]);
+            setFileTopics({});
+            loadCustomBooks();
+        } catch (err: any) {
+            toast.error(err?.response?.data?.detail || 'Failed to upload custom files.', { id: toastId });
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleDeleteCustom = async (id: number) => {
+        try {
+            await deleteCustomTextbook(id);
+            toast.success('Custom textbook deleted');
+            loadCustomBooks();
+        } catch (err) {
+            toast.error('Failed to delete custom textbook');
+        }
+    };
 
     useEffect(() => {
         if (!resources.textbooks.length) {
@@ -192,7 +543,7 @@ export const TextbookHub = () => {
                 </div>
 
                 <div className="flex gap-2 bg-white dark:bg-slate-800 p-2 rounded-2xl border border-slate-100 dark:border-slate-700 mb-8">
-                    {['9', '10', '11', '12'].map((cls) => (
+                    {['8', '9', '10', '11', '12'].map((cls) => (
                         <button
                             key={cls}
                             onClick={() => {
@@ -289,11 +640,11 @@ export const TextbookHub = () => {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <Button
                                     className="h-12 rounded-2xl bg-[#1D9E75] hover:bg-[#16805d] font-bold"
-                                    onClick={() => chapterMirrorUrl && window.open(chapterMirrorUrl, '_blank')}
-                                    disabled={!chapterMirrorUrl}
+                                    onClick={openNcertViewer}
+                                    disabled={!selectedChapter}
                                 >
-                                    <FileText size={16} className="mr-2" aria-hidden="true" />
-                                    Open Readable Mirror
+                                    <BookOpen size={16} className="mr-2" aria-hidden="true" />
+                                    Open Textbook Viewer
                                 </Button>
                                 <Button
                                     className="h-12 rounded-2xl bg-[#1D9E75] hover:bg-[#16805d] font-bold"
@@ -364,6 +715,157 @@ export const TextbookHub = () => {
                             )}
                         </Card>
 
+                        {/* Custom Textbooks Manager */}
+                        <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
+                            <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 mb-4">
+                                <Upload size={18} className="text-[#1D9E75]" />
+                                Student Custom Textbooks
+                            </h3>
+                            <p className="text-sm text-slate-500 mb-6">
+                                Upload your own textbook PDFs for <strong>Class {classFilter} {resources.subject}</strong>. These custom books will override default chapter search resources when you practice or ask AI questions.
+                            </p>
+
+                            {/* Drag and Drop Zone */}
+                            <div
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                    setIsDragOver(true);
+                                }}
+                                onDragLeave={() => setIsDragOver(false)}
+                                onDrop={(e) => {
+                                    e.preventDefault();
+                                    setIsDragOver(false);
+                                    if (e.dataTransfer.files) {
+                                        const filesArray = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+                                        if (filesArray.length > 0) {
+                                            setUploadFiles(prev => [...prev, ...filesArray]);
+                                            const newTopics = { ...fileTopics };
+                                            filesArray.forEach(file => {
+                                                const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+                                                const cleanName = nameWithoutExt
+                                                    .replace(/[_-]/g, " ")
+                                                    .replace(/\b\w/g, c => c.toUpperCase());
+                                                newTopics[file.name] = cleanName;
+                                            });
+                                            setFileTopics(newTopics);
+                                        } else {
+                                            toast.error('Only PDF files are supported.');
+                                        }
+                                    }
+                                }}
+                                className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
+                                    isDragOver
+                                        ? 'border-[#1D9E75] bg-emerald-50/50 dark:bg-emerald-950/20'
+                                        : 'border-slate-200 dark:border-slate-700 hover:border-[#1D9E75]/50'
+                                }`}
+                            >
+                                <Upload size={32} className="mx-auto text-slate-400 mb-2" />
+                                <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                                    Drag & Drop custom textbook PDFs here, or{' '}
+                                    <label className="text-[#1D9E75] hover:underline cursor-pointer">
+                                        browse files
+                                        <input
+                                            type="file"
+                                            multiple
+                                            accept=".pdf"
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                </p>
+                                <p className="text-xs text-slate-400 mt-1">Supports multiple PDF uploads (up to 10-11 at once)</p>
+                            </div>
+
+                            {/* Files to Upload List */}
+                            {uploadFiles.length > 0 && (
+                                <div className="mt-6 space-y-4 p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-2xl">
+                                    <p className="text-xs font-black uppercase tracking-wider text-slate-400 mb-2">Files Selected for Upload</p>
+                                    {uploadFiles.map((file, idx) => (
+                                        <div key={file.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{file.name}</p>
+                                                <p className="text-[10px] text-slate-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                                            </div>
+                                            <div className="flex-1 min-w-[200px]">
+                                                <label className="block text-[10px] font-black text-slate-400 uppercase mb-1">Assign Topic/Chapter Name:</label>
+                                                <input
+                                                    type="text"
+                                                    value={fileTopics[file.name] || ''}
+                                                    onChange={(e) => setFileTopics(prev => ({ ...prev, [file.name]: e.target.value }))}
+                                                    placeholder="e.g. Life Processes"
+                                                    className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold focus:ring-1 focus:ring-[#1D9E75] outline-none text-slate-900 dark:text-white"
+                                                />
+                                            </div>
+                                            <Button
+                                                variant="outline"
+                                                className="h-8 w-8 p-0 rounded-lg border-red-200 hover:bg-red-50 text-red-500 dark:border-red-900/30 dark:hover:bg-red-950/20"
+                                                onClick={() => setUploadFiles(prev => prev.filter((_, i) => i !== idx))}
+                                            >
+                                                <Trash2 size={14} />
+                                            </Button>
+                                        </div>
+                                    ))}
+                                    <div className="flex justify-end gap-2 pt-2">
+                                        <Button
+                                            variant="outline"
+                                            className="rounded-xl text-xs h-9"
+                                            onClick={() => setUploadFiles([])}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            className="bg-[#1D9E75] hover:bg-[#16805d] text-white rounded-xl text-xs font-bold h-9"
+                                            onClick={handleUploadAll}
+                                            disabled={uploading}
+                                        >
+                                            {uploading ? 'Uploading...' : `Upload ${uploadFiles.length} Books`}
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Already Uploaded Textbooks */}
+                            <div className="mt-8 space-y-3">
+                                <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Uploaded Custom Books</h4>
+                                {loadingCustom ? (
+                                    <p className="text-sm text-slate-500">Loading custom textbooks...</p>
+                                ) : customBooks.length === 0 ? (
+                                    <p className="text-sm text-slate-500 italic">No custom textbooks uploaded yet for Class {classFilter} {resources.subject}.</p>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {customBooks.map((book) => (
+                                            <div
+                                                key={book.id}
+                                                className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-emerald-200 dark:hover:border-emerald-900/40 transition-colors"
+                                            >
+                                                <div className="min-w-0 pr-2">
+                                                    <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{book.filename}</p>
+                                                    <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Topic: {book.chapter}</p>
+                                                    <p className="text-[10px] text-slate-400">Uploaded {new Date(book.created_at + 'Z').toLocaleDateString()}</p>
+                                                </div>
+                                                <div className="flex gap-2 items-center flex-shrink-0">
+                                                    <Button
+                                                        variant="outline"
+                                                        className="h-9 px-3 rounded-xl border-emerald-100 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-950/20 dark:hover:bg-emerald-950/20 text-xs font-bold"
+                                                        onClick={() => openCustomViewer(book)}
+                                                    >
+                                                        Read
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        className="h-9 w-9 p-0 rounded-xl border-red-100 text-red-500 hover:bg-red-50 dark:border-red-950/20 dark:hover:bg-red-950/20 flex-shrink-0"
+                                                        onClick={() => handleDeleteCustom(book.id)}
+                                                    >
+                                                        <Trash2 size={15} />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </Card>
+
                         {/* Quick Launch Footer */}
                         <Card className="p-6 bg-gradient-to-r from-slate-900 to-slate-800 text-white border-none shadow-xl rounded-3xl">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -391,6 +893,224 @@ export const TextbookHub = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Textbook Viewer Modal */}
+            {viewerOpen && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-0 transition-all animate-fadeIn">
+                    <div className="bg-white dark:bg-slate-900 w-full h-full flex flex-col overflow-hidden shadow-2xl relative">
+                        {/* Header */}
+                        <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+                            <div>
+                                <h3 className="text-lg font-black text-slate-900 dark:text-white truncate max-w-lg">
+                                    {viewerTitle}
+                                </h3>
+                                <p className="text-xs text-slate-500 font-medium">
+                                    Class {classFilter} • {resources.subject}
+                                </p>
+                            </div>
+                            
+                            <div className="flex items-center gap-3">
+                                {/* Layout Mode Toggles */}
+                                <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                                    <button
+                                        onClick={() => setLayoutMode('split')}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                                            layoutMode === 'split'
+                                                ? 'bg-[#1D9E75] text-white shadow-sm'
+                                                : 'text-slate-600 dark:text-slate-350 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                        }`}
+                                    >
+                                        Split View
+                                    </button>
+                                    <button
+                                        onClick={() => setLayoutMode('pdf')}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                                            layoutMode === 'pdf'
+                                                ? 'bg-[#1D9E75] text-white shadow-sm'
+                                                : 'text-slate-600 dark:text-slate-355 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                        }`}
+                                    >
+                                        Original PDF
+                                    </button>
+                                    <button
+                                        onClick={() => setLayoutMode('text')}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
+                                            layoutMode === 'text'
+                                                ? 'bg-[#1D9E75] text-white shadow-sm'
+                                                : 'text-slate-600 dark:text-slate-355 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                        }`}
+                                    >
+                                        Interactive Text
+                                    </button>
+                                </div>
+                                
+                                <button
+                                    onClick={closeViewer}
+                                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all font-bold"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Body */}
+                        <div className="flex-1 overflow-hidden flex flex-col md:flex-row bg-slate-50 dark:bg-slate-950">
+                            {/* Left Panel: PDF Viewer (shown if layoutMode !== 'text') */}
+                            <div className={`flex flex-col relative border-r border-slate-200 dark:border-slate-800 transition-all duration-300 ${
+                                layoutMode === 'split' ? 'w-full h-1/2 md:h-full md:w-1/2' : layoutMode === 'pdf' ? 'w-full h-full' : 'hidden'
+                            }`}>
+                                {viewerPdfLoading ? (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-slate-500 bg-slate-50 dark:bg-slate-950">
+                                        <div className="animate-spin h-10 w-10 border-4 border-[#1D9E75] border-t-transparent rounded-full" />
+                                        <p className="font-bold text-sm">Loading PDF...</p>
+                                        <p className="text-xs text-slate-400">Fetching securely from the NCERT servers</p>
+                                    </div>
+                                ) : viewerPdfError ? (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-500 px-8 bg-slate-50 dark:bg-slate-950">
+                                        <FileText size={40} className="opacity-30" />
+                                        <p className="font-bold text-sm">PDF could not be loaded</p>
+                                        <p className="text-xs text-center text-slate-400">{viewerPdfError}</p>
+                                    </div>
+                                ) : viewerPdfUrl ? (
+                                    <iframe
+                                        src={viewerPdfUrl}
+                                        className="w-full h-full border-none"
+                                        title="Textbook PDF Viewer"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-400 bg-slate-50 dark:bg-slate-950">
+                                        <FileText size={40} className="opacity-30" />
+                                        <p className="text-sm font-bold">No PDF available</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Right Panel: Interactive Text & AI Coach (shown if layoutMode !== 'pdf') */}
+                            <div className={`flex flex-col md:flex-row overflow-hidden transition-all duration-300 ${
+                                layoutMode === 'split' ? 'w-full h-1/2 md:h-full md:w-1/2' : layoutMode === 'text' ? 'w-full h-full' : 'hidden'
+                            }`}>
+                                {/* Left Text Column */}
+                                <div 
+                                    onMouseUp={handleMouseUp}
+                                    className="flex-1 overflow-y-auto p-6 md:p-8 select-text bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800"
+                                >
+                                    {/* Diagram-awareness banner */}
+                                    {!loadingViewerText && viewerText && viewerText.includes('[Diagram / Figure') && (
+                                        <div className="mb-5 p-3 bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-800/40 rounded-2xl flex items-start gap-2.5">
+                                            <span className="text-indigo-600 text-base mt-0.5">🔬</span>
+                                            <div>
+                                                <p className="text-xs font-black text-indigo-700 dark:text-indigo-300 uppercase tracking-wider">AI Diagram Descriptions Included</p>
+                                                <p className="text-[11px] text-indigo-600 dark:text-indigo-400 mt-0.5">Diagrams, figures, chemical structures &amp; math formulas from image-heavy pages were described by AI vision and are shown inline below. Switch to <strong>Original PDF</strong> mode or view the left panel to see the actual graphics.</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {loadingViewerText ? (
+                                        <div className="flex flex-col items-center justify-center h-full gap-3 text-slate-500">
+                                            <div className="animate-spin h-8 w-8 border-4 border-[#1D9E75] border-t-transparent rounded-full"></div>
+                                            <p className="font-bold text-sm">Extracting text from NCERT PDF...</p>
+                                            <p className="text-xs text-slate-400">The Original PDF is already loaded and ready to read</p>
+                                        </div>
+                                    ) : !viewerText ? (
+                                        <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
+                                            <FileText size={44} className="text-slate-300 dark:text-slate-700" />
+                                            <div>
+                                                <p className="font-black text-sm text-slate-700 dark:text-slate-200 mb-1">Text extraction not available</p>
+                                                <p className="text-xs text-slate-500 leading-relaxed max-w-xs">
+                                                    This chapter's text could not be extracted from the PDF (may be image-based or not yet cached).
+                                                    Please refer to the <strong>Original PDF</strong> panel on the left.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="prose dark:prose-invert max-w-none">
+                                            <MarkdownContent content={viewerText} />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Right AI Panel */}
+                                <div className="w-full md:w-80 h-full bg-slate-50/50 dark:bg-slate-950/20 p-5 flex flex-col overflow-y-auto">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <Sparkles size={16} className="text-[#1D9E75]" />
+                                        <h4 className="font-black text-sm text-slate-900 dark:text-white uppercase tracking-wider">AI Study Coach</h4>
+                                    </div>
+
+                                    {aiActionName ? (
+                                        <div className="space-y-3 flex-1 flex flex-col">
+                                            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 rounded-2xl">
+                                                <p className="text-[10px] font-black uppercase text-[#1D9E75] mb-1">Selected Excerpt:</p>
+                                                <p className="text-xs text-slate-600 dark:text-slate-305 italic line-clamp-3">"{selectedText}"</p>
+                                            </div>
+                                            
+                                            <div className="p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm flex-1 overflow-y-auto min-h-[200px]">
+                                                <p className="text-xs font-black uppercase tracking-wider text-slate-400 mb-2">{aiActionName}</p>
+                                                {aiLoading && !aiResponse ? (
+                                                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                                                        <div className="animate-spin h-3.5 w-3.5 border-2 border-[#1D9E75] border-t-transparent rounded-full"></div>
+                                                        Thinking...
+                                                    </div>
+                                                ) : (
+                                                    <MarkdownContent className="text-xs leading-relaxed" content={aiResponse} />
+                                                )}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
+                                            <Brain size={36} className="text-slate-350 dark:text-slate-700 mb-3" />
+                                            <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Interactive Reader</p>
+                                            <p className="text-[11px] text-slate-500 leading-relaxed">
+                                                Highlight any sentence or paragraph in the textbook to trigger AI explanations, summaries, or memory tricks.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Floating Context Tooltip */}
+                    {showContextMenu && (
+                        <div
+                            onMouseDown={(e) => e.preventDefault()}
+                            className="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl z-[60] p-1.5 flex flex-col w-48 text-xs font-semibold animate-scaleIn"
+                            style={{
+                                top: `${menuPosition.y + 10}px`,
+                                left: `${menuPosition.x}px`,
+                                transform: 'translateX(-50%)',
+                            }}
+                        >
+                            <button
+                                onClick={() => runAiAction('Meaning & Context', 'Explain the meaning, key terms, and context of this textbook excerpt clearly.')}
+                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                            >
+                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                Ask Meaning
+                            </button>
+                            <button
+                                onClick={() => runAiAction('Summary', 'Provide a concise summary of this textbook excerpt.')}
+                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                            >
+                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                Summarize
+                            </button>
+                            <button
+                                onClick={() => runAiAction('Key Points', 'Extract the key values, points, and takeaways from this textbook excerpt as a bulleted list.')}
+                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                            >
+                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                Convert to Points
+                            </button>
+                            <button
+                                onClick={() => runAiAction('Memory Tricks', 'Provide fun mnemonics, associations, or tricks to easily memorize this textbook excerpt.')}
+                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                            >
+                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                Tricks to Memorize
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

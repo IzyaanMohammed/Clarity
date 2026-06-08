@@ -1,14 +1,11 @@
 import { useMemo, useState } from 'react';
 import { BookOpen, FileText, Trash2, ExternalLink } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import remarkGfm from 'remark-gfm';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { addStudyMaterial, getBookmarks, getStudyMaterials, removeStudyMaterial, type StudyMaterialItem } from '../utils/storage';
 import type { BookmarkItem } from '../types';
 import { extractMarkdownSection, formatQuickRecallBlock, parseMarkdownTable } from '../utils/markdown';
@@ -36,6 +33,14 @@ export const StudyMaterials = () => {
                 .includes(query)
         ));
     }, [materials, materialQuery]);
+    const videoLibraryItems = useMemo(
+        () => filteredMaterials.filter((item) => item.type === 'video'),
+        [filteredMaterials]
+    );
+    const standardMaterials = useMemo(
+        () => filteredMaterials.filter((item) => item.type !== 'video'),
+        [filteredMaterials]
+    );
     const filteredBookmarks = useMemo(() => {
         const query = bookmarkQuery.trim().toLowerCase();
         if (!query) return bookmarks;
@@ -124,6 +129,20 @@ export const StudyMaterials = () => {
         );
     };
 
+    const parseVideoLibraryPayload = (raw?: string) => {
+        if (!raw) return null;
+        try {
+            const parsed = JSON.parse(raw) as {
+                key_moments?: Array<{ coach_note?: string }>;
+                quiz?: Array<unknown>;
+                selected_video?: { title?: string; channel?: string };
+            };
+            return parsed;
+        } catch {
+            return null;
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
             <Navbar />
@@ -165,14 +184,59 @@ export const StudyMaterials = () => {
                         </div>
 
                         <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                            <BookOpen size={20} className="text-[#1D9E75]" />
+                            Video Library
+                        </h2>
+                        <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1 mb-6">
+                            {videoLibraryItems.length === 0 && (
+                                <p className="text-sm text-slate-500">No video cards yet. Use Studio auto-fetch to build your Video Library.</p>
+                            )}
+                            {videoLibraryItems.map((item) => {
+                                const payload = parseVideoLibraryPayload(item.content);
+                                const moments = payload?.key_moments || [];
+                                const quizzes = payload?.quiz || [];
+                                const topTip = moments[0]?.coach_note || 'Play, pause, and write one board-style answer from the first key moment.';
+                                return (
+                                    <div key={item.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <div>
+                                                <p className="text-sm font-black text-slate-900 dark:text-white">{item.title}</p>
+                                                <p className="text-xs text-slate-500 mt-1">{item.subject} • {item.chapter}</p>
+                                            </div>
+                                            <Button variant="ghost" className="rounded-xl" onClick={() => removeItem(item.id)}>
+                                                <Trash2 size={14} />
+                                            </Button>
+                                        </div>
+                                        {item.url && (
+                                            <div className="mt-3 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-black">
+                                                <iframe
+                                                    src={item.url}
+                                                    title={item.title}
+                                                    className="w-full aspect-video"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                />
+                                            </div>
+                                        )}
+                                        <div className="mt-3 flex flex-wrap gap-2">
+                                            <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-emerald-100 text-emerald-700">{moments.length} tips/hints</span>
+                                            <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-indigo-100 text-indigo-700">{quizzes.length} quiz questions</span>
+                                        </div>
+                                        <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">Tip: {topTip}</p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                             <FileText size={20} className="text-[#1D9E75]" />
                             OCR and Saved Materials
                         </h2>
                         <div className="space-y-3 max-h-[560px] overflow-y-auto pr-1">
-                            {filteredMaterials.length === 0 && (
-                                <p className="text-sm text-slate-500">{materialQuery ? 'No matching materials found.' : 'No materials saved yet. Use OCR page or Studio to store outputs.'}</p>
+                            {standardMaterials.length === 0 && (
+                                <p className="text-sm text-slate-500">{materialQuery ? 'No matching materials found.' : 'No materials saved yet. Use OCR page or Studio (YouTube AI + Mindmap) to store outputs.'}</p>
                             )}
-                            {filteredMaterials.map((item) => (
+                            {standardMaterials.map((item) => (
                                 <div key={item.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
                                     <div className="flex items-center justify-between gap-2">
                                         <div>
@@ -307,32 +371,28 @@ export const StudyMaterials = () => {
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Core Ideas</h4>
                                         {renderTableBlock(activeMaterial.content, 'Core Ideas', ['Key Terms', 'Board Focus', 'Quick Recall', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Core Ideas', ['Key Terms', 'Board Focus', 'Quick Recall', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Core Ideas', ['Key Terms', 'Board Focus', 'Quick Recall', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Key Terms</h4>
                                         {renderTableBlock(activeMaterial.content, 'Key Terms', ['Board Focus', 'Quick Recall', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Key Terms', ['Board Focus', 'Quick Recall', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Key Terms', ['Board Focus', 'Quick Recall', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Board Focus</h4>
                                         {renderTableBlock(activeMaterial.content, 'Board Focus', ['Quick Recall', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Board Focus', ['Quick Recall', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Board Focus', ['Quick Recall', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Quick Recall</h4>
-                                        <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
-                                            {formatQuickRecallBlock(extractMarkdownSection(activeMaterial.content, 'Quick Recall', ['Exam Tip']))}
-                                        </ReactMarkdown>
+                                        <MarkdownContent content={formatQuickRecallBlock(extractMarkdownSection(activeMaterial.content, 'Quick Recall', ['Exam Tip']))} />
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Exam Tip</h4>
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                            {extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])}
-                                        </ReactMarkdown>
+                                        <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])} />
                                     </section>
                                 </div>
                             ) : activeMaterial.type === 'formula' && activeMaterial.content ? (
@@ -340,32 +400,30 @@ export const StudyMaterials = () => {
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Formulas</h4>
                                         {renderTableBlock(activeMaterial.content, 'Formulas', ['Definitions', 'Units', 'Common Mistakes', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Formulas', ['Definitions', 'Units', 'Common Mistakes', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Formulas', ['Definitions', 'Units', 'Common Mistakes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Definitions</h4>
                                         {renderTableBlock(activeMaterial.content, 'Definitions', ['Units', 'Common Mistakes', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Definitions', ['Units', 'Common Mistakes', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Definitions', ['Units', 'Common Mistakes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Units</h4>
                                         {renderTableBlock(activeMaterial.content, 'Units', ['Common Mistakes', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Units', ['Common Mistakes', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Units', ['Common Mistakes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Common Mistakes</h4>
                                         {renderTableBlock(activeMaterial.content, 'Common Mistakes', ['Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Common Mistakes', ['Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Common Mistakes', ['Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Exam Tip</h4>
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                            {extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])}
-                                        </ReactMarkdown>
+                                        <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])} />
                                     </section>
                                 </div>
                             ) : activeMaterial.type === 'plan' && activeMaterial.content ? (
@@ -373,39 +431,35 @@ export const StudyMaterials = () => {
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Morning Sprint</h4>
                                         {renderTableBlock(activeMaterial.content, 'Morning Sprint', ['Afternoon Deep Work', 'Evening Review', 'Priority Fixes', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Morning Sprint', ['Afternoon Deep Work', 'Evening Review', 'Priority Fixes', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Morning Sprint', ['Afternoon Deep Work', 'Evening Review', 'Priority Fixes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Afternoon Deep Work</h4>
                                         {renderTableBlock(activeMaterial.content, 'Afternoon Deep Work', ['Evening Review', 'Priority Fixes', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Afternoon Deep Work', ['Evening Review', 'Priority Fixes', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Afternoon Deep Work', ['Evening Review', 'Priority Fixes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Evening Review</h4>
                                         {renderTableBlock(activeMaterial.content, 'Evening Review', ['Priority Fixes', 'Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Evening Review', ['Priority Fixes', 'Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Evening Review', ['Priority Fixes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Priority Fixes</h4>
                                         {renderTableBlock(activeMaterial.content, 'Priority Fixes', ['Exam Tip']) || (
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{extractMarkdownSection(activeMaterial.content, 'Priority Fixes', ['Exam Tip'])}</ReactMarkdown>
+                                            <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Priority Fixes', ['Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
                                         <h4 className="text-base font-black text-slate-900 dark:text-white">Exam Tip</h4>
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                            {extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])}
-                                        </ReactMarkdown>
+                                        <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])} />
                                     </section>
                                 </div>
                             ) : (
                                 <div className="prose prose-slate dark:prose-invert max-w-none">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {activeMaterial.content || 'No text content available.'}
-                                    </ReactMarkdown>
+                                    <MarkdownContent content={activeMaterial.content || 'No text content available.'} />
                                 </div>
                             )}
                         </div>
@@ -438,9 +492,7 @@ export const StudyMaterials = () => {
                                 <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">{activeBookmark.type}</p>
                                 <h4>{activeBookmark.subject} • {activeBookmark.chapter}</h4>
                                 {activeBookmark.question && <p><strong>Question:</strong> {activeBookmark.question}</p>}
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {activeBookmark.answer || 'No answer text available.'}
-                                </ReactMarkdown>
+                                <MarkdownContent content={activeBookmark.answer || 'No answer text available.'} />
                             </div>
                         </div>
                     </div>

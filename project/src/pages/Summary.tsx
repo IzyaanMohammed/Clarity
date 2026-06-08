@@ -1,13 +1,10 @@
 import { useMemo, useState } from 'react';
 import { FileText, Calculator, Sparkles, Info, SlidersHorizontal } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import remarkGfm from 'remark-gfm';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { getUser, saveStudyMaterialIfNew, type StudyMaterialItem } from '../utils/storage';
 import { extractMarkdownSection, formatQuickRecallBlock, parseMarkdownTable } from '../utils/markdown';
 import { generateChapterSummaryStream, generateFormulaSheetStream, saveMaterialToDatabase } from '../api';
@@ -107,6 +104,7 @@ export const Summary = () => {
                     goal: user?.goal || '',
                     study_hours: user?.studyHours || '',
                     focus_areas: user?.focusAreas || '',
+                    focus_chapters: JSON.stringify(user?.focusChapters || {}),
                     exam_board: user?.examBoard || 'CBSE',
                     preferred_language: user?.preferredLanguage || 'English',
                     preferred_pace: user?.preferredPace || 'Balanced',
@@ -335,17 +333,16 @@ export const Summary = () => {
                                         <section className="space-y-3">
                                             <h3 className="text-lg font-black text-slate-900 dark:text-white">Quick Recall</h3>
                                             <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 text-slate-700 dark:text-slate-200">
-                                                <div className="prose prose-slate dark:prose-invert max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-1">
-                                                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
-                                                        {formatQuickRecallBlock(extractMarkdownSection(content, 'Quick Recall', ['Exam Tip']))}
-                                                    </ReactMarkdown>
-                                                </div>
+                                                <MarkdownContent
+                                                    content={formatQuickRecallBlock(extractMarkdownSection(content, 'Quick Recall', ['Exam Tip']))}
+                                                    className="prose-p:my-2 prose-ul:my-2 prose-li:my-1"
+                                                />
                                             </div>
                                         </section>
                                         <section className="space-y-3">
                                             <h3 className="text-lg font-black text-slate-900 dark:text-white">Exam Tip</h3>
-                                            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 whitespace-pre-wrap leading-7 text-slate-700 dark:text-slate-200">
-                                                {extractMarkdownSection(content, 'Exam Tip', [])}
+                                            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 text-slate-700 dark:text-slate-200">
+                                                <MarkdownContent content={extractMarkdownSection(content, 'Exam Tip', [])} className="leading-7" />
                                             </div>
                                         </section>
                                     </>
@@ -369,16 +366,16 @@ export const Summary = () => {
                                         </section>
                                         <section className="space-y-3">
                                             <h3 className="text-lg font-black text-slate-900 dark:text-white">Exam Tip</h3>
-                                            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 whitespace-pre-wrap leading-7 text-slate-700 dark:text-slate-200">
-                                                {extractMarkdownSection(content, 'Exam Tip', [])}
+                                            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 text-slate-700 dark:text-slate-200">
+                                                <MarkdownContent content={extractMarkdownSection(content, 'Exam Tip', [])} className="leading-7" />
                                             </div>
                                         </section>
                                     </>
                                 )}
                                 <details className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
                                     <summary className="cursor-pointer text-xs font-black uppercase tracking-wider text-slate-500">View Raw Markdown</summary>
-                                    <div className="prose prose-slate dark:prose-invert max-w-none mt-3">
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+                                    <div className="mt-3">
+                                        <MarkdownContent content={content} />
                                     </div>
                                 </details>
                             </div>

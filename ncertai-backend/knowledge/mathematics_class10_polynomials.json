@@ -1,0 +1,25 @@
+{
+  "class_num": "10",
+  "subject": "Mathematics",
+  "chapter": "Polynomials",
+  "concepts": [
+    {
+      "id": "poly_zeroes_geo",
+      "title": "Geometrical Meaning of Zeroes",
+      "ncert_text": "The zeroes of a polynomial p(x) are the x-coordinates of the points where the graph of y = p(x) intersects the x-axis.",
+      "keywords": ["zeroes", "x-intercept", "parabola", "graph"]
+    },
+    {
+      "id": "quadratic_coeff_relation",
+      "title": "Relationship between Zeroes and Coefficients",
+      "ncert_text": "For a quadratic polynomial ax^2 + bx + c: Sum of zeroes (\u03b1 + \u03b2) = -b/a. Product of zeroes (\u03b1\u03b2) = c/a.",
+      "keywords": ["alpha", "beta", "coefficients", "sum of zeroes", "product of zeroes"]
+    },
+    {
+      "id": "cubic_coeff_relation",
+      "title": "Relationship for Cubic Polynomials",
+      "ncert_text": "For ax^3 + bx^2 + cx + d: \u03b1+\u03b2+\u03b3 = -b/a, \u03b1\u03b2+\u03b2\u03b3+\u03b3\u03b1 = c/a, \u03b1\u03b2\u03b3 = -d/a.",
+      "keywords": ["cubic polynomial", "gamma", "zeroes"]
+    }
+  ]
+}

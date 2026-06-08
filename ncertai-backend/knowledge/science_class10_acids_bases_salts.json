@@ -1,0 +1,37 @@
+{
+  "class_num": "10",
+  "subject": "Science",
+  "chapter": "Acids, Bases and Salts",
+  "concepts": [
+    {
+      "id": "acid_base_properties",
+      "title": "Properties of Acids and Bases",
+      "ncert_text": "Acids are sour in taste and change the colour of blue litmus to red. Bases are bitter in taste and change the colour of red litmus to blue.",
+      "keywords": ["acids", "bases", "litmus", "indicator"]
+    },
+    {
+      "id": "chemical_indicators",
+      "title": "Indicators",
+      "ncert_text": "Substances that change color or odor in acidic/basic media. Natural: Litmus, Turmeric. Synthetic: Methyl orange, Phenolphthalein. Olfactory: Onion, Vanilla.",
+      "keywords": ["indicators", "phenolphthalein", "methyl orange", "olfactory"]
+    },
+    {
+      "id": "neutralization",
+      "title": "Neutralization Reaction",
+      "ncert_text": "The reaction between an acid and a base to give a salt and water. Acid + Base -> Salt + Water. It is generally exothermic.",
+      "keywords": ["neutralization", "salt", "water", "exothermic"]
+    },
+    {
+      "id": "ph_scale",
+      "title": "pH Scale",
+      "ncert_text": "A scale for measuring hydrogen ion concentration in a solution. 0 to 14. 7 is neutral, <7 is acidic, >7 is basic. pH = -log[H+].",
+      "keywords": ["pH scale", "hydrogen ion", "acidic", "basic", "neutral"]
+    },
+    {
+      "id": "common_salts",
+      "title": "Important Chemicals from Common Salt",
+      "ncert_text": "Sodium Hydroxide (NaOH) via Chlor-alkali process. Bleaching Powder (CaOCl2). Baking Soda (NaHCO3). Washing Soda (Na2CO3.10H2O). Plaster of Paris (CaSO4.1/2H2O).",
+      "keywords": ["NaOH", "bleaching powder", "baking soda", "washing soda", "Plaster of Paris", "gypsum"]
+    }
+  ]
+}

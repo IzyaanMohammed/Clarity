@@ -1,13 +1,11 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { BookOpen, MessageCircle, ClipboardList, Moon, Sun, Book, FileText, BookMarked, Layers, CalendarClock, Bookmark, User, Sparkles, ScanText, FolderOpen, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
-import { useTheme } from '../../contexts/useTheme';
+import { BookOpen, MessageCircle, ClipboardList, Book, FileText, Layers, CalendarClock, User, Sparkles, ScanText, FolderOpen, ChevronLeft, ChevronRight, BarChart3, Timer, Brain, Video } from 'lucide-react';
 import { getUser } from '../../utils/storage';
 
 export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
   const user = getUser();
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('clarity_sidebar_collapsed') === '1');
 
@@ -27,21 +25,23 @@ export const Navbar = () => {
     { to: '/dashboard', label: 'Dashboard', icon: BookOpen },
     { to: '/ask', label: 'Ask AI', icon: MessageCircle },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
+    { to: '/ai-tutor', label: 'AI Tutor', icon: Sparkles },
   ];
 
   const learnLinks = [
     { to: '/library', label: 'Library', icon: Book },
-    { to: '/textbook-hub', label: 'Textbook Hub', icon: BookMarked },
+    { to: '/textbook-hub', label: 'Textbook Hub', icon: BookOpen },
+    { to: '/active-recall', label: 'Active Recall', icon: Brain },
     { to: '/flashcards', label: 'Flashcards', icon: Layers },
-    { to: '/plan', label: 'Plan', icon: CalendarClock },
     { to: '/summary', label: 'Summary', icon: FileText },
+    { to: '/subscription', label: 'Subscription', icon: Sparkles },
   ];
 
   const toolsLinks = [
-    { to: '/studio', label: 'Studio', icon: Sparkles },
+    { to: '/exam-simulator', label: 'Exam Simulator', icon: Timer },
+    { to: '/studio', label: 'Studio', icon: Video },
     { to: '/ocr', label: 'OCR', icon: ScanText },
     { to: '/materials', label: 'Materials', icon: FolderOpen },
-    { to: '/bookmarks', label: 'Saved', icon: Bookmark },
     { to: '/progress', label: 'Progress', icon: BarChart3 },
   ];
 
@@ -49,9 +49,8 @@ export const Navbar = () => {
     { to: '/dashboard', label: 'Home', icon: BookOpen },
     { to: '/ask', label: 'Ask', icon: MessageCircle },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
-    { to: '/studio', label: 'Studio', icon: Sparkles },
-    { to: '/materials', label: 'Materials', icon: FolderOpen },
-    { to: '/library', label: 'Library', icon: Book },
+    { to: '/ai-tutor', label: 'Tutor', icon: Sparkles },
+    { to: '/progress', label: 'Progress', icon: BarChart3 },
     { to: '/profile', label: 'Profile', icon: User },
   ];
 
@@ -126,21 +125,6 @@ export const Navbar = () => {
           </div>
 
           <div className="mt-auto pt-4 space-y-3">
-            <button
-              onClick={toggleTheme}
-              title={collapsed ? 'Toggle theme' : undefined}
-              className={`flex w-full items-center gap-3 rounded-2xl py-3 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors ${collapsed ? 'justify-center px-3' : 'px-4'}`}
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
-                {theme === 'light' ? (
-                  <Moon className="h-4 w-4" />
-                ) : (
-                  <Sun className="h-4 w-4" />
-                )}
-              </span>
-              {!collapsed && <span>Toggle theme</span>}
-            </button>
-
             {user && (
               <button
                 onClick={() => navigate('/profile')}

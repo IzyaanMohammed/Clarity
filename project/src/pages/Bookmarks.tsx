@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bookmark, Trash2, RefreshCw } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { getBookmarks, removeBookmark } from '../utils/storage';
 
 export const Bookmarks = () => {
@@ -202,11 +201,9 @@ export const Bookmarks = () => {
                                             <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-3">
                                                 {showFlashcardAnswer ? 'Answer' : 'Question'}
                                             </p>
-                                            <div className="prose prose-slate dark:prose-invert max-w-none">
-                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                    {showFlashcardAnswer ? (activeBookmark.answer || 'No answer text available.') : (activeBookmark.question || 'No question available.')}
-                                                </ReactMarkdown>
-                                            </div>
+                                            <MarkdownContent
+                                                content={showFlashcardAnswer ? (activeBookmark.answer || 'No answer text available.') : (activeBookmark.question || 'No question available.')}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -215,9 +212,7 @@ export const Bookmarks = () => {
                                     <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">{activeBookmark.type}</p>
                                     <h4>{activeBookmark.subject} • {activeBookmark.chapter}</h4>
                                     {activeBookmark.question && <p><strong>Question:</strong> {activeBookmark.question}</p>}
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                        {activeBookmark.answer || 'No answer text available.'}
-                                    </ReactMarkdown>
+                                    <MarkdownContent content={activeBookmark.answer || 'No answer text available.'} />
                                 </div>
                             )}
                         </div>

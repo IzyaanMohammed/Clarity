@@ -17,6 +17,13 @@ import { Studio } from './pages/Studio';
 import { OCR } from './pages/OCR';
 import { StudyMaterials } from './pages/StudyMaterials';
 import { Progress } from './pages/Progress';
+import { Landing } from './pages/Landing';
+import { ExamSimulator } from './pages/ExamSimulator';
+import { ParentPortal } from './pages/ParentPortal';
+import { Subscription } from './pages/Subscription';
+import { Login } from './pages/Login';
+import { AITutor } from './pages/AITutor';
+import { ActiveRecall } from './pages/ActiveRecall';
 import { getMaterialsFromDatabase, getMyProfile, getUserSnapshot } from './api';
 import { clearAuthToken, clearUser, getAuthToken, getUser, hydrateLocalStateFromSnapshot, saveUser, type StudyMaterialItem } from './utils/storage';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -25,7 +32,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const user = getUser();
   const token = getAuthToken();
   if (!user || !token) {
-    return <Navigate to="/onboarding" replace />;
+    return <Navigate to="/login" replace />;
   }
   return <>{children}</>;
 }
@@ -42,18 +49,30 @@ function SessionHydrator({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        const [profile, snapshotResp, materialsResp] = await Promise.all([
-          getMyProfile(),
+        const profile = await getMyProfile();
+        saveUser(profile);
+
+        // Snapshot/material sync is best-effort and should never log users out.
+        const [snapshotResult, materialsResult] = await Promise.allSettled([
           getUserSnapshot(),
           getMaterialsFromDatabase(),
         ]);
 
-        saveUser(profile);
-        const serverMaterials = (materialsResp.materials || []) as StudyMaterialItem[];
-        hydrateLocalStateFromSnapshot(snapshotResp.payload || {}, serverMaterials);
-      } catch {
-        clearUser();
-        clearAuthToken();
+        const snapshotPayload =
+          snapshotResult.status === 'fulfilled' ? (snapshotResult.value.payload || {}) : {};
+        const serverMaterials =
+          materialsResult.status === 'fulfilled'
+            ? ((materialsResult.value.materials || []) as StudyMaterialItem[])
+            : [];
+
+        hydrateLocalStateFromSnapshot(snapshotPayload, serverMaterials);
+      } catch (error: any) {
+        const status = error?.response?.status;
+        // Only clear auth on real auth failures.
+        if (status === 401 || status === 403) {
+          clearUser();
+          clearAuthToken();
+        }
       } finally {
         setHydrated(true);
       }
@@ -75,7 +94,9 @@ function App() {
         <SessionHydrator>
           <Toaster position="top-center" />
           <Routes>
+            <Route path="/" element={<Landing />} />
             <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/login" element={<Login />} />
 
             <Route
               path="/dashboard"
@@ -162,7 +183,7 @@ function App() {
               path="/plan"
               element={
                 <ProtectedRoute>
-                  <StudyPlan />
+                  <AITutor initialTab="planner" />
                 </ProtectedRoute>
               }
             />
@@ -213,6 +234,24 @@ function App() {
             />
 
             <Route
+              path="/ai-tutor"
+              element={
+                <ProtectedRoute>
+                  <AITutor initialTab="chat" />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/active-recall"
+              element={
+                <ProtectedRoute>
+                  <ActiveRecall />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
               path="/ocr"
               element={
                 <ProtectedRoute>
@@ -230,7 +269,28 @@ function App() {
               }
             />
 
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/exam-simulator"
+              element={
+                <ProtectedRoute>
+                  <ExamSimulator />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/parent-portal"
+              element={<ParentPortal />}
+            />
+
+            <Route
+              path="/subscription"
+              element={
+                <ProtectedRoute>
+                  <Subscription />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </SessionHydrator>

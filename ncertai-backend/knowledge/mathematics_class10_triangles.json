@@ -1,0 +1,32 @@
+{
+  "subject": "Mathematics",
+  "class": "10",
+  "chapter": "Triangles",
+  "concepts": [
+    {
+      "title": "Similarity of Figures",
+      "ncert_text": "Two figures having the same shape but not necessarily the same size are called similar figures. All congruent figures are similar but the similar figures need not be congruent. All circles are similar, all squares are similar and all equilateral triangles are similar. Two polygons of the same number of sides are similar, if (i) their corresponding angles are equal and (ii) their corresponding sides are in the same ratio (or proportion).",
+      "keywords": ["similarity", "congruence", "proportion", "polygon", "ratio"]
+    },
+    {
+      "title": "Basic Proportionality Theorem (BPT)",
+      "ncert_text": "Theorem 6.1 (Thales Theorem): If a line is drawn parallel to one side of a triangle to intersect the other two sides in distinct points, the other two sides are divided in the same ratio. Given: In ΔABC, DE || BC. To Prove: AD/DB = AE/EC. This is a fundamental theorem for solving problems involving parallel lines in triangles.",
+      "keywords": ["BPT", "Thales", "parallel", "ratio", "intercept"]
+    },
+    {
+      "title": "Criteria for Similarity of Triangles (AAA, SSS, SAS)",
+      "ncert_text": "Two triangles are similar if: (i) AAA Criterion: Corresponding angles are equal. (ii) SSS Criterion: Corresponding sides are in the same ratio. (iii) SAS Criterion: One angle of a triangle is equal to one angle of the other triangle and the sides including these angles are proportional. If in two triangles, two angles of one triangle are respectively equal to two angles of the other triangle, then the two triangles are similar (AA similarity criterion).",
+      "keywords": ["AAA", "SSS", "SAS", "AA", "similarity criteria"]
+    },
+    {
+      "title": "Areas of Similar Triangles",
+      "ncert_text": "Theorem: The ratio of the areas of two similar triangles is equal to the square of the ratio of their corresponding sides. If ΔABC ~ ΔPQR, then Area(ABC)/Area(PQR) = (AB/PQ)^2 = (BC/QR)^2 = (AC/PR)^2. This property is used to relate the sizes of similar shapes.",
+      "keywords": ["area", "ratio", "square", "proportionality"]
+    },
+    {
+      "title": "Pythagoras Theorem",
+      "ncert_text": "Theorem: In a right triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides. If in ΔABC, ∠B = 90°, then AC^2 = AB^2 + BC^2. The converse of Pythagoras theorem states that if the square of one side is equal to the sum of the squares of the other two sides, then the angle opposite to the first side is a right angle.",
+      "keywords": ["Pythagoras", "hypotenuse", "right triangle", "square", "90 degrees"]
+    }
+  ]
+}

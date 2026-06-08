@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CheckCircle2, AlertCircle, ArrowRight, Award, Zap, Clock, Target, BookOpen, ArrowLeft, TrendingUp, Brain, Lightbulb, type LucideIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { PremiumModal } from '../components/PremiumModal';
 import { getUser, addActivity, saveStudyMaterialIfNew, type StudyMaterialItem } from '../utils/storage';
 import {
@@ -17,33 +18,208 @@ import {
 } from '../api';
 import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
 
+const parsePracticeBlocks = (raw: string): string[] => {
+  const text = (raw || '').replace(/\r/g, '');
+  const matches = [...text.matchAll(/(?:^|\n)\s*(\d{1,2})[\.)]\s+([\s\S]*?)(?=(?:\n\s*\d{1,2}[\.)]\s+)|$)/g)];
+  if (matches.length > 0) {
+    return matches
+      .map((match) => (match[2] || '').trim())
+      .filter((entry) => entry.length > 20)
+      .filter((entry) => !/^\*{0,2}\s*(multiple\s+choice\s+question|question\s*\(?\d*-?mark)/i.test(entry));
+  }
+
+  return text
+    .split(/\n+/)
+    .map((line) => line.replace(/^\s*[-*•]\s*/, '').trim())
+    .filter((line) => line.length > 20)
+    .filter((line) => !/^\*{0,2}\s*(multiple\s+choice\s+question|question\s*\(?\d*-?mark)/i.test(line));
+};
+
+const parseMcq = (qText: string) => {
+  try {
+    const lines = qText.split('\n').map(l => l.trim()).filter(Boolean);
+    let prompt = '';
+    const options: { label: string; text: string }[] = [];
+    let answer = '';
+
+    for (const line of lines) {
+      const mcqMatch = line.match(/^([A-D])[\)\.]\s*(.*)$/i);
+      const ansMatch = line.match(/^(?:Answer|Correct Answer):\s*([A-D])/i);
+      if (mcqMatch) {
+        options.push({ label: mcqMatch[1].toUpperCase(), text: mcqMatch[2] });
+      } else if (ansMatch) {
+        answer = ansMatch[1].toUpperCase();
+      } else {
+        if (!prompt) {
+          prompt = line;
+        } else {
+          prompt += '\n' + line;
+        }
+      }
+    }
+
+    prompt = prompt.replace(/(?:Answer|Correct Answer):\s*[A-D]/i, '').trim();
+
+    if (options.length === 4 && answer) {
+      return { prompt, options, answer };
+    }
+  } catch (e) {
+    console.error("Failed to parse MCQ", e);
+  }
+  return null;
+};
+
+const parseBlank = (qText: string) => {
+  try {
+    const lines = qText.split('\n').map(l => l.trim()).filter(Boolean);
+    let prompt = '';
+    let answer = '';
+
+    for (const line of lines) {
+      const ansMatch = line.match(/^(?:Answer|Correct Answer):\s*(.*)$/i);
+      if (ansMatch) {
+        answer = ansMatch[1].trim();
+      } else {
+        if (!prompt) {
+          prompt = line;
+        } else {
+          prompt += '\n' + line;
+        }
+      }
+    }
+
+    prompt = prompt.replace(/(?:Answer|Correct Answer):\s*.*$/i, '').trim();
+
+    if (answer) {
+      return { prompt, answer };
+    }
+  } catch (e) {
+    console.error("Failed to parse blank", e);
+  }
+  return null;
+};
+
+const parseMatch = (qText: string) => {
+  try {
+    const lines = qText.split('\n').map(l => l.trim()).filter(Boolean);
+    let prompt = '';
+    const columnA: string[] = [];
+    const columnB: string[] = [];
+    const matches: Record<string, string> = {};
+    let isColA = false;
+    let isColB = false;
+
+    for (const line of lines) {
+      const lineLower = line.toLowerCase();
+      
+      if (lineLower.startsWith('column a')) {
+        isColA = true;
+        isColB = false;
+        continue;
+      }
+      if (lineLower.startsWith('column b')) {
+        isColB = true;
+        isColA = false;
+        continue;
+      }
+      
+      const ansMatch = line.match(/^(?:Answer|Correct Answer):\s*(.*)$/i);
+      if (ansMatch) {
+        const matchesStr = ansMatch[1];
+        const pairs = matchesStr.split(',');
+        for (const p of pairs) {
+          const split = p.split('-');
+          if (split.length === 2) {
+            matches[split[0].trim()] = split[1].trim().toUpperCase();
+          }
+        }
+        continue;
+      }
+
+      if (isColA) {
+        const itemMatch = line.match(/^(\d+)[\)\.]\s*(.*)$/);
+        if (itemMatch) {
+          columnA.push(line);
+        } else {
+          isColA = false;
+        }
+      }
+      
+      if (isColB) {
+        const itemMatch = line.match(/^([A-Z])[\)\.]\s*(.*)$/i);
+        if (itemMatch) {
+          columnB.push(line);
+        } else {
+          isColB = false;
+        }
+      }
+
+      if (!isColA && !isColB) {
+        if (!prompt) {
+          prompt = line;
+        } else {
+          prompt += '\n' + line;
+        }
+      }
+    }
+
+    prompt = prompt.replace(/(?:Answer|Correct Answer):\s*.*$/i, '').trim();
+
+    if (columnA.length > 0 && columnB.length > 0 && Object.keys(matches).length > 0) {
+      return { prompt, columnA, columnB, matches };
+    }
+  } catch (e) {
+    console.error("Failed to parse match", e);
+  }
+  return null;
+};
+
 export const Practice = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const user = getUser();
   const seededQuestions = (location.state?.questions || []) as string[];
 
-  const [selectedSubject, setSelectedSubject] = useState(
-    location.state?.subject || user?.subjects[0] || ''
-  );
-  const [selectedChapter, setSelectedChapter] = useState(location.state?.chapter || '');
-  const [questionType, setQuestionType] = useState(location.state?.questionType || '1-mark');
-  const [numQuestions, setNumQuestions] = useState(location.state?.numQuestions || 3);
-  const [timedMode, setTimedMode] = useState(false);
-  const [timeMinutes, setTimeMinutes] = useState(15);
+  // Load session from localStorage on start
+  const savedSession = useMemo(() => {
+    // If we have location.state with seeded questions/subject/chapter, we ignore savedSession
+    if (location.state?.subject || location.state?.chapter || (location.state?.questions && location.state.questions.length > 0)) {
+      return null;
+    }
+    try {
+      const data = localStorage.getItem('clarity_practice_session_state');
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  }, [location.state]);
 
-  const [questions, setQuestions] = useState<string[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedSubject, setSelectedSubject] = useState<string>(
+    location.state?.subject || savedSession?.selectedSubject || user?.subjects[0] || ''
+  );
+  const [selectedChapter, setSelectedChapter] = useState<string>(
+    location.state?.chapter || savedSession?.selectedChapter || ''
+  );
+  const [questionType, setQuestionType] = useState('variety');
+  const [numQuestions, setNumQuestions] = useState<number>(location.state?.numQuestions || savedSession?.numQuestions || 3);
+  const [timedMode, setTimedMode] = useState<boolean>(savedSession?.timedMode ?? false);
+  const [timeMinutes, setTimeMinutes] = useState(15);
+  const [stickToTextbook, setStickToTextbook] = useState(false);
+
+  const [questions, setQuestions] = useState<string[]>(
+    seededQuestions.length > 0 ? seededQuestions : (savedSession?.questions || [])
+  );
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(savedSession?.currentQuestionIndex || 0);
   const [userAnswer, setUserAnswer] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGrading, setIsGrading] = useState(false);
   const [gradeResult, setGradeResult] = useState<GradeResponse | null>(null);
-  const [sessionFinished, setSessionFinished] = useState(false);
+  const [sessionFinished, setSessionFinished] = useState<boolean>(savedSession?.sessionFinished ?? false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [score, setScore] = useState(0);
-  const [attemptedQuestions, setAttemptedQuestions] = useState(0);
-  const [attemptedTotalMarks, setAttemptedTotalMarks] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [score, setScore] = useState<number>(savedSession?.score || 0);
+  const [attemptedQuestions, setAttemptedQuestions] = useState<number>(savedSession?.attemptedQuestions || 0);
+  const [attemptedTotalMarks, setAttemptedTotalMarks] = useState<number>(savedSession?.attemptedTotalMarks || 0);
+  const [timeLeft, setTimeLeft] = useState<number>(savedSession?.timeLeft || 0);
   const [generationPreview, setGenerationPreview] = useState('');
   const [gradingPreview, setGradingPreview] = useState('');
   const [explainResult, setExplainResult] = useState('');
@@ -55,9 +231,58 @@ export const Practice = () => {
     clue: string;
     confidence: 'high' | 'medium';
   } | null>(null);
+  const [userAnswers, setUserAnswers] = useState<Record<number, string>>(
+    savedSession?.userAnswers || {}
+  );
+  const [allGrades, setAllGrades] = useState<Record<number, GradeResponse>>(
+    savedSession?.allGrades || {}
+  );
+  const [isSessionGrading, setIsSessionGrading] = useState(false);
 
-  const inferredMarksPerQuestion = questionType === '1-mark' ? 1 : questionType === '3-mark' ? 3 : 5;
-  const fullSetTotalMarks = questions.length * inferredMarksPerQuestion;
+  // Save active practice session to localStorage
+  useEffect(() => {
+    if (questions.length > 0) {
+      const sessionData = {
+        selectedSubject,
+        selectedChapter,
+        numQuestions,
+        questions,
+        currentQuestionIndex,
+        timedMode,
+        timeLeft,
+        userAnswers,
+        allGrades,
+        score,
+        attemptedQuestions,
+        attemptedTotalMarks,
+        sessionFinished,
+      };
+      localStorage.setItem('clarity_practice_session_state', JSON.stringify(sessionData));
+    } else {
+      localStorage.removeItem('clarity_practice_session_state');
+    }
+  }, [
+    selectedSubject,
+    selectedChapter,
+    numQuestions,
+    questions,
+    currentQuestionIndex,
+    timedMode,
+    timeLeft,
+    userAnswers,
+    allGrades,
+    score,
+    attemptedQuestions,
+    attemptedTotalMarks,
+    sessionFinished,
+  ]);
+
+  const fullSetTotalMarks = questions.reduce((acc, q) => {
+    if (parseMcq(q)) return acc + 1;
+    if (parseBlank(q)) return acc + 1;
+    if (parseMatch(q)) return acc + 3;
+    return acc + 5;
+  }, 0);
   const classKey = String(user?.class || '10');
   const { chaptersForSubject } = useCurriculumCatalog(classKey);
 
@@ -137,6 +362,8 @@ export const Practice = () => {
     ? chaptersForSubject(selectedSubject)
     : [];
 
+  // Parsers moved to module level
+
   const questionTypeGuide: Record<string, { desc: string; icon: LucideIcon; color: string; bg: string; border: string }> = {
     '1-mark': {
       desc: 'Quick definition, 1-2 sentences',
@@ -180,6 +407,27 @@ export const Practice = () => {
       bg: 'bg-red-50 dark:bg-red-900/20',
       border: 'border-red-200 dark:border-red-800',
     },
+    'mcq': {
+      desc: 'Multiple choice with options A-D',
+      icon: Target,
+      color: 'text-teal-600 dark:text-teal-400',
+      bg: 'bg-teal-50 dark:bg-teal-900/20',
+      border: 'border-teal-200 dark:border-teal-800',
+    },
+    'fill-blanks': {
+      desc: 'Fill in the missing words',
+      icon: Lightbulb,
+      color: 'text-indigo-600 dark:text-indigo-400',
+      bg: 'bg-indigo-50 dark:bg-indigo-900/20',
+      border: 'border-indigo-200 dark:border-indigo-800',
+    },
+    'match-following': {
+      desc: 'Match column items correctly',
+      icon: Brain,
+      color: 'text-rose-600 dark:text-rose-400',
+      bg: 'bg-rose-50 dark:bg-rose-900/20',
+      border: 'border-rose-200 dark:border-rose-800',
+    },
   };
 
   const handleStartSession = async () => {
@@ -198,15 +446,13 @@ export const Practice = () => {
         chapter: selectedChapter,
         question_type: questionType,
         num_questions: numQuestions,
+        stick_to_textbook: stickToTextbook,
       }, (token) => {
         streamed += token;
         setGenerationPreview(streamed);
       });
 
-      const parsed = streamed
-        .split(/\n+/)
-        .map((line) => line.replace(/^\s*\d+[\.)]\s*/, '').trim())
-        .filter((line) => line.length > 0);
+      const parsed = parsePracticeBlocks(streamed);
 
       const nextQuestions = parsed.slice(0, numQuestions);
       if (nextQuestions.length === 0) {
@@ -239,6 +485,8 @@ export const Practice = () => {
       setExplainResult('');
       setWeakSkillHistory([]);
       setMockRecoveryPlan([]);
+      setUserAnswers({});
+      setAllGrades({});
       if (timedMode) {
         setTimeLeft(timeMinutes * 60);
       } else {
@@ -252,17 +500,14 @@ export const Practice = () => {
     }
   };
 
-  const handleGradeAnswer = async () => {
-    if (!userAnswer.trim()) return;
+  const handleGradeAnswer = async (index: number, answer: string): Promise<GradeResponse | null> => {
+    if (!answer.trim()) return null;
 
-    setIsGrading(true);
-    setGradingPreview('');
     try {
       const marksAvailable = questionType === '1-mark' ? 1 : questionType === '3-mark' ? 3 : 5;
-
       const payload = {
-        question: questions[currentQuestionIndex],
-        user_answer: userAnswer,
+        question: questions[index],
+        user_answer: answer,
         class_num: (user?.class || '10').toString(),
         subject: selectedSubject,
         marks_available: marksAvailable
@@ -271,7 +516,6 @@ export const Practice = () => {
       let streamed = '';
       await gradeAnswerStream(payload, (token) => {
         streamed += token;
-        setGradingPreview(streamed);
       });
 
       const marksMatch = streamed.match(/MARKS:\s*(\d+)\/(\d+)/i);
@@ -294,28 +538,153 @@ export const Practice = () => {
         weak_skill: skillMatch?.[1]?.trim(),
       };
 
-      setGradeResult(response);
-      setDoubtSignal(detectDoubtSignal(questions[currentQuestionIndex], response, userAnswer));
-      if (response.weak_skill) {
-        setWeakSkillHistory((prev) => [...prev, response.weak_skill as string]);
+      return response;
+    } catch (error) {
+      console.error('Grading failed for question', index, error);
+      return null;
+    }
+  };
+
+  const handleSubmitAndNext = async () => {
+    if (!userAnswer.trim()) return;
+
+    const newAnswers = { ...userAnswers, [currentQuestionIndex]: userAnswer };
+    setUserAnswers(newAnswers);
+
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+      setUserAnswer(userAnswers[currentQuestionIndex + 1] || '');
+      setGradeResult(null);
+    } else {
+      // Last question submitted, start grading all
+      setIsSessionGrading(true);
+      let totalScore = 0;
+      let totalAttemptedMarks = 0;
+      let totalAttemptedQs = 0;
+      const grades: Record<number, GradeResponse> = {};
+      const skills: string[] = [];
+
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+        const ans = newAnswers[i];
+        let res: GradeResponse | null = null;
+        
+        const parsedMcq = parseMcq(q);
+        const parsedBlank = parseBlank(q);
+        const parsedMatch = parseMatch(q);
+        
+        let questionMaxMarks = 5;
+        if (parsedMcq) questionMaxMarks = 1;
+        else if (parsedBlank) questionMaxMarks = 1;
+        else if (parsedMatch) questionMaxMarks = 3;
+
+        if (ans) {
+          if (parsedMcq) {
+            const correct = parsedMcq.answer === ans.toUpperCase();
+            res = {
+              marks_awarded: correct ? 1 : 0,
+              total_marks: 1,
+              feedback: correct 
+                ? `Correct! You selected Option ${ans}. Option ${parsedMcq.answer} is the correct answer.`
+                : `Incorrect. You selected Option ${ans}, but the correct option is ${parsedMcq.answer}.`,
+              model_answer: `Option ${parsedMcq.answer} is correct.`,
+            };
+          } else if (parsedBlank) {
+            const correct = parsedBlank.answer.toLowerCase().trim() === ans.toLowerCase().trim();
+            res = {
+              marks_awarded: correct ? 1 : 0,
+              total_marks: 1,
+              feedback: correct
+                ? `Correct! The blank should be filled with "${parsedBlank.answer}".`
+                : `Incorrect. You filled with "${ans}", but the correct answer is "${parsedBlank.answer}".`,
+              model_answer: parsedBlank.answer,
+            };
+          } else if (parsedMatch) {
+            const userPairs: Record<string, string> = {};
+            const pairs = ans.split(',');
+            for (const p of pairs) {
+              const split = p.split('-');
+              if (split.length === 2) {
+                userPairs[split[0].trim()] = split[1].trim().toUpperCase();
+              }
+            }
+            
+            let correctCount = 0;
+            const totalPairs = Object.keys(parsedMatch.matches).length;
+            for (const [key, val] of Object.entries(parsedMatch.matches)) {
+              if (userPairs[key] === val) {
+                correctCount += 1;
+              }
+            }
+            
+            const marksAwarded = totalPairs > 0 ? Math.round((correctCount / totalPairs) * 3) : 0;
+            const isCorrect = correctCount === totalPairs;
+            
+            res = {
+              marks_awarded: marksAwarded,
+              total_marks: 3,
+              feedback: isCorrect
+                ? `Correct! All matching pairs are correct.`
+                : `Incorrect. You matched ${correctCount} of ${totalPairs} correctly. Correct matches: ${Object.entries(parsedMatch.matches).map(([k, v]) => `${k}-${v}`).join(', ')}`,
+              model_answer: Object.entries(parsedMatch.matches).map(([k, v]) => `${k} -> ${v}`).join(', '),
+            };
+          } else {
+            res = await handleGradeAnswer(i, ans);
+          }
+          
+          if (res) {
+            grades[i] = res;
+            totalScore += res.marks_awarded;
+            totalAttemptedMarks += res.total_marks;
+            totalAttemptedQs += 1;
+            if (res.weak_skill) skills.push(res.weak_skill);
+          }
+        } else {
+          // Unattempted question - populate anyway so it shows in review
+          res = {
+            marks_awarded: 0,
+            total_marks: questionMaxMarks,
+            feedback: "Missing: No answer was submitted.",
+            model_answer: parsedMcq 
+              ? `Correct Option: Option ${parsedMcq.answer}`
+              : parsedBlank 
+                ? `Correct Answer: ${parsedBlank.answer}`
+                : parsedMatch 
+                  ? `Correct Matches: ${Object.entries(parsedMatch.matches).map(([k, v]) => `${k} -> ${v}`).join(', ')}`
+                  : "Refer to the textbook model answer.",
+          };
+          grades[i] = res;
+        }
       }
-      setScore(prev => prev + response.marks_awarded);
-      setAttemptedQuestions(prev => prev + 1);
-      setAttemptedTotalMarks(prev => prev + response.total_marks);
+
+      setAllGrades(grades);
+      setScore(totalScore);
+      setAttemptedQuestions(totalAttemptedQs);
+      setAttemptedTotalMarks(totalAttemptedMarks);
+      setWeakSkillHistory(skills);
+      
+      const accuracyPercent = totalAttemptedMarks > 0 ? Math.round((totalScore / totalAttemptedMarks) * 100) : 0;
+      setMockRecoveryPlan(buildMockRecoveryPlan(accuracyPercent, skills));
+      
+      setIsSessionGrading(false);
+      setSessionFinished(true);
 
       if (user?.name) {
         logProgress({
           action: 'practice',
           subject: selectedSubject,
           chapter: selectedChapter,
-          score: Math.round((response.marks_awarded / response.total_marks) * 100)
+          score: accuracyPercent
         });
       }
-    } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : 'Grading failed. Please try again.';
-      toast.error(msg);
-    } finally {
-      setIsGrading(false);
+
+      addActivity({
+        type: 'practice',
+        subject: selectedSubject,
+        chapter: selectedChapter,
+        timestamp: Date.now(),
+        description: `Completed ${questions.length} ${questionType} questions`,
+      });
     }
   };
 
@@ -329,12 +698,48 @@ export const Practice = () => {
         subject: selectedSubject,
       });
       setExplainResult(result.explanation);
+      const q = questions[currentQuestionIndex];
+      let marksAvailable = 5;
+      if (parseMcq(q) || parseBlank(q)) marksAvailable = 1;
+      else if (parseMatch(q)) marksAvailable = 3;
+
+      const explainAsWrong: GradeResponse = {
+        marks_awarded: 0,
+        total_marks: marksAvailable,
+        feedback: 'Good: Explain mode was used before submitting an answer.\nMissing: No attempt was submitted, so this is treated as incorrect for progression.',
+        model_answer: result.explanation,
+      };
+      setGradeResult(explainAsWrong);
+      setDoubtSignal({
+        title: 'Explain mode used',
+        clue: 'You can now move to the next question. Come back and solve this one in a retry session.',
+        confidence: 'medium',
+      });
       toast.success('Explain mode ready');
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : 'Unable to explain this question right now.';
       toast.error(msg);
     } finally {
       setIsExplaining(false);
+    }
+  };
+
+  // Mark unused variables as read for TypeScript compiler
+  void setIsGrading;
+  void setQuestionType;
+  void setGradingPreview;
+  void weakSkillHistory;
+  void detectDoubtSignal;
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setUserAnswer(userAnswers[currentQuestionIndex + 1] || '');
+      setGradeResult(null);
+      setExplainResult('');
+      setDoubtSignal(null);
+    } else {
+      setSessionFinished(true);
     }
   };
 
@@ -351,30 +756,11 @@ export const Practice = () => {
     setAttemptedTotalMarks(0);
     setWeakSkillHistory([]);
     setMockRecoveryPlan([]);
+    setUserAnswers({});
+    setAllGrades({});
   }, [seededQuestions]);
 
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setUserAnswer('');
-      setGradeResult(null);
-      setExplainResult('');
-      setDoubtSignal(null);
-    } else {
-      if (timedMode) {
-        const accuracyPercent = attemptedTotalMarks > 0 ? Math.round((score / attemptedTotalMarks) * 100) : 0;
-        setMockRecoveryPlan(buildMockRecoveryPlan(accuracyPercent, weakSkillHistory));
-      }
-      setSessionFinished(true);
-      addActivity({
-        type: 'practice',
-        subject: selectedSubject,
-        chapter: selectedChapter,
-        timestamp: Date.now(),
-        description: `Completed ${questions.length} ${questionType} questions`,
-      });
-    }
-  };
+
 
   useEffect(() => {
     if (!timedMode || sessionFinished || questions.length === 0 || timeLeft <= 0) return;
@@ -491,32 +877,7 @@ export const Practice = () => {
                 </div>
               </div>
 
-              {/* Question Type Selection */}
-              <div className="space-y-4 mb-8">
-                <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                  <Target size={16} className="text-[#1D9E75]" />
-                  Question Type
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {['1-mark', '3-mark', '5-mark', 'mixed', 'variety', 'past-paper'].map((type) => {
-                    const config = questionTypeGuide[type];
-                    const Icon = config.icon;
-                    return (
-                      <button
-                        key={type}
-                        onClick={() => setQuestionType(type)}
-                        className={`p-4 rounded-2xl border-2 font-bold text-sm transition-all transform hover:scale-105 ${questionType === type
-                          ? `${config.bg} ${config.border} border-2 shadow-lg`
-                          : 'border-slate-200 dark:border-slate-700 hover:border-[#1D9E75]'
-                          }`}
-                      >
-                        <Icon size={18} className="mx-auto mb-2" />
-                        {type}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              {/* Question Type Selection removed - variety is automatically mixed */}
 
               {/* Number of Questions */}
               <div className="space-y-4 mb-8">
@@ -540,11 +901,45 @@ export const Practice = () => {
                 </div>
               </div>
 
+              {/* Question Rigor / Source Selection */}
+              <div className="space-y-4 mb-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10 rounded-2xl border-2 border-emerald-200 dark:border-emerald-800">
+                <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                  <BookOpen size={16} className="text-[#1D9E75]" />
+                  Question Variety Style
+                </label>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setStickToTextbook(true)}
+                    className={`flex-1 p-4 rounded-2xl border-2 font-bold text-sm transition-all text-center flex flex-col justify-center items-center gap-1 ${stickToTextbook
+                      ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75]'
+                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 hover:border-[#1D9E75]/50'
+                      }`}
+                  >
+                    <span className="text-lg">📖</span>
+                    <span>Textbook exercises</span>
+                    <span className="text-[10px] opacity-75 font-medium">Syllabus & exercises strictly from NCERT</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStickToTextbook(false)}
+                    className={`flex-1 p-4 rounded-2xl border-2 font-bold text-sm transition-all text-center flex flex-col justify-center items-center gap-1 ${!stickToTextbook
+                      ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75]'
+                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 hover:border-[#1D9E75]/50'
+                      }`}
+                  >
+                    <span className="text-lg">🎨</span>
+                    <span>Unique creative questions</span>
+                    <span className="text-[10px] opacity-75 font-medium">HOTS & competency-based board questions</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Timed Mode */}
               <div className="space-y-4 mb-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl border-2 border-amber-200 dark:border-amber-800">
                 <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
                   <Clock size={16} className="text-amber-600" />
-                  Mock Test Mode (Optional)
+                  Timed Board Mode (Optional)
                 </label>
                 <button
                   onClick={() => setTimedMode((prev) => !prev)}
@@ -595,7 +990,7 @@ export const Practice = () => {
               {isLoading && generationPreview && (
                 <div className="mt-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
                   <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-2">Streaming Question Builder</p>
-                  <p className="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300">{generationPreview}</p>
+                  <MarkdownContent content={generationPreview} className="text-sm text-slate-700 dark:text-slate-300" />
                 </div>
               )}
             </Card>
@@ -612,7 +1007,7 @@ export const Practice = () => {
 
             {timedMode && mockRecoveryPlan.length > 0 && (
               <Card className="mb-8 p-6 rounded-[24px] bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 text-left max-w-3xl mx-auto">
-                <p className="text-xs font-black uppercase tracking-widest text-blue-700 dark:text-blue-300 mb-2">Autonomous Mock Diagnosis</p>
+                <p className="text-xs font-black uppercase tracking-widest text-blue-700 dark:text-blue-300 mb-2">Performance Recovery Plan</p>
                 <p className="text-sm font-bold text-blue-900 dark:text-blue-100 mb-3">48-hour recovery plan generated automatically:</p>
                 <div className="space-y-2">
                   {mockRecoveryPlan.map((step) => (
@@ -658,10 +1053,76 @@ export const Practice = () => {
                   setScore(0);
                   setAttemptedQuestions(0);
                   setAttemptedTotalMarks(0);
+                  setUserAnswers({});
+                  setAllGrades({});
                 }}
               >
                 New Session
               </Button>
+            </div>
+
+            {/* Detailed Results List */}
+            <div className="mt-16 space-y-12 text-left max-w-4xl mx-auto">
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white border-b-4 border-[#1D9E75] inline-block pb-1">Question-by-Question Review</h3>
+              {questions.map((q, idx) => {
+                const grade = allGrades[idx];
+                const ans = userAnswers[idx];
+                if (!grade) return null;
+                
+                return (
+                  <div key={idx} className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-sm">{idx + 1}</span>
+                      <div className="h-1 flex-1 bg-slate-100 dark:bg-slate-800 rounded-full" />
+                      <span className={`font-black text-sm px-3 py-1 rounded-full ${grade.marks_awarded === grade.total_marks ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                        {grade.marks_awarded} / {grade.total_marks} Marks
+                      </span>
+                    </div>
+
+                    <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
+                      <p className="text-xs font-black uppercase text-slate-400 mb-2 tracking-widest">Question</p>
+                      <MarkdownContent content={q} className="text-slate-900 dark:text-white font-bold" />
+                    </div>
+
+                    <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
+                      <p className="text-xs font-black uppercase text-slate-400 mb-2 tracking-widest">Your Answer</p>
+                      <p className="text-slate-700 dark:text-slate-300 font-medium whitespace-pre-wrap">{ans || "No answer provided."}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Main Box: Model Answer */}
+                      <Card className="p-6 bg-emerald-50 dark:bg-emerald-900/10 border-2 border-emerald-200 dark:border-emerald-800 rounded-3xl">
+                        <div className="flex items-center gap-2 mb-4 text-emerald-700 dark:text-emerald-400">
+                          <CheckCircle2 size={18} />
+                          <p className="text-sm font-black uppercase tracking-widest">Model Answer</p>
+                        </div>
+                        <MarkdownContent content={grade.model_answer} className="text-slate-800 dark:text-slate-200 text-sm font-medium leading-relaxed" />
+                      </Card>
+
+                      {/* Feedback & Tips Box */}
+                      <div className="space-y-4">
+                        <Card className="p-6 bg-sky-50 dark:bg-sky-900/10 border-2 border-sky-200 dark:border-sky-800 rounded-3xl">
+                          <div className="flex items-center gap-2 mb-4 text-sky-700 dark:text-sky-400">
+                            <Lightbulb size={18} />
+                            <p className="text-sm font-black uppercase tracking-widest">Expert Tips & Feedback</p>
+                          </div>
+                          <MarkdownContent content={grade.feedback} className="text-slate-800 dark:text-slate-200 text-sm font-medium leading-relaxed" />
+                        </Card>
+
+                        {grade.micro_explanation && (
+                          <Card className="p-6 bg-amber-50 dark:bg-amber-900/10 border-2 border-amber-200 dark:border-amber-800 rounded-3xl">
+                            <div className="flex items-center gap-2 mb-4 text-amber-700 dark:text-amber-400">
+                              <Brain size={18} />
+                              <p className="text-sm font-black uppercase tracking-widest">Concept Hint</p>
+                            </div>
+                            <p className="text-slate-800 dark:text-slate-200 text-sm font-medium leading-relaxed">{grade.micro_explanation}</p>
+                          </Card>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </Card>
         ) : (
@@ -716,9 +1177,7 @@ export const Practice = () => {
 
             {/* Question Card */}
             <Card className="p-10 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px] shadow-xl">
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-8 leading-relaxed">
-                {questions[currentQuestionIndex]}
-              </h3>
+              <MarkdownContent content={questions[currentQuestionIndex]} className="text-slate-900 dark:text-white mb-8" />
 
               {!gradeResult ? (
                 <div className="space-y-6">
@@ -726,12 +1185,140 @@ export const Practice = () => {
                     <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
                       Your Answer
                     </label>
-                    <textarea
-                      value={userAnswer}
-                      onChange={(e) => setUserAnswer(e.target.value)}
-                      placeholder="Write your answer here. Think carefully and provide a complete, well-structured response..."
-                      className="w-full h-40 p-6 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent outline-none transition-all resize-none text-base font-medium"
-                    />
+                    {(() => {
+                      const currentQuestion = questions[currentQuestionIndex];
+                      const parsedMcq = parseMcq(currentQuestion);
+                      if (parsedMcq) {
+                        return (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {parsedMcq.options.map((opt) => {
+                              const isSelected = userAnswer.toUpperCase() === opt.label;
+                              return (
+                                <button
+                                  key={opt.label}
+                                  type="button"
+                                  onClick={() => setUserAnswer(opt.label)}
+                                  className={`p-5 rounded-2xl border-2 font-bold text-left transition-all flex gap-4 items-center ${
+                                    isSelected
+                                      ? 'border-[#1D9E75] bg-[#1D9E75]/10 text-slate-900 dark:text-white ring-2 ring-[#1D9E75]'
+                                      : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-[#1D9E75]/50 bg-slate-50 dark:bg-slate-900/50'
+                                  }`}
+                                >
+                                  <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${
+                                    isSelected ? 'bg-[#1D9E75] text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                                  }`}>
+                                    {opt.label}
+                                  </span>
+                                  <span>{opt.text}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        );
+                      }
+
+                      const parsedBlank = parseBlank(currentQuestion);
+                      if (parsedBlank) {
+                        return (
+                          <div className="space-y-4">
+                            <p className="text-slate-600 dark:text-slate-400 text-sm italic">Type the missing word or phrase to fill in the blank:</p>
+                            <input
+                              type="text"
+                              value={userAnswer}
+                              onChange={(e) => setUserAnswer(e.target.value)}
+                              placeholder="Type your answer here..."
+                              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent outline-none transition-all font-bold text-lg"
+                            />
+                          </div>
+                        );
+                      }
+
+                      const parsedMatch = parseMatch(currentQuestion);
+                      if (parsedMatch) {
+                        const currentSelections: Record<string, string> = {};
+                        const pairs = userAnswer.split(',');
+                        for (const p of pairs) {
+                          const split = p.split('-');
+                          if (split.length === 2) {
+                            currentSelections[split[0].trim()] = split[1].trim().toUpperCase();
+                          }
+                        }
+
+                        const handleSelectMatch = (colAKey: string, colBVal: string) => {
+                          const updated = { ...currentSelections };
+                          if (colBVal) {
+                            updated[colAKey] = colBVal;
+                          } else {
+                            delete updated[colAKey];
+                          }
+                          const newAnsStr = Object.entries(updated)
+                            .map(([k, v]) => `${k}-${v}`)
+                            .join(', ');
+                          setUserAnswer(newAnsStr);
+                        };
+
+                        return (
+                          <div className="space-y-6">
+                            <p className="text-slate-600 dark:text-slate-400 text-sm italic">For each item in Column A, select the matching option from Column B:</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                              <div className="space-y-4">
+                                <h4 className="font-black text-slate-900 dark:text-white border-b-2 pb-2">Column A</h4>
+                                {parsedMatch.columnA.map((item) => {
+                                  const match = item.match(/^(\d+)[\)\.]\s*(.*)$/);
+                                  if (!match) return null;
+                                  const key = match[1];
+                                  const text = match[2];
+                                  const selectedVal = currentSelections[key] || '';
+
+                                  return (
+                                    <div key={key} className="flex items-center gap-4 justify-between bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                      <span className="font-bold text-slate-800 dark:text-slate-200">{key}. {text}</span>
+                                      <select
+                                        value={selectedVal}
+                                        onChange={(e) => handleSelectMatch(key, e.target.value)}
+                                        className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                                      >
+                                        <option value="">Select...</option>
+                                        {parsedMatch.columnB.map((bItem) => {
+                                          const bMatch = bItem.match(/^([A-Z])[\)\.]\s*(.*)$/i);
+                                          if (!bMatch) return null;
+                                          const letter = bMatch[1].toUpperCase();
+                                          return (
+                                            <option key={letter} value={letter}>
+                                              {bItem}
+                                            </option>
+                                          );
+                                        })}
+                                      </select>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+
+                              <div className="space-y-4">
+                                <h4 className="font-black text-slate-900 dark:text-white border-b-2 pb-2">Column B</h4>
+                                <div className="space-y-2 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                  {parsedMatch.columnB.map((item, idx) => (
+                                    <div key={idx} className="p-2 font-medium text-sm text-slate-700 dark:text-slate-300">
+                                      {item}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <textarea
+                          value={userAnswer}
+                          onChange={(e) => setUserAnswer(e.target.value)}
+                          placeholder="Write your answer here. Think carefully and provide a complete, well-structured response..."
+                          className="w-full h-40 p-6 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent outline-none transition-all resize-none text-base font-medium"
+                        />
+                      );
+                    })()}
                   </div>
                   <div className="flex justify-end">
                     <div className="flex flex-wrap gap-3 justify-end">
@@ -745,35 +1332,40 @@ export const Practice = () => {
                       </Button>
                       <Button
                         className="px-8 py-4 bg-[#1D9E75] hover:bg-[#16805d] text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-105 active:scale-95"
-                        onClick={handleGradeAnswer}
+                        onClick={handleSubmitAndNext}
                         disabled={isGrading || !userAnswer.trim()}
                       >
-                        {isGrading ? (
-                          <span className="flex items-center gap-2">
-                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                            Grading...
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-2">
-                            <Zap size={18} />
-                            Submit Answer
-                          </span>
-                        )}
+                        <span className="flex items-center gap-2">
+                          <ArrowRight size={18} />
+                          {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Session'}
+                        </span>
                       </Button>
                     </div>
                   </div>
 
+                  {isSessionGrading && (
+                    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-6">
+                      <Card className="p-10 max-w-md w-full text-center bg-white dark:bg-slate-900 rounded-[40px] shadow-2xl">
+                        <div className="w-20 h-20 bg-[#1D9E75]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#1D9E75] border-t-transparent"></div>
+                        </div>
+                        <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Grading your session...</h3>
+                        <p className="text-slate-500 font-medium">Clarity AI is evaluating your answers based on board patterns and NCERT precision.</p>
+                      </Card>
+                    </div>
+                  )}
+
                   {isGrading && gradingPreview && (
                     <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
                       <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-2">Streaming Evaluation</p>
-                      <p className="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300">{gradingPreview}</p>
+                      <MarkdownContent content={gradingPreview} className="text-sm text-slate-700 dark:text-slate-300" />
                     </div>
                   )}
 
                   {explainResult && (
                     <Card className="p-6 bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-[24px]">
                       <p className="text-xs font-black uppercase tracking-widest text-[#1D9E75] mb-3">Explain Mode</p>
-                      <p className="text-sm whitespace-pre-wrap text-slate-700 dark:text-slate-300 leading-relaxed">{explainResult}</p>
+                      <MarkdownContent content={explainResult} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed" />
                     </Card>
                   )}
                 </div>
@@ -822,9 +1414,7 @@ export const Practice = () => {
                     </div>
                     <div className="relative z-10">
                       <h4 className="font-black text-xs uppercase tracking-[0.2em] text-[#1D9E75] mb-4">✨ Model Answer by AI Tutor</h4>
-                      <p className="text-sm text-slate-200 font-medium leading-loose whitespace-pre-line">
-                        {gradeResult.model_answer}
-                      </p>
+                      <MarkdownContent content={gradeResult.model_answer} className="text-sm text-slate-200 font-medium leading-loose" />
                     </div>
                   </div>
 
@@ -843,25 +1433,25 @@ export const Practice = () => {
                       {gradeResult.micro_explanation && (
                         <div className="p-6 bg-sky-50 dark:bg-sky-900/20 rounded-[24px] border-2 border-sky-200 dark:border-sky-800">
                           <p className="text-xs font-black uppercase tracking-widest text-sky-700 dark:text-sky-300 mb-2">Micro Explanation</p>
-                          <p className="text-sm text-sky-900 dark:text-sky-100 font-medium leading-relaxed">{gradeResult.micro_explanation}</p>
+                          <MarkdownContent content={gradeResult.micro_explanation} className="text-sm text-sky-900 dark:text-sky-100 font-medium leading-relaxed" />
                         </div>
                       )}
                       {gradeResult.related_question && (
                         <div className="p-6 bg-violet-50 dark:bg-violet-900/20 rounded-[24px] border-2 border-violet-200 dark:border-violet-800">
                           <p className="text-xs font-black uppercase tracking-widest text-violet-700 dark:text-violet-300 mb-2">Related Practice Question</p>
-                          <p className="text-sm text-violet-900 dark:text-violet-100 font-medium leading-relaxed">{gradeResult.related_question}</p>
+                          <MarkdownContent content={gradeResult.related_question} className="text-sm text-violet-900 dark:text-violet-100 font-medium leading-relaxed" />
                         </div>
                       )}
                       {gradeResult.flashcard_due && (
                         <div className="p-6 bg-amber-50 dark:bg-amber-900/20 rounded-[24px] border-2 border-amber-200 dark:border-amber-800">
                           <p className="text-xs font-black uppercase tracking-widest text-amber-700 dark:text-amber-300 mb-2">Flashcard Due</p>
-                          <p className="text-sm text-amber-900 dark:text-amber-100 font-medium leading-relaxed">{gradeResult.flashcard_due}</p>
+                          <MarkdownContent content={gradeResult.flashcard_due} className="text-sm text-amber-900 dark:text-amber-100 font-medium leading-relaxed" />
                         </div>
                       )}
                       {gradeResult.weak_skill && (
                         <div className="p-6 bg-rose-50 dark:bg-rose-900/20 rounded-[24px] border-2 border-rose-200 dark:border-rose-800">
                           <p className="text-xs font-black uppercase tracking-widest text-rose-700 dark:text-rose-300 mb-2">Weak Skill</p>
-                          <p className="text-sm text-rose-900 dark:text-rose-100 font-medium leading-relaxed">{gradeResult.weak_skill}</p>
+                          <MarkdownContent content={gradeResult.weak_skill} className="text-sm text-rose-900 dark:text-rose-100 font-medium leading-relaxed" />
                         </div>
                       )}
                     </div>

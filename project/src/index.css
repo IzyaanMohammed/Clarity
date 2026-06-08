@@ -3,9 +3,26 @@
 @tailwind utilities;
 
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-900 antialiased dark:bg-[#020617] dark:text-slate-100;
+    }
+
+    ::selection {
+        background: rgba(29, 158, 117, 0.22);
+        color: inherit;
+    }
+
     @media (min-width: 768px) {
         body[data-clarity-sidebar]>#root>div {
             padding-left: calc(var(--clarity-sidebar-width, 0px) + 1rem);
         }
+    }
+
+    #root {
+        min-height: 100vh;
     }
 }

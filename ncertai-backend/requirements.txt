@@ -5,7 +5,12 @@ python-dotenv
 pydantic
 python-multipart
 PyPDF2
+pdfplumber
+pymupdf
 Pillow
 httpx
 slowapi
 aiofiles
+pytube
+youtube-search
+youtube-transcript-api

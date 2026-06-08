@@ -1,0 +1,49 @@
+{
+  "class_num": "10",
+  "subject": "Science",
+  "chapter": "Chemical Reactions and Equations",
+  "concepts": [
+    {
+      "id": "chem_reaction",
+      "title": "Chemical Reaction",
+      "ncert_text": "A process where substances (reactants) transform into new substances (products) with different properties. Accompanied by change in state, color, gas evolution, or temperature change.",
+      "keywords": ["chemical reaction", "reactants", "products", "evolution of gas", "change in temperature"]
+    },
+    {
+      "id": "mass_conservation",
+      "title": "Law of Conservation of Mass",
+      "ncert_text": "Mass can neither be created nor destroyed in a chemical reaction. The total mass of elements in products must equal the total mass in reactants. Equations must be balanced.",
+      "keywords": ["conservation of mass", "balanced chemical equation", "atoms"]
+    },
+    {
+      "id": "combination_rxn",
+      "title": "Combination Reaction",
+      "ncert_text": "A reaction in which a single product is formed from two or more reactants. Example: CaO(s) + H2O(l) -> Ca(OH)2(aq) + Heat.",
+      "keywords": ["combination reaction", "single product", "exothermic"]
+    },
+    {
+      "id": "decomposition_rxn",
+      "title": "Decomposition Reaction",
+      "ncert_text": "A single reactant breaks down to give simpler products. Requires energy in form of heat (thermal), light (photolytic), or electricity (electrolytic).",
+      "keywords": ["decomposition", "thermal decomposition", "electrolysis", "photolysis"]
+    },
+    {
+      "id": "displacement_rxn",
+      "title": "Displacement Reaction",
+      "ncert_text": "A reaction where a more reactive element displaces a less reactive element from its compound. Example: Fe(s) + CuSO4(aq) -> FeSO4(aq) + Cu(s).",
+      "keywords": ["displacement", "reactivity series", "iron nail", "copper sulphate"]
+    },
+    {
+      "id": "redox_rxn",
+      "title": "Redox Reaction",
+      "ncert_text": "If a substance gains oxygen or loses hydrogen during a reaction, it is oxidized. If it loses oxygen or gains hydrogen, it is reduced. Both occur simultaneously in Redox reactions.",
+      "keywords": ["oxidation", "reduction", "redox", "oxidising agent", "reducing agent"]
+    },
+    {
+      "id": "corrosion_rancidity",
+      "title": "Corrosion and Rancidity",
+      "ncert_text": "Corrosion: Deterioration of metals by action of air/moisture (e.g., rusting). Rancidity: Oxidation of fats and oils in food making them smell/taste bad.",
+      "keywords": ["corrosion", "rusting", "rancidity", "antioxidants", "nitrogen flushing"]
+    }
+  ]
+}

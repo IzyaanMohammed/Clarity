@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./ncertai-backend
+    container_name: clarity-backend
+    environment:
+      CLARITY_ENV: production
+      CLARITY_LOG_LEVEL: INFO
+      CLARITY_CORS_ORIGINS: http://localhost:8080
+      CLARITY_DB_PATH: /data/clarity.db
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+    volumes:
+      - clarity_data:/data
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./project
+    container_name: clarity-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+
+volumes:
+  clarity_data:

@@ -1,0 +1,16 @@
+.venv
+node_modules
+project/node_modules
+ncertai-backend/.venv
+ncertai-backend/__pycache__
+ncertai-backend/generated_videos
+ncertai-backend/data
+project/dist
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v4
+files.zip
+*.mp4
+*.zip
+.git
+.vs

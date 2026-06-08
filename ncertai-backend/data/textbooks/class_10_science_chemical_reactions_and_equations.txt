@@ -1,0 +1,171 @@
+**Chapter – Chemical Reactions and Equations**  
+
+---
+
+### 1.  What is a Chemical Reaction?  
+
+A **chemical reaction** is a process in which one or more substances (reactants) undergo a chemical change to form new substances (products) having different chemical composition and properties.  
+
+**Key features of a chemical reaction**  
+
+| Feature | Description |
+|---------|-------------|
+| **Formation of new substances** | Reactants → Products (different composition). |
+| **Energy change** | Usually accompanied by release (exothermic) or absorption (endothermic) of energy. |
+| **Reversibility** | Some reactions are reversible; equilibrium may be established. |
+| **Conservation of mass** | Total mass of reactants = total mass of products (Law of Conservation of Mass). |
+
+---
+
+### 2.  Types of Chemical Reactions  
+
+| Type of Reaction | General Form | Typical Example |
+|------------------|--------------|-----------------|
+| **Combination (Synthesis)** | A + B → AB | 2 H₂ + O₂ → 2 H₂O |
+| **Decomposition** | AB → A + B | 2 HgO → 2 Hg + O₂ |
+| **Displacement (Single‑Replacement)** | A + BC → AC + B | Zn + CuSO₄ → ZnSO₄ + Cu |
+| **Double‑Displacement (Metathesis)** | AB + CD → AD + CB | AgNO₃ + NaCl → AgCl + NaNO₃ |
+| **Redox (Oxidation–Reduction)** | Electron transfer occurs | Fe + O₂ → Fe₂O₃ |
+
+*Only the first four types are explicitly required for Class 10 NCERT syllabus.*
+
+---
+
+### 3.  Balancing Chemical Equations  
+
+Balancing ensures that the **Law of Conservation of Mass** is obeyed.  
+
+#### 3.1 Steps to Balance an Equation  
+
+1. **Write the correct formulas** of all reactants and products.  
+2. **List the number of atoms** of each element on both sides.  
+3. **Adjust coefficients** (whole numbers placed before formulas) to equalise the number of atoms of each element.  
+4. **Check** that the total number of atoms of every element is the same on both sides.  
+
+#### 3.2 Example – Balancing a Combustion Reaction  
+
+Unbalanced:  C₂H₆ + O₂ → CO₂ + H₂O  
+
+| Element | Reactants | Products |
+|---------|-----------|----------|
+| C       | 2         | 1 (in CO₂) |
+| H       | 6         | 2 (in H₂O) |
+| O       | 2         | 2 (in CO₂) + 1 (in H₂O) = 3 |
+
+**Balancing steps**  
+
+- Put coefficient **2** before CO₂ → C: 2 on each side.  
+- Put coefficient **3** before H₂O → H: 6 on each side.  
+- Now O atoms on product side = (2 × 2) + (3 × 1) = 7.  
+- Place coefficient **7/2** before O₂ → O: (7/2) × 2 = 7.  
+
+To avoid fractions, multiply whole equation by 2:  
+
+\[
+\boxed{2\,\text{C}_2\text{H}_6 + 7\,\text{O}_2 \rightarrow 4\,\text{CO}_2 + 6\,\text{H}_2\text{O}
+}
+\]
+
+---
+
+### 4.  Writing Chemical Equations  
+
+#### 4.1 State Symbols  
+
+| Symbol | Meaning |
+|--------|---------|
+| (s) | Solid |
+| (l) | Liquid |
+| (g) | Gas |
+| (aq) | Aqueous solution (solute dissolved in water) |
+
+The state symbol is written in brackets immediately after the formula.  
+
+#### 4.2 Example – Reaction of Sodium with Hydrochloric Acid  
+
+\[
+\boxed{2\,\text{Na (s)} + 2\,\text{HCl (aq)} \rightarrow 2\,\text{NaCl (aq)} + \text{H}_2\text{(g)}}
+\]
+
+---
+
+### 5.  Important Reactions from the Syllabus  
+
+| Reaction | Balanced Equation | Type |
+|----------|-------------------|------|
+| **Combustion of methane** | CH₄ + 2 O₂ → CO₂ + 2 H₂O | Combination |
+| **Thermal decomposition of calcium carbonate** | CaCO₃ → CaO + CO₂ | Decomposition |
+| **Reaction of zinc with copper sulphate** | Zn + CuSO₄ → ZnSO₄ + Cu | Single‑replacement |
+| **Acid‑base neutralisation (HCl + NaOH)** | HCl + NaOH → NaCl + H₂O | Double‑displacement |
+| **Precipitation reaction (AgNO₃ + NaCl)** | AgNO₃ + NaCl → AgCl↓ + NaNO₃ | Double‑displacement |
+
+*The arrow “↓” denotes a precipitate.*
+
+---
+
+### 6.  Energy Changes in Chemical Reactions  
+
+#### 6.1 Exothermic and Endothermic  
+
+- **Exothermic reaction** – energy is released to the surroundings (temperature of surroundings rises).  
+  \[
+  \text{Reactants} \rightarrow \text{Products} + \text{heat}
+  \]
+
+- **Endothermic reaction** – energy is absorbed from the surroundings (temperature of surroundings falls).  
+  \[
+  \text{Reactants} + \text{heat} \rightarrow \text{Products}
+  \]
+
+#### 6.2 Practical Indicators  
+
+| Observation | Reaction Type |
+|-------------|---------------|
+| Rise in temperature, flame, hot plate | Exothermic |
+| Cooling of the reaction mixture, need for heating | Endothermic |
+
+---
+
+### 7.  Laws Governing Chemical Reactions  
+
+| Law | Statement |
+|-----|------------|
+| **Law of Conservation of Mass** | Mass of reactants = mass of products in a chemical reaction. |
+| **Law of Constant Composition** | A given chemical compound always contains the same elements in the same proportion by mass. |
+| **Law of Multiple Proportions** | When two elements form more than one compound, the masses of one element that combine with a fixed mass of the other are in simple whole‑number ratios. |
+
+---
+
+### 8.  Practice Problems  
+
+1. **Balancing** – Balance the following equation:  
+   \[
+   \text{Al} + \text{HCl} \rightarrow \text{AlCl}_3 + \text{H}_2
+   \]
+
+2. **Identify the type** – Classify the reaction:  
+   \[
+   \text{CaO} + \text{CO}_2 \rightarrow \text{CaCO}_3
+   \]
+
+3. **State symbols** – Write the complete balanced equation with state symbols for the reaction between aqueous sodium carbonate and aqueous calcium chloride.
+
+4. **Energy change** – State whether the following reaction is exothermic or endothermic and give a reason:  
+   \[
+   \text{NH}_4\text{NO}_3(s) \rightarrow \text{NH}_4^+ (aq) + \text{NO}_3^- (aq)
+   \]
+
+---
+
+### 9.  Summary of Key Points  
+
+- A chemical reaction converts reactants into products with different chemical identities.  
+- Reactions are classified as combination, decomposition, single‑replacement, double‑replacement, and redox.  
+- Balancing equations respects the conservation of mass; only coefficients are altered, never subscripts.  
+- State symbols (s, l, g, aq) indicate the physical state of each species.  
+- Energy changes are classified as exothermic (heat released) or endothermic (heat absorbed).  
+- Fundamental laws – conservation of mass, constant composition, and multiple proportions – govern all chemical reactions.  
+
+--- 
+
+*End of Chapter*

@@ -9,6 +9,7 @@ from models.schemas import (
     DailyPlanResponse,
 )
 from services.openrouter import ask_openrouter, ask_openrouter_stream
+from services.ncert_retriever import get_ncert_context
 from utils.rate_limiter import check_rate_limit, increment_usage
 import logging
 import json
@@ -244,9 +245,13 @@ async def chapter_summary(request: SummaryRequest, x_user_id: str = Header(None)
         {
             "role": "system",
             "content": (
-                f"You are Clarity, a CBSE tutor for Class {request.class_num} {request.subject}. "
-                "Use exact NCERT terminology."
+                f"You are Clarity — the official CBSE AI Tutor for Class {request.class_num} {request.subject}. "
+                f"Your primary knowledge base is the official NCERT textbook for chapter '{request.chapter}'. "
+                f"STRICT RULES: Use exact NCERT terminology and pedagogical logic. Align all points with CBSE board marking schemes. "
+                f"{get_ncert_context(request.class_num, request.subject, request.chapter) or ''} "
+                f"Ensure every 'Core Idea' and 'Key Term' matches the textbook definition exactly. "
                 f"{_profile_block(request.learner_profile)}"
+                + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),
         },
         {"role": "user", "content": prompt},
@@ -287,9 +292,12 @@ async def chapter_summary_stream(request: SummaryRequest, x_user_id: str = Heade
         {
             "role": "system",
             "content": (
-                f"You are Clarity, a CBSE tutor for Class {request.class_num} {request.subject}. "
-                "Use exact NCERT terminology."
+                f"You are Clarity — the official CBSE AI Tutor for Class {request.class_num} {request.subject}. "
+                f"Your primary knowledge base is the official NCERT textbook for chapter '{request.chapter}'. "
+                f"STRICT RULES: Use exact NCERT terminology and pedagogical logic. Align all points with CBSE board marking schemes. "
+                f"{get_ncert_context(request.class_num, request.subject, request.chapter) or ''} "
                 f"{_profile_block(request.learner_profile)}"
+                + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),
         },
         {"role": "user", "content": prompt},
@@ -328,9 +336,11 @@ async def formula_sheet(request: FormulaSheetRequest, x_user_id: str = Header(No
         {
             "role": "system",
             "content": (
-                f"You are Clarity, a CBSE tutor for Class {request.class_num} {request.subject}. "
-                "Produce an exam revision sheet in clear markdown."
+                f"You are Clarity — the official CBSE AI Tutor for Class {request.class_num} {request.subject}. "
+                f"Produce an exam-ready formula/definition sheet strictly using NCERT definitions and symbols. "
+                f"{get_ncert_context(request.class_num, request.subject, request.chapter) or ''} "
                 f"{_profile_block(request.learner_profile)}"
+                + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),
         },
         {"role": "user", "content": prompt},
@@ -371,9 +381,9 @@ async def formula_sheet_stream(request: FormulaSheetRequest, x_user_id: str = He
         {
             "role": "system",
             "content": (
-                f"You are Clarity, a CBSE tutor for Class {request.class_num} {request.subject}. "
-                "Produce an exam revision sheet in clear markdown."
-                f"{_profile_block(request.learner_profile)}"
+                f"You are Clarity — the official CBSE AI Tutor for Class {request.class_num} {request.subject}. "
+                "Produce an exam-ready formula/definition sheet strictly using NCERT definitions and symbols. "
+                f"{_profile_block(request.learner_profile)}" + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),
         },
         {"role": "user", "content": prompt},
@@ -413,9 +423,9 @@ async def daily_plan(request: DailyPlanRequest, x_user_id: str = Header(None)):
         {
             "role": "system",
             "content": (
-                f"You are Clarity, a CBSE tutor for Class {request.class_num}. "
-                "Build actionable and focused daily study plans."
-                f"{_profile_block(request.learner_profile)}"
+                f"You are Clarity — the official CBSE AI Tutor for Class {request.class_num}. "
+                "Build actionable, NCERT-focused daily study plans that align with CBSE board patterns."
+                f"{_profile_block(request.learner_profile)}" + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),
         },
         {"role": "user", "content": prompt},
@@ -450,9 +460,9 @@ async def daily_plan_stream(request: DailyPlanRequest, x_user_id: str = Header(N
         {
             "role": "system",
             "content": (
-                f"You are Clarity, a CBSE tutor for Class {request.class_num}. "
-                "Build actionable and focused daily study plans."
-                f"{_profile_block(request.learner_profile)}"
+                f"You are Clarity — the official CBSE AI Tutor for Class {request.class_num}. "
+                "Build actionable, NCERT-focused daily study plans that align with CBSE board patterns."
+                f"{_profile_block(request.learner_profile)}" + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),
         },
         {"role": "user", "content": prompt},

@@ -7,6 +7,7 @@ import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import tempfile
 import textwrap
@@ -33,7 +34,36 @@ class HighQualityVideoGenerator:
         self.images_dir.mkdir(parents=True, exist_ok=True)
         self.videos_dir.mkdir(parents=True, exist_ok=True)
         self._video_cache: dict[str, Optional[Path]] = {}
+        self._video_usage_count: dict[str, int] = {}
         self.frame_count = 0
+
+    def _query_terms(self, text: str) -> list[str]:
+        terms = re.findall(r"[a-zA-Z]{3,}", (text or "").lower())
+        stop = {
+            "class", "chapter", "topic", "concept", "lesson", "study", "education",
+            "board", "cbse", "notes", "exam", "with", "from", "into", "about",
+            "that", "this", "then", "than", "their", "there", "where", "when",
+        }
+        filtered = [t for t in terms if t not in stop]
+        unique: list[str] = []
+        seen: set[str] = set()
+        for term in filtered:
+            if term not in seen:
+                unique.append(term)
+                seen.add(term)
+        return unique[:8]
+
+    def _title_relevance(self, query: str, title: str) -> int:
+        query_terms = set(self._query_terms(query))
+        if not query_terms:
+            return 0
+        title_terms = set(self._query_terms(title))
+        overlap = query_terms.intersection(title_terms)
+        score = len(overlap) * 3
+        low_title = (title or "").lower()
+        if any(term in low_title for term in query_terms):
+            score += 2
+        return score
 
     def _load_font(self, size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
         """Load system font with fallback."""
@@ -147,6 +177,7 @@ class HighQualityVideoGenerator:
                 payload = json.loads(response.read().decode("utf-8", errors="ignore"))
 
             pages = payload.get("query", {}).get("pages", {})
+            candidates: list[tuple[int, str]] = []
             for page in pages.values():
                 imageinfo = page.get("imageinfo") or []
                 if not imageinfo:
@@ -155,7 +186,13 @@ class HighQualityVideoGenerator:
                 candidate = str(info.get("url", ""))
                 mime = str(info.get("mime", ""))
                 if mime.startswith("video/") and candidate.lower().endswith((".webm", ".ogv", ".mp4")):
-                    return candidate
+                    title = str(page.get("title", ""))
+                    score = self._title_relevance(query, title)
+                    if score > 0:
+                        candidates.append((score, candidate))
+            if candidates:
+                candidates.sort(key=lambda item: item[0], reverse=True)
+                return candidates[0][1]
         except Exception:
             return None
 
@@ -205,6 +242,11 @@ class HighQualityVideoGenerator:
                 payload = json.loads(response.read().decode("utf-8", errors="ignore"))
 
             docs = payload.get("response", {}).get("docs", []) if isinstance(payload, dict) else []
+            docs = sorted(
+                docs,
+                key=lambda d: self._title_relevance(normalized_query, str(d.get("title", ""))),
+                reverse=True,
+            )
             for doc in docs:
                 identifier = str(doc.get("identifier", "")).strip()
                 if not identifier:
@@ -232,6 +274,98 @@ class HighQualityVideoGenerator:
             return None
 
         return None
+
+    def _get_internet_archive_video_candidates(self, query: str, min_seconds: int = 300) -> list[dict[str, object]]:
+        """Return ranked Internet Archive video candidates with duration metadata when available."""
+        normalized_query = re.sub(r"\s+", " ", query or "").strip()
+        if not normalized_query:
+            return []
+        candidates: list[dict[str, object]] = []
+        try:
+            search_url = (
+                "https://archive.org/advancedsearch.php?"
+                f"q={urllib.parse.quote_plus(f'({normalized_query}) AND mediatype:movies')}"
+                "&fl[]=identifier&fl[]=title&rows=10&page=1&output=json"
+            )
+            req = urllib.request.Request(search_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=12) as response:
+                payload = json.loads(response.read().decode("utf-8", errors="ignore"))
+
+            docs = payload.get("response", {}).get("docs", []) if isinstance(payload, dict) else []
+            docs = sorted(
+                docs,
+                key=lambda d: self._title_relevance(normalized_query, str(d.get("title", ""))),
+                reverse=True,
+            )
+
+            for doc in docs:
+                identifier = str(doc.get("identifier", "")).strip()
+                title = str(doc.get("title", "")).strip()
+                if not identifier:
+                    continue
+                metadata_url = f"https://archive.org/metadata/{urllib.parse.quote_plus(identifier)}"
+                metadata_req = urllib.request.Request(metadata_url, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(metadata_req, timeout=12) as metadata_response:
+                    metadata = json.loads(metadata_response.read().decode("utf-8", errors="ignore"))
+
+                files = metadata.get("files", []) if isinstance(metadata, dict) else []
+                for item in files:
+                    name = str(item.get("name", "")).strip()
+                    format_name = str(item.get("format", "")).lower()
+                    if not name or not name.lower().endswith((".mp4", ".webm", ".ogv")):
+                        continue
+                    if not any(marker in format_name for marker in ("mpeg4", "h.264", "h264", "mpeg2", "video")):
+                        continue
+                    duration_raw = str(item.get("length", "")).strip()
+                    duration_val = None
+                    try:
+                        duration_val = float(duration_raw) if duration_raw else None
+                    except Exception:
+                        duration_val = None
+                    if duration_val is not None and duration_val < min_seconds:
+                        continue
+                    score = self._title_relevance(normalized_query, title)
+                    candidates.append(
+                        {
+                            "url": f"https://archive.org/download/{identifier}/{urllib.parse.quote(name)}",
+                            "title": title,
+                            "duration": duration_val,
+                            "score": score,
+                        }
+                    )
+
+            candidates.sort(
+                key=lambda c: (
+                    int(c.get("score", 0)),
+                    float(c.get("duration") or 0.0),
+                ),
+                reverse=True,
+            )
+        except Exception:
+            return []
+
+        return candidates[:8]
+
+    def _get_ranked_archive_candidates(self, queries: list[str], min_seconds: int = 45) -> list[dict[str, object]]:
+        """Collect and rank archive candidates across related queries."""
+        ranked: list[dict[str, object]] = []
+        seen_urls: set[str] = set()
+        for query in queries:
+            for candidate in self._get_internet_archive_video_candidates(query, min_seconds=min_seconds):
+                url = str(candidate.get("url", "")).strip()
+                if not url or url in seen_urls:
+                    continue
+                seen_urls.add(url)
+                ranked.append(candidate)
+
+        ranked.sort(
+            key=lambda c: (
+                int(c.get("score", 0)),
+                float(c.get("duration") or 0.0),
+            ),
+            reverse=True,
+        )
+        return ranked
 
     def _download_external_video(self, source_url: str, topic: str) -> Optional[Path]:
         """Download a remote stock video to temp storage."""
@@ -263,20 +397,45 @@ class HighQualityVideoGenerator:
         if normalized in self._video_cache:
             return self._video_cache[normalized]
 
-        # Prefer no-key sources first.
+        query_variants = [normalized]
+        key_terms = self._query_terms(normalized)
+        if key_terms:
+            query_variants.append(" ".join(key_terms[:3]))
+            query_variants.append(" ".join(key_terms[:2]))
+        if any(term in normalized for term in ("physics", "force", "motion", "electricity")):
+            query_variants.append("physics experiment classroom")
+        if any(term in normalized for term in ("chemistry", "atom", "molecule", "reaction")):
+            query_variants.append("chemistry lab experiment")
+        if any(term in normalized for term in ("biology", "cell", "tissue", "organism")):
+            query_variants.append("biology microscope classroom")
+        if any(term in normalized for term in ("math", "algebra", "geometry", "equation")):
+            query_variants.append("mathematics classroom board")
+        query_variants.append("students learning classroom")
+
+        deduped_queries: list[str] = []
+        seen_queries: set[str] = set()
+        for item in query_variants:
+            q = item.strip().lower()
+            if q and q not in seen_queries:
+                deduped_queries.append(item.strip())
+                seen_queries.add(q)
+
         candidate_urls: list[str] = []
-        wiki_url = self._get_wikimedia_video_url(normalized)
-        if wiki_url:
-            candidate_urls.append(wiki_url)
+        for query in deduped_queries[:6]:
+            wiki_url = self._get_wikimedia_video_url(query)
+            if wiki_url:
+                candidate_urls.append(wiki_url)
 
-        archive_url = self._get_internet_archive_video_url(normalized)
-        if archive_url:
-            candidate_urls.append(archive_url)
+            archive_url = self._get_internet_archive_video_url(query)
+            if archive_url:
+                candidate_urls.append(archive_url)
 
-        # Optional API-backed provider.
-        pixabay_url = self._get_pixabay_video_url(normalized)
-        if pixabay_url:
-            candidate_urls.append(pixabay_url)
+            pixabay_url = self._get_pixabay_video_url(query)
+            if pixabay_url:
+                candidate_urls.append(pixabay_url)
+
+            if len(candidate_urls) >= 4:
+                break
 
         for url in candidate_urls:
             path = self._download_external_video(url, normalized)
@@ -301,27 +460,21 @@ class HighQualityVideoGenerator:
         if len(words) > 2:
             variants.append(" ".join(words[:2]))
 
-        # Broader classroom-safe fallback tags for generic stock footage providers.
+        # Keep variants close to lesson context first; only broaden if needed.
         variants.extend([
             f"{base} education",
             f"{base} science",
             f"{base} learning",
-            f"{base} concept",
             f"{base} classroom",
-            "classroom lesson",
-            "students learning",
-            "education science",
-            "classroom concept",
         ])
 
         if mode == "minimal":
             variants = variants[:2]
         elif mode == "aggressive":
             variants.extend([
-                "school board teaching",
-                "study notes concept",
-                "science documentary",
-                "explainer animation",
+                "classroom lesson",
+                "students learning science",
+                "teaching concept animation",
             ])
         else:
             variants = variants[:5]
@@ -342,6 +495,195 @@ class HighQualityVideoGenerator:
         if level == "light":
             return 2
         return 1
+
+    def _media_duration_seconds(self, media_path: Path) -> Optional[float]:
+        ffprobe = shutil.which("ffprobe")
+        if not ffprobe or not media_path.exists():
+            return None
+        command = [
+            ffprobe,
+            "-v", "error",
+            "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1",
+            str(media_path),
+        ]
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode != 0:
+            return None
+        try:
+            duration = float((result.stdout or "").strip())
+            if duration > 0:
+                return duration
+        except Exception:
+            return None
+        return None
+
+    def generate_full_topic_video(
+        self,
+        output_path: Path,
+        topic_query: str,
+        target_seconds: int = 360,
+        min_external_segments: int = 1,
+    ) -> Optional[Path]:
+        """Create a long-form topic video from ranked external video sources."""
+        ffmpeg = self._find_ffmpeg()
+        if not ffmpeg:
+            return None
+
+        target_seconds = max(300, min(int(target_seconds or 360), 420))
+        min_external_segments = max(1, min(int(min_external_segments or 1), 8))
+        query_variants = self._video_query_variants(topic_query, "aggressive")
+        query_variants.extend([
+            f"{topic_query} documentary",
+            f"{topic_query} explained",
+            f"{topic_query} education",
+        ])
+        candidates = self._get_ranked_archive_candidates(query_variants, min_seconds=45)
+        if not candidates:
+            return None
+
+        downloaded: list[tuple[Path, Optional[float], str]] = []
+        for candidate in candidates:
+            url = str(candidate.get("url", "")).strip()
+            if not url:
+                continue
+            downloaded_path = self._download_external_video(url, topic_query)
+            if not downloaded_path or not downloaded_path.exists():
+                continue
+            selected_duration = self._media_duration_seconds(downloaded_path)
+            downloaded.append((downloaded_path, selected_duration, str(candidate.get("title", "")).strip()))
+            if selected_duration and selected_duration >= target_seconds:
+                break
+
+        if not downloaded:
+            return None
+
+        safe_query = str(topic_query or "Topic").strip().replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+        if len(downloaded) == 1:
+            if min_external_segments > 1:
+                return None
+            source_path, selected_duration, _title = downloaded[0]
+            vf = (
+                "scale=1280:720:force_original_aspect_ratio=increase,"
+                "crop=1280:720,"
+                "eq=saturation=1.08:contrast=1.04:brightness=-0.01,"
+                "drawbox=x=0:y=0:w=iw:h=80:color=black@0.32:t=fill,"
+                f"drawtext=fontfile='C\\:/Windows/Fonts/arial.ttf':text='{safe_query}':fontcolor=white:fontsize=34:x=42:y=20,"
+                "format=yuv420p"
+            )
+
+            start_offset = 0.0
+            if selected_duration and selected_duration > (target_seconds + 12):
+                start_offset = min(18.0, max(0.0, (selected_duration - target_seconds) * 0.15))
+
+            command = [
+                ffmpeg,
+                "-y",
+                "-ss", f"{start_offset:.2f}",
+                "-t", str(target_seconds),
+                "-i", str(source_path),
+                "-vf", vf,
+                "-r", "24",
+                "-c:v", "libx264",
+                "-preset", "medium",
+                "-crf", "21",
+                "-b:v", "5200k",
+                "-pix_fmt", "yuv420p",
+                str(output_path),
+            ]
+            result = subprocess.run(command, capture_output=True, text=True)
+            if result.returncode != 0 or not output_path.exists() or output_path.stat().st_size == 0:
+                return None
+
+            self._write_render_manifest(
+                output_path=output_path,
+                slides_count=1,
+                motion_template="single-topic-stock",
+                subtitles_enabled=False,
+                narration_enabled=False,
+                external_video_count=1,
+                procedural_broll_count=0,
+                broll_mode="aggressive",
+                montage_level="single",
+                montage_segments_total=1,
+            )
+            return output_path
+
+        segment_count = min(4, len(downloaded))
+        if segment_count < min_external_segments:
+            return None
+        segment_duration = max(28.0, target_seconds / float(segment_count))
+        segment_paths: list[Path] = []
+        for index, (source_path, selected_duration, title) in enumerate(downloaded[:segment_count], start=1):
+            segment_path = self.videos_dir / f"full_topic_seg_{index:02d}.mp4"
+            clip_title = title or safe_query
+            clip_bullets = [
+                f"Part {index} of {segment_count}",
+                f"Topic focus: {safe_query}",
+            ]
+            fontfile = "C:/Windows/Fonts/arial.ttf" if os.path.exists("C:/Windows/Fonts/arial.ttf") else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+            vf = self._cinematic_video_filter(segment_duration, clip_title[:58], clip_bullets, fontfile)
+            command = [ffmpeg, "-y"]
+            if selected_duration and selected_duration > (segment_duration + 0.8):
+                max_start = max(selected_duration - segment_duration - 0.3, 0.0)
+                offset = min(max_start, (index - 1) * min(9.0, max_start or 0.0))
+                command.extend(["-ss", f"{offset:.2f}", "-t", f"{segment_duration:.2f}", "-i", str(source_path)])
+            else:
+                command.extend(["-stream_loop", "-1", "-t", f"{segment_duration:.2f}", "-i", str(source_path)])
+            command.extend([
+                "-vf", vf,
+                "-r", "24",
+                "-c:v", "libx264",
+                "-preset", "medium",
+                "-crf", "21",
+                "-b:v", "5200k",
+                "-pix_fmt", "yuv420p",
+                str(segment_path),
+            ])
+            result = subprocess.run(command, capture_output=True, text=True)
+            if result.returncode != 0 or not segment_path.exists() or segment_path.stat().st_size == 0:
+                continue
+            segment_paths.append(segment_path)
+
+        if not segment_paths:
+            return None
+
+        concat_file = self.temp_dir / "full_topic_concat_list.txt"
+        concat_lines = []
+        for path in segment_paths:
+            safe_path = str(path).replace("\\", "/")
+            concat_lines.append(f"file '{safe_path}'")
+        concat_file.write_text("\n".join(concat_lines), encoding="utf-8")
+        concat_command = [
+            ffmpeg,
+            "-y",
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            str(concat_file),
+            "-c",
+            "copy",
+            str(output_path),
+        ]
+        concat_result = subprocess.run(concat_command, capture_output=True, text=True)
+        if concat_result.returncode != 0 or not output_path.exists() or output_path.stat().st_size == 0:
+            return None
+
+        self._write_render_manifest(
+            output_path=output_path,
+            slides_count=1,
+            motion_template="full-topic-stock",
+            subtitles_enabled=False,
+            narration_enabled=False,
+            external_video_count=len(segment_paths),
+            procedural_broll_count=0,
+            broll_mode="aggressive",
+            montage_level="full-topic",
+            montage_segments_total=len(segment_paths),
+        )
+        return output_path
 
     def render_title_slide(self, title: str, subtitle: str, accent_color: tuple[int, int, int]) -> Path:
         """
@@ -825,16 +1167,22 @@ class HighQualityVideoGenerator:
                 duration = self._slide_duration(bullets, duration_per_frame)
             durations.append(duration)
             segment_target = max(self._montage_segment_target(montage_level), min_external_segments or 0)
-            candidate_paths: list[Path] = []
+            all_candidate_paths: list[Path] = []
             for query in self._video_query_variants(slide_query, broll_mode):
                 candidate = self._fetch_video_for_topic(query)
                 if not candidate or not candidate.exists():
                     continue
-                if candidate in candidate_paths:
+                if candidate in all_candidate_paths:
                     continue
-                candidate_paths.append(candidate)
-                if len(candidate_paths) >= segment_target:
+                all_candidate_paths.append(candidate)
+                if len(all_candidate_paths) >= max(segment_target + 2, 4):
                     break
+
+            # Prefer clips that have been used less to avoid repetitive video loops.
+            candidate_paths = sorted(
+                all_candidate_paths,
+                key=lambda p: self._video_usage_count.get(str(p), 0),
+            )[:segment_target]
 
             if candidate_paths:
                 slide_bullets = bullets if bullets else ["Key concept", "Exam-focused explanation"]
@@ -843,12 +1191,17 @@ class HighQualityVideoGenerator:
                 for seg_index, source_path in enumerate(candidate_paths):
                     segment_path = clips_dir / f"clip_{index + 1:03d}_seg_{seg_index + 1:02d}.mp4"
                     vf = self._cinematic_video_filter(segment_duration, slide_title or "Concept Focus", slide_bullets, fontfile)
-                    segment_command = [
-                        ffmpeg,
-                        "-y",
-                        "-stream_loop", "-1",
-                        "-t", f"{segment_duration:.2f}",
-                        "-i", str(source_path),
+                    media_duration = self._media_duration_seconds(source_path)
+                    usage_count = self._video_usage_count.get(str(source_path), 0)
+                    segment_command = [ffmpeg, "-y"]
+                    if media_duration and media_duration > (segment_duration + 0.8):
+                        max_start = max(media_duration - segment_duration - 0.3, 0.0)
+                        step = min(1.4, max_start)
+                        offset = min(max_start, usage_count * step)
+                        segment_command.extend(["-ss", f"{offset:.2f}", "-t", f"{segment_duration:.2f}", "-i", str(source_path)])
+                    else:
+                        segment_command.extend(["-stream_loop", "-1", "-t", f"{segment_duration:.2f}", "-i", str(source_path)])
+                    segment_command.extend([
                         "-vf", vf,
                         "-r", str(fps),
                         "-c:v", "libx264",
@@ -857,9 +1210,10 @@ class HighQualityVideoGenerator:
                         "-b:v", "5200k",
                         "-pix_fmt", "yuv420p",
                         str(segment_path),
-                    ]
+                    ])
                     segment_result = subprocess.run(segment_command, capture_output=True, text=True)
                     if segment_result.returncode == 0 and segment_path.exists() and segment_path.stat().st_size > 0:
+                        self._video_usage_count[str(source_path)] = usage_count + 1
                         segment_paths.append(segment_path)
 
                 if segment_paths:

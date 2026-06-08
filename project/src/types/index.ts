@@ -2,6 +2,7 @@ export interface UserData {
   name: string;
   class: number;
   subjects: string[];
+  subscriptionTier?: 'free' | 'pro' | 'pro_max';
   school?: string;
   examBoard?: string;
   preferredLanguage?: string;
@@ -20,6 +21,8 @@ export interface UserData {
   goal?: string;
   studyHours?: string;
   focusAreas?: string;
+  teacherPersonality?: 'Strict' | 'Kind' | 'Lenient' | 'Enthusiastic';
+  focusChapters?: Record<string, string[]>; // subject -> chapters
 }
 
 export interface Message {

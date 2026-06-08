@@ -299,5 +299,76 @@ export const NCERT_CHAPTERS: Record<string, Record<string, string[]>> = {
       "On Killing a Tree (Poem)",
       "A Slumber Did My Spirit Seal (Poem)"
     ]
+  },
+  "8": {
+    "Science": [
+      "Crop Production and Management",
+      "Microorganisms: Friend and Foe",
+      "Coal and Petroleum",
+      "Combustion and Flame",
+      "Conservation of Plants and Animals",
+      "Reproduction in Animals",
+      "Reaching the Age of Adolescence",
+      "Force and Pressure",
+      "Friction",
+      "Sound",
+      "Chemical Effects of Electric Current",
+      "Some Natural Phenomena",
+      "Light"
+    ],
+    "Maths": [
+      "Rational Numbers",
+      "Linear Equations in One Variable",
+      "Understanding Quadrilaterals",
+      "Data Handling",
+      "Squares and Square Roots",
+      "Cubes and Cube Roots",
+      "Comparing Quantities",
+      "Algebraic Expressions and Identities",
+      "Mensuration",
+      "Exponents and Powers",
+      "Direct and Inverse Proportions",
+      "Factorisation",
+      "Introduction to Graphs"
+    ],
+    "Social Science": [
+      "How, When and Where",
+      "From Trade to Territory",
+      "Ruling the Countryside",
+      "Tribals, Dikus and the Vision of a Golden Age",
+      "When People Rebel",
+      "Civilising the \"Native\", Educating the Nation",
+      "Women, Caste and Reform",
+      "The Making of the National Movement: 1870s-1947",
+      "Resources",
+      "Land, Soil, Water, Natural Vegetation and Wildlife Resources",
+      "Agriculture",
+      "Industries",
+      "Human Resources",
+      "The Indian Constitution",
+      "Understanding Secularism",
+      "Parliament and the Making of Laws",
+      "Judiciary",
+      "Understanding Our Criminal Justice System",
+      "Marginalisation Confronted",
+      "Public Facilities",
+      "Law and Social Justice"
+    ],
+    "English": [
+      "The Best Christmas Present in the World",
+      "The Tsunami",
+      "Glimpses of the Past",
+      "Bepin Choudhury's Lapse of Memory",
+      "The Summit Within",
+      "This is Jody's Fawn",
+      "A Short Monsoon Diary",
+      "The Great Stone Face",
+      "The Ant and the Cricket (Poem)",
+      "Geography Lesson (Poem)",
+      "Macavity: The Mystery Cat (Poem)",
+      "The Last Bargain (Poem)",
+      "The School Boy (Poem)",
+      "On the Grasshopper and Cricket (Poem)"
+    ]
   }
 };

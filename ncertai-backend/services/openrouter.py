@@ -19,10 +19,20 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 # fallback → free image-capable model
 MODELS = {
     "fast":     "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-    "vision":   "qwen/qwen3.6-plus:free",
+    "vision":   "google/gemma-4-31b-it:free",
     "smart":    "openai/gpt-oss-120b:free",
-    "fallback": "qwen/qwen3.6-plus:free",
+    "fallback": "openrouter/free",
 }
+
+FREE_FALLBACK_MODELS = [
+    "openrouter/free",
+    "meta-llama/llama-3.3-70b-instruct:free",
+    "google/gemma-4-31b-it:free",
+    "meta-llama/llama-3.2-3b-instruct:free",
+    "qwen/qwen3-coder:free",
+    "openai/gpt-oss-120b:free",
+    "nousresearch/hermes-3-llama-3.1-405b:free",
+]
 
 # ── Retry Configuration ────────────────────────────────────────────────────────
 MAX_RETRIES = 3  # Total attempts per model
@@ -113,45 +123,43 @@ async def _call_model(messages: list, model: str, attempt: int = 1) -> tuple[str
 
 async def ask_openrouter(messages: list, task_type: str = "fast") -> str:
     """
-    Route to the right model with automatic 3-step fallback chain + retry logic.
+    Route to the right model with automatic fallback list + retry logic.
     Each model automatically retries up to 3 times with exponential backoff before fallback.
-
-    task_type:
-        "fast"   → Mistral (default — MCQs, 1-mark, definitions)
-        "vision" → Qwen (file uploads, images, handwritten notes)
-        "smart"  → GPT-OSS (summaries, 5-mark, complex explanations)
     """
-    # Step 1 — pick primary model and retry with exponential backoff
     primary = MODELS.get(task_type, MODELS["fast"])
     result, attempts = await _call_model(messages, primary)
     if result:
         logger.info(f"✅ PRIMARY MODEL SUCCESS [{primary}] after {attempts} attempt(s)")
         return result
     
-    logger.warning(f"⚠️ Primary model failed after {attempts} attempts → trying fallback #1")
+    logger.warning(f"⚠️ Primary model failed after {attempts} attempts → trying fallback chain")
 
-    # Step 2 — fall back to Qwen (good all-rounder, handles vision too)
-    if primary != MODELS["fallback"]:
-        result, attempts = await _call_model(messages, MODELS["fallback"])
+    # Loop through the list of fallbacks
+    for model in FREE_FALLBACK_MODELS:
+        if model == primary:
+            continue
+        logger.info(f"🔄 Trying fallback model: {model}")
+        result, attempts = await _call_model(messages, model)
         if result:
-            logger.info(f"✅ FALLBACK #1 SUCCESS [{MODELS['fallback']}] after {attempts} attempt(s)")
+            logger.info(f"✅ FALLBACK MODEL SUCCESS [{model}] after {attempts} attempt(s)")
             return result
-        logger.warning(f"⚠️ Fallback #1 failed after {attempts} attempts → trying fallback #2")
 
-    # Step 3 — last resort: Mistral (lightest, most likely to respond under load)
-    if primary != MODELS["fast"]:
-        result, attempts = await _call_model(messages, MODELS["fast"])
-        if result:
-            logger.info(f"✅ FALLBACK #2 SUCCESS [{MODELS['fast']}] after {attempts} attempt(s)")
-            return result
-        logger.warning(f"⚠️ Fallback #2 failed after {attempts} attempts → returning teacher fallback")
+    # All models failed after retries. Return a deterministic tutor answer
+    logger.error("🔥 ALL MODELS EXHAUSTED after retries. Returning deterministic tutor response.")
+    user_prompt = ""
+    for msg in reversed(messages or []):
+        if str(msg.get("role", "")).lower() == "user":
+            user_prompt = str(msg.get("content") or "").strip()
+            break
+    if not user_prompt:
+        user_prompt = "your chapter question"
 
-    # All models failed after retries
-    logger.error("🔥 ALL MODELS EXHAUSTED after retries. Returning teacher fallback message.")
     return (
-        "💡 **Clarity Tutor**: Our AI engines are taking a 30-second chai break ☕. "
-        "Please retry — your CBSE prep is too important to wait long!\n\n"
-        "⏳ *Tip: If this keeps happening, try breaking your question into smaller parts.*"
+        f"Let's solve this step by step for {user_prompt}.\n\n"
+        "1. Core idea: Identify the NCERT definition or rule first.\n"
+        "2. Build understanding: Explain the concept in simple terms with one textbook example.\n"
+        "3. Board answer format: Write in points using keywords, then add a final conclusion line.\n\n"
+        "Now reply with your current understanding in 2-3 lines, and I will correct it like a board examiner."
     )
 
 
@@ -248,41 +256,38 @@ async def ask_openrouter_stream(
     Each model gets retried before fallback. Streams tokens as they arrive.
     """
     primary = MODELS.get(task_type, MODELS["fast"])
-    tried_primary = False
-    tried_fallback1 = False
+    tried_any = False
 
     # Step 1 — try primary model
     logger.info(f"🔄 Streaming from primary model [{primary}]")
     async for chunk in _stream_model(messages, primary):
-        tried_primary = True
+        tried_any = True
         yield chunk
 
-    if tried_primary:
+    if tried_any:
         return  # Successfully streamed from primary
 
-    # Step 2 — fall back to Qwen
-    logger.warning(f"Primary model failed → streaming from fallback #1 [{MODELS['fallback']}]")
-    if primary != MODELS["fallback"]:
-        async for chunk in _stream_model(messages, MODELS["fallback"]):
-            tried_fallback1 = True
-            yield chunk
+    logger.warning("Primary model failed to stream → trying fallback chain")
 
-    if tried_fallback1:
-        return
-
-    # Step 3 — last resort: Mistral
-    logger.warning(f"Fallback #1 failed → streaming from fallback #2 [{MODELS['fast']}]")
-    if primary != MODELS["fast"]:
-        async for chunk in _stream_model(messages, MODELS["fast"]):
+    # Step 2 — fall back loop
+    for model in FREE_FALLBACK_MODELS:
+        if model == primary:
+            continue
+        logger.info(f"🔄 Streaming from fallback model [{model}]")
+        async for chunk in _stream_model(messages, model):
+            tried_any = True
             yield chunk
+        if tried_any:
             return
 
     # All streaming attempts exhausted
-    logger.error("🔥 All streaming attempts exhausted")
-    yield (
-        "💡 **Clarity Tutor**: Real-time streaming is temporarily unavailable. "
-        "Please retry in a moment — our AI servers are refreshing!"
-    )
+    logger.error("🔥 All streaming attempts exhausted, switching to non-stream fallback")
+    fallback_text = await ask_openrouter(messages, task_type=task_type)
+    if not fallback_text:
+        fallback_text = "I could not stream just now, but here is the best available answer."
+    chunk_size = 280
+    for i in range(0, len(fallback_text), chunk_size):
+        yield fallback_text[i:i + chunk_size]
 
 
 def detect_task_type(question: str, marks: int = 0) -> str:

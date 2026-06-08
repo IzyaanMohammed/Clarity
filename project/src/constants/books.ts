@@ -35,4 +35,10 @@ export const NCERT_BOOKS: NcertBook[] = [
     { class: '9', subject: 'Maths', title: 'Mathematics', url: 'https://ncert.nic.in/textbook.php?iemh1=0-12' },
     { class: '9', subject: 'Social Science', title: 'Democratic Politics', url: 'https://ncert.nic.in/textbook.php?ieps1=0-5' },
     { class: '9', subject: 'English', title: 'Beehive', url: 'https://ncert.nic.in/textbook.php?iebe1=0-9' },
+
+    // Class 8
+    { class: '8', subject: 'Science', title: 'Science', url: 'https://ncert.nic.in/textbook.php?hesc1=0-13' },
+    { class: '8', subject: 'Maths', title: 'Mathematics', url: 'https://ncert.nic.in/textbook.php?hemh1=0-13' },
+    { class: '8', subject: 'Social Science', title: 'Our Pasts - III', url: 'https://ncert.nic.in/textbook.php?hesp1=0-8' },
+    { class: '8', subject: 'English', title: 'Honeydew', url: 'https://ncert.nic.in/textbook.php?hehd1=0-8' },
 ];

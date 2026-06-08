@@ -1,5 +1,6 @@
 from datetime import date
 import os
+from services.database import get_user_profile
 
 # In-memory storage for MVP
 # Structure:
@@ -22,29 +23,37 @@ LIMITS = {
         "question": 120,
         "upload": 30,
         "summary": 80,
-        "test": 30,
         "practice": 120,
+    },
+    "pro_max": {
+        "question": 999999,
+        "upload": 999999,
+        "summary": 999999,
+        "practice": 999999,
     },
     "pro": {
         "question": 999999,
         "upload": 999999,
         "summary": 999999,
-        "test": 999999,
         "practice": 999999,
     }
 }
 
 
 def _is_rate_limit_enabled() -> bool:
-    # Reliability-first default for local/dev. Set CLARITY_ENFORCE_RATE_LIMITS=1 to enforce.
-    return os.getenv("CLARITY_ENFORCE_RATE_LIMITS", "0").strip().lower() in {"1", "true", "yes", "on"}
+    value = os.getenv("CLARITY_ENFORCE_RATE_LIMITS", "").strip().lower()
+    if value in {"1", "true", "yes", "on"}:
+        return True
+    if value in {"0", "false", "no", "off"}:
+        return False
+    return os.getenv("CLARITY_ENV", "development").strip().lower() == "production"
 
 def get_user_tier(user_id: str) -> str:
-    # In a real app, this would check a database
-    # For now, we'll check if the user_id contains "PRO" (mocking)
-    if user_id.endswith("_PRO"):
-        return "pro"
-    return usage_data.get(user_id, {}).get("tier", "free")
+    profile = get_user_profile(user_id) or {}
+    tier = str(profile.get("subscription_tier") or "free").strip().lower()
+    if tier not in LIMITS:
+        return "free"
+    return tier
 
 def check_rate_limit(user_id: str, action: str) -> bool:
     if not _is_rate_limit_enabled():
@@ -61,7 +70,6 @@ def check_rate_limit(user_id: str, action: str) -> bool:
             "question": 0,
             "upload": 0,
             "summary": 0,
-            "test": 0,
             "practice": 0,
             "tier": tier,
         }
@@ -76,7 +84,6 @@ def check_rate_limit(user_id: str, action: str) -> bool:
     if usage_data[user_id].get("week") != week_key:
         usage_data[user_id]["week"] = week_key
         usage_data[user_id]["summary"] = 0
-        usage_data[user_id]["test"] = 0
         
     limit = LIMITS[tier].get(action, 5)
     return usage_data[user_id].get(action, 0) < limit
@@ -96,7 +103,6 @@ def increment_usage(user_id: str, action: str):
             "question": 0,
             "upload": 0,
             "summary": 0,
-            "test": 0,
             "practice": 0,
             "tier": tier,
         }
@@ -110,6 +116,5 @@ def increment_usage(user_id: str, action: str):
     if usage_data[user_id].get("week") != week_key:
         usage_data[user_id]["week"] = week_key
         usage_data[user_id]["summary"] = 0
-        usage_data[user_id]["test"] = 0
 
     usage_data[user_id][action] = usage_data[user_id].get(action, 0) + 1

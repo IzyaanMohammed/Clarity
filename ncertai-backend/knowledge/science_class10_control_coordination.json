@@ -1,0 +1,37 @@
+{
+  "subject": "Science",
+  "class": "10",
+  "chapter": "Control and Coordination",
+  "concepts": [
+    {
+      "title": "Neuron and Nerve Impulse",
+      "ncert_text": "Nervous tissue is made up of an organized network of nerve cells or neurons, and is specialized for conducting information via electrical impulses from one part of the body to another. Information from our environment is detected by the specialized tips of some nerve cells (receptors). This information triggers a chemical reaction that creates an electrical impulse. This impulse travels from the dendrite to the cell body, and then along the axon to its end. At the end of the axon, the electrical impulse sets off the release of some chemicals. These chemicals cross the gap, or synapse, and start a similar electrical impulse in a dendrite of the next neuron.",
+      "keywords": ["neuron", "dendrite", "axon", "synapse", "impulse", "receptor"]
+    },
+    {
+      "title": "Reflex Action and Reflex Arc",
+      "ncert_text": "Reflex is a word we use very commonly when we talk about some sudden action in response to something in the environment. Reflex actions are involuntary and nearly instantaneous movements in response to a stimulus. The process of detecting the signal or the input and responding to it by an output action might be completed quickly. Such a connection is commonly called a reflex arc. Reflex arcs are formed in the spinal cord itself, although the information input also goes on to reach the brain. This allows for a much faster response than thinking.",
+      "keywords": ["reflex", "spinal cord", "stimulus", "reflex arc", "involuntary"]
+    },
+    {
+      "title": "Human Brain Structure",
+      "ncert_text": "The brain is the main coordinating centre of the body. The brain and spinal cord constitute the central nervous system. The brain has three such major parts or regions, namely the fore-brain, mid-brain and hind-brain. The fore-brain is the main thinking part of the brain. It has regions which receive sensory impulses from various receptors. Separate areas of the fore-brain are specialised for hearing, smell, sight and so on. The hind-brain consists of the pons, medulla and cerebellum. Involuntary actions are controlled by the mid-brain and hind-brain. Cerebellum is responsible for precision of voluntary actions and maintaining the posture and balance of the body.",
+      "keywords": ["forebrain", "midbrain", "hindbrain", "cerebellum", "medulla", "cerebrum", "CNS"]
+    },
+    {
+      "title": "Control and Coordination in Plants",
+      "ncert_text": "Plants have neither a nervous system nor muscles. They use chemical means for transmission of information from cell to cell. Plant cells change shape by changing the amount of water in them, resulting in swelling or shrinking, and therefore in changing shapes (e.g. sensitive plant). Plants also show directional growth in response to stimuli like light (phototropism), gravity (geotropism), water (hydrotropism) and chemicals (chemotropism). These movements are called tropic movements. For example, the shoots respond by bending towards light while roots respond by bending away from it.",
+      "keywords": ["phototropism", "geotropism", "hydrotropism", "chemotropism", "tropic", "nastic"]
+    },
+    {
+      "title": "Plant Hormones (Phytohormones)",
+      "ncert_text": "Chemical compounds which help to coordinate growth, development and responses to the environment are called plant hormones. Auxin, synthesized at the shoot tip, helps the cells to grow longer. When light is coming from one side of the plant, auxin diffuses towards the shady side of the shoot. This concentration of auxin stimulates the cells to grow longer on the side of the shoot which is away from light. Thus, the plant appears to bend towards light. Gibberellins help in the growth of the stem. Cytokinins promote cell division. Abscisic acid is one example of a hormone which inhibits growth (e.g. wilting of leaves).",
+      "keywords": ["auxin", "gibberellin", "cytokinin", "abscisic acid", "growth", "hormone"]
+    },
+    {
+      "title": "Hormones in Animals (Endocrine System)",
+      "ncert_text": "Endocrine glands secrete chemical messengers called hormones directly into the blood. Adrenaline is secreted directly into the blood and carried to different parts of the body. It speeds up heartbeat, increases breathing rate, and diverts blood to skeletal muscles (fight or flight response). Thyroxin, secreted by the thyroid gland, regulates carbohydrate, protein and fat metabolism. Growth hormone, secreted by the pituitary, regulates growth and development. Insulin, produced by the pancreas, helps in regulating blood sugar levels. A feedback mechanism regulates the timing and amount of hormone released.",
+      "keywords": ["endocrine", "hormone", "adrenaline", "thyroxin", "insulin", "pituitary", "feedback"]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "class_num": "10",
+  "subject": "Mathematics",
+  "chapter": "Quadratic Equations",
+  "concepts": [
+    {
+      "id": "quadratic_std_form",
+      "title": "Standard Form",
+      "ncert_text": "A quadratic equation in variable x is an equation of form ax^2 + bx + c = 0, where a, b, c are real numbers and a \u2260 0.",
+      "keywords": ["standard form", "quadratic equation", "variable"]
+    },
+    {
+      "id": "roots_factorization",
+      "title": "Roots by Factorisation",
+      "ncert_text": "Finding roots by splitting the middle term. If we can factorise ax^2 + bx + c = 0 into two linear factors, the roots can be found by setting each factor to zero.",
+      "keywords": ["factorisation", "splitting middle term", "linear factors"]
+    },
+    {
+      "id": "quadratic_formula",
+      "title": "Quadratic Formula",
+      "ncert_text": "The roots of ax^2 + bx + c = 0 are given by x = [-b \u00b1 \u221a(b^2 - 4ac)] / 2a, provided b^2 - 4ac \u2265 0.",
+      "keywords": ["quadratic formula", "discriminant", "roots"]
+    },
+    {
+      "id": "nature_of_roots",
+      "title": "Nature of Roots",
+      "ncert_text": "Depends on discriminant D = b^2 - 4ac. (i) D > 0: Two distinct real roots. (ii) D = 0: Two equal real roots. (iii) D < 0: No real roots.",
+      "keywords": ["nature of roots", "discriminant", "distinct roots", "equal roots", "no real roots"]
+    }
+  ]
+}

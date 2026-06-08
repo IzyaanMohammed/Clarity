@@ -1,0 +1,37 @@
+{
+  "class_num": "10",
+  "subject": "Science",
+  "chapter": "Light \u2013 Reflection and Refraction",
+  "concepts": [
+    {
+      "id": "reflection_laws",
+      "title": "Laws of Reflection",
+      "ncert_text": "(i) The angle of incidence is equal to the angle of reflection. (ii) The incident ray, the normal to the mirror at the point of incidence and the reflected ray, all lie in the same plane.",
+      "keywords": ["angle of incidence", "angle of reflection", "normal", "same plane"]
+    },
+    {
+      "id": "mirror_formula",
+      "title": "Mirror Formula",
+      "ncert_text": "1/v + 1/u = 1/f. Here u is object distance, v is image distance and f is focal length. The magnification m = -v/u = h'/h.",
+      "keywords": ["mirror formula", "focal length", "magnification", "object distance"]
+    },
+    {
+      "id": "refractive_index",
+      "title": "Refractive Index",
+      "ncert_text": "The refractive index of medium 2 with respect to medium 1 (n21) = speed of light in medium 1 / speed of light in medium 2. Absolute refractive index n = c/v.",
+      "keywords": ["refractive index", "speed of light", "absolute refractive index"]
+    },
+    {
+      "id": "snells_law",
+      "title": "Snell's Law",
+      "ncert_text": "The ratio of sine of angle of incidence to the sine of angle of refraction is a constant, for the light of a given colour and for the given pair of media. sin i / sin r = constant.",
+      "keywords": ["Snell's law", "refraction", "constant", "sine"]
+    },
+    {
+      "id": "lens_formula",
+      "title": "Lens Formula",
+      "ncert_text": "1/v - 1/u = 1/f. Magnification m = v/u = h'/h. Power of lens P = 1/f (in metres). Unit of power is Dioptre (D).",
+      "keywords": ["lens formula", "power of lens", "dioptre", "focal length"]
+    }
+  ]
+}

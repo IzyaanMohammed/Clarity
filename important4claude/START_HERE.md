@@ -1,14 +1,17 @@
-# Clarity - Start Here (AI Context Pack)
+# Clarity - Start Here (Standalone AI Handoff)
 
-This folder is a minimal high-signal pack for an AI agent (Claude/Copilot/etc.) to understand the project quickly.
+This folder is intentionally designed so you can share only this folder with another AI and it can still understand the system.
+It now contains architecture + code references + API contracts.
 
 ## Running Services (current local)
 - Frontend: http://localhost:5173
 - Backend: http://localhost:8010
 
-## Read Order (2 files)
-1. `PROJECT_BRAIN.md` - full system understanding (product, architecture, API map, data flow, known issues)
-2. `KEY_FILES_MINIMAL.md` - exact file paths to inspect in priority order
+## Read Order (4 files)
+1. `PROJECT_BRAIN.md` - product + architecture + risks + behavior
+2. `BACKEND_REFERENCE.py` - condensed backend reference code
+3. `FRONTEND_REFERENCE.tsx` - condensed frontend reference code
+4. `API_CONTRACTS.json` - endpoint/request/response schema map
 
 ## Quick Commands
 - Backend:
@@ -20,4 +23,4 @@ This folder is a minimal high-signal pack for an AI agent (Claude/Copilot/etc.) 
   - `py -3 -m smoke_endpoints`
 
 ## Why this pack exists
-The repository has many files and some legacy/staging artifacts. This pack points to the minimum set needed to reason about core behavior without losing critical context.
+The repository is large and has mixed maturity. This pack keeps the file count low while preserving enough code and system detail for another AI to reason and implement correctly without full repo access.

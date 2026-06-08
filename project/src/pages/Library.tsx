@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Book, ExternalLink, Search, Filter, RefreshCw, FileText } from 'lucide-react';
+import { Book, Search, Filter, RefreshCw, FileText, X, Sparkles, BookOpen, ArrowLeft } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { getUser } from '../utils/storage';
 import { NCERT_CHAPTERS } from '../constants/ncert';
-import { buildNcertChapterUrl, getStudyResources } from '../utils/studyResources';
+import { getStudyResources } from '../utils/studyResources';
 import {
   getPastPapers,
   getPastPaperQuestions,
   getWorksheets,
+  getChapterText,
+  askQuestionStream,
   type PastPaperItem,
   type WorksheetItem,
 } from '../api';
@@ -39,10 +42,6 @@ export const Library = () => {
     }
     setSelectedChapter(resources.chapters[0] || '');
   }, [resources.chapters, referencedChapter]);
-
-  const filteredBooks = resources.textbooks.filter(book =>
-    (book.subject.toLowerCase().includes(searchTerm.toLowerCase()) || book.title.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
 
   const filteredChapters = resources.chapters.filter((chapter) =>
     chapter.toLowerCase().includes(chapterSearch.toLowerCase())
@@ -85,6 +84,22 @@ export const Library = () => {
 
     return Array.from(dedup.values());
   }, [worksheets, templateWorksheets]);
+
+  const filteredWorksheets = useMemo(() => {
+    if (!searchTerm) return mergedWorksheets;
+    const term = searchTerm.toLowerCase();
+    return mergedWorksheets.filter(w =>
+      w.title.toLowerCase().includes(term) || w.chapter.toLowerCase().includes(term)
+    );
+  }, [mergedWorksheets, searchTerm]);
+
+  const filteredPastPapers = useMemo(() => {
+    if (!searchTerm) return pastPapers;
+    const term = searchTerm.toLowerCase();
+    return pastPapers.filter(p =>
+      p.chapter.toLowerCase().includes(term) || p.board.toLowerCase().includes(term)
+    );
+  }, [pastPapers, searchTerm]);
 
   const difficultyStyles: Record<string, string> = {
     Easy: 'bg-emerald-100 text-emerald-700',
@@ -133,14 +148,15 @@ export const Library = () => {
     loadWorksheets();
   }, [classFilter, resources.subject]);
 
+
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
           <div>
-            <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">NCERT Digital Library</h1>
-            <p className="text-slate-500 font-medium">Instant access to official textbooks for Class {classFilter}.</p>
+            <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">NCERT Worksheets & Past Papers</h1>
+            <p className="text-slate-500 font-medium">Access practice worksheets, mock sets, and authentic board papers for Class {classFilter}.</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
@@ -167,7 +183,7 @@ export const Library = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1D9E75] transition-colors" size={20} />
               <input
                 type="text"
-                placeholder="Search textbooks..."
+                placeholder="Search worksheets or papers..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12 pr-6 py-3.5 w-full md:w-72 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-4 focus:ring-[#1D9E75]/10 outline-none transition-all font-bold"
@@ -193,64 +209,9 @@ export const Library = () => {
 
         <Card className="p-5 mb-8 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-slate-800 dark:to-slate-900 border border-sky-100 dark:border-slate-700 rounded-3xl">
           <p className="text-sm font-bold text-slate-700 dark:text-slate-200 text-center">
-            Select Class, then Subject, then open a chapter or worksheet. Everything below auto-updates to match your selection.
+            Select Class, then Subject, then generate practice worksheets or solve authentic CBSE past papers.
           </p>
         </Card>
-
-        {filteredBooks.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredBooks.map((book, index) => (
-              <Card key={index} className="p-0 overflow-hidden bg-white dark:bg-[#0f172a] border-none shadow-xl shadow-slate-200/50 dark:shadow-none hover:scale-[1.03] transition-all rounded-[32px] group">
-                <div className="h-48 bg-gradient-to-br from-[#1D9E75]/5 to-[#1D9E75]/20 flex items-center justify-center relative overflow-hidden">
-                  <Book size={64} className="text-[#1D9E75] relative z-10" />
-                  <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,transparent)] dark:bg-grid-slate-700/25" />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-black rounded-lg uppercase tracking-widest">
-                      {book.subject}
-                    </span>
-                  </div>
-                  <h3 className="font-black text-xl text-slate-900 dark:text-white mb-6 line-clamp-1">{book.title}</h3>
-                  <Button
-                    className="w-full bg-[#1D9E75] hover:bg-[#16805d] rounded-2xl font-bold py-6 group"
-                    onClick={() => {
-                      const chapterIndex = Math.max(1, resources.chapters.findIndex((c) => c === selectedChapter) + 1);
-                      const directUrl = buildNcertChapterUrl(book.url, chapterIndex);
-                      window.open(directUrl, '_blank');
-                    }}
-                  >
-                    <ExternalLink size={18} className="mr-2 group-hover:rotate-12 transition-transform" />
-                    Open Textbook
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full mt-2 rounded-2xl font-bold"
-                    onClick={() => {
-                      const chapter = resources.chapters[0] || NCERT_CHAPTERS[book.class]?.[book.subject]?.[0] || '';
-                      navigate('/ask', { state: { subject: book.subject, chapter } });
-                    }}
-                  >
-                    Ask AI About This Chapter
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="w-full mt-2 rounded-2xl font-bold"
-                    onClick={() => navigate('/textbook-hub', { state: { selectedBook: book } })}
-                  >
-                    Open In Textbook Hub
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20 bg-white dark:bg-[#0f172a] rounded-[40px] shadow-sm border-2 border-dashed border-slate-100 dark:border-slate-800">
-            <Filter size={48} className="mx-auto text-slate-200 mb-4" />
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">No textbooks found</h3>
-            <p className="text-slate-500 mt-1">Try a different search or class filter.</p>
-          </div>
-        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
           <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
@@ -298,9 +259,9 @@ export const Library = () => {
               {loadingWorksheets && (
                 <p className="text-sm text-slate-500">Loading internet worksheets...</p>
               )}
-              {mergedWorksheets.length === 0 ? (
+              {filteredWorksheets.length === 0 ? (
                 <p className="text-sm text-slate-500">No worksheet dataset found for this class and subject.</p>
-              ) : mergedWorksheets.map((worksheet) => (
+              ) : filteredWorksheets.map((worksheet) => (
                 <div
                   key={worksheet.id}
                   className="p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50"
@@ -360,11 +321,11 @@ export const Library = () => {
 
           {loadingPapers ? (
             <p className="text-sm text-slate-500">Loading past papers...</p>
-          ) : pastPapers.length === 0 ? (
+          ) : filteredPastPapers.length === 0 ? (
             <p className="text-sm text-slate-500">No dataset papers found for this class and subject yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {pastPapers.map((paper) => (
+              {filteredPastPapers.map((paper) => (
                 <div
                   key={paper.id}
                   className="p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50"
@@ -425,34 +386,6 @@ export const Library = () => {
             </div>
           )}
         </Card>
-
-        {/* Pro Call to Action */}
-        <div className="mt-16 p-10 bg-slate-900 rounded-[40px] text-center relative overflow-hidden shadow-2xl">
-          <div className="relative z-10">
-            <h2 className="text-3xl font-black text-white mb-4">Unlock Smart Highlights</h2>
-            <p className="text-slate-400 font-medium mb-8 max-w-2xl mx-auto">
-              Upgrade to Clarity Pro to highlight any paragraph in these books and get instant AI-generated summaries,
-              predicted board questions, and formula sheets.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button
-                className="bg-white text-slate-900 hover:bg-slate-100 font-black px-10 py-4 rounded-2xl shadow-lg transition-transform active:scale-95"
-                onClick={() => navigate('/settings')}
-              >
-                Go Pro Now
-              </Button>
-              <Button
-                variant="outline"
-                className="border-slate-700 text-white hover:bg-white/5 font-black px-10 py-4 rounded-2xl"
-                onClick={() => navigate('/settings')}
-              >
-                Compare Plans
-              </Button>
-            </div>
-          </div>
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#1D9E75]/20 rounded-full blur-[80px]" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px]" />
-        </div>
       </div>
     </div>
   );

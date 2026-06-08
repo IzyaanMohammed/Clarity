@@ -1,0 +1,49 @@
+{
+  "class_num": "10",
+  "subject": "Science",
+  "chapter": "Electricity",
+  "concepts": [
+    {
+      "id": "electric_current",
+      "title": "Electric Current and Circuit",
+      "ncert_text": "Electric current is expressed by the amount of charge flowing through a particular area in unit time. I = Q/t. SI unit is Ampere (A). Measured by Ammeter (series).",
+      "keywords": ["electric current", "ampere", "coulomb", "ammeter", "series"]
+    },
+    {
+      "id": "potential_difference",
+      "title": "Electric Potential and Potential Difference",
+      "ncert_text": "Work done to move a unit charge from one point to another. V = W/Q. SI unit is Volt (V). Measured by Voltmeter (parallel).",
+      "keywords": ["potential difference", "volt", "voltmeter", "parallel", "work done"]
+    },
+    {
+      "id": "ohms_law",
+      "title": "Ohm's Law",
+      "ncert_text": "The potential difference V across the ends of a given metallic wire in an electric circuit is directly proportional to the current I flowing through it, provided its temperature remains the same. V = IR.",
+      "keywords": ["Ohm's law", "V=IR", "resistance", "proportionality"]
+    },
+    {
+      "id": "resistance_factors",
+      "title": "Factors on which Resistance Depends",
+      "ncert_text": "Resistance R depends on length (l), area of cross-section (A), and nature of material. R = \u03c1(l/A). \u03c1 is electrical resistivity (Ohm-metre).",
+      "keywords": ["resistance", "resistivity", "length", "cross-section", "rho"]
+    },
+    {
+      "id": "resistors_combination",
+      "title": "Combination of Resistors",
+      "ncert_text": "Series: Rs = R1 + R2 + R3. Parallel: 1/Rp = 1/R1 + 1/R2 + 1/R3.",
+      "keywords": ["series", "parallel", "equivalent resistance"]
+    },
+    {
+      "id": "heating_effect",
+      "title": "Heating Effect of Electric Current",
+      "ncert_text": "Heat produced in a resistor is H = I^2Rt (Joule's Law of Heating). Applications: Electric iron, heater, fuse.",
+      "keywords": ["Joule's law", "heating effect", "fuse", "tungsten"]
+    },
+    {
+      "id": "electric_power",
+      "title": "Electric Power",
+      "ncert_text": "The rate at which electric energy is dissipated or consumed. P = VI = I^2R = V^2/R. SI unit is Watt (W). Commercial unit: 1 kWh = 3.6 x 10^6 J.",
+      "keywords": ["electric power", "watt", "kWh", "energy"]
+    }
+  ]
+}

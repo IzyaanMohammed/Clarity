@@ -1,0 +1,333 @@
+**Class 10 – Science**  
+**Chapter: Acids, Bases and Salts**  
+
+---  
+
+## 1.  Introduction  
+
+Chemistry deals with substances and the changes they undergo. Among the many families of substances, **acids, bases and salts** occupy a central place because they are encountered in everyday life, industry and the laboratory. This chapter explores their nature, properties, reactions and the methods used to identify them.  
+
+---  
+
+## 2.  Acids  
+
+### 2.1  Definition  
+
+> **Acid** – A substance that **donates hydrogen ions (H⁺)** in aqueous solution or **produces H⁺ ions** when dissolved in water.  
+
+*According to the Arrhenius definition:* an acid increases the concentration of H⁺ ions in water.  
+
+*According to the Brønsted–Lowry definition:* an acid is a **proton donor**.  
+
+### 2.2  Common Properties  
+
+| Property | Observation |
+|----------|-------------|
+| **Taste** | Sour (e.g., lemon juice, vinegar) |
+| **Effect on litmus** | Turns blue litmus red |
+| **Reaction with metals** | Reacts with active metals (Zn, Mg, Fe) to liberate **hydrogen gas** |
+| **Reaction with carbonates** | Fizzes with carbonates/ bicarbonates, releasing **CO₂** |
+| **Electrical conductivity** | Conducts electricity (electrolyte) because of ions in solution |
+
+### 2.3  Important Formulas  
+
+1. **pH of a solution**  
+
+   $$\text{pH}= -\log_{10}[H^{+}]$$  
+
+2. **Concentration of H⁺ from pH**  
+
+   $$[H^{+}] = 10^{-\text{pH}} \; \text{mol L}^{-1}$$  
+
+3. **Acid‑base neutralisation**  
+
+   $$\text{Acid} + \text{Base} \rightarrow \text{Salt} + \text{Water}$$  
+
+   In ionic form (for a strong acid and a strong base):  
+
+   $$\underbrace{H^{+}}_{\text{from acid}} + \underbrace{OH^{-}}_{\text{from base}} \longrightarrow H_{2}O$$  
+
+### 2.4  Examples of Common Acids  
+
+| Acid | Formula | Common Use |
+|------|---------|------------|
+| Hydrochloric acid | HCl | Stomach acid, cleaning metal |
+| Sulphuric acid | H₂SO₄ | Battery acid, manufacture of fertilizers |
+| Nitric acid | HNO₃ | Explosives, etching |
+| Acetic acid | CH₃COOH | Vinegar |
+| Carbonic acid | H₂CO₃ | Soft drinks (formed in solution) |
+
+---  
+
+## 3.  Bases  
+
+### 3.1  Definition  
+
+> **Base** – A substance that **accepts hydrogen ions (H⁺)** or **produces hydroxide ions (OH⁻)** in aqueous solution.  
+
+*Arrhenius definition:* a base increases the concentration of OH⁻ ions in water.  
+
+*Brønsted–Lowry definition:* a base is a **proton acceptor**.  
+
+### 3.2  Common Properties  
+
+| Property | Observation |
+|----------|-------------|
+| **Taste** | Bitter |
+| **Feel** | Slippery, soapy feel |
+| **Effect on litmus** | Turns red litmus blue |
+| **Reaction with acids** | Neutralises acids to give salt + water |
+| **Electrical conductivity** | Conducts electricity (electrolyte) |
+
+### 3.3  Important Formulas  
+
+1. **pOH of a solution**  
+
+   $$\text{pOH}= -\log_{10}[OH^{-}]$$  
+
+2. **Relation between pH and pOH**  
+
+   $$\text{pH} + \text{pOH} = 14 \quad (\text{at } 25^{\circ}\text{C})$$  
+
+3. **K\(_\text{b}\) – Base ionisation constant** (for a weak base B)  
+
+   $$B + H_{2}O \rightleftharpoons BH^{+} + OH^{-}$$  
+
+   $$K_{b}= \frac{[BH^{+}][OH^{-}]}{[B]}$$  
+
+### 3.4  Examples of Common Bases  
+
+| Base | Formula | Common Use |
+|------|---------|------------|
+| Sodium hydroxide | NaOH | Drain cleaner, soap making |
+| Potassium hydroxide | KOH | Soft‑ening water |
+| Calcium hydroxide | Ca(OH)₂ | Lime water, building material |
+| Ammonia solution | NH₃·H₂O | Household cleaner |
+| Magnesium hydroxide | Mg(OH)₂ | Antacid (Milk of magnesia) |
+
+---  
+
+## 4.  Salts  
+
+### 4.1  Definition  
+
+> **Salt** – An ionic compound formed **by the neutralisation reaction** of an acid and a base. It contains the **cation of the base** and the **anion of the acid**.  
+
+### 4.2  Formation of Salts  
+
+The general neutralisation equation:  
+
+$$\underbrace{HA}_{\text{acid}} + \underbrace{BOH}_{\text{base}} \longrightarrow \underbrace{BA}_{\text{salt}} + \underbrace{H_{2}O}_{\text{water}}$$  
+
+where **HA** is a generic acid (H⁺ donor) and **BOH** is a generic base (OH⁻ donor).  
+
+#### Example  
+
+Neutralisation of hydrochloric acid with sodium hydroxide:  
+
+$$\boxed{HCl + NaOH \longrightarrow NaCl + H_{2}O}$$  
+
+- **Na⁺** comes from NaOH (base)  
+- **Cl⁻** comes from HCl (acid)  
+
+### 4.3  Types of Salts  
+
+| Type | Description | Example |
+|------|-------------|----------|
+| **Normal (Simple) Salt** | Both acid and base are strong | NaCl, K₂SO₄ |
+| **Acidic Salt** | One replaceable H⁺ remains (from a weak acid) | NaHSO₄, NH₄Cl |
+| **Basic Salt** | Contains OH⁻ or a weak base cation | Na₂CO₃, CaCO₃ |
+| **Double Salt** | Two different salts crystallise together | Mohr’s salt – (NH₄)₂Fe(SO₄)₂·6H₂O |
+| **Complex Salt** | Contains a complex ion (coordination compound) | K₃[Fe(CN)₆] |
+
+---  
+
+## 5.  Reactions Involving Acids, Bases and Salts  
+
+### 5.1  Neutralisation  
+
+**Equation:**  
+
+$$\boxed{Acid + Base \rightarrow Salt + Water}$$  
+
+**Worked Example 1**  
+
+*Problem:* 25 mL of 0.1 M HCl is mixed with 25 mL of 0.1 M NaOH. Calculate the pH of the resulting solution.  
+
+*Solution:*  
+
+1. Moles of H⁺ = \(0.1 \, \text{M} \times 0.025 \, \text{L}=2.5 \times 10^{-3}\) mol.  
+2. Moles of OH⁻ = same (2.5 × 10⁻³ mol).  
+3. They neutralise completely → water formed, no excess H⁺ or OH⁻.  
+4. The solution is neutral (ignoring auto‑ionisation of water).  
+
+\[
+\text{pH}=7
+\]
+
+---
+
+### 5.2  Reaction of Acid with Metal  
+
+**General equation:**  
+
+$$\boxed{Metal + Acid \rightarrow Salt + H_{2}\uparrow}$$  
+
+**Worked Example 2**  
+
+*Problem:* Write the balanced equation when zinc reacts with dilute sulphuric acid.  
+
+*Solution:*  
+
+\[
+\begin{aligned}
+\text{Zn} + \text{H}_{2}\text{SO}_{4} &\longrightarrow \text{ZnSO}_{4} + \text{H}_{2}\uparrow \\
+\end{aligned}
+\]
+
+---
+
+### 5.3  Reaction of Acid with Carbonates  
+
+**General equation:**  
+
+$$\boxed{Acid + Carbonate \rightarrow Salt + H_{2}O + CO_{2}\uparrow}$$  
+
+**Worked Example 3**  
+
+*Problem:* 5 g of CaCO₃ is treated with excess HCl. How many millilitres of H₂ gas are produced at STP?  
+
+*Solution:*  
+
+1. Moles of CaCO₃ = \(\frac{5}{100.09}\,\text{mol}=0.0499\) mol.  
+2. Reaction: \(\text{CaCO}_{3}+2\text{HCl}\rightarrow\text{CaCl}_{2}+H_{2}O+CO_{2}\uparrow\) – no H₂ gas is formed; CO₂ is released.  
+   (Hence the answer is **0 mL** of H₂.)  
+
+*Lesson:* Always check the balanced equation before calculating gas volumes.
+
+---
+
+### 5.4  Preparation of Salts  
+
+| Method | Example |
+|--------|---------|
+| **Reaction of acid with base** | NaCl from HCl + NaOH |
+| **Reaction of acid with metal oxide** | CuO + 2 H₂SO₄ → CuSO₄ + 2 H₂O |
+| **Reaction of acid with metal carbonate** | Na₂CO₃ + 2 HCl → 2 NaCl + H₂O + CO₂ |
+| **Direct combination** | 2 Na + Cl₂ → 2 NaCl (synthesis) |
+| **Metathesis (double displacement)** | Na₂SO₄ + BaCl₂ → 2 NaCl + BaSO₄↓ |
+
+---  
+
+## 6.  Indicators – Detecting Acidity or Alkalinity  
+
+| Indicator | Colour in Acidic Solution | Colour in Basic Solution |
+|-----------|--------------------------|--------------------------|
+| Litmus paper | Red | Blue |
+| Phenolphthalein | Colourless | Pink |
+| Methyl orange | Red | Yellow |
+| Bromothymol blue | Yellow | Blue |
+
+*The colour change occurs because the indicator itself is a weak acid or base that dissociates differently at different pH.*
+
+---  
+
+## 7.  Important Formulas (Summary)  
+
+\[
+\begin{aligned}
+\text{pH} &= -\log[H^{+}] \\
+\text{pOH} &= -\log[OH^{-}] \\
+\text{pH} + \text{pOH} &= 14 \quad (25^{\circ}\text{C})\\[4pt]
+K_{a} &= \frac{[H^{+}][A^{-}]}{[HA]} \quad (\text{acid dissociation constant})\\
+K_{b} &= \frac{[BH^{+}][OH^{-}]}{[B]} \quad (\text{base ionisation constant})\\[4pt]
+\text{Neutralisation: } & HA + BOH \rightarrow BA + H_{2}O\\[4pt]
+\text{Acid + Metal: } & \text{Metal} + 2HA \rightarrow \text{MetalA}_{2} + H_{2}\uparrow\\
+\text{Acid + Carbonate: } & \text{Acid} + \text{MCO}_{3} \rightarrow \text{M}^{2+}\text{A}_{2} + H_{2}O + CO_{2}\uparrow
+\end{aligned}
+\]
+
+---  
+
+## 8.  Worked Numerical Problems  
+
+### Problem 1  
+
+*Find the pH of a solution prepared by dissolving 0.5 g of NaOH (M.W. = 40 g mol⁻¹) in 250 mL of water.*  
+
+**Solution**  
+
+1. Moles of NaOH = \(\frac{0.5}{40}=0.0125\) mol.  
+2. Concentration of OH⁻ = \(\frac{0.0125}{0.250}=0.050\) M.  
+3. \(\text{pOH}= -\log(0.050)=1.30\).  
+4. \(\text{pH}=14-1.30=12.70\).  
+
+*The solution is strongly basic.*
+
+---
+
+### Problem 2  
+
+*20 mL of 0.2 M H₂SO₄ is mixed with 30 mL of 0.1 M NaOH. Calculate the pH of the resulting solution.*  
+
+**Solution**  
+
+1. Moles of \(H_{2}SO_{4}\) (first ionisation gives 2 H⁺, but in dilute solution we treat both):  
+
+   \(n_{H^{+}} = 2 \times 0.2 \times 0.020 = 0.008\) mol.  
+
+2. Moles of NaOH = \(0.1 \times 0.030 = 0.003\) mol.  
+
+3. Excess \(H^{+}\) = \(0.008 - 0.003 = 0.005\) mol.  
+
+4. Total volume = 0.020 L + 0.030 L = 0.050 L.  
+
+5. \([H^{+}] = \frac{0.005}{0.050}=0.10\) M.  
+
+6. \(\text{pH}= -\log(0.10)=1.00\).  
+
+*The mixture remains strongly acidic.*
+
+---
+
+### Problem 3  
+
+*Write the net ionic equation for the reaction between aqueous solutions of barium chloride and potassium sulphate.*  
+
+**Solution**  
+
+Overall:  
+
+\[
+\text{BaCl}_{2(aq)} + \text{K}_{2}\text{SO}_{4(aq)} \rightarrow \text{BaSO}_{4(s)} \downarrow + 2 \, \text{KCl}_{(aq)}
+\]
+
+Spectator ions: \(K^{+}\) and \(Cl^{-}\).  
+
+**Net ionic equation:**  
+
+\[
+\boxed{\text{Ba}^{2+}_{(aq)} + \text{SO}_{4}^{2-}_{(aq)} \rightarrow \text{BaSO}_{4(s)}\downarrow}
+\]
+
+---  
+
+## 9.  Key Points (Summary)  
+
+1. **Acids** are proton donors; they increase \([H^{+}]\) in water, turn blue litmus red and taste sour.  
+2. **Bases** are proton acceptors; they increase \([OH^{-}]\) in water, turn red litmus blue and feel slippery.  
+3. **pH** quantifies acidity: \(\text{pH} = -\log[H^{+}]\); \(\text{pH} + \text{pOH} = 14\) at 25 °C.  
+4. **Neutralisation** of an acid and a base yields a **salt** and **water**.  
+5. **Salts** are ionic compounds formed from the cation of a base and the anion of an acid; they may be neutral, acidic or basic.  
+6. Common reactions:  
+   - Acid + Metal → Salt + H₂↑  
+   - Acid + Carbonate → Salt + H₂O + CO₂↑  
+   - Acid + Base → Salt + H₂O (neutralisation)  
+7. **Indicators** help identify the nature of a solution by colour change.  
+8. Important constants: \(K_{a}\) for acids, \(K_{b}\) for bases; they describe the degree of ionisation.  
+
+---  
+
+**End of Chapter**  
+
+*Practice the worked examples, attempt the exercises in the textbook and perform the suggested laboratory experiments to strengthen your understanding of acids, bases and salts.*

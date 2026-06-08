@@ -16,13 +16,13 @@ export const Button = ({
   disabled,
   ...props
 }: ButtonProps) => {
-  const baseStyles = 'font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center gap-2 font-bold rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:ring-offset-2 focus:ring-offset-transparent';
 
   const variantStyles = {
-    primary: 'bg-[#1D9E75] text-white hover:bg-[#178f69] active:scale-95',
-    secondary: 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600',
+    primary: 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/25 hover:bg-[#178f69] active:scale-[0.98]',
+    secondary: 'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-slate-300 dark:hover:bg-slate-600',
     outline: 'border-2 border-[#1D9E75] text-[#1D9E75] hover:bg-[#1D9E75] hover:text-white',
-    ghost: 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+    ghost: 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800',
   };
 
   const sizeStyles = {
@@ -33,9 +33,8 @@ export const Button = ({
 
   return (
     <button
-      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${
-        fullWidth ? 'w-full' : ''
-      } ${className}`}
+      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${fullWidth ? 'w-full' : ''
+        } ${className}`}
       disabled={disabled}
       {...props}
     >

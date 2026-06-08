@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Info, Target, Clock3, ListChecks, Sparkles } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { Info, Target, Clock3, ListChecks, Sparkles, Calendar, Plus, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { getUser, saveStudyMaterialIfNew, type StudyMaterialItem } from '../utils/storage';
 import { extractMarkdownSection, parseMarkdownTable } from '../utils/markdown';
 import { generateDailyPlanStream, saveMaterialToDatabase } from '../api';
@@ -16,7 +15,62 @@ export const StudyPlan = () => {
     const classKey = (user?.class || '10').toString();
     const { subjectsForClass } = useCurriculumCatalog(classKey);
 
-    const [examDate, setExamDate] = useState('');
+    const [examDate, setExamDate] = useState(() => {
+        const saved = localStorage.getItem('clarity_exam_date');
+        if (saved) return saved;
+        const now = new Date();
+        const boardYear = now.getMonth() <= 2 ? now.getFullYear() : now.getFullYear() + 1;
+        return `${boardYear}-02-15`;
+    });
+
+    const [otherDates, setOtherDates] = useState<Array<{ id: string; label: string; date: string }>>(() => {
+        const saved = localStorage.getItem('clarity_other_dates');
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch {
+                return [];
+            }
+        }
+        return [];
+    });
+
+    const [newDateLabel, setNewDateLabel] = useState('');
+    const [newDateValue, setNewDateValue] = useState('');
+
+    const handleExamDateChange = (val: string) => {
+        setExamDate(val);
+        localStorage.setItem('clarity_exam_date', val);
+    };
+
+    const handleAddOtherDate = () => {
+        if (!newDateLabel.trim() || !newDateValue) {
+            toast.error('Please enter both label and date');
+            return;
+        }
+        const updated = [
+            ...otherDates,
+            {
+                id: `date_${Date.now()}`,
+                label: newDateLabel.trim(),
+                date: newDateValue
+            }
+        ];
+        updated.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        setOtherDates(updated);
+        localStorage.setItem('clarity_other_dates', JSON.stringify(updated));
+        setNewDateLabel('');
+        setNewDateValue('');
+        toast.success('Milestone added');
+    };
+
+    const handleRemoveOtherDate = (id: string) => {
+        const updated = otherDates.filter(d => d.id !== id);
+        setOtherDates(updated);
+        localStorage.setItem('clarity_other_dates', JSON.stringify(updated));
+        toast.success('Milestone removed');
+    };
+
     const [weakTopicsInput, setWeakTopicsInput] = useState('');
     const [taskCount, setTaskCount] = useState(7);
     const [planDepth, setPlanDepth] = useState<'lite' | 'balanced' | 'intensive'>('balanced');
@@ -104,6 +158,7 @@ export const StudyPlan = () => {
                         goal: user?.goal || '',
                         study_hours: user?.studyHours || '',
                         focus_areas: user?.focusAreas || '',
+                        focus_chapters: JSON.stringify(user?.focusChapters || {}),
                         exam_board: user?.examBoard || 'CBSE',
                         preferred_language: user?.preferredLanguage || 'English',
                         preferred_pace: user?.preferredPace || 'Balanced',
@@ -172,7 +227,7 @@ export const StudyPlan = () => {
                             <input
                                 type="date"
                                 value={examDate}
-                                onChange={(e) => setExamDate(e.target.value)}
+                                onChange={(e) => handleExamDateChange(e.target.value)}
                                 className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700"
                             />
                         </div>
@@ -226,6 +281,91 @@ export const StudyPlan = () => {
                     </div>
                 </Card>
 
+                {/* Upcoming Exams & Deadlines Planner */}
+                <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl text-emerald-600">
+                            <Calendar size={20} />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Upcoming Exams & Deadlines</h2>
+                            <p className="text-xs text-slate-500 font-medium">Keep track of key dates (monthly tests, chapter quizzes, practicals)</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Add milestone form */}
+                        <div className="space-y-4 lg:col-span-1 p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                            <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Add New Milestone</h3>
+                            
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1.5">Label</label>
+                                <input
+                                    type="text"
+                                    value={newDateLabel}
+                                    onChange={(e) => setNewDateLabel(e.target.value)}
+                                    placeholder="e.g. Physics Chapter 3 Test"
+                                    className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 text-sm focus:ring-1 focus:ring-[#1D9E75] outline-none"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1.5">Date</label>
+                                <input
+                                    type="date"
+                                    value={newDateValue}
+                                    onChange={(e) => setNewDateValue(e.target.value)}
+                                    className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 text-sm focus:ring-1 focus:ring-[#1D9E75] outline-none"
+                                />
+                            </div>
+
+                            <Button
+                                onClick={handleAddOtherDate}
+                                className="w-full bg-[#1D9E75] hover:bg-[#16805d] rounded-xl font-bold text-sm h-11 flex items-center justify-center gap-2"
+                            >
+                                <Plus size={16} /> Add Milestone
+                            </Button>
+                        </div>
+
+                        {/* List of milestones */}
+                        <div className="lg:col-span-2 space-y-3">
+                            <h3 className="text-sm font-black uppercase tracking-wider text-slate-400 mb-3">Planned Milestones</h3>
+                            
+                            {otherDates.length === 0 ? (
+                                <div className="h-[180px] flex flex-col items-center justify-center border border-dashed border-slate-200 dark:border-slate-700 rounded-2xl text-slate-400 dark:text-slate-500">
+                                    <Calendar size={32} className="mb-2 opacity-50" />
+                                    <p className="text-sm font-bold">No custom milestones added yet</p>
+                                    <p className="text-xs">Add exams, quizzes, or homework deadlines to see them here.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[220px] overflow-y-auto pr-1">
+                                    {otherDates.map((milestone) => (
+                                        <div
+                                            key={milestone.id}
+                                            className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-slate-200 dark:hover:border-slate-700 transition-colors"
+                                        >
+                                            <div className="min-w-0 pr-2">
+                                                <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{milestone.label}</p>
+                                                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5 mt-1">
+                                                    <Calendar size={12} />
+                                                    {new Date(milestone.date).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                </p>
+                                            </div>
+                                            <Button
+                                                variant="outline"
+                                                className="h-9 w-9 p-0 rounded-xl border-red-100 hover:bg-red-50 text-red-500 dark:border-red-950/20 dark:hover:bg-red-950/20 flex-shrink-0"
+                                                onClick={() => handleRemoveOtherDate(milestone.id)}
+                                            >
+                                                <Trash2 size={15} />
+                                            </Button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </Card>
+
                 <Card className="p-6 md:p-10 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl min-h-[420px]">
                     {plan ? (
                         <div className="space-y-6">
@@ -260,16 +400,16 @@ export const StudyPlan = () => {
                                     <p className="text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 mb-2 flex items-center gap-2">
                                         <Sparkles size={14} /> Exam Tip
                                     </p>
-                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 whitespace-pre-wrap leading-6 text-slate-700 dark:text-slate-200">
-                                        {extractMarkdownSection(plan, 'Exam Tip', [])}
+                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 text-slate-700 dark:text-slate-200">
+                                        <MarkdownContent content={extractMarkdownSection(plan, 'Exam Tip', [])} className="leading-6" />
                                     </div>
                                 </Card>
                             </div>
 
                             <details className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
                                 <summary className="cursor-pointer text-xs font-black uppercase tracking-wider text-slate-500">View Raw Markdown</summary>
-                                <div className="prose prose-slate dark:prose-invert max-w-none mt-3">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{plan}</ReactMarkdown>
+                                <div className="max-w-none mt-3">
+                                    <MarkdownContent content={plan} />
                                 </div>
                             </details>
                         </div>

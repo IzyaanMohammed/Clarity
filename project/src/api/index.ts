@@ -16,10 +16,16 @@ const apiClient = axios.create({
   },
 });
 
+const getParentAuthToken = (): string => sessionStorage.getItem('clarity_parent_token') || '';
+
 // Attach X-User-ID from localStorage to every request
 apiClient.interceptors.request.use((config) => {
   const userStr = localStorage.getItem('ncertai_user');
   const token = getAuthToken();
+  const hasExplicitAuthHeader = Boolean(
+    (config.headers as any)?.Authorization ||
+    (config.headers as any)?.authorization
+  );
   if (userStr) {
     try {
       const user = JSON.parse(userStr);
@@ -30,13 +36,13 @@ apiClient.interceptors.request.use((config) => {
       console.error('Error parsing user data from localStorage', e);
     }
   }
-  if (token) {
+  // Keep any request-specific Authorization header (for example parent portal token)
+  // and only apply student token when no explicit auth header was provided.
+  if (token && !hasExplicitAuthHeader) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
 });
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface AskQuestionPayload {
   class_num: string;
@@ -45,12 +51,21 @@ export interface AskQuestionPayload {
   question: string;
   conversation_history?: Array<{ role: string; content: string }>;
   learner_profile?: Record<string, string>;
+  teacher_personality?: string;
 }
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
 
 export interface AuthUserPayload {
   name: string;
   class: number;
   subjects: string[];
+  subscriptionTier?: 'free' | 'pro' | 'pro_max';
+  subscriptionStatus?: string;
+  trialStart?: string | null;
+  trialEnd?: string | null;
+  subscriptionEnd?: string | null;
   school?: string;
   learningStyle?: string;
   goal?: string;
@@ -62,11 +77,34 @@ export interface AuthUserPayload {
   confidenceLevel?: string;
   revisionFrequency?: string;
   parentEmail?: string;
+  teacherPersonality?: 'Strict' | 'Kind' | 'Lenient' | 'Enthusiastic';
+  focusChapters?: Record<string, string[]>;
 }
 
 export interface AuthResponse {
   token: string;
   user: AuthUserPayload;
+}
+
+export interface BillingPlanConfig {
+  label: string;
+  monthly: string;
+  yearly: string;
+}
+
+export interface BillingConfigResponse {
+  provider: string;
+  enabled: boolean;
+  currency: string;
+  base_url?: string;
+  plans: Record<'pro' | 'pro_max', BillingPlanConfig>;
+}
+
+export interface BillingCheckoutResponse {
+  checkout_url: string;
+  session_id?: string;
+  plan: 'pro' | 'pro_max';
+  provider: string;
 }
 
 export interface AskQuestionResponse {
@@ -80,6 +118,8 @@ export interface PracticePayload {
   chapter: string;
   question_type: string;
   num_questions: number;
+  teacher_personality?: string;
+  stick_to_textbook?: boolean;
 }
 
 export interface PracticeResponse {
@@ -160,6 +200,7 @@ export interface GradePayload {
   class_num: string;
   subject: string;
   marks_available: number;
+  teacher_personality?: string;
 }
 
 export interface GradeResponse {
@@ -196,6 +237,7 @@ export interface SummaryPayload {
   detail_level?: 'short' | 'standard' | 'deep';
   max_points?: number;
   learner_profile?: Record<string, string>;
+  teacher_personality?: string;
 }
 
 export interface ChapterSummaryResponse {
@@ -214,6 +256,7 @@ export interface DailyPlanPayload {
   task_count?: number;
   plan_depth?: 'lite' | 'balanced' | 'intensive';
   learner_profile?: Record<string, string>;
+  teacher_personality?: string;
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -252,6 +295,10 @@ const streamEndpoint = async (
 
   while (attempts < maxAttempts) {
     attempts += 1;
+    const finalPayload = typeof payload === 'object' && payload !== null
+      ? { ...payload, teacher_personality: (payload as any).teacher_personality || getTeacherPersonality() }
+      : payload;
+
     response = await fetch(`${API_BASE_URL}${path}`, {
       method: 'POST',
       headers: {
@@ -259,7 +306,7 @@ const streamEndpoint = async (
         ...(userId ? { 'X-User-ID': userId } : {}),
         ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(finalPayload),
     });
 
     if (response.ok && response.body) {
@@ -334,6 +381,19 @@ const getCurrentUsername = (): string => {
   }
 };
 
+const getTeacherPersonality = (): string => {
+  const userStr = localStorage.getItem('ncertai_user');
+  if (userStr) {
+    try {
+      const user = JSON.parse(userStr);
+      return user.teacherPersonality || 'Kind';
+    } catch {
+      return 'Kind';
+    }
+  }
+  return 'Kind';
+};
+
 export interface DailyPlanResponse {
   plan: string;
 }
@@ -342,7 +402,8 @@ export interface VideoStoryboardPayload {
   class_num: string;
   subject: string;
   chapter: string;
-  topic: string;
+  topic?: string;
+  source_url?: string;
   duration_seconds?: number;
   style?: string;
   broll_mode?: 'minimal' | 'balanced' | 'aggressive';
@@ -381,6 +442,7 @@ export interface StatsResponse {
   avg_practice_score?: number;
   accuracy_rate?: number;
   estimated_study_minutes?: number;
+  parent_note?: string;
   recent_activity: Array<{
     action: string;
     subject: string;
@@ -457,6 +519,74 @@ export interface ResourceStackResponse {
   };
 }
 
+export interface VideoResourceItem {
+  video_id: string;
+  title: string;
+  url: string;
+  embed_url: string;
+  embed_code?: string;
+  duration?: string;
+  channel?: string;
+  search_source: string;
+  match_score: number;
+}
+
+export interface VideoResourceStackResponse {
+    subject: string;
+    chapter: string;
+    videos: Array<{
+        id: string;
+        title: string;
+        thumbnail: string;
+        channel: string;
+        duration: string;
+        video_id?: string;
+        url?: string;
+        embed_url?: string;
+        embed_code?: string;
+    }>;
+    clarity_booster: {
+        positioning: string;
+        checkpoints: string[];
+        exam_traps: string[];
+        class_num: string;
+    };
+}
+
+export interface VideoLearningMoment {
+  timestamp_seconds: number;
+  timestamp_label: string;
+  subtopic: string;
+  important_point: string;
+  keywords: string[];
+  coach_note: string;
+  exam_answer_frame?: string;
+  common_trap?: string;
+  memory_hook?: string;
+}
+
+export interface VideoLearningQuizQuestion {
+  question: string;
+  options: string[];
+  answer_index: number;
+  explanation: string;
+}
+
+export interface VideoLearningAssistResponse {
+  class_num: string;
+  subject: string;
+  chapter: string;
+  video_id: string;
+  plan_tier: 'pro' | 'pro_max';
+  feature_mode: 'pro' | 'pro-max';
+  key_moments: VideoLearningMoment[];
+  quiz: VideoLearningQuizQuestion[];
+  transcript_stats: {
+    segments: number;
+    duration_seconds: number;
+  };
+}
+
 export interface StudyNotificationItem {
   title: string;
   message: string;
@@ -478,6 +608,147 @@ export interface MockScheduleResponse {
 
 export interface CurriculumCatalogResponse {
   catalog: Record<string, Record<string, string[]>>;
+}
+
+export interface ExamSimStartPayload {
+  class_num: string;
+  subject: string;
+  scope: 'single-chapter' | 'multi-chapter' | 'full-subject';
+  chapter?: string;
+  chapters?: string[];
+  mode: 'full-mock' | 'section-drill';
+  duration_minutes: number;
+  question_count: number;
+  total_marks: number;
+  stick_to_textbook?: boolean;
+}
+
+export interface ExamSimQuestion {
+  question_id: string;
+  question: string;
+  marks: number;
+  chapter: string;
+}
+
+export interface ExamSimStartResponse {
+  session_id: string;
+  mode: string;
+  scope: 'single-chapter' | 'multi-chapter' | 'full-subject' | string;
+  duration_minutes: number;
+  subject: string;
+  chapter: string;
+  chapters: string[];
+  total_marks: number;
+  questions: ExamSimQuestion[];
+}
+
+export interface ExamSimSubmitPayload {
+  session_id: string;
+  class_num: string;
+  subject: string;
+  scope: 'single-chapter' | 'multi-chapter' | 'full-subject';
+  chapter?: string;
+  chapters?: string[];
+  mode: 'full-mock' | 'section-drill';
+  answers: Array<{ question_id?: string; question: string; marks_available: number; answer_text: string }>;
+}
+
+export interface ExamSimSubmitResponse {
+  session_id: string;
+  mode: string;
+  subject: string;
+  chapter: string;
+  total_questions: number;
+  attempted: number;
+  total_marks: number;
+  marks_awarded: number;
+  accuracy_percent: number;
+  step_mark_losses: Array<{ question: string; lost_reason: string; fix: string }>;
+  recovery_plan: string[];
+}
+
+export interface ParentPortalSummaryResponse {
+  student: string;
+  parent_email?: string;
+  students?: string[];
+  readiness_score: number;
+  risk_level: 'low' | 'medium' | 'high';
+  subject_confidence: Array<{ subject: string; confidence: number; samples: number }>;
+  weak_chapters: string[];
+  recommendations: string[];
+  updated_at: string;
+}
+
+export interface RecommendationItem {
+  id: string;
+  title: string;
+  reason: string;
+  subject?: string;
+  chapter?: string;
+  priority: 'high' | 'medium' | 'low';
+  action: 'practice' | 'ask' | 'library';
+}
+
+export interface RecommendationsResponse {
+  recommendations: RecommendationItem[];
+}
+
+export interface ProgressAnalyticsTopic {
+  subject: string;
+  chapter: string;
+  average_score: number;
+  total_attempts: number;
+  trend: 'improving' | 'stable' | 'declining' | string;
+}
+
+export interface ProgressAnalyticsResponse {
+  overall: {
+    average_score: number;
+    study_streak_days: number;
+    hours_studied: number;
+    questions_per_day: number;
+    accuracy_rate: number;
+    total_questions: number;
+    total_practice_attempts: number;
+    total_flashcard_reviews: number;
+    total_uploads: number;
+  };
+  weak_topics: ProgressAnalyticsTopic[];
+  recommended_topics: ProgressAnalyticsTopic[];
+  subject_breakdown: Array<{
+    subject: string;
+    average_score: number;
+    topic_count: number;
+    attempts: number;
+  }>;
+  insights: string[];
+  has_activity: boolean;
+}
+
+export interface ParentLoginResponse {
+  token: string;
+  parent: {
+    email: string;
+    student: string;
+  };
+}
+
+export interface DiagnosticQuestionOption {
+  key: string;
+  text: string;
+}
+
+export interface DiagnosticQuestion {
+  id: string;
+  chapter: string;
+  prompt: string;
+  options: DiagnosticQuestionOption[];
+}
+
+export interface DiagnosticQuestionsResponse {
+  diagnostic_class: string;
+  diagnostic_subject: string;
+  questions: DiagnosticQuestion[];
 }
 
 // ── Analytics Helpers ────────────────────────────────────────────────────────
@@ -513,7 +784,11 @@ export function recordStudyActivity(
 export const askQuestion = async (
   payload: AskQuestionPayload
 ): Promise<AskQuestionResponse> => {
-  const response = await apiClient.post('/chat/ask', payload);
+  const finalPayload = { 
+    ...payload, 
+    teacher_personality: payload.teacher_personality || getTeacherPersonality() 
+  };
+  const response = await apiClient.post('/chat/ask', finalPayload);
   return response.data;
 };
 
@@ -540,6 +815,38 @@ export const getMyProfile = async (): Promise<AuthUserPayload> => {
 
 export const updateMyProfile = async (profile: AuthUserPayload): Promise<{ status: string }> => {
   const response = await apiClient.put('/auth/me', profile);
+  return response.data;
+};
+
+export const getBillingConfig = async (): Promise<BillingConfigResponse> => {
+  const response = await apiClient.get('/auth/billing/config');
+  return response.data;
+};
+
+export const createBillingCheckout = async (plan: 'pro' | 'pro_max'): Promise<BillingCheckoutResponse> => {
+  const response = await apiClient.post('/auth/billing/checkout', { plan });
+  return response.data;
+};
+
+export const startBillingTrial = async (plan: 'pro' | 'pro_max'): Promise<any> => {
+  const response = await apiClient.post('/auth/billing/start-trial', { plan });
+  return response.data;
+};
+
+export const submitDiagnostic = async (payload: {
+  class_num: string;
+  subject?: string;
+  answers: Array<{ question_id: string; selected_option: string }>;
+}): Promise<{ total_score: number; diagnostic_class?: string; diagnostic_subject?: string; subject_scores: Record<string, number>; strengths: string[]; weaknesses: string[]; recommended_start: string }> => {
+  const response = await apiClient.post('/auth/diagnostic', payload);
+  return response.data;
+};
+
+export const getDiagnosticQuestions = async (params: {
+  class_num: string;
+  subject?: string;
+}): Promise<DiagnosticQuestionsResponse> => {
+  const response = await apiClient.get('/auth/diagnostic/questions', { params });
   return response.data;
 };
 
@@ -601,7 +908,11 @@ export const askQuestionStream = async (
 export const generatePractice = async (
   payload: PracticePayload
 ): Promise<PracticeResponse> => {
-  const response = await apiClient.post('/practice/generate', payload);
+  const finalPayload = { 
+    ...payload, 
+    teacher_personality: payload.teacher_personality || getTeacherPersonality() 
+  };
+  const response = await apiClient.post('/practice/generate', finalPayload);
   return response.data;
 };
 
@@ -621,7 +932,11 @@ export const generatePracticeStream = async (
 export const gradeAnswer = async (
   payload: GradePayload
 ): Promise<GradeResponse> => {
-  const response = await apiClient.post('/practice/grade', payload);
+  const finalPayload = { 
+    ...payload, 
+    teacher_personality: payload.teacher_personality || getTeacherPersonality() 
+  };
+  const response = await apiClient.post('/practice/grade', finalPayload);
   return response.data;
 };
 
@@ -741,8 +1056,90 @@ export const getResourceStack = async (payload: {
   return response.data;
 };
 
+export const getVideoResourceStack = async (payload: {
+  class_num: string;
+  subject: string;
+  chapter: string;
+  limit?: number;
+}): Promise<VideoResourceStackResponse> => {
+  const response = await apiClient.get('/practice/video-resource-stack', { params: payload });
+  return response.data;
+};
+
+export const getVideoLearningAssist = async (payload: {
+  class_num: string;
+  subject: string;
+  chapter: string;
+  video_id?: string;
+  video_url?: string;
+}): Promise<VideoLearningAssistResponse> => {
+  const response = await apiClient.get('/practice/video-learning-assist', { params: payload });
+  return response.data;
+};
+
 export const getMockSchedule = async (): Promise<MockScheduleResponse> => {
   const response = await apiClient.get('/practice/mock-schedule');
+  return response.data;
+};
+
+export const startExamSimulation = async (
+  payload: ExamSimStartPayload
+): Promise<ExamSimStartResponse> => {
+  const response = await apiClient.post('/practice/exam-simulation/start', payload);
+  return response.data;
+};
+
+export const submitExamSimulation = async (
+  payload: ExamSimSubmitPayload
+): Promise<ExamSimSubmitResponse> => {
+  const response = await apiClient.post('/practice/exam-simulation/submit', payload);
+  return response.data;
+};
+
+export const getParentPortalSummary = async (): Promise<ParentPortalSummaryResponse> => {
+  const response = await apiClient.get('/progress/parent-portal-summary');
+  return response.data;
+};
+
+export const getRecommendations = async (): Promise<RecommendationsResponse> => {
+  const response = await apiClient.get('/progress/recommendations');
+  return response.data;
+};
+
+export const getProgressAnalytics = async (): Promise<ProgressAnalyticsResponse> => {
+  const response = await apiClient.get('/progress/analytics');
+  return response.data;
+};
+
+export const parentLogin = async (payload: {
+  email: string;
+  password: string;
+}): Promise<ParentLoginResponse> => {
+  const response = await apiClient.post('/auth/parent/login', payload);
+  return response.data;
+};
+
+export const parentLogout = async (): Promise<{ status: string }> => {
+  const token = getParentAuthToken();
+  const response = await apiClient.post('/auth/parent/logout', null, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  return response.data;
+};
+
+export const resendParentCredentials = async (): Promise<{ status: string; message: string; parent_email: string }> => {
+  const response = await apiClient.post('/auth/parent/resend-credentials');
+  return response.data;
+};
+
+export const getParentPortalSummaryForParent = async (): Promise<ParentPortalSummaryResponse> => {
+  const token = getParentAuthToken();
+  if (!token) {
+    throw new Error('Parent session missing. Please login again.');
+  }
+  const response = await apiClient.get('/progress/parent-portal/summary', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 
@@ -751,10 +1148,8 @@ export const getStudyNotifications = async (): Promise<StudyNotificationResponse
   return response.data;
 };
 
-export const sendParentReport = async (payload: {
-  parent_email: string;
-}): Promise<{ status: string; message: string; report: string }> => {
-  const response = await apiClient.post('/progress/report/send', payload);
+export const sendParentReport = async (): Promise<{ status: string; message: string; parent_email: string; report: string }> => {
+  const response = await apiClient.post('/progress/report/send');
   return response.data;
 };
 
@@ -922,3 +1317,149 @@ export const getWorksheets = async (params: {
   const response = await apiClient.get('/practice/worksheets', { params });
   return response.data;
 };
+
+export interface CustomTextbookItem {
+  id: number;
+  username: string;
+  class_num: number;
+  subject: string;
+  chapter: string;
+  filename: string;
+  filepath: string;
+  created_at: string;
+}
+
+export const uploadCustomTextbook = async (formData: FormData): Promise<CustomTextbookItem> => {
+  const response = await apiClient.post('/upload/custom-textbook', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+export const getCustomTextbooks = async (params: {
+  class_num?: number;
+  subject?: string;
+}): Promise<{ textbooks: CustomTextbookItem[] }> => {
+  const response = await apiClient.get('/upload/custom-textbooks', { params });
+  return response.data;
+};
+
+export const deleteCustomTextbook = async (textbookId: number): Promise<{ status: string; message: string }> => {
+  const response = await apiClient.delete(`/upload/custom-textbook/${textbookId}`);
+  return response.data;
+};
+
+export const getCustomTextbookContent = async (textbookId: number): Promise<{ content: string }> => {
+  const response = await apiClient.get(`/upload/custom-textbook/${textbookId}/content`);
+  return response.data;
+};
+
+export interface TutorChatPayload {
+  question: string;
+  conversation_history?: Array<{ role: string; content: string }>;
+}
+
+export const askTutor = async (payload: TutorChatPayload): Promise<{ answer: string }> => {
+  const response = await apiClient.post('/chat/tutor', payload);
+  return response.data;
+};
+
+export const askTutorStream = async (
+  payload: TutorChatPayload,
+  onToken: (token: string) => void
+): Promise<void> => {
+  try {
+    await streamEndpoint('/chat/tutor-stream', payload, onToken);
+  } catch {
+    const fallback = await askTutor(payload);
+    await streamAsTyping(fallback.answer, onToken);
+  }
+};
+
+export const getChapterText = async (params: {
+  class_num: string;
+  subject: string;
+  chapter: string;
+}): Promise<{ content: string }> => {
+  const response = await apiClient.get('/curriculum/chapter-text', { params });
+  return response.data;
+};
+
+export interface ActiveRecallEvaluateResponse {
+  accuracy_score: number;
+  recalled_keywords: string[];
+  missed_concepts: string[];
+  feedback_notes: string;
+}
+
+export const evaluateActiveRecall = async (payload: {
+  class_num: string;
+  subject: string;
+  chapter: string;
+  recall_text: string;
+}): Promise<ActiveRecallEvaluateResponse> => {
+  const response = await apiClient.post('/curriculum/active-recall/evaluate', payload);
+  return response.data;
+};
+
+
+export interface ParentPortalSettings {
+  encouragement_note: string;
+  weekly_goals: string;
+}
+
+export const getParentPortalSettings = async (): Promise<ParentPortalSettings> => {
+  const token = getParentAuthToken();
+  if (!token) {
+    throw new Error('Parent session missing. Please login again.');
+  }
+  const response = await apiClient.get('/progress/parent-portal/settings', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const updateParentPortalSettings = async (payload: {
+  encouragement_note?: string;
+  weekly_goals?: string;
+}): Promise<{ status: string; message: string }> => {
+  const token = getParentAuthToken();
+  if (!token) {
+    throw new Error('Parent session missing. Please login again.');
+  }
+  const response = await apiClient.post('/progress/parent-portal/settings', payload, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const chatWithParentAdvisor = async (
+  message: string,
+  history: Array<{ sender: 'parent' | 'ai'; text: string }>
+): Promise<{ response: string }> => {
+  const token = getParentAuthToken();
+  if (!token) {
+    throw new Error('Parent session missing. Please login again.');
+  }
+  const response = await apiClient.post(
+    '/progress/parent-portal/advisor/chat',
+    { message, history },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+export const switchParentStudent = async (studentUsername: string): Promise<{ status: string; active_student: string }> => {
+  const token = getParentAuthToken();
+  if (!token) {
+    throw new Error('Parent session missing. Please login again.');
+  }
+  const response = await apiClient.post('/auth/parent/switch-student', { student_username: studentUsername }, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+

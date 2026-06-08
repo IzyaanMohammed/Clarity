@@ -1,0 +1,37 @@
+{
+  "subject": "Science",
+  "class": "10",
+  "chapter": "Life Processes",
+  "concepts": [
+    {
+      "title": "Nutrition in Plants (Autotrophic)",
+      "ncert_text": "Autotrophic nutrition is the process by which autotrophs take in substances from the outside and convert them into stored forms of energy. This material is taken in the form of carbon dioxide and water which is converted into carbohydrates in the presence of sunlight and chlorophyll. Photosynthesis is the process. Equation: 6CO2 + 12H2O + Sunlight -> C6H12O6 + 6O2 + 6H2O. Key steps include absorption of light energy by chlorophyll, conversion of light energy to chemical energy and splitting of water molecules into hydrogen and oxygen, and reduction of carbon dioxide to carbohydrates.",
+      "keywords": ["photosynthesis", "chlorophyll", "autotrophic", "stomata", "carbohydrates"]
+    },
+    {
+      "title": "Nutrition in Humans (Holozoic)",
+      "ncert_text": "The alimentary canal is basically a long tube extending from the mouth to the anus. We can see that the tube has different parts. Various regions are specialised to perform different functions. Food is broken down into small particles by teeth and mixed with saliva. Salivary amylase breaks down starch into sugar. The stomach releases HCl, pepsin, and mucus. The small intestine is the site of complete digestion of carbohydrates, proteins, and fats. It receives secretions from liver (bile) and pancreas (trypsin, lipase). Villi increase the surface area for absorption.",
+      "keywords": ["digestion", "stomach", "intestine", "bile", "villi", "amylase", "pepsin"]
+    },
+    {
+      "title": "Respiration",
+      "ncert_text": "The process by which energy is released from food is called respiration. The first step is the break-down of glucose, a six-carbon molecule, into a three-carbon molecule called pyruvate. This takes place in the cytoplasm. Further, the pyruvate may be converted into ethanol and carbon dioxide (in yeast, anaerobic) or lactic acid (in muscle cells, anaerobic) or carbon dioxide and water (in mitochondria, aerobic). Energy released is used to synthesize ATP. In humans, air is taken in through nostrils, filtered by hair and mucus, and reaches alveoli where gas exchange occurs.",
+      "keywords": ["respiration", "aerobic", "anaerobic", "pyruvate", "ATP", "alveoli", "hemoglobin"]
+    },
+    {
+      "title": "Transportation in Humans",
+      "ncert_text": "Blood transports food, oxygen and waste materials in our bodies. The heart is a muscular organ which is as big as our fist. Because both oxygen and carbon dioxide have to be transported by the blood, the heart has different chambers to prevent the oxygen-rich blood from mixing with the blood containing carbon dioxide. The separation of the right side and the left side of the heart is useful to keep oxygenated and deoxygenated blood from mixing. Such separation allows a highly efficient supply of oxygen to the body. This is useful in animals that have high energy needs, such as birds and mammals.",
+      "keywords": ["heart", "circulation", "blood", "arteries", "veins", "capillaries", "platelets"]
+    },
+    {
+      "title": "Transportation in Plants",
+      "ncert_text": "Plants have two main transport tissues: Xylem and Phloem. Xylem moves water and minerals obtained from the soil. Phloem transports products of photosynthesis from the leaves where they are synthesised to other parts of the plant. Water is moved up through xylem by suction pull caused by transpiration (loss of water vapor from leaves). Transport of food (translocation) in phloem is achieved by utilizing energy from ATP, which increases osmotic pressure allowing food to move to tissues with less pressure.",
+      "keywords": ["xylem", "phloem", "transpiration", "translocation", "osmotic pressure"]
+    },
+    {
+      "title": "Excretion in Humans",
+      "ncert_text": "The excretory system of human beings includes a pair of kidneys, a pair of ureters, a urinary bladder and a urethra. Kidneys are located in the abdomen, one on either side of the backbone. Urine produced in the kidneys passes through the ureters into the urinary bladder where it is stored until it is released through the urethra. Each kidney has large numbers of filtration units called nephrons packed close together. Some substances in the initial filtrate, such as glucose, amino acids, salts and a major amount of water, are selectively re-absorbed as the urine flows along the tube.",
+      "keywords": ["excretion", "kidney", "nephron", "dialysis", "ureter", "bladder"]
+    }
+  ]
+}

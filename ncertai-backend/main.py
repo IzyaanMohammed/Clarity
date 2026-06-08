@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -15,19 +18,29 @@ from routes.curriculum import router as curriculum_router
 from services.database import init_db
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=os.getenv("CLARITY_LOG_LEVEL", "INFO"))
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="NcertAI API", version="1.0.0")
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 init_db()
 
+IS_PRODUCTION = os.getenv("CLARITY_ENV", "development").strip().lower() == "production"
+
+
+def _parse_cors_origins() -> list[str]:
+    raw = os.getenv("CLARITY_CORS_ORIGINS", "")
+    if raw.strip():
+        return [origin.strip() for origin in raw.split(",") if origin.strip()]
+    return [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+
 # CORS setup
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+origins = _parse_cors_origins()
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,6 +49,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    if response.headers.get("X-Frame-Options") == "":
+        if "X-Frame-Options" in response.headers:
+            del response.headers["X-Frame-Options"]
+    elif "pdf" in request.url.path or "proxy" in request.url.path:
+        if "X-Frame-Options" in response.headers:
+            del response.headers["X-Frame-Options"]
+    else:
+        response.headers["X-Frame-Options"] = "DENY"
+    if IS_PRODUCTION:
+        response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload"
+    return response
 
 # Include Routers
 app.include_router(qa_router, prefix="/api/v1/chat", tags=["QA"])
@@ -58,9 +89,16 @@ async def health_check():
 
 
 @app.get("/api/khan-adapter")
-async def khan_adapter_mock(class_num: str = "9", subject: str = "Mathematics", limit: int = 8):
-    # Mock adapter: maps grade 9 Khan-style math topics to CBSE chapter names.
-    # Replace this endpoint with your real adapter implementation when available.
+async def khan_adapter(class_num: str = "9", subject: str = "Mathematics", limit: int = 8):
+    mock_enabled = os.getenv("CLARITY_ENABLE_KHAN_ADAPTER_MOCK", "0").strip().lower() in {"1", "true", "yes", "on"}
+    if not mock_enabled:
+        return {
+            "worksheets": [],
+            "source": "disabled",
+            "message": "Khan adapter is disabled. Configure a production worksheet provider or enable CLARITY_ENABLE_KHAN_ADAPTER_MOCK explicitly.",
+        }
+
+    # Development fallback adapter for local testing only.
     if str(class_num) != "9":
         return {"worksheets": []}
 
@@ -101,28 +139,24 @@ async def khan_adapter_mock(class_num: str = "9", subject: str = "Mathematics", 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.error(f"Autonomous System caught error: {str(exc)}", exc_info=True)
-    # Never let the student see a crash. Always return a teacher fallback.
-    return JSONResponse(
-        status_code=200, # Return 200 so frontend doesn't trigger 'Something went wrong'
+    status_code = 500
+    detail = "Internal server error"
+    if not IS_PRODUCTION:
+        detail = f"Internal server error: {str(exc)}"
+
+    response = JSONResponse(
+        status_code=status_code,
         content={
-            "answer": (
-                "💡 **Clarity Tutor**: Our AI engines encountered a brief hiccup ☕ \n\n"
-                "**What this means:** All three of our backup models are temporarily overwhelmed. "
-                "This usually lasts less than 30 seconds.\n\n"
-                "**Here's what to do:**\n"
-                "1️⃣ **Immediate retry:** Click the Send button again in 5-10 seconds\n"
-                "2️⃣ **Split the question:** Try asking one specific concept instead of multiple\n"
-                "3️⃣ **Use simpler wording:** Sometimes brief questions get responses faster\n\n"
-                "⚠️ *If this keeps happening, check that the backend is running:*\n"
-                "`uvicorn main:app --port 8000`\n\n"
-                "**Your CBSE prep matters — let's get you back on track! 🎯**"
-            ),
-            "tokens_used": 0,
-            "is_fallback": True,
-            "retry_after_seconds": 10
+            "detail": detail,
         }
     )
+    origin = request.headers.get("origin", "")
+    if origin and origin in origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Vary"] = "Origin"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "8000")))

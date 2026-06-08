@@ -116,7 +116,7 @@ export const getStudyResources = (classNum: string, subject: string): StudyResou
 };
 
 export const getReadableMirrorUrl = (url: string): string => {
-    return `https://r.jina.ai/http://${url.replace(/^https?:\/\//, '')}`;
+    return url;
 };
 
 export const buildNcertChapterUrl = (baseUrl: string, chapterIndex: number): string => {

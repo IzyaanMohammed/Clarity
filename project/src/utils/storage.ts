@@ -161,7 +161,9 @@ export const incrementDailyUpload = () => {
 };
 
 export const checkDailyLimits = (user: UserData | null) => {
-  if (!user || user.isPremium) return { canAsk: true, canUpload: true };
+  const tier = user?.subscriptionTier || 'free';
+  const paid = tier === 'pro' || tier === 'pro_max';
+  if (!user || paid) return { canAsk: true, canUpload: true };
 
   const questionsToday = user.questionsToday || 0;
   const uploadsToday = user.uploadsToday || 0;

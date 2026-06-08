@@ -21,6 +21,30 @@ from services.database import get_username_by_token
 router = APIRouter()
 
 
+def _ck12_response_headers(source_url: Optional[str]) -> dict[str, str]:
+    headers: dict[str, str] = {}
+    source = str(source_url or "").strip()
+    if not source:
+        return headers
+    lowered = source.lower()
+    if "ck12.org" not in lowered and "flexbooks.ck12.org" not in lowered:
+        return headers
+
+    # Option 1 from CK-12 guidance: prevent indexing on pages carrying CK-12 sourced content.
+    headers["X-Robots-Tag"] = "noindex"
+    # Keep canonical/source discoverable for compliant attribution flows.
+    headers["X-Source-Url"] = source
+    headers["Link"] = f'<{source}>; rel="canonical"'
+    return headers
+
+
+def _normalize_video_request_topic(request: VideoRenderPackageRequest | VideoStoryboardRequest):
+    effective_topic = str((request.topic or request.chapter or request.subject or "Core Concept")).strip()
+    if effective_topic:
+        return request.model_copy(update={"topic": effective_topic})
+    return request
+
+
 def _extract_token(authorization: Optional[str]) -> str:
     if not authorization:
         return ""
@@ -370,10 +394,26 @@ async def _build_topic_slides(request: VideoRenderPackageRequest):
 
 async def _make_video_from_topic(request: VideoRenderPackageRequest) -> Path:
     temp_dir = Path(tempfile.mkdtemp(prefix="clarity_video_"))
+    strict_long_form = str(request.style or "").strip().lower() == "topic-full-video"
 
     slides = await _build_topic_slides(request)
 
     generator = HighQualityVideoGenerator(temp_dir=temp_dir)
+
+    # If user asks for long-form (5-6 min), prefer a single full stock clip rather than repeated scene loops.
+    if int(request.duration_seconds or 0) >= 300:
+        long_file = temp_dir / f"clarity_{request.class_num}_{request.subject}_{request.chapter[:18].replace(' ', '_')}_fullstock.mp4"
+        full_topic = f"{request.subject} {request.chapter} {request.topic}".strip()
+        full_result = generator.generate_full_topic_video(
+            output_path=long_file,
+            topic_query=full_topic,
+            target_seconds=int(request.duration_seconds),
+            min_external_segments=int(request.min_external_segments or 0),
+        )
+        if full_result and full_result.exists() and full_result.stat().st_size > 0:
+            return Path(full_result)
+        if strict_long_form:
+            raise HTTPException(status_code=503, detail="Unable to assemble a long-form external video for this topic yet.")
 
     def _read_manifest_count(video_path: Path) -> int:
         manifest_path = video_path.with_suffix(".manifest.json")
@@ -441,8 +481,9 @@ async def _make_video_from_topic(request: VideoRenderPackageRequest) -> Path:
     try:
         out_file = await _render_once(request)
         if out_file.exists() and out_file.stat().st_size > 0:
+            required_external_count = max(0, int(request.min_external_segments or 0))
             external_count = _read_manifest_count(out_file)
-            if external_count < max(0, int(request.min_external_segments or 0)):
+            if external_count < required_external_count:
                 retry_request = request.model_copy(update={
                     "broll_mode": "aggressive",
                     "montage_level": "dynamic",
@@ -450,13 +491,20 @@ async def _make_video_from_topic(request: VideoRenderPackageRequest) -> Path:
                 retry_file = await _render_once(retry_request)
                 if retry_file.exists() and retry_file.stat().st_size > 0:
                     retry_count = _read_manifest_count(retry_file)
-                    if retry_count >= external_count:
+                    if retry_count >= required_external_count:
                         return Path(retry_file)
+                raise RuntimeError(
+                    f"Video quality threshold not met: external segments {retry_count}/{required_external_count}."
+                )
             return Path(out_file)
 
         raise HTTPException(status_code=500, detail="Video generation produced no output file")
 
-    except Exception:
+    except Exception as exc:
+        if "Video quality threshold not met" in str(exc):
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        if strict_long_form:
+            raise
         # Fallback to basic rendering if high-quality generation fails
         frames_dir = temp_dir / "frames"
         frames_dir.mkdir(parents=True, exist_ok=True)
@@ -514,6 +562,7 @@ async def video_script_stream(request: VideoStoryboardRequest, authorization: Op
     if not username:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
+    request = _normalize_video_request_topic(request)
     prompt = (
         f"Create a {request.duration_seconds}-second educational micro-video storyboard for "
         f"Class {request.class_num} {request.subject}. Chapter: {request.chapter}. Topic: {request.topic}. "
@@ -811,8 +860,9 @@ async def video_render_package(request: VideoRenderPackageRequest, authorization
     
     _require_request_fields(
         request.model_dump(),
-        ["class_num", "subject", "chapter", "topic"],
+        ["class_num", "subject", "chapter"],
     )
+    request = _normalize_video_request_topic(request)
     prompt = (
         f"Create a render-ready Manim package for a Class {request.class_num} {request.subject} lesson. "
         f"Chapter: {request.chapter}. Topic: {request.topic}. Duration: {request.duration_seconds}s. "
@@ -849,11 +899,13 @@ async def video_file(request: VideoRenderPackageRequest, authorization: Optional
     
     _require_request_fields(
         request.model_dump(),
-        ["class_num", "subject", "chapter", "topic"],
+        ["class_num", "subject", "chapter"],
     )
+    request = _normalize_video_request_topic(request)
     video_path = await _make_video_from_topic(request)
     filename = video_path.name
     headers = _video_manifest_headers(video_path)
+    headers.update(_ck12_response_headers(request.source_url))
     return FileResponse(
         path=str(video_path),
         media_type="video/mp4",
@@ -870,19 +922,24 @@ async def video_file_manim(request: VideoRenderPackageRequest, authorization: Op
     
     _require_request_fields(
         request.model_dump(),
-        ["class_num", "subject", "chapter", "topic"],
+        ["class_num", "subject", "chapter"],
     )
+    request = _normalize_video_request_topic(request)
     try:
         video_path, engine = await _make_video_with_manim(request)
     except Exception:
+        if str(request.style or "").strip().lower() == "topic-full-video":
+            raise HTTPException(status_code=503, detail="Unable to render the requested long-form video right now.")
         # Reliable fallback so students still get a finished video.
         video_path = await _make_video_from_topic(request)
         engine = "fallback-slides"
 
-    filename = video_path.name if video_path.suffix.lower() == ".mp4" else f"clarity_{request.topic}.mp4"
+    filename = video_path.name if video_path.suffix.lower() == ".mp4" else f"clarity_{request.topic or request.chapter}.mp4"
+    headers = {"X-Video-Engine": engine}
+    headers.update(_ck12_response_headers(request.source_url))
     return FileResponse(
         path=str(video_path),
         media_type="video/mp4",
         filename=filename,
-        headers={"X-Video-Engine": engine},
+        headers=headers,
     )

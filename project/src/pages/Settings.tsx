@@ -1,13 +1,79 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Crown, Zap, Sparkles, Check, X, Flame, TrendingUp } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { createBillingCheckout, getBillingConfig, resendParentCredentials, startBillingTrial, type BillingConfigResponse } from '../api';
+import { updateUser } from '../utils/storage';
 
 export const Settings = () => {
     const navigate = useNavigate();
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+    const [billingConfig, setBillingConfig] = useState<BillingConfigResponse | null>(null);
+    const [loadingCheckout, setLoadingCheckout] = useState<'pro' | 'pro_max' | null>(null);
+    const [loadingParentResend, setLoadingParentResend] = useState(false);
+
+    useEffect(() => {
+        const loadBilling = async () => {
+            try {
+                const config = await getBillingConfig();
+                setBillingConfig(config);
+            } catch {
+                setBillingConfig(null);
+            }
+        };
+
+        loadBilling();
+    }, []);
+
+    const launchCheckout = async (plan: 'pro' | 'pro_max') => {
+        if (!billingConfig?.enabled) {
+            setLoadingCheckout(plan);
+            try {
+                const res = await startBillingTrial(plan);
+                updateUser({
+                    subscriptionTier: res.subscriptionTier,
+                    subscriptionStatus: res.subscriptionStatus,
+                    trialStart: res.trialStart,
+                    trialEnd: res.trialEnd,
+                    subscriptionEnd: res.subscriptionEnd,
+                });
+                toast.success(`Success! Activated trial for Clarity ${plan === 'pro' ? 'Pro' : 'Pro Max'}`);
+                navigate('/dashboard');
+            } catch (error: any) {
+                console.error('Failed to start trial', error);
+                toast.error(error?.response?.data?.detail || 'Could not start trial right now.');
+            } finally {
+                setLoadingCheckout(null);
+            }
+            return;
+        }
+
+        setLoadingCheckout(plan);
+        try {
+            const { checkout_url } = await createBillingCheckout(plan);
+            window.location.href = checkout_url;
+        } catch (error) {
+            console.error('Failed to start checkout', error);
+            toast.error('Could not start checkout right now.');
+        } finally {
+            setLoadingCheckout(null);
+        }
+    };
+
+    const handleParentResend = async () => {
+        setLoadingParentResend(true);
+        try {
+            const result = await resendParentCredentials();
+            toast.success(result.message || 'Parent credentials sent again.');
+        } catch (error: any) {
+            toast.error(error?.response?.data?.detail || 'Could not resend parent credentials right now.');
+        } finally {
+            setLoadingParentResend(false);
+        }
+    };
 
     const plans = [
         {
@@ -15,19 +81,17 @@ export const Settings = () => {
             icon: Sparkles,
             price: '$0',
             period: '/forever',
-            description: 'The perfect starter pack',
+            description: 'The plan for getting started now',
+            planId: undefined,
             color: 'from-blue-500 to-cyan-500',
             textColor: 'text-blue-600 dark:text-blue-400',
             bgColor: 'bg-blue-50 dark:bg-blue-900/20',
             borderColor: 'border-blue-200 dark:border-blue-800',
             features: [
-                { name: '5 AI Tutor questions/day', included: true },
-                { name: '3 Practice sessions/week', included: true },
-                { name: 'Basic NCERT Textbook Hub', included: true },
-                { name: '1 Flashcard set/month', included: true },
-                { name: 'Ad-supported', included: true },
-                { name: 'Community only (no priority support)', included: true },
-                { name: 'Standard model (Dolphin-Mistral)', included: true },
+                { name: 'Core study workspace', included: true },
+                { name: 'Parent-linked progress view', included: true },
+                { name: 'Diagnostic onboarding', included: true },
+                { name: 'Basic practice and revision tools', included: true },
             ],
             cta: 'Current Plan',
             disabled: true,
@@ -35,49 +99,43 @@ export const Settings = () => {
         {
             name: 'Pro Scholar',
             icon: Flame,
-            price: billingCycle === 'monthly' ? '$4.99' : '$49.99',
+            price: billingConfig?.plans.pro ? (billingCycle === 'monthly' ? billingConfig.plans.pro.monthly : billingConfig.plans.pro.yearly) : (billingCycle === 'monthly' ? '50 AED' : '500 AED'),
             period: billingCycle === 'monthly' ? '/month' : '/year',
             description: 'For serious board prep',
+            planId: 'pro' as const,
             color: 'from-orange-500 to-red-500',
             textColor: 'text-orange-600 dark:text-orange-400',
             bgColor: 'bg-orange-50 dark:bg-orange-900/20',
             borderColor: 'border-orange-200 dark:border-orange-800',
             features: [
-                { name: '50 AI Tutor questions/day', included: true },
-                { name: 'Unlimited Practice sessions', included: true },
-                { name: 'Full NCERT Textbook Hub + Download', included: true },
-                { name: 'Unlimited Flashcards', included: true },
-                { name: 'Ad-free experience', included: true },
-                { name: 'Priority email support (24h response)', included: true },
-                { name: 'Smart model (GPT-OSS turbo)', included: true },
-                { name: 'AI Study Plans + Progress tracking', included: true },
-                { name: 'Unlimited uploads/vision scans', included: false },
+                { name: 'Unlimited questions and practice', included: true },
+                { name: 'Full progress analytics', included: true },
+                { name: 'OCR and file analysis tools', included: true },
+                { name: 'Weekly parent report', included: true },
+                { name: 'Priority support queue', included: true },
             ],
-            cta: 'Upgrade Now',
+            cta: billingConfig?.enabled ? 'Start Checkout' : 'Start Free Trial',
             popular: true,
         },
         {
             name: 'Pro Max',
             icon: Crown,
-            price: billingCycle === 'monthly' ? '$9.99' : '$99.99',
+            price: billingConfig?.plans.pro_max ? (billingCycle === 'monthly' ? billingConfig.plans.pro_max.monthly : billingConfig.plans.pro_max.yearly) : (billingCycle === 'monthly' ? '350 AED' : '3500 AED'),
             period: billingCycle === 'monthly' ? '/month' : '/year',
-            description: 'The ultimate study superpower',
+            description: 'The full board-prep workspace',
+            planId: 'pro_max' as const,
             color: 'from-amber-500 to-yellow-500',
             textColor: 'text-amber-600 dark:text-amber-400',
             bgColor: 'bg-amber-50 dark:bg-amber-900/20',
             borderColor: 'border-amber-200 dark:border-amber-800',
             features: [
-                { name: '∞ Unlimited everything', included: true },
-                { name: '24/7 Live chat support', included: true },
-                { name: 'Vision AI + Code scanning', included: true },
-                { name: 'Custom study plans by expert tutors', included: true },
-                { name: 'AI Doubt clearing (chat)', included: true },
-                { name: 'Past paper solutions + full archives', included: true },
-                { name: 'Advanced model (Qwen 32B Vision)', included: true },
-                { name: 'Priority API access', included: true },
-                { name: 'Offline downloads for all content', included: true },
+                { name: 'Everything in Pro', included: true },
+                { name: 'Board-style exam simulator', included: true },
+                { name: 'Parent portal + readiness signals', included: true },
+                { name: 'Advanced video and image study tools', included: true },
+                { name: 'Highest priority support', included: true },
             ],
-            cta: 'Upgrade Now',
+            cta: billingConfig?.enabled ? 'Start Checkout' : 'Start Free Trial',
         },
     ];
 
@@ -107,6 +165,25 @@ export const Settings = () => {
                     </div>
                 </div>
 
+                <Card className="mb-10 p-6 rounded-[32px] bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">Parent access</p>
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white">Resend parent portal credentials</h2>
+                            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                                Use this only when the parent loses access. It sends a fresh password once without changing your profile.
+                            </p>
+                        </div>
+                        <Button
+                            onClick={handleParentResend}
+                            disabled={loadingParentResend}
+                            className="px-5 py-3 rounded-2xl bg-slate-900 text-white font-black"
+                        >
+                            {loadingParentResend ? 'Sending...' : 'Resend Parent Credentials'}
+                        </Button>
+                    </div>
+                </Card>
+
                 {/* Billing Cycle Toggle */}
                 <div className="mb-12 flex items-center justify-center gap-6">
                     <span className={`text-lg font-bold ${billingCycle === 'monthly' ? 'text-slate-900 dark:text-white' : 'text-slate-500'}`}>
@@ -132,10 +209,20 @@ export const Settings = () => {
                     </span>
                 </div>
 
+                {!billingConfig?.enabled && (
+                    <div className="mb-8 rounded-3xl border border-amber-200 bg-amber-50/80 p-5 text-amber-900 dark:border-amber-800 dark:bg-amber-900/15 dark:text-amber-100">
+                        <p className="text-sm font-black uppercase tracking-[0.18em]">Billing not connected</p>
+                        <p className="mt-2 text-sm text-amber-800 dark:text-amber-200">
+                            Stripe checkout is wired in, but you still need a Stripe secret key and price IDs before subscriptions can charge cards.
+                        </p>
+                    </div>
+                )}
+
                 {/* Plans Grid */}
                 <div className="grid md:grid-cols-3 gap-8 mb-16">
                     {plans.map((plan) => {
                         const Icon = plan.icon;
+                        const planId = plan.planId as 'pro' | 'pro_max' | undefined;
                         return (
                             <div key={plan.name} className="relative group">
                                 {plan.popular && (
@@ -208,13 +295,18 @@ export const Settings = () => {
 
                                         {/* CTA Button */}
                                         <Button
-                                            disabled={plan.disabled}
+                                            disabled={plan.disabled || loadingCheckout === planId}
+                                            onClick={() => {
+                                                if (planId) {
+                                                    launchCheckout(planId);
+                                                }
+                                            }}
                                             className={`w-full py-4 font-bold text-lg rounded-2xl transition-all ${plan.popular || !plan.disabled
                                                 ? 'bg-[#1D9E75] hover:bg-[#16805d] text-white shadow-lg shadow-[#1D9E75]/30'
                                                 : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-default'
                                                 }`}
                                         >
-                                            {plan.cta}
+                                            {loadingCheckout === planId ? 'Preparing checkout...' : plan.cta}
                                         </Button>
                                     </div>
                                 </Card>
@@ -238,19 +330,19 @@ export const Settings = () => {
                             },
                             {
                                 q: 'Which payment methods do you accept?',
-                                a: 'We accept all major credit/debit cards, UPI, and digital wallets like Google Pay and PhonePe.',
+                                a: 'Subscriptions are handled through Stripe Checkout, so card payment support depends on the checkout account you connect.',
                             },
                             {
                                 q: "What's the difference between models?",
-                                a: 'Standard (fast), Smart (accurate), Vision (image/handwriting). Pro Scholar gets Smart; Pro Max gets all.',
+                                a: 'Pro Scholar unlocks the heavier study tools. Pro Max adds the most advanced exam and parent-facing flows.',
                             },
                             {
                                 q: 'Can I upgrade or downgrade?',
-                                a: "Yes! Change your plan anytime. We'll adjust your billing proportionally.",
+                                a: 'Yes. Once billing is live, plan changes can be handled from the same subscription screen.',
                             },
                             {
                                 q: 'Is there a student discount?',
-                                a: 'Use code STUDENT2025 for 25% off any plan! Valid with proper ID proof.',
+                                a: 'Discount codes can be added later through the billing provider if you want promo support.',
                             },
                         ].map((faq, idx) => (
                             <div key={idx} className="space-y-2">
@@ -270,7 +362,7 @@ export const Settings = () => {
                     <p className="text-slate-600 dark:text-slate-400 font-medium mb-6 max-w-2xl mx-auto">
                         Join 50,000+ students who are using NCERT AI to score higher. Your first 7 days are completely free!
                     </p>
-                    <Button className="px-8 py-4 bg-[#1D9E75] hover:bg-[#16805d] text-white font-bold text-lg rounded-2xl shadow-lg">
+                    <Button className="px-8 py-4 bg-[#1D9E75] hover:bg-[#16805d] text-white font-bold text-lg rounded-2xl shadow-lg" onClick={() => navigate('/onboarding')}>
                         Start Free Trial
                     </Button>
                 </div>

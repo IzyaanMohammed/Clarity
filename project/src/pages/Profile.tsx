@@ -8,7 +8,7 @@ import { Button } from '../components/ui/Button';
 import { clearAuthToken, clearUser, getUser, saveUser } from '../utils/storage';
 import { logoutUser, updateMyProfile } from '../api';
 
-const CLASSES = ['9', '10', '11', '12'];
+const CLASSES = ['8', '9', '10', '11', '12'];
 const SUBJECTS = ['Science', 'Physics', 'Chemistry', 'Biology', 'Maths', 'English', 'Social Science', 'Computer Science'];
 const LEARNING_STYLES = ['Visual', 'Auditory', 'Reading/Writing', 'Kinesthetic', 'Mixed'];
 const GOALS = ['Score 95+', 'Score 80-95', 'Pass with Merit', 'Improvement', 'Just Prepare'];
@@ -25,6 +25,8 @@ export const Profile = () => {
     const [learningStyle, setLearningStyle] = useState(user?.learningStyle || 'Mixed');
     const [goal, setGoal] = useState(user?.goal || 'Score 95+');
     const [studyHours, setStudyHours] = useState(user?.studyHours || '2 hours/day');
+    const [parentEmail, setParentEmail] = useState(user?.parentEmail || '');
+    const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'pro' | 'pro_max'>(user?.subscriptionTier || 'free');
     const [focusAreas, setFocusAreas] = useState((user?.focusAreas || '').split(',').map(x => x.trim()).filter(Boolean));
     const [focusInput, setFocusInput] = useState('');
 
@@ -53,6 +55,11 @@ export const Profile = () => {
             return;
         }
 
+        if (!parentEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parentEmail.trim())) {
+            toast.error('⚠️ Valid parent email is required.');
+            return;
+        }
+
         const payload = {
             name,
             school,
@@ -67,7 +74,8 @@ export const Profile = () => {
             preferredPace: user?.preferredPace,
             confidenceLevel: user?.confidenceLevel,
             revisionFrequency: user?.revisionFrequency,
-            parentEmail: user?.parentEmail,
+            parentEmail: parentEmail.trim(),
+            subscriptionTier: subscriptionTier,
         };
 
         try {
@@ -153,6 +161,19 @@ export const Profile = () => {
                                         className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
                                     />
                                 </div>
+
+                                <div>
+                                    <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-3">
+                                        Parent Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        value={parentEmail}
+                                        onChange={(e) => setParentEmail(e.target.value)}
+                                        placeholder="parent@example.com"
+                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
+                                    />
+                                </div>
                             </div>
                         </Card>
 
@@ -188,8 +209,12 @@ export const Profile = () => {
                                     <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-4">
                                         Subjects
                                     </label>
+                                    {/* Dynamically filter subjects based on grade to combine Physics/Chemistry/Biology under Science for grades 8, 9, 10 */}
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                        {SUBJECTS.map((subject) => (
+                                        {(['11', '12'].includes(selectedClass)
+                                            ? ['Physics', 'Chemistry', 'Biology', 'Maths', 'English']
+                                            : ['Science', 'Maths', 'English', 'Social Science']
+                                        ).map((subject) => (
                                             <button
                                                 key={subject}
                                                 onClick={() => toggleSubject(subject)}
@@ -203,7 +228,62 @@ export const Profile = () => {
                                         ))}
                                     </div>
                                 </div>
+
                             </div>
+                        </Card>
+
+                        {/* Subscription Tier Selection */}
+                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                                <Sparkles className="text-[#1D9E75]" size={28} />
+                                Subscription Plan
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {[
+                                    {
+                                        id: 'free',
+                                        name: 'Free',
+                                        desc: 'Standard limits, CBSE core practice',
+                                        activeColor: 'border-slate-400 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200',
+                                    },
+                                    {
+                                        id: 'pro',
+                                        name: 'Pro',
+                                        desc: 'Unlimited coach questions & AI notes',
+                                        activeColor: 'border-slate-900 bg-slate-950 text-white dark:border-slate-800 dark:bg-black',
+                                    },
+                                    {
+                                        id: 'pro_max',
+                                        name: 'Pro Max',
+                                        desc: 'All Pro + Parent Portal & Milestones',
+                                        activeColor: 'border-amber-500 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300',
+                                    },
+                                ].map((plan) => (
+                                    <button
+                                        key={plan.id}
+                                        type="button"
+                                        onClick={() => setSubscriptionTier(plan.id as 'free' | 'pro' | 'pro_max')}
+                                        className={`p-5 rounded-2xl border-2 text-left transition-all hover:scale-[1.02] flex flex-col justify-between h-36 ${
+                                            subscriptionTier === plan.id
+                                                ? plan.activeColor
+                                                : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-350'
+                                        }`}
+                                    >
+                                        <div>
+                                            <p className="font-black text-lg">{plan.name}</p>
+                                            <p className="text-xs mt-1 leading-relaxed opacity-90">{plan.desc}</p>
+                                        </div>
+                                        <div className="mt-3 flex items-center gap-1">
+                                            <span className="text-[10px] uppercase font-black tracking-widest px-2.5 py-1 bg-white/40 dark:bg-black/20 rounded-md">
+                                                {subscriptionTier === plan.id ? 'Active' : 'Select'}
+                                            </span>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="text-[10px] text-slate-400 mt-4 italic font-semibold">
+                                * Plan upgrades are processed instantly. In development, self-assigned subscription changes are allowed.
+                            </p>
                         </Card>
 
                         {/* Learning Preferences */}
@@ -276,6 +356,46 @@ export const Profile = () => {
                             </Card>
                         </div>
 
+
+                        {/* School Focus Chapters */}
+                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
+                            <div className="flex justify-between items-start gap-4 flex-wrap mb-6">
+                                <div>
+                                    <h2 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
+                                        <Target className="text-[#1D9E75]" size={28} />
+                                        School Focus Chapters
+                                    </h2>
+                                    <p className="text-xs text-slate-500 mt-1">Select the chapters you are covering in class this week to personalize your AI tutor.</p>
+                                </div>
+                                <Button
+                                    onClick={() => navigate('/onboarding', { state: { editFocus: true } })}
+                                    className="bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] hover:bg-[#1D9E75]/10 border border-[#1D9E75]/30 font-bold px-4 py-2 rounded-xl text-sm"
+                                >
+                                    Select / Edit Chapters
+                                </Button>
+                            </div>
+                            
+                            <div className="space-y-3">
+                                {user?.focusChapters && Object.keys(user.focusChapters).length > 0 && Object.values(user.focusChapters).some(list => list.length > 0) ? (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {Object.entries(user.focusChapters).map(([subj, chaps]) => {
+                                            if (!chaps || chaps.length === 0) return null;
+                                            return (
+                                                <div key={subj} className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                                    <p className="text-xs font-black uppercase text-slate-400 mb-1">{subj}</p>
+                                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{chaps.join(', ')}</p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="p-6 text-center bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                                        <p className="text-sm text-slate-500 font-bold">No school focus chapters selected for this week.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </Card>
+
                         {/* Focus Areas */}
                         <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
                             <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
@@ -343,6 +463,12 @@ export const Profile = () => {
                                 <div>
                                     <p className="text-slate-600 dark:text-slate-400 font-bold">Daily Study</p>
                                     <p className="text-slate-900 dark:text-white font-bold">{studyHours}</p>
+                                </div>
+                                <div>
+                                    <p className="text-slate-600 dark:text-slate-400 font-bold">Plan</p>
+                                    <p className="text-slate-900 dark:text-white font-black uppercase text-xs tracking-wider">
+                                        {subscriptionTier === 'pro_max' ? 'Pro Max 🌟' : subscriptionTier === 'pro' ? 'Pro ⚡' : 'Free 📚'}
+                                    </p>
                                 </div>
                             </div>
                         </Card>

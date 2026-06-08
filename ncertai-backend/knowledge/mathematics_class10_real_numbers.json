@@ -1,0 +1,25 @@
+{
+  "class_num": "10",
+  "subject": "Mathematics",
+  "chapter": "Real Numbers",
+  "concepts": [
+    {
+      "id": "fundamental_theorem",
+      "title": "Fundamental Theorem of Arithmetic",
+      "ncert_text": "Every composite number can be expressed (factorised) as a product of primes, and this factorisation is unique, apart from the order in which the prime factors occur.",
+      "keywords": ["prime factorization", "composite number", "unique"]
+    },
+    {
+      "id": "hcf_lcm_relation",
+      "title": "HCF and LCM Relation",
+      "ncert_text": "For any two positive integers a and b, HCF(a, b) x LCM(a, b) = a x b.",
+      "keywords": ["HCF", "LCM", "product of numbers"]
+    },
+    {
+      "id": "irrationality_proof",
+      "title": "Revisiting Irrational Numbers",
+      "ncert_text": "A number 's' is called irrational if it cannot be written in the form p/q. If p is a prime and p divides a^2, then p divides a. This is used to prove \u221a2, \u221a3 are irrational.",
+      "keywords": ["irrational", "prime", "divides", "contradiction proof"]
+    }
+  ]
+}

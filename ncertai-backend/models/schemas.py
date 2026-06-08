@@ -8,6 +8,7 @@ class QARequest(BaseModel):
     question: str
     conversation_history: Optional[List[Dict[str, str]]] = []
     learner_profile: Optional[Dict[str, str]] = None
+    teacher_personality: Optional[str] = "Kind"
 
 class QAResponse(BaseModel):
     answer: str
@@ -19,6 +20,8 @@ class PracticeRequest(BaseModel):
     chapter: str
     question_type: str  # "1-mark"/"3-mark"/"5-mark"/"mixed"
     num_questions: int = 5
+    teacher_personality: Optional[str] = "Kind"
+    stick_to_textbook: Optional[bool] = False
 
 class PracticeResponse(BaseModel):
     questions: List[str]
@@ -29,6 +32,7 @@ class GradeRequest(BaseModel):
     class_num: str
     subject: str
     marks_available: int
+    teacher_personality: Optional[str] = "Kind"
 
 class GradeResponse(BaseModel):
     marks_awarded: int
@@ -90,6 +94,7 @@ class SummaryRequest(BaseModel):
     detail_level: str = "standard"  # short | standard | deep
     max_points: int = 6
     learner_profile: Optional[Dict[str, str]] = None
+    teacher_personality: Optional[str] = "Kind"
 
 
 class SummaryResponse(BaseModel):
@@ -103,6 +108,7 @@ class FormulaSheetRequest(BaseModel):
     formula_count: int = 12
     include_examples: bool = True
     learner_profile: Optional[Dict[str, str]] = None
+    teacher_personality: Optional[str] = "Kind"
 
 
 class FormulaSheetResponse(BaseModel):
@@ -133,17 +139,38 @@ class DailyPlanRequest(BaseModel):
     task_count: int = 7
     plan_depth: str = "balanced"  # lite | balanced | intensive
     learner_profile: Optional[Dict[str, str]] = None
+    teacher_personality: Optional[str] = "Kind"
 
 
 class DailyPlanResponse(BaseModel):
     plan: str
 
 
+class DiagnosticAnswerItem(BaseModel):
+    question_id: str
+    selected_option: str
+
+
+class DiagnosticRequest(BaseModel):
+    class_num: str
+    subject: Optional[str] = None
+    answers: List[DiagnosticAnswerItem]
+
+
+class DiagnosticResponse(BaseModel):
+    total_score: int
+    subject_scores: Dict[str, int]
+    strengths: List[str]
+    weaknesses: List[str]
+    recommended_start: str
+
+
 class VideoStoryboardRequest(BaseModel):
     class_num: str
     subject: str
     chapter: str
-    topic: str
+    topic: Optional[str] = None
+    source_url: Optional[str] = None
     duration_seconds: int = 90
     style: str = "concept-first"
     broll_mode: str = "balanced"  # minimal | balanced | aggressive
@@ -164,7 +191,8 @@ class VideoRenderPackageRequest(BaseModel):
     class_num: str
     subject: str
     chapter: str
-    topic: str
+    topic: Optional[str] = None
+    source_url: Optional[str] = None
     duration_seconds: int = 90
     style: str = "concept-first"
     broll_mode: str = "balanced"  # minimal | balanced | aggressive

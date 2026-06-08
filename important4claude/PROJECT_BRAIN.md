@@ -1,5 +1,12 @@
 # Clarity Project Brain (Minimal Complete Context)
 
+This file explains the system; code-level reference is included in:
+- `BACKEND_REFERENCE.py`
+- `FRONTEND_REFERENCE.tsx`
+- `API_CONTRACTS.json`
+
+If you share only this folder, an AI still gets architecture + endpoint contracts + representative implementation structure.
+
 ## 1) Product Intent
 Clarity is a CBSE-focused AI study platform with:
 - Ask AI tutoring

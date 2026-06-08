@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
     ArrowLeft,
     ArrowRight,
@@ -18,10 +18,10 @@ import {
 import toast from 'react-hot-toast';
 import { Card } from '../components/ui/Card';
 import { getAuthToken, getUser, saveAuthToken, saveUser } from '../utils/storage';
-import { loginUser, registerUser, updateMyProfile } from '../api';
+import { getDiagnosticQuestions, loginUser, registerUser, submitDiagnostic, updateMyProfile, type DiagnosticQuestion } from '../api';
 import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
 
-const CLASSES = ['9', '10', '11', '12'];
+const CLASSES = ['8', '9', '10', '11', '12'];
 
 const LEARNING_STYLES = [
     { name: 'Visual', icon: Eye, desc: 'Diagrams, charts, colors' },
@@ -38,9 +38,21 @@ const LANGUAGES = ['English', 'Hinglish', 'Hindi'];
 const PACES = ['Slow and detailed', 'Balanced', 'Fast and concise'];
 const CONFIDENCE_LEVELS = ['Needs strong support', 'Average confidence', 'High confidence'];
 const REVISION_FREQUENCY = ['Daily', 'Alternate days', 'Twice a week', 'Weekly'];
+const TEACHER_PERSONALITIES = [
+    { value: 'Strict', label: 'Strict', desc: 'No-nonsense, focus on precision and discipline' },
+    { value: 'Kind', label: 'Kind', desc: 'Encouraging, supportive and patient' },
+    { value: 'Lenient', label: 'Lenient', desc: 'Relaxed pace, flexible with mistakes' },
+    { value: 'Enthusiastic', label: 'Enthusiastic', desc: 'High energy, focuses on curiosity and fun' },
+] as const;
+const SUBSCRIPTION_TIERS = [
+    { value: 'free', label: 'Free', desc: 'Start here now' },
+    { value: 'pro', label: 'Pro', desc: 'Billing-ready upgrade when checkout is connected' },
+    { value: 'pro_max', label: 'Pro Max', desc: 'Everything in Pro plus exam and parent workflows' },
+] as const;
 
 export const Onboarding = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const existingUser = getUser();
     const existingToken = getAuthToken();
     const isEditing = !!existingUser;
@@ -51,7 +63,7 @@ export const Onboarding = () => {
     const [school, setSchool] = useState(existingUser?.school || '');
     const [selectedClass, setSelectedClass] = useState((existingUser?.class || '10').toString());
     const [selectedSubjects, setSelectedSubjects] = useState<string[]>(existingUser?.subjects || []);
-    const { subjectsForClass } = useCurriculumCatalog(selectedClass);
+    const { subjectsForClass, chaptersForSubject } = useCurriculumCatalog(selectedClass);
     const availableSubjects = subjectsForClass.length ? subjectsForClass : [
         'Science',
         'Physics',
@@ -71,7 +83,33 @@ export const Onboarding = () => {
     const [preferredPace, setPreferredPace] = useState(existingUser?.preferredPace || 'Balanced');
     const [confidenceLevel, setConfidenceLevel] = useState(existingUser?.confidenceLevel || 'Average confidence');
     const [revisionFrequency, setRevisionFrequency] = useState(existingUser?.revisionFrequency || 'Alternate days');
+    const [subscriptionTier, setSubscriptionTier] = useState((existingUser?.subscriptionTier || 'free') as 'free' | 'pro' | 'pro_max');
+    const [teacherPersonality, setTeacherPersonality] = useState(existingUser?.teacherPersonality || 'Kind');
+    const [focusChapters, setFocusChapters] = useState<Record<string, string[]>>(existingUser?.focusChapters || {});
     const [parentEmail, setParentEmail] = useState(existingUser?.parentEmail || '');
+    const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});
+    const [diagnosticScore, setDiagnosticScore] = useState<number | null>(null);
+    const [diagnosticQuestions, setDiagnosticQuestions] = useState<DiagnosticQuestion[]>([]);
+    const [diagnosticMeta, setDiagnosticMeta] = useState<{ diagnosticClass: string; diagnosticSubject: string } | null>(null);
+    const [diagnosticQuerySubject, setDiagnosticQuerySubject] = useState<string>('mixed');
+    const [diagnosticLoading, setDiagnosticLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (location.state?.editFocus) {
+            setStep(10);
+        }
+    }, [location.state]);
+
+    const pickDiagnosticSubject = (): string | undefined => {
+        if (!selectedSubjects.length) return undefined;
+        const stemPriority = ['Physics', 'Chemistry', 'Biology', 'Maths', 'Science'];
+        const normalized = selectedSubjects.map((s) => s.trim());
+        const preferred = stemPriority.filter((s) => normalized.includes(s));
+        const pool = preferred.length ? preferred : normalized;
+        const index = Math.floor(Math.random() * pool.length);
+        return pool[index];
+    };
 
     const steps = [
         { title: 'Welcome', subtitle: 'Set up your personal AI tutor in under 1 minute' },
@@ -83,6 +121,9 @@ export const Onboarding = () => {
         { title: 'Time Commitment', subtitle: 'Daily study capacity' },
         { title: 'Main Challenge', subtitle: 'Where you need the most support' },
         { title: 'Deep Personalization', subtitle: 'Set pace, language and revision behavior' },
+        { title: 'AI Teacher', subtitle: 'Choose the personality of your AI tutor' },
+        { title: 'School Focus', subtitle: 'Select chapters you are focusing on in school right now' },
+        { title: 'Diagnostic Check', subtitle: 'Take a short baseline quiz so your study plan starts from real data' },
         { title: 'Finish', subtitle: 'Review and begin your journey' },
     ];
 
@@ -95,6 +136,46 @@ export const Onboarding = () => {
     useEffect(() => {
         setSelectedSubjects((prev) => prev.filter((subject) => availableSubjects.includes(subject)));
     }, [selectedClass, availableSubjects.join('|')]);
+
+    useEffect(() => {
+        let active = true;
+        const loadDiagnostic = async () => {
+            if (isEditing) {
+                setDiagnosticQuestions([]);
+                setDiagnosticMeta(null);
+                setDiagnosticLoading(false);
+                return;
+            }
+            if (!selectedClass) return;
+            setDiagnosticLoading(true);
+            try {
+                const preferredSubject = pickDiagnosticSubject();
+                const response = await getDiagnosticQuestions({
+                    class_num: selectedClass,
+                    subject: preferredSubject,
+                });
+                if (!active) return;
+                setDiagnosticQuerySubject(preferredSubject || 'mixed');
+                setDiagnosticQuestions(response.questions || []);
+                setDiagnosticMeta({
+                    diagnosticClass: response.diagnostic_class,
+                    diagnosticSubject: response.diagnostic_subject,
+                });
+                setDiagnosticAnswers({});
+                setDiagnosticScore(null);
+            } catch {
+                if (!active) return;
+                setDiagnosticQuestions([]);
+                setDiagnosticMeta(null);
+            } finally {
+                if (active) setDiagnosticLoading(false);
+            }
+        };
+        loadDiagnostic();
+        return () => {
+            active = false;
+        };
+    }, [isEditing, selectedClass, selectedSubjects.join('|')]);
 
     const validateStep = () => {
         if (step === 1 && (!name.trim() || !school.trim())) {
@@ -132,15 +213,53 @@ export const Onboarding = () => {
             return false;
         }
 
+        if (step === 8) {
+            const email = parentEmail.trim();
+            if (!email) {
+                toast.error('Parent email is mandatory.');
+                return false;
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                toast.error('Enter a valid parent email address.');
+                return false;
+            }
+        }
+
+        if (step === 9 && !teacherPersonality) {
+            toast.error('Please select an AI teacher personality.');
+            return false;
+        }
+
+        if (step === 11 && !isEditing) {
+            if (diagnosticLoading) {
+                toast.error('Diagnostic is loading. Please wait a moment.');
+                return false;
+            }
+            if (diagnosticQuestions.length === 0) {
+                toast.error('Unable to load diagnostic questions right now. Try again.');
+                return false;
+            }
+            const answered = diagnosticQuestions.filter((question) => diagnosticAnswers[question.id]);
+            if (answered.length < diagnosticQuestions.length) {
+                toast.error('Complete the diagnostic quiz to continue.');
+                return false;
+            }
+        }
+
         return true;
     };
 
     const handleNext = () => {
         if (!validateStep()) return;
+        if (location.state?.editFocus && step === 10) {
+            handleComplete();
+            return;
+        }
         setStep((prev) => Math.min(prev + 1, steps.length - 1));
     };
 
     const handleComplete = async () => {
+        if (isSubmitting) return;
         const profile = {
             name: name.trim(),
             school: school.trim(),
@@ -155,10 +274,23 @@ export const Onboarding = () => {
             preferredPace,
             confidenceLevel,
             revisionFrequency,
-            parentEmail: parentEmail.trim() || undefined,
+            subscriptionTier,
+            teacherPersonality,
+            focusChapters,
+            parentEmail: parentEmail.trim(),
+        };
+
+        const diagnosticPayload = {
+            class_num: String(selectedClass),
+            subject: diagnosticQuerySubject || selectedSubjects[0] || 'mixed',
+            answers: diagnosticQuestions.map((question) => ({
+                question_id: question.id,
+                selected_option: diagnosticAnswers[question.id] || '',
+            })),
         };
 
         try {
+            setIsSubmitting(true);
             if (isEditing && existingToken) {
                 await updateMyProfile(profile);
                 saveUser(profile);
@@ -172,14 +304,32 @@ export const Onboarding = () => {
                 return;
             }
 
-            const result = await registerUser({ profile, password: password.trim() });
-            saveAuthToken(result.token);
-            saveUser(result.user);
-            toast.success('Welcome to Clarity.');
-            navigate('/dashboard');
+            try {
+                const result = await registerUser({ profile, password: password.trim() });
+                saveAuthToken(result.token);
+                saveUser(result.user);
+                const diagnosticResult = await submitDiagnostic(diagnosticPayload);
+                setDiagnosticScore(diagnosticResult.total_score);
+                toast.success('Welcome to Clarity.');
+                navigate('/dashboard');
+            } catch (error: unknown) {
+                const message = error instanceof Error ? error.message : '';
+                const conflict = /already exists|409|conflict/i.test(message);
+                if (!conflict) {
+                    throw error;
+                }
+
+                const loginResult = await loginUser({ name: name.trim(), password: password.trim() });
+                saveAuthToken(loginResult.token);
+                saveUser(loginResult.user);
+                toast.success('Existing account found. Logged in successfully.');
+                navigate('/dashboard');
+            }
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Unable to complete onboarding right now.';
             toast.error(message);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -248,7 +398,7 @@ export const Onboarding = () => {
 
                             {!isEditing && (
                                 <div className="mt-8 max-w-md mx-auto text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
-                                    <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-3">Already have an account?</p>
+                                    <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-3">Already have an account? <Link to="/login" className="text-[#1D9E75] hover:underline">Login here</Link></p>
                                     <div className="space-y-3">
                                         <input
                                             type="text"
@@ -506,7 +656,7 @@ export const Onboarding = () => {
                             </div>
 
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Parent Email (optional)</p>
+                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Parent Email (mandatory)</p>
                                 <input
                                     type="email"
                                     value={parentEmail}
@@ -515,10 +665,177 @@ export const Onboarding = () => {
                                     className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold"
                                 />
                             </div>
+
+                            <div>
+                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Plan preference</p>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                    {SUBSCRIPTION_TIERS.map((tier) => (
+                                        <button
+                                            key={tier.value}
+                                            onClick={() => setSubscriptionTier(tier.value)}
+                                            className={`rounded-xl border-2 p-3 text-left ${subscriptionTier === tier.value
+                                                ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20'
+                                                : 'border-slate-200 dark:border-slate-700'
+                                                }`}
+                                        >
+                                            <p className="text-sm font-black text-slate-900 dark:text-white">{tier.label}</p>
+                                            <p className="text-[11px] text-slate-500 mt-1">{tier.desc}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                                <p className="mt-3 text-[11px] text-slate-500">
+                                    This choice is saved as a billing preference. Real paid access is activated later from Settings.
+                                </p>
+                            </div>
                         </div>
                     )}
 
                     {step === 9 && (
+                        <div className="space-y-4">
+                            {TEACHER_PERSONALITIES.map((p) => (
+                                <button
+                                    key={p.value}
+                                    onClick={() => setTeacherPersonality(p.value as any)}
+                                    className={`w-full rounded-2xl border-2 p-6 text-left flex items-center gap-4 transition-all ${teacherPersonality === p.value
+                                        ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20'
+                                        : 'border-slate-200 dark:border-slate-700 hover:border-[#1D9E75]/50'
+                                        }`}
+                                >
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${teacherPersonality === p.value ? 'bg-[#1D9E75] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+                                        <Sparkles size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-slate-900 dark:text-white">{p.label}</p>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{p.desc}</p>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {step === 10 && (
+                        <div className="space-y-6">
+                            <div className="rounded-2xl border border-[#1D9E75]/30 bg-emerald-50 dark:bg-emerald-900/10 p-4">
+                                <p className="text-sm font-bold text-slate-900 dark:text-white">What are you studying in school this week?</p>
+                                <p className="text-xs text-slate-500 mt-1">This helps the AI prioritize your daily missions and practice sets.</p>
+                            </div>
+                            <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2">
+                                {selectedSubjects.map((subject) => (
+                                    <div key={subject} className="space-y-3">
+                                        <div className="flex items-center justify-between border-b border-slate-150 dark:border-slate-800 pb-1.5 mb-2">
+                                            <h3 className="text-sm font-black text-[#1D9E75] uppercase tracking-wider">{subject}</h3>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const allChapters = chaptersForSubject(subject);
+                                                    const currentFocused = focusChapters[subject] || [];
+                                                    const isAllSelected = allChapters.length > 0 && allChapters.every(c => currentFocused.includes(c));
+                                                    setFocusChapters(prev => ({
+                                                        ...prev,
+                                                        [subject]: isAllSelected ? [] : allChapters
+                                                    }));
+                                                }}
+                                                className="text-xs font-black text-[#1D9E75] hover:text-[#16805d] dark:hover:text-emerald-400 hover:underline transition-colors cursor-pointer"
+                                            >
+                                                {(() => {
+                                                    const allChapters = chaptersForSubject(subject);
+                                                    const currentFocused = focusChapters[subject] || [];
+                                                    const isAllSelected = allChapters.length > 0 && allChapters.every(c => currentFocused.includes(c));
+                                                    return isAllSelected ? 'Deselect All' : 'Select All';
+                                                })()}
+                                            </button>
+                                        </div>
+                                        <div className="grid grid-cols-1 gap-2">
+                                            {chaptersForSubject(subject).map((chapter) => {
+                                                const isFocused = (focusChapters[subject] || []).includes(chapter);
+                                                return (
+                                                    <button
+                                                        key={chapter}
+                                                        onClick={() => {
+                                                            setFocusChapters(prev => {
+                                                                const current = prev[subject] || [];
+                                                                const next = isFocused
+                                                                    ? current.filter(c => c !== chapter)
+                                                                    : [...current, chapter];
+                                                                return { ...prev, [subject]: next };
+                                                            });
+                                                        }}
+                                                        className={`p-3 rounded-xl border-2 text-left text-sm font-bold transition-all ${isFocused
+                                                            ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
+                                                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-[#1D9E75]/30'
+                                                            }`}
+                                                    >
+                                                        <div className="flex items-center justify-between">
+                                                            <span>{chapter}</span>
+                                                            {isFocused && <Check size={14} />}
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 11 && (
+                        <div className="space-y-5">
+                            {isEditing ? (
+                                <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4">
+                                    <p className="text-sm font-black text-slate-900 dark:text-white">Diagnostic is first-time only</p>
+                                    <p className="text-xs text-slate-500 mt-1">
+                                        You are updating an existing account, so the signup diagnostic is skipped.
+                                    </p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4">
+                                        <p className="text-sm font-black text-slate-900 dark:text-white">Baseline diagnostic quiz</p>
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            These questions are from one grade lower to test fundamentals.
+                                            {diagnosticMeta ? ` Class ${diagnosticMeta.diagnosticClass} • ${diagnosticMeta.diagnosticSubject}` : ''}
+                                        </p>
+                                    </div>
+                                    {diagnosticLoading && (
+                                        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4">
+                                            <p className="text-sm text-slate-600 dark:text-slate-300">Loading diagnostic questions...</p>
+                                        </div>
+                                    )}
+                                    <div className="space-y-4">
+                                        {diagnosticQuestions.map((question, index) => (
+                                            <div key={question.id} className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                                                <p className="text-xs font-black uppercase tracking-wide text-[#1D9E75] mb-2">Question {index + 1}</p>
+                                                <p className="text-[11px] font-bold text-slate-500 mb-2">{question.chapter}</p>
+                                                <p className="text-sm font-bold text-slate-900 dark:text-white mb-3">{question.prompt}</p>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                    {question.options.map((option) => (
+                                                        <button
+                                                            key={option.key}
+                                                            onClick={() => setDiagnosticAnswers((prev) => ({ ...prev, [question.id]: option.key }))}
+                                                            className={`rounded-xl border-2 p-3 text-left text-sm font-semibold transition-all ${diagnosticAnswers[question.id] === option.key
+                                                                ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
+                                                                : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                                                }`}
+                                                        >
+                                                            <span className="font-black mr-2">{option.key}.</span>{option.text}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {diagnosticScore !== null && (
+                                        <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 p-4">
+                                            <p className="text-sm font-black text-emerald-700 dark:text-emerald-300">Diagnostic score: {diagnosticScore}%</p>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    )}
+
+                    {step === 12 && (
                         <div className="text-center py-6 space-y-5">
                             <div className="text-5xl">🎯</div>
                             <h2 className="text-3xl font-black text-slate-900 dark:text-white">Ready to Start</h2>
@@ -542,6 +859,14 @@ export const Onboarding = () => {
                                     <p className="text-xs uppercase font-bold text-slate-500">Board & Revision</p>
                                     <p className="font-black text-slate-900 dark:text-white">{examBoard} • {revisionFrequency}</p>
                                 </div>
+                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3 col-span-2">
+                                    <p className="text-xs uppercase font-bold text-slate-500">AI Personality</p>
+                                    <p className="font-black text-slate-900 dark:text-white">{teacherPersonality}</p>
+                                </div>
+                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3 col-span-2">
+                                    <p className="text-xs uppercase font-bold text-slate-500">Plan preference</p>
+                                    <p className="font-black text-slate-900 dark:text-white">{subscriptionTier.replace('_', ' ').toUpperCase()}</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -558,7 +883,7 @@ export const Onboarding = () => {
                         </button>
                     )}
 
-                    {step < steps.length - 1 ? (
+                    {step < steps.length - 1 && !(location.state?.editFocus && step === 10) ? (
                         <button
                             onClick={handleNext}
                             className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#1D9E75] to-emerald-600 text-white font-black hover:from-[#178764] hover:to-emerald-700 flex items-center gap-2 shadow-lg"
@@ -568,11 +893,12 @@ export const Onboarding = () => {
                         </button>
                     ) : (
                         <button
-                            onClick={handleComplete}
+                            onClick={step === 10 && location.state?.editFocus ? handleComplete : handleComplete}
+                            disabled={isSubmitting}
                             className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#1D9E75] to-emerald-600 text-white font-black hover:from-[#178764] hover:to-emerald-700 flex items-center gap-2 shadow-lg"
                         >
-                            Enter Dashboard
-                            <Sparkles size={18} />
+                            {isSubmitting ? 'Saving...' : (location.state?.editFocus && step === 10 ? 'Save Focus' : 'Enter Dashboard')}
+                            {location.state?.editFocus && step === 10 ? <Check size={18} /> : <Sparkles size={18} />}
                         </button>
                     )}
                 </div>

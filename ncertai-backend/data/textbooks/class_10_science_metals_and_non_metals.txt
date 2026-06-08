@@ -1,0 +1,243 @@
+**Class 10 – Science**  
+**Chapter 7 – Metals and Non‑metals**  
+
+---  
+
+## 1. Introduction  
+
+Metals and non‑metals constitute the two broad categories of elements found in the periodic table.  Their contrasting physical and chemical properties are the basis for a large number of applications in daily life, industry and technology.  This chapter explores these properties, the trends in the periodic table, and the reactions that distinguish metals from non‑metals.  
+
+---  
+
+## 2. Key Definitions  
+
+| Term | Definition |
+|------|------------|
+| **Metal** | An element that is a good conductor of heat and electricity, malleable, ductile, has a shiny (metallic) luster and tends to lose electrons to form **cations** (positive ions). |
+| **Non‑metal** | An element that is a poor conductor of heat and electricity, brittle in solid state, lacks metallic luster and tends to gain electrons to form **anions** (negative ions) or share electrons covalently. |
+| **Alloy** | A homogeneous mixture of two or more metals, or a metal and a non‑metal, in which the constituent elements are completely soluble in each other in the liquid state and retain a single phase on solidification. |
+| **Electropositivity** | Tendency of an atom to lose electrons and form positive ions. Metals are electropositive. |
+| **Electronegativity** | Tendency of an atom to attract electrons towards itself. Non‑metals are electronegative. |
+| **Corrosion** | The gradual destruction of a metal (or alloy) by chemical reaction with its environment, most commonly oxidation. |
+| **Oxidation state (oxidation number)** | The charge that an atom would have if all its bonds were ionic. In a metal oxide, the metal is in a positive oxidation state, the oxygen is –2. |
+
+---  
+
+## 3. Physical Properties  
+
+| Property | Metals | Non‑metals |
+|----------|--------|------------|
+| **State at STP** | Solid (except Hg) | Solid (C, S, P), liquid (Br), gas (O₂, N₂, H₂, etc.) |
+| **Luster** | Metallic (shiny) | Dull or non‑metallic |
+| **Malleability & Ductility** | Malleable & ductile | Brittle (except graphite) |
+| **Electrical Conductivity** | Good conductors (free electrons) | Poor conductors (except graphite) |
+| **Thermal Conductivity** | High | Low |
+| **Melting/Boiling Points** | Generally high (except Hg) | Generally low (except C) |
+| **Density** | High | Low |
+| **Sonorous** | Yes (ring when struck) | No |
+
+> **Note:** Graphite, a non‑metal, conducts electricity because of its layered structure of delocalised π‑electrons.
+
+---  
+
+## 4. Chemical Properties  
+
+### 4.1 Reactivity with Oxygen  
+
+| Element | Reaction with Oxygen | Product | Observation |
+|---------|---------------------|---------|-------------|
+| **Metals (e.g., Fe, Mg, Zn)** | $$\text{M} + \frac{n}{2}\,\text{O}_2 \rightarrow \text{M}_n\text{O}_m$$ | Metal oxides (basic) | Form a **basic oxide**; often give a **basic** solution on reaction with water. |
+| **Non‑metals (e.g., S, P, C)** | $$\text{X} + \frac{n}{2}\,\text{O}_2 \rightarrow \text{X}_n\text{O}_m$$ | Non‑metal oxides (acidic) | Form **acidic oxides**; dissolve in water to give acidic solutions. |
+
+### 4.2 Reaction with Water  
+
+* **Active metals (Na, K, Ca, Mg)** react vigorously:  
+
+  $$\text{2 Na} + 2\text{H}_2\text{O} \rightarrow 2\text{NaOH} + \text{H}_2\uparrow$$  
+
+* **Less active metals (Fe, Cu, Zn)** react very slowly or not at all with cold water; may react with steam:  
+
+  $$\text{Zn} + \text{H}_2\text{O (steam)} \rightarrow \text{ZnO} + \text{H}_2\uparrow$$  
+
+* **Non‑metals** do not react with water (except for some oxides forming acids).
+
+### 4.3 Reaction with Acids  
+
+* **Metals** (except some like Cu, Ag) dissolve in dilute acids, liberating hydrogen gas:  
+
+  $$\text{M} + 2\text{HCl} \rightarrow \text{MCl}_2 + \text{H}_2\uparrow$$  
+
+* **Non‑metals** usually do **not** react with dilute acids, but their **oxides** do:  
+
+  $$\text{SO}_2 + 2\text{H}_2\text{O} \rightarrow \text{H}_2\text{SO}_3$$  
+
+### 4.4 Reaction with Halogens  
+
+* **Metals** → **Metal halides** (ionic):  
+
+  $$\text{2 Na} + \text{Cl}_2 \rightarrow 2\text{NaCl}$$  
+
+* **Non‑metals** → **Covalent halides** (e.g., PCl₅, SO₂Cl₂).  
+
+### 4.5 Corrosion (Oxidation)  
+
+* **General form:**  
+
+  $$\text{Metal} + \text{O}_2 + \text{H}_2\text{O} \rightarrow \text{Metal oxide/hydroxide}$$  
+
+* Example – Iron rusting:  
+
+  $$4\text{Fe} + 3\text{O}_2 + 6\text{H}_2\text{O} \rightarrow 4\text{Fe(OH)}_3$$  
+
+* Preventive measures: painting, galvanisation (Zn coating), cathodic protection.
+
+---  
+
+## 5. Trends in the Periodic Table  
+
+| Trend | Metals | Non‑metals |
+|-------|--------|------------|
+| **Atomic size** | Decreases across a period, increases down a group | Same trend as metals |
+| **Ionisation enthalpy** | Decreases down a group, increases across a period | Increases across a period, decreases down a group |
+| **Electronegativity** | Increases across a period, decreases down a group | Decreases across a period, increases down a group |
+| **Metallic character** | Decreases across a period, increases down a group | Increases across a period, decreases down a group |
+
+*The **metallic character** is the tendency to lose electrons; the **non‑metallic character** is the tendency to gain or share electrons.*
+
+---  
+
+## 6. Worked Examples  
+
+### Example 1 – Identifying an Oxide as Acidic, Basic or Amphoteric  
+
+**Question:**  
+Classify the oxide **Al₂O₃** as acidic, basic or amphoteric. Justify your answer.
+
+**Solution:**  
+
+1. **Reaction with acid:**  
+
+   $$\text{Al}_2\text{O}_3 + 6\text{HCl} \rightarrow 2\text{AlCl}_3 + 3\text{H}_2\text{O}$$  
+
+   The oxide dissolves in acid, forming a salt and water.  
+
+2. **Reaction with base:**  
+
+   $$\text{Al}_2\text{O}_3 + 2\text{NaOH} + 3\text{H}_2\text{O} \rightarrow 2\text{Na[Al(OH)}_4]$$  
+
+   The oxide also reacts with a strong base to give a soluble aluminate complex.  
+
+Since **Al₂O₃** reacts both with acids *and* bases, it is **amphoteric**.
+
+---
+
+### Example 2 – Calculating Mass of Metal Required for a Reaction  
+
+**Question:**  
+How many grams of **magnesium** are needed to completely react with **500 mL** of **0.2 M** hydrochloric acid at STP?
+
+**Reaction:**  
+
+$$\text{Mg} + 2\text{HCl} \rightarrow \text{MgCl}_2 + \text{H}_2\uparrow$$  
+
+**Solution:**  
+
+1. **Moles of HCl:**  
+
+   $$\text{Molarity} = \frac{\text{moles}}{\text{volume (L)}} \Rightarrow \text{moles HCl} = 0.2\;\text{mol L}^{-1} \times 0.500\;\text{L}=0.10\;\text{mol}$$  
+
+2. **Stoichiometry:**  
+
+   From the balanced equation, 2 mol HCl react with 1 mol Mg.  
+
+   $$\text{moles Mg} = \frac{0.10\;\text{mol HCl}}{2}=0.050\;\text{mol}$$  
+
+3. **Mass of Mg:**  
+
+   Molar mass of Mg = **24.3 g mol⁻¹**  
+
+   $$\text{mass Mg}=0.050\;\text{mol}\times 24.3\;\text{g mol}^{-1}=1.215\;\text{g}$$  
+
+**Answer:**  **1.22 g of Mg** (correct to three significant figures) are required.
+
+---
+
+### Example 3 – Determining Electrical Conductivity  
+
+**Question:**  
+A metal wire of length **2 m** and cross‑sectional area **0.5 mm²** carries a current of **5 A** when a potential difference of **10 V** is applied across its ends. Calculate its **resistivity** (ρ).  
+
+**Formula:**  
+
+$$R = \rho \frac{L}{A} \quad\text{and}\quad V = IR$$  
+
+**Solution:**  
+
+1. **Find resistance (R):**  
+
+   $$R = \frac{V}{I} = \frac{10\;\text{V}}{5\;\text{A}} = 2\;\Omega$$  
+
+2. **Convert area to m²:**  
+
+   $$0.5\;\text{mm}^2 = 0.5 \times 10^{-6}\;\text{m}^2 = 5.0 \times 10^{-7}\;\text{m}^2$$  
+
+3. **Use the resistivity formula:**  
+
+   $$\rho = R\frac{A}{L}=2\;\Omega \times \frac{5.0 \times 10^{-7}\;\text{m}^2}{2\;\text{m}} = 5.0 \times 10^{-7}\;\Omega\;\text{m}$$  
+
+**Answer:**  The resistivity of the metal is **\(5.0 \times 10^{-7}\; \Omega\; \text{m}\)**, typical of good conductors such as copper (≈1.7 × 10⁻⁸ Ω m).  
+
+---  
+
+## 7. Important Formulas  
+
+| Quantity | Formula | Where Used |
+|----------|---------|------------|
+| **Molar mass (M)** | $$M = \frac{g}{n}$$ | Converting mass ↔ moles |
+| **Moles of a gas (ideal, STP)** | $$n = \frac{V}{22.4\;\text{L mol}^{-1}}$$ | Gas‑volume calculations |
+| **Electrical resistance** | $$R = \rho \frac{L}{A}$$ | Determining resistivity of metals |
+| **Ohm’s law** | $$V = I R$$ | Relating voltage, current, resistance |
+| **Percent purity** | $$\%\,\text{purity}= \frac{\text{mass of pure metal}}{\text{mass of impure sample}}\times 100$$ | Analyzing alloys |
+| **Corrosion rate** (simplified) | $$\text{Corrosion rate}= \frac{\text{mass loss}}{\text{surface area}\times \text{time}}$$ | Estimating metal loss |
+
+---  
+
+## 8. Applications of Metals and Non‑metals  
+
+| Application | Metal / Non‑metal | Reason |
+|-------------|-------------------|--------|
+| **Electrical wiring** | Cu, Al (metals) | High conductivity, ductile |
+| **Stainless steel utensils** | Fe‑Cr‑Ni alloy | Corrosion‑resistant, strong |
+| **Water purification (chlorination)** | Cl₂ (non‑metal) | Strong oxidising agent, kills microbes |
+| **Incandescent bulb filament** | Tungsten (metal) | High melting point, low vapour pressure |
+| **Graphite pencils** | C (non‑metal) | Soft, layered structure allows marking |
+| **Fuel cells (hydrogen)** | Pt (metal catalyst) | Catalytic activity, electron transfer |
+| **Glass making** | SiO₂ (non‑metal oxide) | Transparent, high melting point |
+
+---  
+
+## 9. Summary – Key Points  
+
+1. **Metals** are electropositive, shiny, malleable, ductile, good conductors and tend to lose electrons forming cations.  
+2. **Non‑metals** are electronegative, brittle (except graphite), poor conductors and tend to gain or share electrons forming anions or covalent bonds.  
+3. **Alloys** are mixtures of metals (or metal + non‑metal) that exhibit enhanced properties (strength, corrosion resistance, etc.).  
+4. **Reactions** – Metals generally form **basic oxides**, react with acids liberating H₂, and corrode (oxidise) in presence of moisture and oxygen. Non‑metals form **acidic oxides** and do not readily react with dilute acids.  
+5. **Trends** – Across a period, metallic character decreases; down a group, metallic character increases. The opposite trend holds for non‑metallic character.  
+6. **Corrosion** can be prevented by coating, alloying, or cathodic protection.  
+7. **Important formulas** include the mole concept, ideal gas volume at STP, Ohm’s law and resistivity relation.  
+8. **Everyday relevance** – From kitchen utensils to electronic devices, the contrasting properties of metals and non‑metals enable the vast array of materials we use.  
+
+---  
+
+*End of Chapter*  
+
+---  
+
+**Suggested Exercises**  
+
+1. Classify the following oxides as acidic, basic or amphoteric: \( \text{Na}_2\text{O},\; \text{Al}_2\text{O}_3,\; \text{SO}_3,\; \text{ZnO}\).  
+2. Write the balanced chemical equation for the reaction of **calcium** with water and indicate the observable changes.  
+3. A **copper wire** of length 1 m and cross‑section 1 mm² has a resistance of 0.017 Ω. Calculate its resistivity and compare with the standard value for copper.  
+4. Explain why **graphite** conducts electricity whereas **diamond** (both allotropes of carbon) does not.  
+
+(Answers are provided in the textbook’s exercise key.)
