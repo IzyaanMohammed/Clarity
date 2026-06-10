@@ -24,7 +24,20 @@ if IS_VERCEL and not os.getenv("CLARITY_DB_PATH"):
         except Exception as e:
             print(f"Warning: Failed to copy bundled DB to /tmp: {e}")
 else:
-    DB_PATH = Path(os.getenv("CLARITY_DB_PATH", Path(__file__).resolve().parent.parent / "clarity.db"))
+    env_db_path = os.getenv("CLARITY_DB_PATH")
+    BUNDLED_DB = Path(__file__).resolve().parent.parent / "clarity.db"
+    if env_db_path:
+        DB_PATH = Path(env_db_path)
+        # If running on persistent volume and the target db does not exist, copy the bundled db
+        if BUNDLED_DB.exists() and not DB_PATH.exists():
+            try:
+                DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(BUNDLED_DB, DB_PATH)
+                print(f"Seeded persistent SQLite database at {DB_PATH} from bundled DB")
+            except Exception as e:
+                print(f"Warning: Failed to seed persistent DB at {DB_PATH}: {e}")
+    else:
+        DB_PATH = BUNDLED_DB
 
 
 

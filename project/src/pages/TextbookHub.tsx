@@ -213,6 +213,22 @@ export const TextbookHub = () => {
         return match ? match[1] : '';
     };
 
+    const getCorrectTextbook = (books: NcertBook[], chapterIdx: number): NcertBook | null => {
+        if (!books.length) return null;
+        let currentOffset = 0;
+        for (const book of books) {
+            const match = book.url.match(/[?&]([a-z0-9]+)=([0-9]+)-([0-9]+)/i);
+            if (match) {
+                const maxChapters = Number(match[4]);
+                if (chapterIdx <= currentOffset + maxChapters) {
+                    return book;
+                }
+                currentOffset += maxChapters;
+            }
+        }
+        return books[books.length - 1];
+    };
+
     const openNcertViewer = async () => {
         if (!selectedBook || !selectedChapter) return;
         resetPdfViewer();
@@ -228,16 +244,10 @@ export const TextbookHub = () => {
         const safeChapterNum = Math.max(1, chapterIndex);
         const bookCode = getBookCode(selectedBook.url);
 
-        // Load PDF as blob — downloads from ncert.nic.in/textbook/pdf/<code><nn>.pdf
+        // Point iframe directly to proxy endpoint — enables native incremental streaming
         const apiPath = `/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${safeChapterNum}`;
-        setViewerPdfLoading(true);
-        fetchPdfBlob(apiPath)
-            .then(blobUrl => setViewerPdfUrl(blobUrl))
-            .catch(() => {
-                // Fallback directly to the proxied API endpoint if blob creation fails
-                setViewerPdfUrl(apiPath);
-            })
-            .finally(() => setViewerPdfLoading(false));
+        setViewerPdfUrl(apiPath);
+        setViewerPdfLoading(false);
 
         // Load text in background — extracted from the actual NCERT PDF
         // Use a large limit so full chapter text is included
@@ -263,18 +273,11 @@ export const TextbookHub = () => {
         setAiActionName('');
         setShowContextMenu(false);
 
-        // Fetch PDF as blob using Authorization header — avoids 401 from token query param
-        const apiPath = `/api/v1/upload/custom-textbook/${book.id}/pdf`;
+        // Serve PDF using token query param directly in iframe for instant streaming
         const token = getAuthToken();
         const fallbackUrl = `/api/v1/upload/custom-textbook/${book.id}/pdf?token=${token}`;
-        setViewerPdfLoading(true);
-        fetchPdfBlob(apiPath)
-            .then(blobUrl => setViewerPdfUrl(blobUrl))
-            .catch(() => {
-                // Fallback to direct iframe src with token query param if blob fails
-                setViewerPdfUrl(fallbackUrl);
-            })
-            .finally(() => setViewerPdfLoading(false));
+        setViewerPdfUrl(fallbackUrl);
+        setViewerPdfLoading(false);
 
         setLoadingViewerText(true);
         try {
@@ -426,6 +429,15 @@ export const TextbookHub = () => {
         () => Math.max(1, resources.chapters.findIndex((chapter) => chapter === selectedChapter) + 1),
         [resources.chapters, selectedChapter]
     );
+
+    useEffect(() => {
+        if (resources.textbooks.length > 1 && chapterIndex > 0) {
+            const correctBook = getCorrectTextbook(resources.textbooks, chapterIndex);
+            if (correctBook && (!selectedBook || selectedBook.title !== correctBook.title)) {
+                setSelectedBook(correctBook);
+            }
+        }
+    }, [chapterIndex, resources.textbooks, selectedBook]);
 
     const chapterUrl = selectedBook ? buildNcertChapterUrl(selectedBook.url, chapterIndex) : '';
     const chapterMirrorUrl = chapterUrl ? getReadableMirrorUrl(chapterUrl) : '';

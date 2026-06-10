@@ -103,6 +103,10 @@ async def get_textbook_content(url: str, max_chars: int = 22000, chapter_index: 
     if chapter_index is not None and chapter_index > 0:
         local_ch = chapter_index
 
+    # Automatically resolve correct split-book part and local chapter
+    from utils.textbook_fetcher import resolve_actual_ncert_filename
+    book_code, local_ch = resolve_actual_ncert_filename(book_code, local_ch)
+
     try:
         from utils.textbook_fetcher import _download_ncert_pdf, _extract_text_from_pdf_bytes
 
@@ -446,7 +450,7 @@ async def get_custom_textbook_pdf(
         media_type="application/pdf",
         headers={
             "Content-Disposition": f'inline; filename="{safe_filename}"',
-            "Cache-Control": "private, max-age=3600",
+            "Cache-Control": "private, max-age=86400",
             "X-Frame-Options": "",
         },
         filename=safe_filename,
@@ -482,6 +486,9 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
     from fastapi.responses import FileResponse
     from pathlib import Path
     import os
+    from utils.textbook_fetcher import resolve_actual_ncert_filename
+
+    book_code, chapter_num = resolve_actual_ncert_filename(book_code, chapter_num)
 
     chapter_num = max(1, chapter_num)
     padded = f"{chapter_num:02d}"
@@ -498,7 +505,7 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
 
     response_headers = {
         "Content-Disposition": f'inline; filename="{filename}"',
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": "public, max-age=31536000, immutable",
         "X-Frame-Options": "",
     }
 
@@ -518,21 +525,33 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
     }
 
     try:
-        async with httpx.AsyncClient(timeout=45.0, follow_redirects=True, headers=browser_headers) as client:
-            response = await client.get(ncert_pdf_url)
-            ctype = response.headers.get("content-type", "")
-            is_pdf = "pdf" in ctype or (len(response.content) > 4 and response.content[:4] == b"%PDF")
-            if response.status_code == 200 and is_pdf:
-                cache_path.write_bytes(response.content)
-                logger.info(f"Cached {filename} ({len(response.content) // 1024} KB)")
-                return FileResponse(cache_path, media_type="application/pdf", headers=response_headers, filename=filename)
-            else:
-                logger.warning(f"NCERT PDF not available: {ncert_pdf_url} status={response.status_code} ctype={ctype}")
-                raise HTTPException(status_code=404, detail=f"NCERT PDF not found: {filename}")
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error proxying NCERT PDF {filename}: {e}")
-        raise HTTPException(status_code=502, detail="Error fetching PDF from NCERT server")
+        import asyncio
+    except ImportError:
+        import asyncio
+
+    retries = 3
+    for attempt in range(retries):
+        try:
+            async with httpx.AsyncClient(timeout=45.0, follow_redirects=True, headers=browser_headers) as client:
+                response = await client.get(ncert_pdf_url)
+                ctype = response.headers.get("content-type", "")
+                is_pdf = "pdf" in ctype or (len(response.content) > 4 and response.content[:4] == b"%PDF")
+                if response.status_code == 200 and is_pdf:
+                    cache_path.write_bytes(response.content)
+                    logger.info(f"Cached {filename} ({len(response.content) // 1024} KB)")
+                    return FileResponse(cache_path, media_type="application/pdf", headers=response_headers, filename=filename)
+                else:
+                    logger.warning(f"NCERT PDF download attempt {attempt+1} failed: status={response.status_code} ctype={ctype}")
+                    if attempt == retries - 1:
+                        raise HTTPException(status_code=404, detail=f"NCERT PDF not found: {filename}")
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.warning(f"NCERT PDF download attempt {attempt+1} got exception: {e}")
+            if attempt == retries - 1:
+                logger.error(f"Error proxying NCERT PDF {filename} after {retries} attempts: ", exc_info=True)
+                raise HTTPException(status_code=502, detail="Error fetching PDF from NCERT server")
+        # Wait a bit before retrying
+        await asyncio.sleep(1.0)
 
 

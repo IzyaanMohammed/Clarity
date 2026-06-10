@@ -77,15 +77,8 @@ export const ActiveRecall = () => {
 
       if (matchingCustom) {
         const token = getAuthToken();
-        const apiPath = `/api/v1/upload/custom-textbook/${matchingCustom.id}/pdf`;
         const fallbackUrl = `/api/v1/upload/custom-textbook/${matchingCustom.id}/pdf?token=${token}`;
-        
-        try {
-          const blobUrl = await fetchPdfBlob(apiPath);
-          setViewerPdfUrl(blobUrl);
-        } catch {
-          setViewerPdfUrl(fallbackUrl);
-        }
+        setViewerPdfUrl(fallbackUrl);
         setViewerPdfLoading(false);
         return;
       }
@@ -105,14 +98,8 @@ export const ActiveRecall = () => {
     const bookCode = getBookCode(book.url);
     const apiPath = `/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${chapterIdx}`;
 
-    try {
-      const blobUrl = await fetchPdfBlob(apiPath);
-      setViewerPdfUrl(blobUrl);
-    } catch {
-      setViewerPdfUrl(apiPath);
-    } finally {
-      setViewerPdfLoading(false);
-    }
+    setViewerPdfUrl(apiPath);
+    setViewerPdfLoading(false);
   };
 
   // Revoke blob URL on unmount to prevent memory leaks

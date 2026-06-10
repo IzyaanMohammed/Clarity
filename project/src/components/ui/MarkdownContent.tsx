@@ -42,6 +42,15 @@ const preprocessMath = (text: string): string => {
     // Inline math: \\( ... \\) or \( ... \)
     processed = processed.replace(/\\{1,2}\(([^]*?)\\{1,2}\)/g, (_: string, eq: string) => `$${eq.trim()}$`);
 
+    // Convert unicode root symbol √ followed by parentheses to LaTeX \sqrt
+    processed = processed.replace(/√\s*\(([^)]+)\)/g, (_, inside) => `$\\sqrt{${inside.trim()}}$`);
+
+    // Convert unicode root symbol √ followed by curly braces to LaTeX \sqrt
+    processed = processed.replace(/√\s*\{([^}]+)\}/g, (_, inside) => `$\\sqrt{${inside.trim()}}$`);
+
+    // Convert unicode root symbol √ followed by alphanumeric/Greek characters to LaTeX \sqrt
+    processed = processed.replace(/√\s*([0-9a-zA-Z\u0370-\u03ff]+)/g, (_, inside) => `$\\sqrt{${inside.trim()}}$`);
+
     // Fix chemical subscripts
     processed = convertChemicalSubscripts(processed);
 

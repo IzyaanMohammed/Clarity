@@ -192,17 +192,24 @@ def _download_ncert_pdf(book_code: str, chapter_num: int) -> Optional[bytes]:
 
     url = f"https://ncert.nic.in/textbook/pdf/{filename}"
     logger.info(f"Downloading NCERT PDF: {url}")
-    try:
-        with httpx.Client(timeout=30.0, follow_redirects=True) as client:
-            resp = client.get(url)
-            ctype = resp.headers.get("content-type", "")
-            if resp.status_code == 200 and ("pdf" in ctype or resp.content[:4] == b"%PDF"):
-                cache_path.write_bytes(resp.content)
-                logger.info(f"Cached {filename} ({len(resp.content) // 1024} KB)")
-                return resp.content
-            logger.warning(f"NCERT PDF not available: {url} (status={resp.status_code}, ctype={ctype})")
-    except Exception as e:
-        logger.error(f"Failed to download NCERT PDF {url}: {e}")
+    
+    import time
+    retries = 3
+    for attempt in range(retries):
+        try:
+            with httpx.Client(timeout=30.0, follow_redirects=True) as client:
+                resp = client.get(url)
+                ctype = resp.headers.get("content-type", "")
+                if resp.status_code == 200 and ("pdf" in ctype or resp.content[:4] == b"%PDF"):
+                    cache_path.write_bytes(resp.content)
+                    logger.info(f"Cached {filename} ({len(resp.content) // 1024} KB)")
+                    return resp.content
+                logger.warning(f"NCERT PDF download attempt {attempt+1} failed: status={resp.status_code}, ctype={ctype}")
+        except Exception as e:
+            logger.warning(f"NCERT PDF download attempt {attempt+1} got exception: {e}")
+            if attempt == retries - 1:
+                logger.error(f"Failed to download NCERT PDF {url} after {retries} attempts: {e}")
+        time.sleep(1.0)
     return None
 
 
@@ -372,3 +379,38 @@ async def get_textbook_chapter_text(class_num: str, subject: str, chapter: str) 
 
     logger.warning(f"All extraction strategies failed for Class {class_num} {subject} - {chapter}")
     return ""
+
+
+def resolve_actual_ncert_filename(book_code: str, chapter_num: int) -> tuple[str, int]:
+    """
+    Given a book_code and a global chapter_num, resolve the correct (book_code, local_chapter_num)
+    by looking up in _BOOK_MAP. Since the frontend always passes the global chapter index,
+    we find the subject/class parts and map the global index to the correct part and local index.
+    """
+    # 1. Find the parts for this book_code
+    found_parts = None
+    for class_num, subjects in _BOOK_MAP.items():
+        for subject, parts in subjects.items():
+            if any(code == book_code for code, _, _ in parts):
+                found_parts = parts
+                break
+        if found_parts:
+            break
+            
+    if not found_parts:
+        return book_code, chapter_num
+        
+    # 2. Treat chapter_num as the global chapter index (1-based)
+    global_chapter_idx = chapter_num
+    
+    # 3. Resolve to the correct book part using global_chapter_idx
+    for code, max_ch, offset in found_parts:
+        if global_chapter_idx <= offset + max_ch:
+            local_ch = max(1, min(global_chapter_idx - offset, max_ch))
+            return code, local_ch
+            
+    # Fallback to the last part
+    code, max_ch, offset = found_parts[-1]
+    local_ch = max(1, min(global_chapter_idx - offset, max_ch))
+    return code, local_ch
+
