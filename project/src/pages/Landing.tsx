@@ -158,6 +158,33 @@ export const Landing = () => {
     const problemWords = ['CONFUSION', 'CHAOS', 'OVERWHELM', 'BOARD STRESS'];
     const problemSectionRef = useRef<HTMLDivElement>(null);
 
+    // Hero Mouse Follow & Reveal Lens States
+    const [heroMousePos, setHeroMousePos] = useState({ x: 0, y: 0 });
+    const [isHeroHovered, setIsHeroHovered] = useState(false);
+    const heroSectionRef = useRef<HTMLDivElement>(null);
+
+    const [headingMousePos, setHeadingMousePos] = useState({ x: 0, y: 0 });
+    const [isHeadingHovered, setIsHeadingHovered] = useState(false);
+    const headingContainerRef = useRef<HTMLDivElement>(null);
+
+    const handleHeroMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!heroSectionRef.current) return;
+        const rect = heroSectionRef.current.getBoundingClientRect();
+        setHeroMousePos({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        });
+    };
+
+    const handleHeadingMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!headingContainerRef.current) return;
+        const rect = headingContainerRef.current.getBoundingClientRect();
+        setHeadingMousePos({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        });
+    };
+
     // Dynamic Google Fonts loading
     useEffect(() => {
         const link = document.createElement('link');
@@ -303,7 +330,7 @@ export const Landing = () => {
             </div>
 
             {/* Global Header */}
-            <header className="sticky top-0 z-50 backdrop-blur-md bg-white/85 dark:bg-[#020617]/85 border-b border-slate-200/80 dark:border-slate-800/80 px-6 py-4 transition-all">
+            <header className="sticky top-0 z-50 backdrop-blur-md bg-white/95 dark:bg-[#020617]/95 border-b border-slate-200/80 dark:border-slate-800/80 px-6 py-4 transition-all">
                 <div className="max-w-7xl mx-auto flex items-center justify-between font-medium">
                     <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-black flex items-center justify-center rounded-xl border border-slate-800 shadow-md">
@@ -335,13 +362,28 @@ export const Landing = () => {
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-6 pt-10 pb-24 space-y-32">
                 {/* Epic Typographic Entrance Section */}
-                <section className="relative overflow-hidden bg-slate-950 text-white p-8 md:p-16 border border-slate-850 min-h-[85vh] rounded-3xl flex flex-col justify-center shadow-2xl">
+                <section 
+                    ref={heroSectionRef}
+                    onMouseMove={handleHeroMouseMove}
+                    onMouseEnter={() => setIsHeroHovered(true)}
+                    onMouseLeave={() => setIsHeroHovered(false)}
+                    className="relative overflow-hidden bg-slate-950 text-white p-8 md:p-16 border border-slate-850 min-h-[85vh] rounded-3xl flex flex-col justify-center shadow-2xl transition-all"
+                >
                     {/* Animated grid overlay */}
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-35" />
                     
                     {/* Radial glowing backgrounds */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none animate-pulse" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-glow" />
+
+                    {isHeroHovered && (
+                        <div 
+                            className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+                            style={{
+                                background: `radial-gradient(500px circle at ${heroMousePos.x}px ${heroMousePos.y}px, rgba(16, 185, 129, 0.07), rgba(99, 102, 241, 0.04), transparent 70%)`
+                            }}
+                        />
+                    )}
 
                     <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full min-h-[400px]">
                         {/* Left Column: Typographic Details */}
@@ -362,11 +404,35 @@ export const Landing = () => {
                             </div>
 
                             {/* Main Morphing Title */}
-                            <div className="relative">
+                            <div 
+                                ref={headingContainerRef}
+                                onMouseMove={handleHeadingMouseMove}
+                                onMouseEnter={() => setIsHeadingHovered(true)}
+                                onMouseLeave={() => setIsHeadingHovered(false)}
+                                className="relative py-4 cursor-crosshair w-full max-w-max select-none"
+                            >
                                 {heroStage === 'reveal' && (
                                     <div className="absolute inset-0 -m-8 border border-emerald-500/20 animate-ping opacity-75 rounded-3xl pointer-events-none" />
                                 )}
-                                <h1 className="text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none transition-all duration-1000 transform scale-100" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
+                                
+                                {/* 1. Blurry Muddy Back Layer (Represents chaos/board stress) */}
+                                <h1 className="text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none transition-all duration-300 filter blur-[7px] opacity-25 select-none" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
+                                    <span className="bg-gradient-to-r from-emerald-450 via-teal-300 via-indigo-550 to-emerald-450 bg-clip-text text-transparent">
+                                        Clarity
+                                    </span>
+                                </h1>
+
+                                {/* 2. Sharp Clear Front Layer with Circle Clip-path (Revealed by cursor/lens) */}
+                                <h1 className="absolute top-4 left-0 text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none pointer-events-none transition-all duration-75" style={{
+                                    fontFamily: "'Sora', sans-serif",
+                                    fontWeight: 800,
+                                    clipPath: isHeadingHovered 
+                                        ? `circle(110px at ${headingMousePos.x}px ${headingMousePos.y}px)` 
+                                        : `circle(130px at 50% 50%)`,
+                                    WebkitClipPath: isHeadingHovered 
+                                        ? `circle(110px at ${headingMousePos.x}px ${headingMousePos.y}px)` 
+                                        : `circle(130px at 50% 50%)`
+                                }}>
                                     <span className="bg-gradient-to-r from-emerald-450 via-teal-300 via-indigo-550 to-emerald-450 bg-clip-text text-transparent animate-gradient-text text-glow">
                                         Clarity
                                     </span>
@@ -415,7 +481,7 @@ export const Landing = () => {
                                 ? 'opacity-100 translate-y-0 scale-100'
                                 : 'opacity-0 translate-y-8 scale-95'
                         }`}>
-                            <div className="w-full bg-white/85 dark:bg-slate-900/85 border border-slate-200 dark:border-slate-805 rounded-3xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col">
+                            <div className="w-full bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-805 rounded-3xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col">
                                 {/* Chat Header */}
                                 <div className="bg-slate-50/70 dark:bg-slate-950/60 px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-850">
                                     <div className="flex items-center gap-2">
@@ -966,7 +1032,7 @@ export const Landing = () => {
                             </div>
                             
                             {/* Mini Leaderboard Graphic */}
-                            <div className="w-full md:w-80 bg-white/85 dark:bg-slate-950/85 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-lg shrink-0 space-y-3">
+                            <div className="w-full md:w-80 bg-white/95 dark:bg-slate-950/95 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-lg shrink-0 space-y-3">
                                 <p className="text-[10px] font-black uppercase tracking-wider text-slate-450 dark:text-slate-500 flex justify-between items-center">
                                     <span>Regional Rankings</span>
                                     <span className="text-[#1D9E75]">Tamil Nadu (State-wise)</span>
