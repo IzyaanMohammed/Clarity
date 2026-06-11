@@ -263,7 +263,7 @@ export const Landing = () => {
         if (!isProblemVisible) return;
         const interval = setInterval(() => {
             setProblemWordIdx((prev) => (prev + 1) % problemWords.length);
-        }, 3000); // Slower interval
+        }, 1000); // Faster interval
         return () => clearInterval(interval);
     }, [isProblemVisible]);
 
@@ -289,7 +289,7 @@ export const Landing = () => {
                     animation: gradient-x 8s ease infinite;
                 }
                 .text-glow {
-                    text-shadow: 0 0 40px rgba(16, 185, 129, 0.35), 0 0 80px rgba(59, 130, 246, 0.15);
+                    text-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
                 }
             `}</style>
 
