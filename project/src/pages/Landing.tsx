@@ -133,7 +133,6 @@ export const Landing = () => {
     const [introPhase, setIntroPhase] = useState<'loading' | 'text' | 'line' | 'wipe' | 'reveal' | 'finished'>('loading');
     const [lettersVisible, setLettersVisible] = useState(false);
     const [hoveredLetterIdx, setHoveredLetterIdx] = useState<number | null>(null);
-    const [isHoveredWord, setIsHoveredWord] = useState(false);
     const [focusRingSize, setFocusRingSize] = useState({ width: 0, height: 0 });
     const [tilt, setTilt] = useState({ x: 0, y: 0 });
     const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
@@ -161,6 +160,11 @@ export const Landing = () => {
     const cursorRingRef = useRef<HTMLDivElement>(null);
     const problemSectionRef = useRef<HTMLDivElement>(null);
     const stageRef = useRef<HTMLDivElement>(null);
+    const isHoveredWordRef = useRef(false);
+
+    const setIsHoveredWord = (hovered: boolean) => {
+        isHoveredWordRef.current = hovered;
+    };
 
     // Load fonts and style overrides
     useEffect(() => {
@@ -313,12 +317,12 @@ export const Landing = () => {
                 curEl.style.top = `${curY}px`;
             }
             if (curRing) {
-                const size = isHoveredWord ? 44 : 28;
+                const size = isHoveredWordRef.current ? 44 : 28;
                 curRing.style.width = `${size}px`;
                 curRing.style.height = `${size}px`;
                 curRing.style.left = `${c2x - curX - (size / 2)}px`;
                 curRing.style.top = `${c2y - curY - (size / 2)}px`;
-                curRing.style.borderColor = isHoveredWord ? 'rgba(26, 26, 46, 0.55)' : 'rgba(26, 26, 46, 0.35)';
+                curRing.style.borderColor = isHoveredWordRef.current ? 'rgba(26, 26, 46, 0.55)' : 'rgba(26, 26, 46, 0.35)';
             }
             requestAnimationFrame(tick);
         };
@@ -328,7 +332,7 @@ export const Landing = () => {
             active = false;
             window.removeEventListener('mousemove', handleMouseMove);
         };
-    }, [isHoveredWord]);
+    }, []);
 
     // 3D Tilting computation
     useEffect(() => {
@@ -569,15 +573,6 @@ export const Landing = () => {
                 .ruled-paper-bg {
                     background-image: linear-gradient(rgba(26, 26, 46, 0.035) 1px, transparent 1px);
                     background-size: 100% 32px;
-                }
-                .red-margin-line {
-                    position: absolute;
-                    left: clamp(20px, 6vw, 80px);
-                    top: 0; bottom: 0;
-                    width: 1.5px;
-                    background-color: rgba(220, 50, 50, 0.18);
-                    pointer-events: none;
-                    z-index: 10;
                 }
 
                 .flat-card {
@@ -854,9 +849,6 @@ export const Landing = () => {
 
                 {/* Main page content layout sheets */}
                 <main className="max-w-7xl mx-auto px-6 py-20 space-y-32 z-10 w-full relative">
-                    {/* Ruled red margin overlay on content */}
-                    <div className="red-margin-line" />
-
                     {/* Section: CTAs & Mockup Workspace demo */}
                     <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full relative pl-[clamp(24px, 7vw, 90px)]">
                         <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
