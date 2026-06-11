@@ -3,25 +3,18 @@ import { Link } from 'react-router-dom';
 import { 
     ArrowRight, 
     Brain, 
-    CalendarCheck2, 
     Rocket, 
-    ShieldCheck, 
-    Sparkles, 
     Trophy, 
     CheckCircle2, 
     ChevronDown, 
     Mail, 
-    Star, 
     Users, 
-    Layout, 
-    Zap, 
     Check, 
     AlertTriangle, 
     BookOpen, 
     LineChart,
     Video,
     FileText,
-    MessageSquare,
     Flame
 } from 'lucide-react';
 
@@ -136,83 +129,245 @@ const PROMPTS = {
 };
 
 export const Landing = () => {
-    // Staged animation hero state
-    const [heroStage, setHeroStage] = useState<'reveal' | 'subtext' | 'cta' | 'scroll'>('reveal');
+    // Intro & Reveal stage states
+    const [introPhase, setIntroPhase] = useState<'loading' | 'text' | 'line' | 'wipe' | 'reveal' | 'finished'>('loading');
+    const [lettersVisible, setLettersVisible] = useState(false);
+    const [hoveredLetterIdx, setHoveredLetterIdx] = useState<number | null>(null);
+    const [isHoveredWord, setIsHoveredWord] = useState(false);
+    const [focusRingSize, setFocusRingSize] = useState({ width: 0, height: 0 });
+    const [tilt, setTilt] = useState({ x: 0, y: 0 });
+    const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
 
-    // Interactive mockup state
+    // Interactive mockup states
     const [activeTab, setActiveTab] = useState<'workspace' | 'tutor' | 'simulator' | 'parent'>('workspace');
-
-    // FAQ state (accordion index)
     const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(null);
 
-    // Interactive console chat state
+    // Interactive chat simulator states
     const [terminalPrompt, setTerminalPrompt] = useState<string>('');
     const [terminalOutput, setTerminalOutput] = useState<string>('');
     const [isTyping, setIsTyping] = useState<boolean>(false);
     const [visibleLinesCount, setVisibleLinesCount] = useState<number>(0);
     const [activePrompt, setActivePrompt] = useState<string | null>(null);
 
-    // Scroll-triggered word switcher state
+    // Scroll dilemma words switcher states
     const [isProblemVisible, setIsProblemVisible] = useState(false);
     const [problemWordIdx, setProblemWordIdx] = useState(0);
     const problemWords = ['CONFUSION', 'CHAOS', 'OVERWHELM', 'BOARD STRESS'];
+    
+    // Refs
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const wordElRef = useRef<HTMLDivElement>(null);
+    const cursorRef = useRef<HTMLDivElement>(null);
+    const cursorRingRef = useRef<HTMLDivElement>(null);
     const problemSectionRef = useRef<HTMLDivElement>(null);
+    const stageRef = useRef<HTMLDivElement>(null);
 
-    // Hero Mouse Follow & Reveal Lens States
-    const [heroMousePos, setHeroMousePos] = useState({ x: 0, y: 0 });
-    const [isHeroHovered, setIsHeroHovered] = useState(false);
-    const heroSectionRef = useRef<HTMLDivElement>(null);
-
-    const [headingMousePos, setHeadingMousePos] = useState({ x: 0, y: 0 });
-    const [isHeadingHovered, setIsHeadingHovered] = useState(false);
-    const headingContainerRef = useRef<HTMLDivElement>(null);
-
-    const handleHeroMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!heroSectionRef.current) return;
-        const rect = heroSectionRef.current.getBoundingClientRect();
-        setHeroMousePos({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        });
-    };
-
-    const handleHeadingMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!headingContainerRef.current) return;
-        const rect = headingContainerRef.current.getBoundingClientRect();
-        setHeadingMousePos({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        });
-    };
-
-    // Dynamic Google Fonts loading
+    // Load fonts and style overrides
     useEffect(() => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'https://fonts.googleapis.com/css2?family=Sora:wght@700;800;900&family=Plus+Jakarta+Sans:wght@700;800&family=Outfit:wght@400;600;800;900&family=Syne:wght@800&family=Space+Grotesk:wght@500;700&display=swap';
+        link.href = 'https://fonts.googleapis.com/css2?family=Syne:wght@800&family=Inter:ital,wght@0,300;0,400;0,500;0,650;0,700;1,300&display=swap';
         document.head.appendChild(link);
         return () => {
             document.head.removeChild(link);
         };
     }, []);
 
-    // Staged animation timing effects
+    // Intro Phase sequence timer triggers
     useEffect(() => {
-        if (heroStage === 'reveal') {
-            const t1 = setTimeout(() => setHeroStage('subtext'), 150);
-            return () => clearTimeout(t1);
-        }
-        if (heroStage === 'subtext') {
-            const t2 = setTimeout(() => setHeroStage('cta'), 150);
-            return () => clearTimeout(t2);
-        }
-        if (heroStage === 'cta') {
-            const t3 = setTimeout(() => setHeroStage('scroll'), 150);
-            return () => clearTimeout(t3);
-        }
-    }, [heroStage]);
+        const t1 = setTimeout(() => setIntroPhase('text'), 200);
+        const t2 = setTimeout(() => setIntroPhase('line'), 600);
+        const t3 = setTimeout(() => setIntroPhase('wipe'), 1100);
+        const t4 = setTimeout(() => setIntroPhase('reveal'), 2050);
+        const t5 = setTimeout(() => {
+            setIntroPhase('finished');
+            setLettersVisible(true);
+        }, 2250);
 
-    // Handle interactive console query simulation
+        return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+            clearTimeout(t3);
+            clearTimeout(t4);
+            clearTimeout(t5);
+        };
+    }, []);
+
+    // Canvas Vignette & Paper Grain drawing
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let W = window.innerWidth;
+        let H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+
+        const drawPaper = () => {
+            // Base warm paper canvas color
+            ctx.fillStyle = '#f7f5f0';
+            ctx.fillRect(0, 0, W, H);
+
+            // Vintage radial vignette
+            const vg = ctx.createRadialGradient(W / 2, H / 2, H * 0.15, W / 2, H / 2, H * 0.75);
+            vg.addColorStop(0, 'rgba(247, 245, 240, 0)');
+            vg.addColorStop(1, 'rgba(210, 205, 195, 0.28)');
+            ctx.fillStyle = vg;
+            ctx.fillRect(0, 0, W, H);
+
+            // Granular paper specks
+            for (let i = 0; i < 8000; i++) {
+                const x = Math.random() * W;
+                const y = Math.random() * H;
+                const a = Math.random() * 0.04;
+                ctx.fillStyle = `rgba(90, 80, 60, ${a})`;
+                ctx.fillRect(x, y, 1, 1);
+            }
+        };
+
+        drawPaper();
+
+        const handleResize = () => {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W;
+            canvas.height = H;
+            drawPaper();
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Floating particles generator
+    useEffect(() => {
+        if (introPhase !== 'finished') return;
+        const symbols = ['✦', '·', '∘', '—', '≡', '⌁', '◦'];
+        const container = stageRef.current;
+        if (!container) return;
+
+        const interval = setInterval(() => {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.bottom = '0';
+            p.style.color = `rgba(26, 26, 46, ${Math.random() * 0.12 + 0.04})`;
+            p.style.fontSize = (Math.random() * 10 + 8) + 'px';
+            const dur = (Math.random() * 8 + 6).toFixed(1) + 's';
+            const delay = (Math.random() * 4).toFixed(1) + 's';
+            p.style.animationDuration = dur;
+            p.style.animationDelay = delay;
+            container.appendChild(p);
+
+            setTimeout(() => {
+                p.remove();
+            }, (parseFloat(dur) + parseFloat(delay)) * 1000 + 200);
+        }, 600);
+
+        return () => clearInterval(interval);
+    }, [introPhase]);
+
+    // Focus ring size layout recalculation
+    useEffect(() => {
+        if (introPhase === 'finished') {
+            const t = setTimeout(() => {
+                if (wordElRef.current) {
+                    const rect = wordElRef.current.getBoundingClientRect();
+                    setFocusRingSize({
+                        width: rect.width + 48,
+                        height: rect.height + 28
+                    });
+                }
+            }, 800);
+            return () => clearTimeout(t);
+        }
+    }, [introPhase]);
+
+    // Custom lag-ring cursor mouse follow
+    useEffect(() => {
+        let curX = window.innerWidth / 2;
+        let curY = window.innerHeight / 2;
+        let c2x = window.innerWidth / 2;
+        let c2y = window.innerHeight / 2;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            curX = e.clientX;
+            curY = e.clientY;
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+
+        let active = true;
+        const tick = () => {
+            if (!active) return;
+            c2x += (curX - c2x) * 0.1;
+            c2y += (curY - c2y) * 0.1;
+
+            const curEl = cursorRef.current;
+            const curRing = cursorRingRef.current;
+            if (curEl) {
+                curEl.style.left = `${curX}px`;
+                curEl.style.top = `${curY}px`;
+            }
+            if (curRing) {
+                const size = isHoveredWord ? 44 : 28;
+                curRing.style.width = `${size}px`;
+                curRing.style.height = `${size}px`;
+                curRing.style.left = `${c2x - curX - (size / 2)}px`;
+                curRing.style.top = `${c2y - curY - (size / 2)}px`;
+                curRing.style.borderColor = isHoveredWord ? 'rgba(26, 26, 46, 0.55)' : 'rgba(26, 26, 46, 0.35)';
+            }
+            requestAnimationFrame(tick);
+        };
+        tick();
+
+        return () => {
+            active = false;
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [isHoveredWord]);
+
+    // 3D Tilting computation
+    useEffect(() => {
+        if (introPhase !== 'finished') return;
+
+        let mx = 0;
+        let my = 0;
+        let lx = 0;
+        let ly = 0;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            mx = (e.clientX / window.innerWidth - 0.5) * 2;
+            my = (e.clientY / window.innerHeight - 0.5) * 2;
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+
+        let active = true;
+        const tick = () => {
+            if (!active) return;
+            lx += (mx - lx) * 0.04;
+            ly += (my - ly) * 0.04;
+
+            setTilt({
+                x: -ly * 5,
+                y: lx * 7
+            });
+
+            requestAnimationFrame(tick);
+        };
+        tick();
+
+        return () => {
+            active = false;
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
+    }, [introPhase]);
+
+    // Dynamic typewriter simulation console
     const simulateTerminal = (key: 'wave-optics' | 'biology' | 'simulator') => {
         if (isTyping) return;
         setIsTyping(true);
@@ -235,7 +390,7 @@ export const Landing = () => {
                 setTimeout(() => {
                     let lineIdx = 0;
                     let currentLines: string[] = [];
-                    
+
                     const outputInterval = setInterval(() => {
                         if (lineIdx < data.output.length) {
                             currentLines.push(data.output[lineIdx]);
@@ -252,17 +407,17 @@ export const Landing = () => {
         }, 15);
     };
 
-    // Auto-play the first simulation after hero enters scroll stage
+    // Auto-play the first simulation after entrance
     useEffect(() => {
-        if (heroStage === 'scroll') {
+        if (introPhase === 'finished') {
             const timer = setTimeout(() => {
                 simulateTerminal('wave-optics');
-            }, 800);
+            }, 1200);
             return () => clearTimeout(timer);
         }
-    }, [heroStage]);
+    }, [introPhase]);
 
-    // Scroll trigger observer for the problem switcher
+    // Dilemma Switcher scroll observer
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -285,351 +440,559 @@ export const Landing = () => {
         };
     }, []);
 
-    // Slow switcher animation cycle
+    // Switch words interval timer
     useEffect(() => {
         if (!isProblemVisible) return;
         const interval = setInterval(() => {
             setProblemWordIdx((prev) => (prev + 1) % problemWords.length);
-        }, 1000); // Faster interval
+        }, 1200);
         return () => clearInterval(interval);
     }, [isProblemVisible]);
+
+    // Ink Ripple spawn trigger
+    const handleStageClick = (e: React.MouseEvent) => {
+        // Exclude inputs, buttons and links to prevent interface disruption
+        const target = e.target as HTMLElement;
+        if (target.closest('button') || target.closest('a') || target.closest('input')) return;
+
+        const newRipple = {
+            id: Date.now() + Math.random(),
+            x: e.clientX,
+            y: e.clientY
+        };
+        setRipples(prev => [...prev, newRipple]);
+        setTimeout(() => {
+            setRipples(prev => prev.filter(r => r.id !== newRipple.id));
+        }, 850);
+    };
 
     const toggleFaq = (index: number) => {
         setOpenFaqIdx((prev) => (prev === index ? null : index));
     };
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans overflow-x-hidden">
-            {/* Custom Styles for animated gradient text */}
+        <div 
+            onClick={handleStageClick}
+            className={`min-h-screen text-[#1a1a2e] transition-all selection:bg-[#1a1a2e]/10 selection:text-[#1a1a2e] overflow-x-hidden ${
+                introPhase !== 'finished' ? 'h-screen overflow-hidden' : 'relative'
+            }`}
+            style={{ backgroundColor: '#f7f5f0' }}
+        >
             <style>{`
-                @keyframes gradient-x {
-                    0%, 100% {
-                        background-size: 200% 200%;
-                        background-position: left center;
-                    }
-                    50% {
-                        background-size: 200% 200%;
-                        background-position: right center;
+                /* Hide standard pointer on desktop */
+                @media (min-width: 768px) {
+                    html, body, a, button, [role="button"], select, input {
+                        cursor: none !important;
                     }
                 }
-                .animate-gradient-text {
-                    animation: gradient-x 8s ease infinite;
+
+                #cur {
+                    position: fixed;
+                    z-index: 9999;
+                    pointer-events: none;
+                    transform: translate(-50%, -50%);
                 }
-                .text-glow {
-                    text-shadow: 0 4px 20px rgba(16, 185, 129, 0.35), 0 0 40px rgba(99, 102, 241, 0.2);
+                #cur-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #1a1a2e;
+                    position: absolute;
+                    transform: translate(-50%, -50%);
                 }
-                .text-glow-bright {
-                    text-shadow: 0 4px 30px rgba(52, 211, 153, 0.75), 0 0 60px rgba(129, 140, 248, 0.5);
+                #cur-ring {
+                    border-radius: 50%;
+                    border: 1.5px solid rgba(26, 26, 46, 0.35);
+                    position: absolute;
+                    transform: translate(-50%, -50%);
+                    transition: width .2s, height .2s, border-color .2s;
                 }
-                @keyframes shine-anim {
-                    0% {
-                        transform: translateX(-100%) skewX(-15deg);
-                    }
-                    100% {
-                        transform: translateX(200%) skewX(-15deg);
-                    }
+
+                .particle {
+                    position: absolute;
+                    pointer-events: none;
+                    z-index: 11;
+                    opacity: 0;
+                    animation: floatParticle linear infinite;
                 }
-                .animate-shine {
-                    animation: shine-anim 2.5s infinite ease-in-out;
+                @keyframes floatParticle {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: .6; }
+                    100% { transform: translateY(-160px) rotate(20deg); opacity: 0; }
+                }
+
+                .ruled {
+                    position: absolute;
+                    z-index: 1;
+                    background: rgba(26, 26, 46, 0.03);
+                    pointer-events: none;
+                }
+                .ruled.h { left: 0; right: 0; height: 1px; }
+                .ruled.v { top: 0; bottom: 0; width: 1px; }
+
+                #flare {
+                    position: absolute;
+                    z-index: 13;
+                    top: 50%; left: 50%;
+                    width: 3px; height: 3px;
+                    border-radius: 50%;
+                    background: #fff;
+                    box-shadow: 0 0 0 0 rgba(255,255,255,0);
+                    transform: translate(-50%,-50%);
+                    pointer-events: none; opacity: 0;
+                }
+                .active-flare {
+                    animation: flareOutAnim .7s ease forwards;
+                }
+                @keyframes flareOutAnim {
+                    0% { opacity: 1; box-shadow: 0 0 60px 60px rgba(255,255,255,0.8); }
+                    100% { opacity: 0; box-shadow: 0 0 200px 180px rgba(255,255,255,0); }
+                }
+
+                .ink-ripple {
+                    position: fixed;
+                    z-index: 999;
+                    pointer-events: none;
+                    border-radius: 50%;
+                    border: 1.5px solid rgba(26, 26, 46, 0.25);
+                    width: 0; height: 0;
+                    transform: translate(-50%, -50%);
+                    animation: rippleAnim 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+                }
+                @keyframes rippleAnim {
+                    0% { width: 0; height: 0; opacity: 1; }
+                    100% { width: 450px; height: 450px; opacity: 0; }
+                }
+
+                /* Stationary custom components style */
+                .ruled-paper-bg {
+                    background-image: linear-gradient(rgba(26, 26, 46, 0.035) 1px, transparent 1px);
+                    background-size: 100% 32px;
+                }
+                .red-margin-line {
+                    position: absolute;
+                    left: clamp(20px, 6vw, 80px);
+                    top: 0; bottom: 0;
+                    width: 1.5px;
+                    background-color: rgba(220, 50, 50, 0.18);
+                    pointer-events: none;
+                    z-index: 10;
+                }
+
+                .flat-card {
+                    background: #ffffff;
+                    border: 1.5px solid #1a1a2e;
+                    box-shadow: 4px 4px 0px #1a1a2e;
+                    border-radius: 1.25rem;
+                    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                .flat-card:hover {
+                    transform: translate(-2px, -2px);
+                    box-shadow: 6px 6px 0px #1a1a2e;
+                }
+
+                .flat-btn-ink {
+                    background: #1a1a2e;
+                    color: #f7f5f0;
+                    border: 1.5px solid #1a1a2e;
+                    border-radius: 0.75rem;
+                    box-shadow: 3px 3px 0px rgba(26, 26, 46, 0.35);
+                    font-weight: 800;
+                    transition: all 0.15s ease;
+                }
+                .flat-btn-ink:hover {
+                    background: rgba(26, 26, 46, 0.9);
+                    transform: translate(1px, 1px);
+                    box-shadow: 1.5px 1.5px 0px rgba(26, 26, 46, 0.35);
+                }
+
+                .flat-btn-outline {
+                    background: transparent;
+                    color: #1a1a2e;
+                    border: 1.5px solid rgba(26, 26, 46, 0.35);
+                    border-radius: 0.75rem;
+                    font-weight: 800;
+                    transition: all 0.15s ease;
+                }
+                .flat-btn-outline:hover {
+                    background: rgba(26, 26, 46, 0.05);
+                    border-color: #1a1a2e;
                 }
             `}</style>
 
-            {/* Top Promotion Ribbon */}
-            <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 text-white text-xs md:text-sm font-black py-3.5 px-4 text-center relative overflow-hidden shadow-md flex items-center justify-center gap-2 z-50">
-                <span className="inline-flex items-center gap-1 bg-white/20 px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider">
-                    <Sparkles size={11} className="animate-spin-slow" /> Promo
-                </span>
-                <span><strong>Special Launch Campaign:</strong> All Pro and Pro Max plans are currently <strong>100% FREE</strong>! No card required.</span>
-                <span className="hidden md:inline-block opacity-75">| Get started instantly.</span>
+            {/* Pointer Custom Cursor */}
+            <div id="cur" ref={cursorRef} className="hidden md:block">
+                <div id="cur-dot" />
+                <div id="cur-ring" ref={cursorRingRef} />
             </div>
 
-            {/* Global Header */}
-            <header className="sticky top-0 z-50 backdrop-blur-md bg-white/95 dark:bg-[#020617]/95 border-b border-slate-200/80 dark:border-slate-800/80 px-6 py-4 transition-all">
-                <div className="max-w-7xl mx-auto flex items-center justify-between font-medium">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-black flex items-center justify-center rounded-xl border border-slate-800 shadow-md">
-                            <img src="/clarity_logo.png" alt="Clarity Logo" className="w-10 h-10 object-contain" style={{ mixBlendMode: 'screen' }} />
-                        </div>
-                        <div>
-                            <p className="text-xl font-black tracking-tight">Clarity</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#1D9E75]">Student OS for CBSE</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2 md:gap-3">
-                        <Link to="/login" className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white text-sm font-black transition-colors">
-                            Student Login
-                        </Link>
-                        <Link 
-                            to="/parent-portal" 
-                            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 border border-slate-350 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900 text-sm font-black rounded-xl transition-colors"
-                        >
-                            <Users size={14} />
-                            Parent Portal
-                        </Link>
-                        <Link to="/onboarding" className="px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-sm font-black rounded-xl transition-all hover:scale-[1.02] border border-slate-800 dark:border-slate-200 shadow-sm">
-                            Get Started
-                        </Link>
-                    </div>
-                </div>
-            </header>
+            {/* Click Ripples layer */}
+            {ripples.map(r => (
+                <div key={r.id} className="ink-ripple" style={{ left: `${r.x}px`, top: `${r.y}px` }} />
+            ))}
 
-            {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-6 pt-10 pb-24 space-y-32">
-                {/* Epic Typographic Entrance Section */}
-                <section 
-                    ref={heroSectionRef}
-                    onMouseMove={handleHeroMouseMove}
-                    onMouseEnter={() => setIsHeroHovered(true)}
-                    onMouseLeave={() => setIsHeroHovered(false)}
-                    className="relative overflow-hidden bg-slate-950 text-white p-8 md:p-16 border border-slate-850 min-h-[85vh] rounded-3xl flex flex-col justify-center shadow-2xl transition-all"
+            {/* Background textured canvas */}
+            <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
+
+            {/* Cinematic loading intro */}
+            {introPhase !== 'finished' && (
+                <div 
+                    id="intro"
+                    style={{
+                        position: 'fixed', inset: 0, zIndex: 200,
+                        background: '#f7f5f0',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexDirection: 'column',
+                    }}
                 >
-                    {/* Animated grid overlay */}
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-35" />
-                    
-                    {/* Radial glowing backgrounds */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none animate-pulse" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-glow" />
+                    <div 
+                        id="ink"
+                        style={{
+                            width: introPhase === 'wipe' || introPhase === 'reveal' ? '250vmax' : '0vmax',
+                            height: introPhase === 'wipe' || introPhase === 'reveal' ? '250vmax' : '0vmax',
+                            borderRadius: '50%',
+                            background: '#1a1a2e',
+                            position: 'absolute',
+                            left: '50%', top: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            transition: 'width .9s cubic-bezier(.7,0,.3,1), height .9s cubic-bezier(.7,0,.3,1)',
+                        }}
+                    />
+                    <div 
+                        id="intro-text"
+                        style={{
+                            fontFamily: "'Syne', sans-serif",
+                            fontWeight: 800,
+                            fontSize: '13px',
+                            letterSpacing: '10px',
+                            textTransform: 'uppercase',
+                            color: '#1a1a2e',
+                            opacity: introPhase === 'text' || introPhase === 'line' ? 1 : 0,
+                            position: 'relative',
+                            zIndex: 2,
+                            transition: 'opacity .8s ease',
+                        }}
+                    >
+                        Clarity
+                    </div>
+                    <div 
+                        id="intro-line"
+                        style={{
+                            width: introPhase === 'line' ? '120px' : '0px',
+                            height: '1px',
+                            background: '#1a1a2e',
+                            opacity: introPhase === 'line' ? 0.15 : 0,
+                            position: 'relative',
+                            zIndex: 2,
+                            marginTop: '20px',
+                            transition: 'width 1.2s ease, opacity 0.5s ease',
+                        }}
+                    />
+                </div>
+            )}
 
-                    {isHeroHovered && (
+            {/* Notebook margins and vertical layout wrapper */}
+            <div 
+                id="stage" 
+                ref={stageRef}
+                className="relative min-h-screen z-10 w-full flex flex-col transition-opacity duration-1000"
+                style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
+            >
+                {/* Background Ruled Lines */}
+                <div className="ruled h" style={{ top: '25%' }} />
+                <div className="ruled h" style={{ top: '37.5%' }} />
+                <div className="ruled h" style={{ top: '62.5%' }} />
+                <div className="ruled h" style={{ top: '75%' }} />
+                <div className="ruled v" style={{ left: '6%' }} />
+
+                {/* Full-screen Hero Header */}
+                <section className="min-h-screen w-full relative flex items-center justify-center flex-col select-none">
+                    <div className="relative text-center">
                         <div 
-                            className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+                            ref={wordElRef}
+                            id="clarity"
+                            className="select-none flex justify-center items-center gap-1 cursor-none"
                             style={{
-                                background: `radial-gradient(500px circle at ${heroMousePos.x}px ${heroMousePos.y}px, rgba(16, 185, 129, 0.07), rgba(99, 102, 241, 0.04), transparent 70%)`
+                                fontFamily: "'Syne', sans-serif",
+                                fontSize: 'clamp(70px, 13vw, 180px)',
+                                fontWeight: 800,
+                                letterSpacing: '-0.025em',
+                                color: '#1a1a2e',
+                                transform: `rotateY(${tilt.y}deg) rotateX(${tilt.x}deg)`,
+                                transformStyle: 'preserve-3d',
+                            }}
+                        >
+                            {Array.from("Clarity").map((char, i) => {
+                                const isHovered = hoveredLetterIdx === i;
+                                return (
+                                    <span 
+                                        key={i} 
+                                        className="L"
+                                        onMouseEnter={() => {
+                                            setHoveredLetterIdx(i);
+                                            setIsHoveredWord(true);
+                                        }}
+                                        onMouseLeave={() => {
+                                            setHoveredLetterIdx(null);
+                                            setIsHoveredWord(false);
+                                        }}
+                                        style={{
+                                            display: 'inline-block',
+                                            position: 'relative',
+                                            opacity: lettersVisible ? 1 : 0,
+                                            filter: lettersVisible ? 'blur(0px)' : 'blur(8px)',
+                                            transform: isHovered 
+                                                ? 'translateZ(30px) scale(1.07)' 
+                                                : (lettersVisible ? 'translateZ(0px) scale(1)' : 'translateZ(0px) scale(1.08)'),
+                                            transition: isHovered 
+                                                ? 'transform 0.15s ease' 
+                                                : (lettersVisible 
+                                                    ? `opacity 0.8s cubic-bezier(.16,1,.3,1) ${i * 90}ms, filter 0.9s cubic-bezier(.16,1,.3,1) ${i * 90}ms, transform 0.5s cubic-bezier(.16,1,.3,1)`
+                                                    : 'none'),
+                                            transformStyle: 'preserve-3d',
+                                        }}
+                                    >
+                                        {char}
+                                    </span>
+                                );
+                            })}
+                        </div>
+                        <div 
+                            id="focus-ring" 
+                            style={{
+                                position: 'absolute',
+                                top: '50%', left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                border: '1.5px solid rgba(26,26,46,0.12)',
+                                borderRadius: '4px',
+                                pointerEvents: 'none',
+                                opacity: lettersVisible ? 1 : 0,
+                                width: `${focusRingSize.width}px`,
+                                height: `${focusRingSize.height}px`,
+                                transition: 'opacity .5s ease, width .3s ease, height .3s ease',
                             }}
                         />
-                    )}
+                        <div id="flare" className={introPhase === 'reveal' || introPhase === 'finished' ? 'active-flare' : ''} />
+                    </div>
 
-                    <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full min-h-[400px]">
-                        {/* Left Column: Typographic Details */}
-                        <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-                            {/* Staged Logo Emblem */}
-                            <div className={`w-24 h-24 bg-black border border-slate-800 flex items-center justify-center shadow-2xl rounded-2xl relative transition-all duration-1000 transform ${
-                                heroStage !== 'reveal' ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                            }`}>
-                                <div className="absolute inset-0 border border-emerald-500/20 rounded-2xl animate-pulse pointer-events-none" />
-                                <img src="/clarity_logo.png" alt="Clarity Emblem" className="w-20 h-20 object-contain" style={{ mixBlendMode: 'screen' }} />
+                    <div 
+                        id="sub"
+                        style={{
+                            position: 'absolute',
+                            top: 'calc(50% + clamp(50px,7vw,100px))',
+                            left: '50%', transform: 'translateX(-50%)',
+                            textAlign: 'center',
+                            opacity: lettersVisible ? 1 : 0,
+                            width: 'min(520px, 90vw)',
+                            zIndex: 12,
+                            transition: 'opacity 1s ease',
+                            transitionDelay: '400ms',
+                        }}
+                    >
+                        <p style={{ fontSize: '15px', fontWeight: 300, color: 'rgba(26,26,46,0.48)', letterSpacing: '0.06em', lineHeight: 1.9 }}>
+                            The AI tutor that brings<br/>
+                            <em style={{ fontStyle: 'italic', color: 'rgba(26,26,46,0.7)' }}>absolute clarity</em> to every subject.
+                        </p>
+                        <div id="sub-line" style={{ width: '40px', height: '1px', background: '#1a1a2e', opacity: 0.15, margin: '16px auto 0' }} />
+                        <div className="mt-8 animate-bounce flex flex-col items-center justify-center gap-1 text-[9px] uppercase tracking-widest text-[#1a1a2e]/40">
+                            <span>Scroll down to study</span>
+                            <ChevronDown size={14} />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Sub-Header bar revealed post-intro */}
+                <header 
+                    className="sticky top-0 z-50 border-b border-[#1a1a2e]/10 px-6 py-4 transition-all"
+                    style={{ backgroundColor: 'rgba(247, 245, 240, 0.95)', backdropFilter: 'blur(8px)' }}
+                >
+                    <div className="max-w-7xl mx-auto flex items-center justify-between font-medium">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 flex items-center justify-center border-1.5 border-[#1a1a2e] rounded-xl bg-white shadow-[2px_2px_0px_#1a1a2e]">
+                                <img src="/mind_pen_logo.png" alt="Clarity Logo" className="w-8 h-8 object-contain" />
                             </div>
+                            <div>
+                                <p className="text-lg font-black tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Clarity</p>
+                                <p className="text-[9px] font-bold uppercase tracking-widest text-[#1a1a2e]/60">Student OS for CBSE</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2 md:gap-3">
+                            <Link 
+                                to="/login" 
+                                className="px-3 py-1.5 text-[#1a1a2e]/70 hover:text-[#1a1a2e] text-xs font-black transition-colors"
+                                onMouseEnter={() => setIsHoveredWord(true)}
+                                onMouseLeave={() => setIsHoveredWord(false)}
+                            >
+                                Student Login
+                            </Link>
+                            <Link 
+                                to="/parent-portal" 
+                                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 border border-[#1a1a2e]/20 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5 text-xs font-black rounded-lg transition-colors"
+                                onMouseEnter={() => setIsHoveredWord(true)}
+                                onMouseLeave={() => setIsHoveredWord(false)}
+                            >
+                                <Users size={12} />
+                                Parent Portal
+                            </Link>
+                            <Link 
+                                to="/onboarding" 
+                                className="px-4 py-2 bg-[#1a1a2e] text-[#f7f5f0] text-xs font-black rounded-lg hover:bg-[#1a1a2e]/90 shadow-[2px_2px_0px_rgba(26,26,46,0.3)]"
+                                onMouseEnter={() => setIsHoveredWord(true)}
+                                onMouseLeave={() => setIsHoveredWord(false)}
+                            >
+                                Get Started
+                            </Link>
+                        </div>
+                    </div>
+                </header>
 
-                            {/* Syllabus Tag */}
-                            <div className={`inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider border border-emerald-500/20 rounded-full transition-all duration-1000 transform ${
-                                heroStage !== 'reveal' ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                            }`}>
+                {/* Top Promotion ribbon */}
+                <div className="bg-[#1a1a2e] text-[#f7f5f0] text-xs md:text-sm font-bold py-3.5 px-4 text-center relative overflow-hidden shadow-inner flex items-center justify-center gap-2 z-20">
+                    <span><strong>Launch Special Campaign:</strong> All Pro and Pro Max plans are currently <strong>100% FREE</strong>! No card needed.</span>
+                </div>
+
+                {/* Main page content layout sheets */}
+                <main className="max-w-7xl mx-auto px-6 py-20 space-y-32 z-10 w-full relative">
+                    {/* Ruled red margin overlay on content */}
+                    <div className="red-margin-line" />
+
+                    {/* Section: CTAs & Mockup Workspace demo */}
+                    <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full relative pl-[clamp(24px, 7vw, 90px)]">
+                        <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+                            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#1a1a2e]/5 text-[#1a1a2e] text-xs font-black uppercase tracking-wider border border-[#1a1a2e]/15 rounded-full">
                                 CBSE Class 9-12 Student OS
                             </div>
 
-                            {/* Main Morphing Title */}
-                            <div 
-                                ref={headingContainerRef}
-                                onMouseMove={handleHeadingMouseMove}
-                                onMouseEnter={() => setIsHeadingHovered(true)}
-                                onMouseLeave={() => setIsHeadingHovered(false)}
-                                className="relative py-6 px-16 bg-white/10 dark:bg-slate-900/50 border border-slate-200/20 dark:border-slate-800/40 backdrop-blur-md rounded-[3rem] shadow-2xl overflow-hidden select-none cursor-zoom-in group max-w-max"
-                            >
-                                {/* Shiny shimmer animation line */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shine pointer-events-none" />
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800 }}>
+                                Complete syllabus study tools designed for absolute focus.
+                            </h2>
 
-                                {heroStage === 'reveal' && (
-                                    <div className="absolute inset-0 -m-8 border border-emerald-500/20 animate-ping opacity-75 rounded-3xl pointer-events-none" />
-                                )}
-                                
-                                {/* 1. Base Layer (100% opaque, bright and glowing) */}
-                                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
-                                    <span className="bg-gradient-to-r from-emerald-450 via-teal-300 via-indigo-550 to-emerald-450 bg-clip-text text-transparent animate-gradient-text text-glow">
-                                        Clarity
-                                    </span>
-                                </h1>
-
-                                {/* 2. Magnifier Zoom Layer (Scaled up from pointer origin, clipped to circular mask) */}
-                                <div className="absolute inset-0 pointer-events-none" style={{
-                                    clipPath: isHeadingHovered ? `circle(90px at ${headingMousePos.x}px ${headingMousePos.y}px)` : 'circle(0px at 0px 0px)',
-                                    WebkitClipPath: isHeadingHovered ? `circle(90px at ${headingMousePos.x}px ${headingMousePos.y}px)` : 'circle(0px at 0px 0px)',
-                                    transform: isHeadingHovered ? 'scale(1.12)' : 'none',
-                                    transformOrigin: `${headingMousePos.x}px ${headingMousePos.y}px`,
-                                    transition: 'transform 0.08s ease-out'
-                                }}>
-                                    <h1 className="absolute top-6 left-16 text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none animate-gradient-text" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
-                                        <span className="bg-gradient-to-r from-emerald-400 via-teal-200 via-indigo-400 to-emerald-400 bg-clip-text text-transparent text-glow-bright">
-                                            Clarity
-                                        </span>
-                                    </h1>
-                                </div>
-
-                                {/* 3. Circular Glass Magnifying Lens Border */}
-                                {isHeadingHovered && (
-                                    <div 
-                                        className="absolute pointer-events-none rounded-full border border-white/50 dark:border-white/40 shadow-2xl bg-white/5 backdrop-blur-[1.5px]" 
-                                        style={{
-                                            width: '180px',
-                                            height: '180px',
-                                            left: `${headingMousePos.x - 90}px`,
-                                            top: `${headingMousePos.y - 90}px`,
-                                        }}
-                                    />
-                                )}
-                            </div>
-
-                            {/* Subtext */}
-                            <p className={`text-lg md:text-xl text-slate-300 font-medium leading-relaxed max-w-2xl transition-all duration-1000 transform ${
-                                (heroStage === 'subtext' || heroStage === 'cta' || heroStage === 'scroll') 
-                                    ? 'opacity-100 translate-y-0' 
-                                    : 'opacity-0 translate-y-4'
-                            }`}>
-                                Clear concepts, focused daily missions, active recall voice recovery, and timed board exam simulators. Designed to guarantee your best syllabus prep in one beautiful system.
+                            <p className="text-sm md:text-base text-[#1a1a2e]/70 font-semibold leading-relaxed max-w-xl">
+                                Clear concepts, focused daily missions, active recall voice recovery, and timed board exam simulators. Designed to guarantee your best CBSE syllabus prep in one beautiful system.
                             </p>
 
-                            {/* CTAs */}
-                            <div className={`flex flex-wrap gap-4 justify-center lg:justify-start pt-4 transition-all duration-1000 transform ${
-                                (heroStage === 'cta' || heroStage === 'scroll') 
-                                    ? 'opacity-100 translate-y-0' 
-                                    : 'opacity-0 translate-y-4'
-                            }`}>
-                                <Link to="/onboarding" className="px-8 py-4 bg-[#1D9E75] hover:bg-[#15805d] text-white font-black inline-flex items-center gap-2 rounded-xl transition-all hover:scale-[1.03] border border-[#1D9E75] shadow-lg shadow-emerald-500/10">
+                            <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
+                                <Link 
+                                    to="/onboarding" 
+                                    className="px-6 py-3 bg-[#1a1a2e] text-[#f7f5f0] font-black inline-flex items-center gap-2 rounded-xl border border-[#1a1a2e] shadow-[3px_3px_0px_rgba(26,26,46,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_rgba(26,26,46,0.3)] transition-all"
+                                    onMouseEnter={() => setIsHoveredWord(true)}
+                                    onMouseLeave={() => setIsHoveredWord(false)}
+                                >
                                     Build My Study OS
-                                    <ArrowRight size={18} />
+                                    <ArrowRight size={16} />
                                 </Link>
-                                <Link to="/parent-portal" className="px-8 py-4 border border-slate-700 bg-slate-900/50 hover:bg-slate-800 text-slate-300 font-black inline-flex items-center gap-2 rounded-xl transition-all hover:scale-[1.03] shadow-md">
-                                    <Users size={18} className="text-emerald-400" />
+                                <Link 
+                                    to="/parent-portal" 
+                                    className="px-6 py-3 border border-[#1a1a2e]/30 hover:bg-[#1a1a2e]/5 text-[#1a1a2e] font-black inline-flex items-center gap-2 rounded-xl transition-all"
+                                    onMouseEnter={() => setIsHoveredWord(true)}
+                                    onMouseLeave={() => setIsHoveredWord(false)}
+                                >
+                                    <Users size={16} />
                                     Open Parent Portal
                                 </Link>
                             </div>
-
-                            {/* Bouncing Indicator */}
-                            <div className={`pt-8 transition-all duration-1000 hidden lg:block ${
-                                heroStage === 'scroll' ? 'opacity-100' : 'opacity-0'
-                            }`}>
-                                <div className="animate-bounce-slow flex items-center gap-2 text-slate-400 font-bold text-xs uppercase tracking-widest pointer-events-none select-none">
-                                    <span>Scroll to Explore</span>
-                                    <ChevronDown size={16} className="text-emerald-400" />
-                                </div>
-                            </div>
                         </div>
 
-                        {/* Right Column: Interactive Chat UI Simulator */}
-                        <div className={`lg:col-span-5 w-full flex flex-col justify-center transition-all duration-1000 transform ${
-                            (heroStage === 'subtext' || heroStage === 'cta' || heroStage === 'scroll')
-                                ? 'opacity-100 translate-y-0 scale-100'
-                                : 'opacity-0 translate-y-8 scale-95'
-                        }`}>
-                            <div className="w-full bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-805 rounded-3xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col">
-                                {/* Chat Header */}
-                                <div className="bg-slate-50/70 dark:bg-slate-950/60 px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-850">
-                                    <div className="flex items-center gap-2">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                                        <span className="text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">Clarity Study Workspace</span>
+                        {/* Top Right: Simulated workspace widget */}
+                        <div className="lg:col-span-5 w-full flex flex-col justify-center">
+                            <div className="w-full bg-white border-1.5 border-[#1a1a2e] rounded-3xl shadow-[5px_5px_0px_rgba(26,26,46,0.15)] overflow-hidden flex flex-col">
+                                {/* Snippet Header */}
+                                <div className="bg-[#fcfbf9] px-4 py-3 flex items-center justify-between border-b border-[#1a1a2e]/10">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
+                                        <span className="text-[10px] font-black text-[#1a1a2e] uppercase tracking-wider">Clarity Study Workspace</span>
                                     </div>
-                                    <span className="text-[10px] font-mono text-slate-400 dark:text-slate-550 uppercase tracking-widest font-black">Active Session</span>
-                                </div>
-                                
-                                {/* Quick Prompt Selector Pills */}
-                                <div className="bg-slate-50/30 dark:bg-slate-900/60 p-3 border-b border-slate-100 dark:border-slate-850 flex flex-wrap gap-2">
-                                    <button 
-                                        type="button"
-                                        onClick={() => simulateTerminal('wave-optics')}
-                                        disabled={isTyping}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                                            activePrompt === 'wave-optics'
-                                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] border-[#1D9E75]/40 font-black shadow-sm'
-                                                : 'bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-850 dark:hover:text-slate-200 hover:border-slate-350 dark:hover:border-slate-700'
-                                        }`}
-                                    >
-                                        💡 Wave Optics PYQ
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        onClick={() => simulateTerminal('biology')}
-                                        disabled={isTyping}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                                            activePrompt === 'biology'
-                                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] border-[#1D9E75]/40 font-black shadow-sm'
-                                                : 'bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-850 dark:hover:text-slate-200 hover:border-slate-350 dark:hover:border-slate-700'
-                                        }`}
-                                    >
-                                        🌿 Grade Biology Note
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        onClick={() => simulateTerminal('simulator')}
-                                        disabled={isTyping}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                                            activePrompt === 'simulator'
-                                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] border-[#1D9E75]/40 font-black shadow-sm'
-                                                : 'bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-850 dark:hover:text-slate-200 hover:border-slate-350 dark:hover:border-slate-700'
-                                        }`}
-                                    >
-                                        ⏱ Timed Exam Simulator
-                                    </button>
+                                    <span className="text-[9px] font-mono text-[#1a1a2e]/40 uppercase tracking-widest font-black">Live Console</span>
                                 </div>
 
-                                {/* Chat Conversation Display */}
-                                <div className="p-4 bg-white dark:bg-[#0b0f19] min-h-[300px] max-h-[360px] overflow-y-auto flex flex-col justify-start gap-4 select-none">
-                                    {terminalPrompt ? (
+                                {/* Dynamic Query selector tabs */}
+                                <div className="bg-[#fdfdfb] p-3 border-b border-[#1a1a2e]/10 flex flex-wrap gap-1.5">
+                                    {(['wave-optics', 'biology', 'simulator'] as const).map((key) => (
+                                        <button 
+                                            key={key}
+                                            type="button"
+                                            onClick={() => simulateTerminal(key)}
+                                            disabled={isTyping}
+                                            className={`px-3 py-1 rounded-lg text-[10px] font-black border transition-all ${
+                                                activePrompt === key
+                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] shadow-sm'
+                                                    : 'bg-white text-[#1a1a2e]/60 border-[#1a1a2e]/15 hover:text-[#1a1a2e] hover:border-[#1a1a2e]/30'
+                                            }`}
+                                            onMouseEnter={() => setIsHoveredWord(true)}
+                                            onMouseLeave={() => setIsHoveredWord(false)}
+                                        >
+                                            {key === 'wave-optics' ? '💡 Wave Optics' : key === 'biology' ? '🌿 Biology Grading' : '⏱ Physics Exam'}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Console content - Styled like a ruled worksheet sheet card */}
+                                <div className="p-4 bg-white min-h-[300px] max-h-[360px] overflow-y-auto flex flex-col justify-start gap-4 text-xs font-semibold leading-relaxed">
+                                    {terminalPrompt && (
                                         <>
-                                            {/* User Message Bubble */}
+                                            {/* User prompt write-in card */}
                                             <div className="flex justify-end w-full">
-                                                <div className="bg-[#1D9E75]/10 dark:bg-emerald-950/20 text-slate-800 dark:text-slate-100 px-4 py-2.5 rounded-2xl rounded-tr-none text-xs font-bold max-w-[85%] border border-[#1D9E75]/25 dark:border-emerald-500/20 shadow-sm text-left">
+                                                <div className="bg-[#1a1a2e]/5 text-[#1a1a2e] px-4 py-2 rounded-2xl rounded-tr-none border border-[#1a1a2e]/10 max-w-[85%] text-left font-black">
                                                     {terminalPrompt}
                                                     {isTyping && <span className="animate-pulse ml-0.5">|</span>}
                                                 </div>
                                             </div>
 
-                                            {/* AI Message Bubble */}
+                                            {/* AI responses cards */}
                                             {terminalOutput && (
-                                                <div className="flex flex-col gap-2 items-start w-full animate-fadeIn">
+                                                <div className="flex flex-col gap-2 items-start w-full">
                                                     <div className="flex items-center gap-2">
-                                                        <div className="w-6 h-6 bg-[#1D9E75] text-white flex items-center justify-center rounded-full text-[10px]">
-                                                            <Brain size={12} />
+                                                        <div className="w-5 h-5 border border-[#1a1a2e] bg-white flex items-center justify-center rounded-full text-[9px] font-black">
+                                                            C
                                                         </div>
-                                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Clarity Coach</span>
+                                                        <span className="text-[9px] text-[#1a1a2e]/50 font-black uppercase tracking-wider">Clarity Coach</span>
                                                     </div>
-                                                    <div className="bg-slate-50/80 dark:bg-slate-900/50 text-slate-800 dark:text-slate-250 p-4 rounded-3xl rounded-tl-none text-xs font-semibold max-w-[95%] border border-slate-200 dark:border-slate-850 shadow-sm text-left w-full space-y-4">
+
+                                                    <div className="bg-[#fcfbf9] text-[#1a1a2e] p-4 rounded-2xl rounded-tl-none border border-[#1a1a2e]/15 shadow-sm text-left w-full space-y-4 font-mono text-[11px] leading-relaxed">
                                                         {activePrompt === 'wave-optics' && (
                                                             <div className="space-y-4">
-                                                                <p className="font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5 text-xs">
-                                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                                                                <p className="font-bold text-xs border-b border-[#1a1a2e]/10 pb-2">
                                                                     Derive expression for fringe width in YDSE (CBSE 2024)
                                                                 </p>
                                                                 
                                                                 {visibleLinesCount >= 2 && (
-                                                                    <div className="p-3.5 bg-emerald-500/5 dark:bg-emerald-955/10 border border-emerald-500/10 dark:border-emerald-500/20 rounded-2xl space-y-1">
-                                                                        <p className="text-[9px] font-black uppercase text-[#1D9E75] tracking-wider">Concept Formula</p>
-                                                                        <p className="text-sm font-black tracking-tight text-slate-850 dark:text-slate-150 font-mono">Fringe Width (β) = λD/d</p>
+                                                                    <div className="p-3 bg-white border border-[#1a1a2e]/10 rounded-xl space-y-1">
+                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/50 tracking-wider">Concept Formula</p>
+                                                                        <p className="text-xs font-bold text-[#1a1a2e]">Fringe Width (β) = λD/d</p>
                                                                     </div>
                                                                 )}
 
                                                                 {visibleLinesCount >= 3 && (
-                                                                    <div className="p-3.5 bg-rose-500/5 dark:bg-rose-955/10 border border-rose-500/10 dark:border-rose-500/20 rounded-2xl space-y-1.5">
-                                                                        <p className="text-[9px] font-black uppercase text-rose-500 tracking-wider flex items-center gap-1">
+                                                                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl space-y-1">
+                                                                        <p className="text-[8px] font-black uppercase text-red-700 tracking-wider flex items-center gap-1">
                                                                             ⚠️ CBSE Exam Trap Identified
                                                                         </p>
-                                                                        <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 leading-relaxed">
-                                                                            Students often forget to explicitly state the path difference condition <span className="font-mono font-bold">Δx = nλ</span> for constructive interference. Skipping this loses <span className="font-bold text-rose-500">-0.5 Marks</span>.
+                                                                        <p className="text-[10px] text-red-800 font-bold leading-relaxed">
+                                                                            Students often omit stating the path difference condition (Δx = nλ). Loss of <strong>0.5 Marks</strong> in grading rubric.
                                                                         </p>
                                                                     </div>
                                                                 )}
 
                                                                 {visibleLinesCount >= 4 && (
                                                                     <div className="space-y-2">
-                                                                        <p className="text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">CBSE Marking Scheme Table</p>
-                                                                        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden text-[10px]">
+                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">CBSE Step-Marking Scheme</p>
+                                                                        <div className="border border-[#1a1a2e]/10 rounded-lg overflow-hidden text-[10px] bg-white">
                                                                             <table className="w-full text-left">
                                                                                 <thead>
-                                                                                    <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 font-bold text-slate-500">
-                                                                                        <th className="p-2">Step Description</th>
-                                                                                        <th className="p-2 text-right">Weight</th>
+                                                                                    <tr className="bg-[#fcfbf9] border-b border-[#1a1a2e]/10 font-bold text-[#1a1a2e]/60">
+                                                                                        <th className="p-2">Step</th>
+                                                                                        <th className="p-2 text-right">Value</th>
                                                                                     </tr>
                                                                                 </thead>
-                                                                                <tbody className="divide-y divide-slate-150 dark:divide-slate-800 text-slate-655 dark:text-slate-350">
+                                                                                <tbody className="divide-y divide-[#1a1a2e]/5 text-[#1a1a2e]/80">
                                                                                     <tr>
-                                                                                        <td className="p-2 font-semibold">Path Difference Formulation</td>
-                                                                                        <td className="p-2 text-right font-black text-[#1D9E75]">+0.5 M</td>
+                                                                                        <td className="p-2">Path Difference Formulation</td>
+                                                                                        <td className="p-2 text-right text-emerald-700 font-bold">+0.5 M</td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td className="p-2 font-semibold">Geometric Wavefront Construction</td>
-                                                                                        <td className="p-2 text-right font-black text-[#1D9E75]">+1.5 M</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td className="p-2 font-semibold">Final Fringe Width Simplification</td>
-                                                                                        <td className="p-2 text-right font-black text-[#1D9E75]">+1.0 M</td>
+                                                                                        <td className="p-2">Geometric Wavefront Construction</td>
+                                                                                        <td className="p-2 text-right text-emerald-700 font-bold">+1.5 M</td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -641,44 +1004,44 @@ export const Landing = () => {
 
                                                         {activePrompt === 'biology' && (
                                                             <div className="space-y-4">
-                                                                <div className="flex justify-between items-center bg-slate-100 dark:bg-slate-900/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
-                                                                    <span className="text-[9px] font-black uppercase text-slate-500 tracking-wider">OCR Vision Analysis</span>
-                                                                    <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-[#1D9E75] text-[9px] font-black">98.2% Confidence</span>
+                                                                <div className="flex justify-between items-center bg-white p-2 rounded-lg border border-[#1a1a2e]/10 text-[9px]">
+                                                                    <span className="font-black text-[#1a1a2e]/50 uppercase">OCR Handwritten Grading</span>
+                                                                    <span className="text-[#1a1a2e] font-black">98.2% Confidence</span>
                                                                 </div>
 
                                                                 {visibleLinesCount >= 3 && (
-                                                                    <div className="p-3 bg-white dark:bg-slate-950/40 rounded-xl border border-slate-200 dark:border-slate-850 text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                                                                    <div className="p-3 bg-[#fdfcf9] rounded-lg border border-[#1a1a2e]/5 italic text-[#1a1a2e]/70">
                                                                         "...syngamy forms zygote. Second sperm cell fertilizes polar nuclei..."
                                                                     </div>
                                                                 )}
 
                                                                 {visibleLinesCount >= 4 && (
                                                                     <div className="space-y-2">
-                                                                        <p className="text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">Answer Key Rubric Checklist</p>
-                                                                        <div className="space-y-1.5 text-[10px] font-black">
-                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
+                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">Answer Key Checklist</p>
+                                                                        <div className="space-y-1 text-[10px]">
+                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-emerald-500/5 text-emerald-800 border border-emerald-500/10">
                                                                                 <span>✔ Syngamy identified</span>
-                                                                                <span>+1.0 Mark</span>
+                                                                                <span className="font-bold">+1.0 M</span>
                                                                             </div>
-                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
+                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-emerald-500/5 text-emerald-800 border border-emerald-500/10">
                                                                                 <span>✔ Zygote formation described</span>
-                                                                                <span>+1.0 Mark</span>
+                                                                                <span className="font-bold">+1.0 M</span>
                                                                             </div>
-                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-rose-500/5 text-rose-500 border border-rose-500/10">
-                                                                                <span>✖ "Triple Fusion" term omitted</span>
-                                                                                <span>-0.5 Mark</span>
+                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-rose-500/5 text-rose-800 border border-rose-500/10">
+                                                                                <span>✖ "Triple Fusion" omitted</span>
+                                                                                <span className="font-bold text-rose-700">-0.5 M</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 )}
 
                                                                 {visibleLinesCount >= 5 && (
-                                                                    <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800">
+                                                                    <div className="flex items-center justify-between pt-2 border-t border-[#1a1a2e]/10">
                                                                         <div>
-                                                                            <span className="text-[9px] font-black uppercase text-slate-400">Notes Grade</span>
-                                                                            <p className="text-base font-black text-slate-850 dark:text-slate-100">2.5 / 3.0 (B+)</p>
+                                                                            <span className="text-[8px] font-black uppercase text-[#1a1a2e]/40">Notes Grade</span>
+                                                                            <p className="text-xs font-black">2.5 / 3.0 (B+)</p>
                                                                         </div>
-                                                                        <button type="button" className="px-3 py-1.5 bg-[#1D9E75] text-white rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md hover:bg-[#15805d]">
+                                                                        <button type="button" className="px-2.5 py-1 bg-[#1a1a2e] text-[#f7f5f0] rounded-lg text-[9px] font-black uppercase">
                                                                             🎙️ Speak to Recover
                                                                         </button>
                                                                     </div>
@@ -688,46 +1051,30 @@ export const Landing = () => {
 
                                                         {activePrompt === 'simulator' && (
                                                             <div className="space-y-4">
-                                                                <div className="flex justify-between items-center bg-slate-150/40 dark:bg-slate-900/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
-                                                                    <span className="text-[9px] font-black text-rose-500 tracking-wider flex items-center gap-1 uppercase">
-                                                                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping inline-block" />
-                                                                        TIMED BOARD SIMULATOR
-                                                                    </span>
-                                                                    <span className="font-mono text-xs font-black text-slate-800 dark:text-slate-250">03:00:00</span>
+                                                                <div className="flex justify-between items-center border-b border-[#1a1a2e]/10 pb-2">
+                                                                    <span className="text-xs font-bold">Coulomb's Law (2 Marks)</span>
+                                                                    <span className="text-[9px] bg-red-100 text-red-800 font-bold px-1.5 py-0.5 rounded">02:14:55</span>
                                                                 </div>
 
                                                                 {visibleLinesCount >= 3 && (
-                                                                    <div className="space-y-2">
-                                                                        <div className="text-[11px] font-black text-slate-700 dark:text-slate-300">Q1: State Coulomb's Law (2 Marks)</div>
-                                                                        <div className="p-3 bg-white dark:bg-slate-950/40 rounded-xl border border-slate-200 dark:border-slate-850 text-[11px] leading-relaxed text-slate-655 dark:text-slate-400">
-                                                                            <span className="text-[8px] font-black text-slate-400 block uppercase mb-1">Your Voice Answer</span>
-                                                                            "Force is directly proportional to product of charges and inversely proportional to square of distance..."
-                                                                        </div>
+                                                                    <div className="p-3 bg-[#fdfcf9] border border-[#1a1a2e]/10 rounded-xl space-y-1">
+                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">Voice Input Transcription</p>
+                                                                        <p className="text-[10px] text-[#1a1a2e]/80">"Force is proportional to product of charges..."</p>
                                                                     </div>
                                                                 )}
 
                                                                 {visibleLinesCount >= 4 && (
-                                                                    <div className="space-y-2">
-                                                                        <p className="text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">Step-Marking Verification</p>
-                                                                        <div className="space-y-1.5 text-[10px] font-black">
-                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
-                                                                                <span>✔ State formula (F = k * q1 * q2 / r²)</span>
-                                                                                <span>+1.0 Mark</span>
-                                                                            </div>
-                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
-                                                                                <span>✔ Define terms (permittivity constant)</span>
-                                                                                <span>+1.0 Mark</span>
-                                                                            </div>
+                                                                    <div className="space-y-1.5 text-[9px]">
+                                                                        <div className="flex items-center gap-1.5 text-emerald-800">
+                                                                            <Check size={10} /> <span>State formula: F = k*q1*q2/r² (+1.0 M)</span>
                                                                         </div>
-                                                                    </div>
-                                                                )}
-
-                                                                {visibleLinesCount >= 5 && (
-                                                                    <div className="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-slate-800">
-                                                                        <span className="text-[9px] font-black uppercase text-slate-400">Verified Grade</span>
-                                                                        <span className="px-3 py-1 bg-emerald-500/10 text-[#1D9E75] rounded-xl font-black text-[11px] border border-emerald-500/20">
-                                                                            2.0 / 2.0 Marks (100%)
-                                                                        </span>
+                                                                        <div className="flex items-center gap-1.5 text-emerald-800">
+                                                                            <Check size={10} /> <span>Define vacuum permittivity (+1.0 M)</span>
+                                                                        </div>
+                                                                        <div className="flex items-center justify-between border-t border-[#1a1a2e]/5 pt-1.5 mt-1 text-[11px] font-black">
+                                                                            <span>Total Grade</span>
+                                                                            <span>2.0 / 2.0 Marks</span>
+                                                                        </div>
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -736,563 +1083,552 @@ export const Landing = () => {
                                                 </div>
                                             )}
                                         </>
-                                    ) : (
-                                        <div className="flex flex-col items-center justify-center py-16 text-slate-400 text-center space-y-3">
-                                            <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full flex items-center justify-center shadow-inner">
-                                                <Brain className="w-6 h-6 text-[#1D9E75] animate-pulse" />
-                                            </div>
-                                            <div>
-                                                <p className="text-slate-700 dark:text-slate-300 font-extrabold text-xs">Clarity Study Assistant</p>
-                                                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed font-bold">Select a task pill above to simulate how the study assistant answers board questions and grades notes.</p>
-                                            </div>
-                                        </div>
                                     )}
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Section: The Student Dilemma (Animated Word Switcher) */}
-                <section ref={problemSectionRef} id="problem-section" className="py-24 bg-slate-950 text-white rounded-3xl border border-slate-900 relative overflow-hidden max-w-7xl mx-auto px-6 text-center shadow-xl">
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#0c0f1d_1px,transparent_1px),linear-gradient(to_bottom,#0c0f1d_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-45" />
-                    <div className="absolute -top-40 left-1/4 w-[400px] h-[400px] bg-rose-500/5 rounded-full blur-[100px] pointer-events-none" />
-                    
-                    <div className="relative z-10 space-y-6">
-                        <p className="text-xs font-black uppercase tracking-widest text-rose-500">The Student Dilemma</p>
-                        <h2 className="text-4xl md:text-5xl font-black tracking-tight max-w-3xl mx-auto leading-tight">
-                            Traditional CBSE preparation is locked in endless...
-                        </h2>
-                        <div className="h-28 flex items-center justify-center">
-                            <span className="text-5xl md:text-7xl font-mono font-bold tracking-tight text-red-500 select-none animate-pulse">
-                                {problemWords[problemWordIdx]}
-                            </span>
-                        </div>
-                        <p className="text-slate-405 max-w-xl mx-auto text-sm md:text-base font-semibold">
-                            Endless reference guides, complex marking criteria, and test anxiety. Clarity structures your study path into clear, active missions that guarantee readiness.
-                        </p>
-                    </div>
-                </section>
-
-                {/* Section: Interactive Workspace Mockups */}
-                <section className="space-y-8">
-                    <div className="text-center max-w-3xl mx-auto space-y-3">
-                        <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">Interactive Product Demo</p>
-                        <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-                            Explore the Clarity Ecosystem
-                        </h2>
-                        <p className="text-slate-500 dark:text-slate-400 font-semibold text-lg leading-relaxed">
-                            Click the tabs below to switch between the workspace views and preview how Clarity manages student preparation and parent transparent metrics.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-                        {/* Selector Tabs Column */}
-                        <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
-                            {[
-                                {
-                                    id: 'workspace',
-                                    title: 'Daily Mission Workspace',
-                                    desc: 'Dynamic checklists prioritizing high-ROI board revision and weak topic recover goals.'
-                                },
-                                {
-                                    id: 'tutor',
-                                    title: 'AI CBSE Study Coach',
-                                    desc: 'Professional chat console resolving textbook questions and surfacing crucial CBSE exam traps.'
-                                },
-                                {
-                                    id: 'simulator',
-                                    title: 'Time Exam Simulator',
-                                    desc: 'Board-style exam practice featuring detailed step-marking grading checklists.'
-                                },
-                                {
-                                    id: 'parent',
-                                    title: 'Parent Transparency Portal',
-                                    desc: 'Separate dashboard displaying readiness scores, risk assessments, and weekly progress alerts.'
-                                }
-                            ].map((tab) => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id as any)}
-                                    className={`w-full text-left p-6 border transition-all flex flex-col gap-1.5 rounded-2xl ${
-                                        activeTab === tab.id 
-                                            ? 'bg-[#1D9E75] text-white border-transparent shadow-lg shadow-emerald-500/10 scale-[1.02]' 
-                                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-850'
-                                    }`}
-                                >
-                                    <h4 className="font-black text-base">{tab.title}</h4>
-                                    <p className={`text-xs font-semibold ${activeTab === tab.id ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'}`}>
-                                        {tab.desc}
-                                    </p>
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Interactive Screen Display Column */}
-                        <div className="lg:col-span-8 relative flex items-stretch">
-                            <div className="absolute -inset-1 bg-gradient-to-tr from-[#1D9E75] to-indigo-500 opacity-20 blur-xl pointer-events-none" />
-                            <div className="relative w-full border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0f172a] shadow-2xl p-8 flex flex-col justify-between rounded-3xl overflow-hidden">
-                                {/* Window Control Bar */}
-                                <div className="flex items-center gap-1.5 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-                                    <span className="w-3 h-3 rounded-full bg-rose-400 inline-block" />
-                                    <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-                                    <span className="w-3 h-3 rounded-full bg-emerald-400 inline-block" />
-                                    <span className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest ml-3">
-                                        Clarity Student OS — {activeTab.toUpperCase()}
-                                    </span>
-                                </div>
-
-                                {/* Active Tab Contents */}
-                                <div className="flex-1 flex flex-col justify-center min-h-[300px]">
-                                    {activeTab === 'workspace' && (
-                                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                                            <div className="md:col-span-7 space-y-4">
-                                                <div className="p-5 bg-slate-950 text-white shadow-md rounded-xl">
-                                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#1D9E75] mb-3">Today's Daily Mission</p>
-                                                    <div className="space-y-2">
-                                                        <div className="flex items-center justify-between text-xs p-3 bg-white/5 border border-white/10 rounded-lg">
-                                                            <span className="flex items-center gap-2"><CheckCircle2 size={14} className="text-emerald-400" /> Solve 5 Wave Optics PYQs</span>
-                                                            <span className="text-[9px] uppercase font-black tracking-wider bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded-full">+15 XP</span>
-                                                        </div>
-                                                        <div className="flex items-center justify-between text-xs p-3 bg-white/5 border border-white/5 rounded-lg">
-                                                            <span className="flex items-center gap-2"><div className="w-4 h-4 border-2 border-white/20 rounded" /> Revise 2 Tricky Biology Traps</span>
-                                                            <span className="text-[9px] uppercase font-black tracking-wider bg-white/10 text-white/60 px-1.5 py-0.5 rounded-full">Pending</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="p-4 border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex items-center justify-between shadow-sm rounded-xl">
-                                                    <div>
-                                                        <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider">CBSE Readiness</p>
-                                                        <h4 className="text-2xl font-black text-slate-900 dark:text-white">78%</h4>
-                                                    </div>
-                                                    <span className="text-xs font-bold text-emerald-605 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full">High prep stability</span>
-                                                </div>
-                                            </div>
-                                            <div className="md:col-span-5 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800 rounded-xl">
-                                                <Flame className="text-orange-500 w-12 h-12 mb-2 animate-bounce-slow" />
-                                                <p className="text-2xl font-black text-slate-900 dark:text-white">6 Days</p>
-                                                <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mt-1">Study Streak</p>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'tutor' && (
-                                        <div className="space-y-4">
-                                            <div className="flex items-start gap-3">
-                                                <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-black rounded-full">U</div>
-                                                <div className="p-4 bg-slate-100 dark:bg-slate-800 max-w-[85%] rounded-2xl rounded-tl-none">
-                                                    <p className="text-xs font-bold text-slate-805 dark:text-slate-200">Explain the Photoelectric Effect in CBSE board style.</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start gap-3">
-                                                <div className="w-8 h-8 bg-[#1D9E75] text-white flex items-center justify-center text-xs rounded-full"><Brain size={14} /></div>
-                                                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 dark:bg-emerald-950/20 max-w-[85%] space-y-2 rounded-2xl rounded-tl-none">
-                                                    <p className="text-xs font-bold text-slate-900 dark:text-slate-105">
-                                                        It is the emission of electrons when light of threshold frequency shines on a metal surface.
-                                                    </p>
-                                                    <div className="p-2.5 bg-yellow-300/20 border border-yellow-300/30 text-yellow-800 dark:text-yellow-300 text-[11px] font-bold rounded-lg">
-                                                        <strong>CBSE Board Exam Tip:</strong> Always state that emission is instantaneous and kinetic energy depends on frequency, not intensity!
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'simulator' && (
-                                        <div className="space-y-4">
-                                            <div className="p-4 bg-slate-950 text-white flex items-center justify-between rounded-t-xl border-b border-slate-850">
-                                                <div className="flex items-center gap-2">
-                                                    <Trophy size={16} className="text-yellow-300" />
-                                                    <span className="text-xs font-black">Physics Part I Simulator</span>
-                                                </div>
-                                                <span className="text-[10px] bg-white/20 px-2 py-0.5 font-mono font-black rounded">02:14:55</span>
-                                            </div>
-                                            <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-b-xl space-y-3">
-                                                <p className="text-xs font-black text-slate-900 dark:text-white">Q1: State Coulomb's law. (2 Marks)</p>
-                                                <div className="p-3 bg-emerald-50 dark:bg-emerald-955/20 border border-emerald-100 dark:border-emerald-900/30 text-xs space-y-1.5 rounded-lg">
-                                                    <p className="font-black text-[#1D9E75] uppercase text-[9px] tracking-wider">Step-Marking Verification</p>
-                                                    <p className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><Check size={12} className="text-emerald-500" /> State formula: F = k*q1*q2/r² (+1.0 Mark)</p>
-                                                    <p className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"><Check size={12} className="text-emerald-500" /> Define variables & vacuum permittivity (+1.0 Mark)</p>
-                                                    <div className="pt-1.5 border-t border-slate-100 dark:border-slate-800 flex justify-between font-bold text-slate-800 dark:text-slate-200">
-                                                        <span>Total Grade</span>
-                                                        <span>2.0 / 2.0 Marks</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'parent' && (
-                                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                                            <div className="md:col-span-7 space-y-3">
-                                                <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm rounded-xl">
-                                                    <div>
-                                                        <p className="text-[9px] font-black uppercase text-slate-400">Weekly Student Score</p>
-                                                        <h4 className="text-2xl font-black text-[#1D9E75] mt-0.5">82.5%</h4>
-                                                    </div>
-                                                    <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] px-2.5 py-1 font-black uppercase tracking-wider border border-emerald-500/20 rounded-full">Low Risk</span>
-                                                </div>
-                                                <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2 rounded-xl">
-                                                    <p className="text-[9px] font-black uppercase text-[#1D9E75] tracking-wider">Recommended actions</p>
-                                                    <p className="text-[11px] font-bold text-slate-600 dark:text-slate-300 leading-relaxed">
-                                                        Ensure <strong>Izyaan</strong> completes 1 timed Physics simulator test on Wave Optics this week.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="md:col-span-5 flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800 text-center rounded-xl">
-                                                <div className="relative w-20 h-20 mb-2">
-                                                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                                        <path className="text-slate-200 dark:text-slate-700" strokeWidth="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                        <path className="text-[#1D9E75]" strokeDasharray="84, 100" strokeWidth="3.5" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                    </svg>
-                                                    <div className="absolute inset-0 flex items-center justify-center text-sm font-black text-slate-800 dark:text-white">84%</div>
-                                                </div>
-                                                <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mt-1">Syllabus Coverage</p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Section: Bento Grid Features Layout */}
-                <section className="space-y-8">
-                    <div className="text-center max-w-2xl mx-auto space-y-2">
-                        <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">Bento Features OS</p>
-                        <h2 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                            Fully featured for absolute preparation
-                        </h2>
-                        <p className="text-slate-550 dark:text-slate-400 font-semibold leading-relaxed">
-                            No shortcuts. Clarity packages specialized revision and verification engines to keep syllabus tracking concrete.
-                        </p>
-                    </div>
-
-                    {/* Bento Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                        {/* Box 1: Studio AI (Video Learning Assist) */}
-                        <div className="md:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 p-8 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-6 items-center rounded-3xl">
-                            <div className="space-y-4 flex-1">
-                                <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-650 dark:text-indigo-400 flex items-center justify-center shadow-inner rounded-xl">
-                                    <Video size={22} />
-                                </div>
-                                <h3 className="font-black text-2xl text-slate-900 dark:text-white">Studio Video Learning Assist</h3>
-                                <p className="text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-                                    Convert curriculum videos into points to remember and active mock quizzes. Tracks trickiest CBSE board exam questions and traps automatically from reference transcripts.
-                                </p>
-                            </div>
-                            <div className="w-full md:w-56 p-4 bg-slate-50 dark:bg-[#0c0e14] border border-slate-100 dark:border-slate-850 space-y-2 shrink-0 rounded-xl">
-                                <span className="text-[9px] font-black uppercase text-[#1D9E75] tracking-widest">Tricky Point</span>
-                                <p className="text-xs font-bold leading-relaxed text-slate-800 dark:text-slate-200">
-                                    Planck's constant remains independent of amplitude. Intensity only scales photon counts!
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Box 2: Active Recall Board */}
-                        <div className="md:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-6 rounded-3xl">
-                            <div className="space-y-4">
-                                <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-955/30 text-[#1D9E75] flex items-center justify-center shadow-inner rounded-xl">
-                                    <Brain size={22} />
-                                </div>
-                                <h3 className="font-black text-2xl text-slate-900 dark:text-white">Active Recall Board</h3>
-                                <p className="text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-                                    Speak or write down what you remember. The AI voice grading engine benchmarks your recall against exact NCERT concepts and reports progress instantly.
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 text-emerald-700 dark:text-emerald-350 text-xs font-bold w-fit rounded-lg">
-                                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
-                                Voice Analysis Active
-                            </div>
-                        </div>
-
-                        {/* Box 3: OCR Note Grading */}
-                        <div className="md:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-6 rounded-3xl">
-                            <div className="space-y-4">
-                                <div className="w-12 h-12 bg-amber-50 dark:bg-amber-955/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-inner rounded-xl">
-                                    <FileText size={22} />
-                                </div>
-                                <h3 className="font-black text-2xl text-slate-900 dark:text-white">OCR Handwritten Grading</h3>
-                                <p className="text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-                                    Snap a picture of your handwritten answers or notebooks. Our vision OCR system reads your text, identifies diagrams, and grades it against CBSE step-marking criteria.
-                                </p>
-                            </div>
-                            <span className="text-[10px] uppercase font-black tracking-wider text-slate-450">Class 9-12 Supported</span>
-                        </div>
-
-                        {/* Box 4: Multi-Board & Multi-Medium Support */}
-                        <div className="md:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 p-8 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-6 items-center rounded-3xl">
-                            <div className="space-y-4 flex-1">
-                                <div className="w-12 h-12 bg-blue-50 dark:bg-blue-955/30 text-blue-650 dark:text-blue-450 flex items-center justify-center shadow-inner rounded-xl">
-                                    <BookOpen size={22} />
-                                </div>
-                                <h3 className="font-black text-2xl text-slate-900 dark:text-white flex items-center gap-2">
-                                    Multi-Board & Dual Medium
-                                    <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] text-[9px] font-black rounded-full uppercase tracking-wider">Active</span>
-                                </h3>
-                                <p className="text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-                                    Fully supports CBSE Board and Tamil Nadu State Board (TNSERT) across both English and Tamil Mediums. The AI model adapts questions, answers, and study resources according to your curriculum and instruction medium. (IB & IGCSE coming soon).
-                                </p>
-                            </div>
-                            <div className="p-4 bg-emerald-500/5 dark:bg-emerald-955/10 border border-emerald-500/10 dark:border-emerald-500/20 text-xs font-bold text-[#1D9E75] flex items-center gap-2 shrink-0 rounded-xl">
-                                <Check size={14} /> TNSERT & CBSE Live
-                            </div>
-                        </div>
-
-                        {/* Box 5: Worldwide & Local Leaderboards */}
-                        <div className="md:col-span-12 bg-gradient-to-br from-emerald-550/5 via-white to-indigo-500/5 dark:from-emerald-950/10 dark:via-slate-900 dark:to-indigo-950/10 border border-slate-200 dark:border-slate-850 p-8 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-8 items-center rounded-3xl">
-                            <div className="space-y-4 flex-1">
-                                <div className="w-12 h-12 bg-yellow-50 dark:bg-yellow-955/20 text-yellow-600 dark:text-yellow-455 flex items-center justify-center shadow-inner rounded-xl">
-                                    <Trophy size={22} className="animate-pulse" />
-                                </div>
-                                <h3 className="font-black text-2xl text-slate-900 dark:text-white flex items-center gap-2">
-                                    Worldwide & Local Leaderboards
-                                    <span className="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-905/30 text-yellow-700 dark:text-yellow-400 text-[10px] font-black rounded-full uppercase tracking-wider">Active</span>
-                                </h3>
-                                <p className="text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-                                    Stay motivated with a regional point-based grading system. Earn points for daily activities like asking the AI (+10), active recall logs (+30), and timed practice exams (+50). Check your ranking on the overall leaderboards, filterable by Grade, Country, State, or City.
-                                </p>
-                                <div className="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500">
-                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">⚡ Practice (+50 pts)</span>
-                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">🧠 Recall (+30 pts)</span>
-                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">💬 AI Chat (+10 pts)</span>
-                                </div>
-                            </div>
-                            
-                            {/* Mini Leaderboard Graphic */}
-                            <div className="w-full md:w-80 bg-white/95 dark:bg-slate-950/95 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-lg shrink-0 space-y-3">
-                                <p className="text-[10px] font-black uppercase tracking-wider text-slate-450 dark:text-slate-500 flex justify-between items-center">
-                                    <span>Regional Rankings</span>
-                                    <span className="text-[#1D9E75]">Tamil Nadu (State-wise)</span>
-                                </p>
-                                <div className="space-y-2 text-xs font-semibold">
-                                    <div className="flex items-center justify-between p-2 rounded-xl bg-yellow-500/5 text-slate-800 dark:text-slate-250 border border-yellow-500/15">
-                                        <span className="flex items-center gap-2">
-                                            <span className="w-5 h-5 rounded-full bg-yellow-105 dark:bg-yellow-905/30 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-[10px] font-black">1</span>
-                                            <span>Rohan Gupta</span>
-                                        </span>
-                                        <span className="font-mono text-[#1D9E75] font-black">1,420 pts</span>
-                                    </div>
-                                    <div className="flex items-center justify-between p-2 rounded-xl bg-slate-505/5 text-slate-800 dark:text-slate-250 border border-slate-300 dark:border-slate-700">
-                                        <span className="flex items-center gap-2">
-                                            <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-350 flex items-center justify-center text-[10px] font-black">2</span>
-                                            <span>Priya Nair</span>
-                                        </span>
-                                        <span className="font-mono text-[#1D9E75] font-black">1,180 pts</span>
-                                    </div>
-                                    <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-slate-800 dark:text-slate-250 border border-emerald-500/15 font-bold ring-1 ring-emerald-500/20">
-                                        <span className="flex items-center gap-2">
-                                            <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-[#1D9E75] flex items-center justify-center text-[10px] font-black">3</span>
-                                            <span>You</span>
-                                        </span>
-                                        <span className="font-mono text-[#1D9E75] font-black">950 pts</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Section: Family Hub Showcase */}
-                <section className="relative overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 md:p-14 shadow-xl rounded-3xl">
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-teal-500/10 to-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-                        {/* Parent Portal Info */}
-                        <div className="lg:col-span-6 space-y-6">
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-teal-50 dark:bg-teal-955/20 text-teal-850 dark:text-teal-400 text-xs font-black uppercase tracking-wider border border-teal-200/50 rounded-full">
-                                Dedicated Family Hub
-                            </div>
-                            <h2 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
-                                Transparent Parent Portal for family alignment
+                    {/* Section: The Student Dilemma (Animated Word Switcher) */}
+                    <section 
+                        ref={problemSectionRef} 
+                        id="problem-section" 
+                        className="py-20 bg-[#1a1a2e] text-[#f7f5f0] rounded-3xl border border-[#1a1a2e] relative overflow-hidden text-center pl-[clamp(24px, 7vw, 90px)] pr-6 shadow-[5px_5px_0px_rgba(26,26,46,0.3)]"
+                    >
+                        <div className="relative z-10 space-y-6">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-[#f7f5f0]/50">The Student Dilemma</p>
+                            <h2 className="text-2xl md:text-3xl font-black tracking-tight max-w-2xl mx-auto leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+                                Traditional CBSE preparation is locked in endless
                             </h2>
-                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-semibold">
-                                Family transparency stays distinct. Clarity separates parent tracking from the student study interface, allowing parents to log in independently with distinct secure credentials.
+                            <div className="h-20 flex items-center justify-center">
+                                <span className="text-4xl md:text-5xl font-mono font-bold tracking-tight text-red-500 select-none animate-pulse">
+                                    {problemWords[problemWordIdx]}
+                                </span>
+                            </div>
+                            <p className="text-[#f7f5f0]/70 max-w-lg mx-auto text-xs md:text-sm font-semibold leading-relaxed">
+                                Reference guides, strict step-marking schemes, and test anxiety. Clarity restructures your study path into clear, active syllabus missions.
                             </p>
-                            <div className="space-y-3">
-                                <div className="flex items-start gap-3">
-                                    <div className="mt-1 bg-teal-100 dark:bg-teal-955 text-teal-850 dark:text-teal-450 p-1.5 rounded-lg"><Mail size={14} /></div>
-                                    <div>
-                                        <p className="text-sm font-black text-slate-900 dark:text-white">Weekly Progress Report Emails</p>
-                                        <p className="text-xs text-slate-550">Automated reports listing asked questions, practice performance, and weak spots.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <div className="mt-1 bg-teal-100 dark:bg-teal-955 text-teal-850 dark:text-teal-450 p-1.5 rounded-lg"><LineChart size={14} /></div>
-                                    <div>
-                                        <p className="text-sm font-black text-slate-900 dark:text-white">Live Syllabus Coverage & Readiness Indicators</p>
-                                        <p className="text-xs text-slate-550">Track coverage percentage, risk assessment, and active time graphs.</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <div className="mt-1 bg-teal-100 dark:bg-teal-955 text-teal-850 dark:text-teal-450 p-1.5 rounded-lg"><AlertTriangle size={14} /></div>
-                                    <div>
-                                        <p className="text-sm font-black text-slate-900 dark:text-white">Actionable Intervention Guides</p>
-                                        <p className="text-xs text-slate-550">Provides exact steps to support your child (e.g. which chapters need immediate recovery practice).</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="pt-2">
-                                <Link 
-                                    to="/parent-portal" 
-                                    className="px-6 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black inline-flex items-center gap-2 shadow-lg transition-all hover:scale-[1.02] border border-slate-800 dark:border-slate-200 rounded-xl"
-                                >
-                                    Open Parent Portal Dashboard
-                                    <ArrowRight size={16} />
-                                </Link>
-                            </div>
+                        </div>
+                    </section>
+
+                    {/* Section: Interactive Workspace Mockups */}
+                    <section className="space-y-8 pl-[clamp(24px, 7vw, 90px)]">
+                        <div className="text-center max-w-2xl mx-auto space-y-3">
+                            <p className="text-[10px] font-black uppercase tracking-wider text-[#1a1a2e]/60">Product Interface Preview</p>
+                            <h2 className="text-3xl md:text-4xl font-black tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+                                Explore the Clarity Student OS
+                            </h2>
+                            <p className="text-[#1a1a2e]/70 font-semibold text-sm leading-relaxed">
+                                Click the options below to switch between workspace mockups and preview how Clarity manages student progress.
+                            </p>
                         </div>
 
-                        {/* Right: Parent Portal UI Mockup */}
-                        <div className="lg:col-span-6 relative">
-                            <div className="relative border border-slate-200 dark:border-slate-855 bg-slate-55/50 dark:bg-slate-950/40 p-6 shadow-md overflow-hidden rounded-2xl">
-                                <div className="flex items-center justify-between pb-4 border-b border-slate-200/60 dark:border-slate-800/60 mb-5">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 bg-slate-900 dark:bg-slate-800 text-white flex items-center justify-center font-bold text-xs border border-slate-850 rounded-lg">
-                                            P
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-black text-slate-900 dark:text-white">Clarity Parent Portal</p>
-                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Access Active</p>
-                                        </div>
-                                    </div>
-                                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-550 inline-block animate-pulse" />
-                                </div>
-
-                                <div className="space-y-4">
-                                    {/* Linked Student Card */}
-                                    <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 shadow-sm flex items-center justify-between rounded-xl">
-                                        <div>
-                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Linked Student</p>
-                                            <p className="text-sm font-black text-slate-900 dark:text-white">Izyaan Mohammed</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Risk Level</p>
-                                            <p className="text-xs font-black text-emerald-600 bg-emerald-50 dark:bg-emerald-955/20 px-2 py-0.5 inline-block border border-emerald-500/20 rounded-full">Low Risk</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Plan */}
-                                    <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 shadow-sm space-y-2.5 rounded-xl">
-                                        <p className="text-[10px] font-black uppercase text-[#1D9E75] tracking-wider">Recommended Parent Action Plan</p>
-                                        <div className="space-y-2 text-xs">
-                                            <div className="p-2.5 bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-850 flex items-start gap-2 rounded-lg">
-                                                <span className="text-slate-700 dark:text-slate-300 font-bold leading-relaxed">
-                                                    Ensure <strong>Izyaan</strong> completes 1 timed Physics simulator test for <strong>Wave Optics</strong> this week.
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Section: Pricing Cards */}
-                <section id="pricing" className="space-y-8">
-                    <div className="text-center max-w-2xl mx-auto space-y-2">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 dark:bg-emerald-955/40 text-emerald-800 dark:text-emerald-450 text-xs font-black uppercase tracking-wider border border-emerald-500/25 rounded-full">
-                            Launch Offer Campaign
-                        </span>
-                        <h2 className="text-4xl font-black tracking-tight text-[#020617] dark:text-white">
-                            Unlock full power, 100% free
-                        </h2>
-                        <p className="text-slate-500 dark:text-slate-450 font-semibold leading-relaxed">
-                            For a limited time, all study levels are free to access as part of our launch campaign. Start boosting your prep today.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                        {tiers.map((tier) => (
-                            <div 
-                                key={tier.name} 
-                                className={`p-8 border flex flex-col justify-between transition-all rounded-3xl ${
-                                    tier.highlight 
-                                        ? 'border-[#1D9E75] bg-emerald-50/20 dark:bg-emerald-955/10 shadow-lg ring-2 ring-[#1D9E75]/10 relative' 
-                                        : 'border-slate-200 dark:border-slate-855 bg-white dark:bg-slate-900 hover:shadow-md'
-                                }`}
-                            >
-                                {tier.highlight && (
-                                    <span className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 px-3.5 py-1 bg-[#1D9E75] text-white text-[10px] font-black uppercase tracking-widest shadow-md border border-[#1D9E75] rounded-full">
-                                        Most Popular
-                                    </span>
-                                )}
-                                <div className="space-y-5">
-                                    <div>
-                                        <span className="px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-850 rounded-full">
-                                            {tier.badge}
-                                        </span>
-                                        <h3 className="text-lg font-black text-[#020617] dark:text-white mt-2.5">{tier.name}</h3>
-                                    </div>
-                                    <div className="flex items-baseline gap-2 pb-4 border-b border-slate-100 dark:border-slate-850">
-                                        <span className="text-sm font-bold text-slate-450 line-through">{tier.originalPrice}</span>
-                                        <span className="text-4xl font-black text-[#020617] dark:text-white">{tier.promoPrice}</span>
-                                        <span className="text-xs font-bold text-slate-500">/mo</span>
-                                    </div>
-                                    <ul className="space-y-2.5 text-xs font-medium text-slate-600 dark:text-slate-355">
-                                        {tier.features.map((f) => (
-                                            <li key={f} className="flex items-start gap-2">
-                                                <CheckCircle2 size={13} className="text-[#1D9E75] mt-0.5 shrink-0" />
-                                                <span>{f}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div className="pt-6">
-                                    <Link 
-                                        to="/onboarding" 
-                                        className={`inline-flex w-full items-center justify-center gap-2 py-3.5 text-xs font-black shadow-md rounded-xl transition-all border ${
-                                            tier.highlight 
-                                                ? 'bg-[#1D9E75] hover:bg-[#15805d] text-white border-[#1D9E75]' 
-                                                : 'bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-955 border-slate-800 dark:border-slate-200'
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+                            {/* Selector Tabs Column */}
+                            <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
+                                {[
+                                    {
+                                        id: 'workspace',
+                                        title: 'Daily Mission Workspace',
+                                        desc: 'Checklists prioritizing high-ROI board revision and weak topic recover goals.'
+                                    },
+                                    {
+                                        id: 'tutor',
+                                        title: 'AI CBSE Study Coach',
+                                        desc: 'Professional chat console resolving textbook questions and surfacing exam traps.'
+                                    },
+                                    {
+                                        id: 'simulator',
+                                        title: 'Timed Exam Simulator',
+                                        desc: 'Board-style exam practice featuring detailed step-marking grading checklists.'
+                                    },
+                                    {
+                                        id: 'parent',
+                                        title: 'Parent Portal Dashboard',
+                                        desc: 'Dashboard displaying coverage scores, risk assessments, and progress alerts.'
+                                    }
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id as any)}
+                                        className={`w-full text-left p-5 border transition-all flex flex-col gap-1 rounded-xl ${
+                                            activeTab === tab.id 
+                                                ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] shadow-[3px_3px_0px_rgba(26,26,46,0.3)] scale-[1.01]' 
+                                                : 'bg-white border-[#1a1a2e]/10 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5'
                                         }`}
+                                        onMouseEnter={() => setIsHoveredWord(true)}
+                                        onMouseLeave={() => setIsHoveredWord(false)}
                                     >
-                                        {tier.cta}
-                                        <Rocket size={14} />
+                                        <h4 className="font-black text-sm">{tab.title}</h4>
+                                        <p className={`text-[11px] font-semibold leading-relaxed ${activeTab === tab.id ? 'text-[#f7f5f0]/80' : 'text-[#1a1a2e]/55'}`}>
+                                            {tab.desc}
+                                        </p>
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Display Window mockup */}
+                            <div className="lg:col-span-8 relative flex items-stretch">
+                                <div className="w-full border border-[#1a1a2e]/15 bg-white shadow-2xl p-6 flex flex-col justify-between rounded-2xl overflow-hidden relative">
+                                    <div className="flex items-center gap-1 mb-6 pb-3 border-b border-[#1a1a2e]/10">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
+                                        <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
+                                        <span className="text-[9px] font-black uppercase text-[#1a1a2e]/40 tracking-widest ml-2">
+                                            Clarity Student OS — {activeTab.toUpperCase()}
+                                        </span>
+                                    </div>
+
+                                    {/* Active Tab Contents */}
+                                    <div className="flex-1 flex flex-col justify-center min-h-[280px]">
+                                        {activeTab === 'workspace' && (
+                                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                                                <div className="md:col-span-7 space-y-4">
+                                                    <div className="p-4 bg-[#1a1a2e] text-[#f7f5f0] rounded-xl shadow-md space-y-3">
+                                                        <p className="text-[9px] font-black uppercase tracking-widest text-[#f7f5f0]/60">Today's Daily Mission</p>
+                                                        <div className="space-y-1.5">
+                                                            <div className="flex items-center justify-between text-xs p-2.5 bg-[#f7f5f0]/5 border border-[#f7f5f0]/10 rounded-lg">
+                                                                <span className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-400" /> Solve 5 Wave Optics PYQs</span>
+                                                                <span className="text-[8px] font-black tracking-wider bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">+15 XP</span>
+                                                            </div>
+                                                            <div className="flex items-center justify-between text-xs p-2.5 bg-[#f7f5f0]/5 border border-[#f7f5f0]/5 rounded-lg opacity-60">
+                                                                <span className="flex items-center gap-2"><div className="w-3.5 h-3.5 border-1.5 border-[#f7f5f0]/30 rounded" /> Revise 2 Biology Traps</span>
+                                                                <span className="text-[8px] font-black tracking-wider bg-[#f7f5f0]/10 text-[#f7f5f0]/60 px-1.5 py-0.5 rounded">Pending</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="p-3.5 border border-[#1a1a2e]/10 bg-[#fdfcf9] flex items-center justify-between rounded-xl">
+                                                        <div>
+                                                            <p className="text-[9px] font-black uppercase text-[#1a1a2e]/40">CBSE Readiness</p>
+                                                            <h4 className="text-xl font-black">78%</h4>
+                                                        </div>
+                                                        <span className="text-[10px] font-black text-emerald-850 bg-emerald-50 px-2 py-0.5 rounded-full">High prep stability</span>
+                                                    </div>
+                                                </div>
+                                                <div className="md:col-span-5 flex flex-col items-center justify-center p-5 bg-[#fcfbf9] border border-[#1a1a2e]/10 rounded-xl">
+                                                    <Flame className="text-orange-500 w-10 h-10 mb-1 animate-bounce" />
+                                                    <p className="text-xl font-black text-[#1a1a2e]">6 Days</p>
+                                                    <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-widest mt-0.5">Study Streak</p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'tutor' && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-start gap-2.5">
+                                                    <div className="w-6 h-6 border border-[#1a1a2e] flex items-center justify-center text-[9px] font-bold rounded-full">U</div>
+                                                    <div className="p-3 bg-[#fdfcf9] border border-[#1a1a2e]/10 max-w-[85%] rounded-xl rounded-tl-none">
+                                                        <p className="text-xs font-semibold text-[#1a1a2e]">Explain the Photoelectric Effect in CBSE board style.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-start gap-2.5">
+                                                    <div className="w-6 h-6 bg-[#1a1a2e] text-[#f7f5f0] flex items-center justify-center text-[9px] rounded-full"><Brain size={12} /></div>
+                                                    <div className="p-3.5 bg-[#fdfcf9] border border-[#1a1a2e]/15 max-w-[85%] space-y-2 rounded-xl rounded-tl-none">
+                                                        <p className="text-xs font-semibold text-[#1a1a2e]">
+                                                            It is the emission of electrons when light of threshold frequency shines on metal.
+                                                        </p>
+                                                        <div className="p-2 bg-yellow-100 border border-[#1a1a2e]/20 text-[#1a1a2e] text-[10px] font-bold rounded-lg leading-relaxed">
+                                                            <strong>Exam Trap:</strong> Kinetic energy depends strictly on light frequency, not light intensity!
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'simulator' && (
+                                            <div className="space-y-4">
+                                                <div className="p-3 bg-[#1a1a2e] text-[#f7f5f0] flex items-center justify-between rounded-t-xl border-b border-[#1a1a2e]/20">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <Trophy size={14} className="text-yellow-300" />
+                                                        <span className="text-[10px] font-bold">Physics Part I Simulator</span>
+                                                    </div>
+                                                    <span className="text-[9px] font-mono text-[#f7f5f0]/80">02:14:55</span>
+                                                </div>
+                                                <div className="p-4 bg-[#fcfbf9] border border-[#1a1a2e]/10 rounded-b-xl space-y-3 font-mono text-[11px]">
+                                                    <p className="font-bold text-[#1a1a2e]">Q1: State Coulomb's law. (2 Marks)</p>
+                                                    <div className="space-y-1 text-emerald-800 text-[10px]">
+                                                        <p className="flex items-center gap-1"><Check size={11} /> Formula: F = k*q1*q2/r² (+1.0 Mark)</p>
+                                                        <p className="flex items-center gap-1"><Check size={11} /> Define variables & vacuum permittivity (+1.0 Mark)</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'parent' && (
+                                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                                                <div className="md:col-span-7 space-y-3">
+                                                    <div className="p-3.5 bg-white border border-[#1a1a2e]/10 flex items-center justify-between rounded-xl">
+                                                        <div>
+                                                            <p className="text-[9px] font-black uppercase text-[#1a1a2e]/40">Weekly Diagnostic Score</p>
+                                                            <h4 className="text-xl font-black text-[#1a1a2e]/80">82.5%</h4>
+                                                        </div>
+                                                        <span className="text-[8px] bg-emerald-50 border border-emerald-500/10 text-emerald-700 px-2 py-0.5 font-bold uppercase rounded-full">Low Risk</span>
+                                                    </div>
+                                                    <div className="p-3 bg-white border border-[#1a1a2e]/10 space-y-1 rounded-xl">
+                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/50 tracking-wider">Recommended Parent Action</p>
+                                                        <p className="text-[11px] text-[#1a1a2e]/70 leading-relaxed">
+                                                            Ensure Rohan completes 1 mock Physics practice exam on Wave Optics.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="md:col-span-5 flex flex-col items-center justify-center p-5 bg-[#fcfbf9] border border-[#1a1a2e]/10 rounded-xl">
+                                                    <div className="relative w-16 h-16 mb-1">
+                                                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                                            <path className="text-slate-100" strokeWidth="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                            <path className="text-[#1a1a2e]" strokeDasharray="84, 100" strokeWidth="3.5" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                                        </svg>
+                                                        <div className="absolute inset-0 flex items-center justify-center text-xs font-black">84%</div>
+                                                    </div>
+                                                    <p className="text-[8px] font-black uppercase tracking-wider text-[#1a1a2e]/50 mt-1">Syllabus Coverage</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Section: Bento Grid Features Layout */}
+                    <section className="space-y-8 pl-[clamp(24px, 7vw, 90px)]">
+                        <div className="text-center max-w-2xl mx-auto space-y-2">
+                            <p className="text-[10px] font-black uppercase tracking-wider text-[#1a1a2e]/60">Syllabus Tools OS</p>
+                            <h2 className="text-3xl font-black tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+                                Fully featured for absolute preparation
+                            </h2>
+                            <p className="text-[#1a1a2e]/70 font-semibold leading-relaxed text-sm">
+                                Clarity packages specialized revision and validation engines to keep syllabus tracking concrete.
+                            </p>
+                        </div>
+
+                        {/* Bento Grid layout sheets */}
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            {/* Card 1: Studio AI */}
+                            <div className="md:col-span-8 flat-card p-6 flex flex-col md:flex-row gap-6 items-center">
+                                <div className="space-y-4 flex-1">
+                                    <div className="w-10 h-10 border border-[#1a1a2e] flex items-center justify-center rounded-xl bg-[#fcfbf9] shadow-[2px_2px_0px_#1a1a2e]">
+                                        <Video size={18} className="text-[#1a1a2e]" />
+                                    </div>
+                                    <h3 className="font-black text-xl">Studio Video Learning Assist</h3>
+                                    <p className="text-xs text-[#1a1a2e]/70 leading-relaxed font-semibold">
+                                        Convert curriculum videos into notes to remember and mock quizzes. Tracks tricky board exam traps automatically from references.
+                                    </p>
+                                </div>
+                                <div className="w-full md:w-48 p-4 bg-[#fcfbf9] border border-[#1a1a2e]/15 rounded-xl space-y-1.5 shrink-0 font-mono text-[10px]">
+                                    <span className="text-[8px] font-black uppercase text-[#1a1a2e]/50 tracking-widest">Tricky Point</span>
+                                    <p className="font-bold leading-relaxed text-[#1a1a2e]">
+                                        Planck's constant is independent of amplitude. Light intensity only scales photon counts!
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Card 2: Active Recall Board */}
+                            <div className="md:col-span-4 flat-card p-6 flex flex-col justify-between space-y-6">
+                                <div className="space-y-4">
+                                    <div className="w-10 h-10 border border-[#1a1a2e] flex items-center justify-center rounded-xl bg-[#fcfbf9] shadow-[2px_2px_0px_#1a1a2e]">
+                                        <Brain size={18} className="text-[#1a1a2e]" />
+                                    </div>
+                                    <h3 className="font-black text-xl">Active Recall Board</h3>
+                                    <p className="text-xs text-[#1a1a2e]/70 leading-relaxed font-semibold">
+                                        Speak or write what you remember. The AI voice grading engine benchmarks recall against NCERT concepts.
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-1.5 border border-[#1a1a2e]/30 px-3 py-1 text-[9px] font-black uppercase w-fit rounded-lg">
+                                    <span className="w-1.5 h-1.5 bg-[#1a1a2e] rounded-full animate-ping" />
+                                    Voice Analysis Active
+                                </div>
+                            </div>
+
+                            {/* Card 3: OCR Handwritten Grading */}
+                            <div className="md:col-span-4 flat-card p-6 flex flex-col justify-between space-y-6">
+                                <div className="space-y-4">
+                                    <div className="w-10 h-10 border border-[#1a1a2e] flex items-center justify-center rounded-xl bg-[#fcfbf9] shadow-[2px_2px_0px_#1a1a2e]">
+                                        <FileText size={18} className="text-[#1a1a2e]" />
+                                    </div>
+                                    <h3 className="font-black text-xl">OCR Handwritten Grading</h3>
+                                    <p className="text-xs text-[#1a1a2e]/70 leading-relaxed font-semibold">
+                                        Snap a photo of your answers. Our vision OCR reads text, maps diagrams, and grades it against CBSE step-marking criteria.
+                                    </p>
+                                </div>
+                                <span className="text-[9px] uppercase font-black tracking-wider text-[#1a1a2e]/40">Class 9-12 Supported</span>
+                            </div>
+
+                            {/* Card 4: Multi-Board & Dual Medium */}
+                            <div className="md:col-span-8 flat-card p-6 flex flex-col md:flex-row gap-6 items-center">
+                                <div className="space-y-4 flex-1">
+                                    <div className="w-10 h-10 border border-[#1a1a2e] flex items-center justify-center rounded-xl bg-[#fcfbf9] shadow-[2px_2px_0px_#1a1a2e]">
+                                        <BookOpen size={18} className="text-[#1a1a2e]" />
+                                    </div>
+                                    <h3 className="font-black text-xl flex items-center gap-2">
+                                        Multi-Board & Dual Medium
+                                        <span className="px-2 py-0.5 bg-[#1a1a2e]/5 border border-[#1a1a2e]/20 text-[#1a1a2e] text-[8px] font-black rounded-full uppercase tracking-wider">Active</span>
+                                    </h3>
+                                    <p className="text-xs text-[#1a1a2e]/70 leading-relaxed font-semibold">
+                                        Fully supports CBSE Board and Tamil Nadu State Board (TNSERT) across both English and Tamil Mediums. (IB & IGCSE coming soon).
+                                    </p>
+                                </div>
+                                <div className="p-3 bg-[#1a1a2e]/5 border border-[#1a1a2e]/20 text-[10px] font-bold text-[#1a1a2e] flex items-center gap-1.5 shrink-0 rounded-xl">
+                                    <Check size={12} /> TNSERT & CBSE Live
+                                </div>
+                            </div>
+
+                            {/* Card 5: Worldwide & Local Leaderboards */}
+                            <div className="md:col-span-12 flat-card p-6 flex flex-col md:flex-row gap-8 items-center">
+                                <div className="space-y-4 flex-1">
+                                    <div className="w-10 h-10 border border-[#1a1a2e] flex items-center justify-center rounded-xl bg-[#fcfbf9] shadow-[2px_2px_0px_#1a1a2e]">
+                                        <Trophy size={18} className="text-[#1a1a2e]" />
+                                    </div>
+                                    <h3 className="font-black text-xl flex items-center gap-2">
+                                        Worldwide & Local Leaderboards
+                                        <span className="px-2 py-0.5 bg-yellow-100 border border-yellow-300 text-yellow-800 text-[8px] font-black rounded-full uppercase tracking-wider">Active</span>
+                                    </h3>
+                                    <p className="text-xs text-[#1a1a2e]/70 leading-relaxed font-semibold">
+                                        Earn points for daily activities like asking the AI (+10), active recall logs (+30), and mock practice exams (+50). Filter by Grade, State, or City.
+                                    </p>
+                                    <div className="flex flex-wrap gap-1.5 text-[9px] font-bold text-[#1a1a2e]/60">
+                                        <span className="px-2.5 py-0.5 bg-[#1a1a2e]/5 border border-[#1a1a2e]/10 rounded-full">Practice (+50 pts)</span>
+                                        <span className="px-2.5 py-0.5 bg-[#1a1a2e]/5 border border-[#1a1a2e]/10 rounded-full">Recall (+30 pts)</span>
+                                    </div>
+                                </div>
+                                
+                                {/* Mini Leaderboard Scoreboard */}
+                                <div className="w-full md:w-72 bg-white border border-[#1a1a2e]/15 p-4 rounded-xl shrink-0 space-y-3">
+                                    <p className="text-[9px] font-black uppercase tracking-wider text-[#1a1a2e]/55 flex justify-between items-center border-b border-[#1a1a2e]/10 pb-1.5">
+                                        <span>Regional rankings</span>
+                                        <span className="text-[#1a1a2e] font-bold">Tamil Nadu (State-wise)</span>
+                                    </p>
+                                    <div className="space-y-1.5 text-[11px] font-bold">
+                                        <div className="flex items-center justify-between p-1.5 rounded bg-white text-[#1a1a2e] border border-[#1a1a2e]/10">
+                                            <span className="flex items-center gap-2">
+                                                <span className="w-4 h-4 rounded-full bg-yellow-100 text-yellow-800 flex items-center justify-center text-[9px] font-black">1</span>
+                                                <span>Rohan Gupta</span>
+                                            </span>
+                                            <span className="font-mono text-emerald-800 font-black">1,420 pts</span>
+                                        </div>
+                                        <div className="flex items-center justify-between p-1.5 rounded bg-white text-[#1a1a2e] border border-[#1a1a2e]/10">
+                                            <span className="flex items-center gap-2">
+                                                <span className="w-4 h-4 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[9px] font-black">2</span>
+                                                <span>Priya Nair</span>
+                                            </span>
+                                            <span className="font-mono text-emerald-800 font-black">1,180 pts</span>
+                                        </div>
+                                        <div className="flex items-center justify-between p-1.5 rounded bg-yellow-100/70 text-[#1a1a2e] border border-[#1a1a2e]/25 font-black ring-1 ring-[#1a1a2e]/10">
+                                            <span className="flex items-center gap-2">
+                                                <span className="w-4 h-4 rounded-full bg-[#1a1a2e] text-[#f7f5f0] flex items-center justify-center text-[9px] font-black">3</span>
+                                                <span>You</span>
+                                            </span>
+                                            <span className="font-mono text-emerald-800 font-black">950 pts</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Section: Family Hub Showcase */}
+                    <section className="relative overflow-hidden border border-[#1a1a2e]/15 bg-white p-8 md:p-12 shadow-lg rounded-3xl pl-[clamp(24px, 7vw, 90px)]">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+                            {/* Parent Portal Info */}
+                            <div className="lg:col-span-6 space-y-6">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1a1a2e]/5 text-[#1a1a2e] text-xs font-black uppercase tracking-wider border border-[#1a1a2e]/15 rounded-full">
+                                    Dedicated Family Hub
+                                </div>
+                                <h2 className="text-3xl font-black tracking-tight leading-none" style={{ fontFamily: "'Syne', sans-serif" }}>
+                                    Transparent Parent Portal for family alignment
+                                </h2>
+                                <p className="text-xs md:text-sm text-[#1a1a2e]/70 leading-relaxed font-semibold">
+                                    Family transparency stays distinct. Clarity separates parent tracking from the student study interface, allowing parents to log in independently with distinct secure credentials.
+                                </p>
+                                <div className="space-y-3">
+                                    <div className="flex items-start gap-2.5">
+                                        <div className="mt-0.5 bg-[#1a1a2e]/5 text-[#1a1a2e] p-1.5 rounded-lg border border-[#1a1a2e]/10"><Mail size={12} /></div>
+                                        <div>
+                                            <p className="text-xs font-black text-[#1a1a2e]">Weekly Progress Report Emails</p>
+                                            <p className="text-[11px] text-[#1a1a2e]/60">Automated reports listing questions, mock simulator performance, and weak spots.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <div className="mt-0.5 bg-[#1a1a2e]/5 text-[#1a1a2e] p-1.5 rounded-lg border border-[#1a1a2e]/10"><LineChart size={12} /></div>
+                                        <div>
+                                            <p className="text-xs font-black text-[#1a1a2e]">Live Coverage & Readiness Indicators</p>
+                                            <p className="text-[11px] text-[#1a1a2e]/60">Track coverage percentage, risk assessment indexes, and active timelines.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <div className="mt-0.5 bg-[#1a1a2e]/5 text-[#1a1a2e] p-1.5 rounded-lg border border-[#1a1a2e]/10"><AlertTriangle size={12} /></div>
+                                        <div>
+                                            <p className="text-xs font-black text-[#1a1a2e]">Actionable Intervention Guides</p>
+                                            <p className="text-[11px] text-[#1a1a2e]/60">Provides exact guides to support your child (e.g. which chapters need immediate practice).</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="pt-2">
+                                    <Link 
+                                        to="/parent-portal" 
+                                        className="px-5 py-3 bg-[#1a1a2e] text-[#f7f5f0] text-xs font-black inline-flex items-center gap-2 rounded-xl shadow-[3px_3px_0px_rgba(26,26,46,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_rgba(26,26,46,0.3)] transition-all"
+                                        onMouseEnter={() => setIsHoveredWord(true)}
+                                        onMouseLeave={() => setIsHoveredWord(false)}
+                                    >
+                                        Open Parent Dashboard
+                                        <ArrowRight size={14} />
                                     </Link>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </section>
 
-                {/* Section: Accordion FAQs */}
-                <section className="max-w-3xl mx-auto space-y-6">
-                    <div className="text-center space-y-2">
-                        <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">FAQ</p>
-                        <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Frequently Asked Questions</h2>
-                    </div>
-
-                    <div className="space-y-3">
-                        {faqsList.map((faq, index) => (
-                            <div 
-                                key={index} 
-                                className="border border-slate-200 dark:border-slate-850 bg-white dark:bg-slate-900 overflow-hidden shadow-sm transition-all rounded-2xl"
-                            >
-                                <button
-                                    onClick={() => toggleFaq(index)}
-                                    className="w-full flex items-center justify-between p-6 text-left font-black text-sm md:text-base text-slate-900 dark:text-white select-none hover:bg-slate-50/50 dark:hover:bg-slate-850/20 transition-colors"
-                                >
-                                    <span>{faq.q}</span>
-                                    <ChevronDown 
-                                        size={18} 
-                                        className={`text-slate-400 transition-transform duration-300 ${
-                                            openFaqIdx === index ? 'transform rotate-180 text-[#1D9E75]' : ''
-                                        }`}
-                                    />
-                                </button>
-                                {openFaqIdx === index && (
-                                    <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800 text-xs md:text-sm text-slate-500 dark:text-slate-400 font-semibold leading-relaxed animate-fadeIn">
-                                        {faq.a}
+                            {/* Parent Portal UI Mockup */}
+                            <div className="lg:col-span-6 relative">
+                                <div className="relative border border-[#1a1a2e]/15 bg-[#fcfbf9] p-6 shadow-md rounded-2xl">
+                                    <div className="flex items-center justify-between pb-3 border-b border-[#1a1a2e]/10 mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-7 h-7 bg-[#1a1a2e] text-[#f7f5f0] flex items-center justify-center font-bold text-xs rounded-lg">
+                                                P
+                                            </div>
+                                            <div>
+                                                <p className="text-[11px] font-black text-[#1a1a2e]">Clarity Parent Portal</p>
+                                                <p className="text-[9px] font-bold text-[#1a1a2e]/40 uppercase">Access Active</p>
+                                            </div>
+                                        </div>
+                                        <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                                     </div>
-                                )}
+
+                                    <div className="space-y-3 font-mono text-[11px]">
+                                        {/* Linked Student Card */}
+                                        <div className="p-3 bg-white border border-[#1a1a2e]/10 flex items-center justify-between rounded-xl">
+                                            <div>
+                                                <p className="text-[8px] font-bold text-[#1a1a2e]/40 uppercase">Student Profile</p>
+                                                <p className="font-bold text-[#1a1a2e]">Izyaan Mohammed</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[8px] font-bold text-[#1a1a2e]/40 uppercase">Risk Index</p>
+                                                <p className="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-500/10">Low Risk</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Action Plan */}
+                                        <div className="p-3 bg-white border border-[#1a1a2e]/10 space-y-1.5 rounded-xl">
+                                            <p className="text-[8px] font-black uppercase text-[#1a1a2e]/55">Recommended Action Plan</p>
+                                            <p className="text-[#1a1a2e]/80 leading-relaxed text-[10px]">
+                                                Ensure Rohan completes 1 mock Physics practice exam on <strong>Wave Optics</strong> this week.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        ))}
-                    </div>
-                </section>
-            </main>
+                        </div>
+                    </section>
+
+                    {/* Section: Pricing Cards */}
+                    <section id="pricing" className="space-y-8 pl-[clamp(24px, 7vw, 90px)]">
+                        <div className="text-center max-w-2xl mx-auto space-y-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-100 border border-yellow-300 text-yellow-850 text-xs font-black uppercase tracking-wider rounded-full">
+                                Special Launch Offer
+                            </span>
+                            <h2 className="text-3xl font-black tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+                                Unlock full power, 100% free
+                            </h2>
+                            <p className="text-[#1a1a2e]/70 font-semibold text-sm leading-relaxed">
+                                For a limited time, all study plans are free to access as part of our initial campaign. Boost your prep now.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                            {tiers.map((tier) => (
+                                <div 
+                                    key={tier.name} 
+                                    className={`p-6 border flex flex-col justify-between transition-all rounded-3xl ${
+                                        tier.highlight 
+                                            ? 'border-2 border-[#1a1a2e] bg-[#fcfbf9]/50 shadow-[5px_5px_0px_#1a1a2e] relative' 
+                                            : 'border-[#1a1a2e]/15 bg-white shadow-[3px_3px_0px_rgba(26,26,46,0.15)] hover:shadow-[5px_5px_0px_rgba(26,26,46,0.15)]'
+                                    }`}
+                                >
+                                    {tier.highlight && (
+                                        <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-0.5 bg-[#1a1a2e] text-[#f7f5f0] text-[8px] font-black uppercase tracking-widest shadow border border-[#1a1a2e] rounded-full">
+                                            Most Popular
+                                        </span>
+                                    )}
+                                    <div className="space-y-4">
+                                        <div>
+                                            <span className="px-2 py-0.5 text-[8px] font-black uppercase tracking-wider bg-[#1a1a2e]/5 text-[#1a1a2e] border border-[#1a1a2e]/10 rounded-full">
+                                                {tier.badge}
+                                            </span>
+                                            <h3 className="text-base font-black mt-2">{tier.name}</h3>
+                                        </div>
+                                        <div className="flex items-baseline gap-1.5 pb-3 border-b border-[#1a1a2e]/10">
+                                            <span className="text-xs font-bold text-[#1a1a2e]/40 line-through">{tier.originalPrice}</span>
+                                            <span className="text-2xl font-black">{tier.promoPrice}</span>
+                                            <span className="text-[10px] font-bold text-[#1a1a2e]/55">/mo</span>
+                                        </div>
+                                        <ul className="space-y-2 text-[11px] font-medium text-[#1a1a2e]/85">
+                                            {tier.features.map((f) => (
+                                                <li key={f} className="flex items-start gap-1.5">
+                                                    <CheckCircle2 size={12} className="text-[#1a1a2e] mt-0.5 shrink-0" />
+                                                    <span>{f}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div className="pt-5">
+                                        <Link 
+                                            to="/onboarding" 
+                                            className={`inline-flex w-full items-center justify-center gap-1.5 py-3 text-xs font-black shadow-sm rounded-xl transition-all border ${
+                                                tier.highlight 
+                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] shadow-[2px_2px_0px_rgba(26,26,46,0.3)] hover:translate-x-[1px] hover:translate-y-[1px]' 
+                                                    : 'bg-transparent text-[#1a1a2e] border-[#1a1a2e]/25 hover:bg-[#1a1a2e]/5'
+                                            }`}
+                                            onMouseEnter={() => setIsHoveredWord(true)}
+                                            onMouseLeave={() => setIsHoveredWord(false)}
+                                        >
+                                            {tier.cta}
+                                            <Rocket size={12} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Section: Accordion FAQs */}
+                    <section className="max-w-3xl mx-auto space-y-6 pl-[clamp(24px, 7vw, 90px)]">
+                        <div className="text-center space-y-2">
+                            <p className="text-[10px] font-black uppercase tracking-wider text-[#1a1a2e]/60">FAQ</p>
+                            <h2 className="text-2xl font-black tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Frequently Asked Questions</h2>
+                        </div>
+
+                        <div className="space-y-2.5">
+                            {faqsList.map((faq, index) => (
+                                <div 
+                                    key={index} 
+                                    className="border border-[#1a1a2e]/15 bg-white overflow-hidden shadow-[2px_2px_0px_rgba(26,26,46,0.1)] rounded-xl"
+                                >
+                                    <button
+                                        onClick={() => toggleFaq(index)}
+                                        className="w-full flex items-center justify-between p-5 text-left font-black text-xs md:text-sm text-[#1a1a2e] select-none hover:bg-[#1a1a2e]/5 transition-colors"
+                                        onMouseEnter={() => setIsHoveredWord(true)}
+                                        onMouseLeave={() => setIsHoveredWord(false)}
+                                    >
+                                        <span>{faq.q}</span>
+                                        <ChevronDown 
+                                            size={16} 
+                                            className={`text-[#1a1a2e]/40 transition-transform duration-300 ${
+                                                openFaqIdx === index ? 'transform rotate-180 text-[#1a1a2e]' : ''
+                                            }`}
+                                        />
+                                    </button>
+                                    {openFaqIdx === index && (
+                                        <div className="p-5 pt-0 border-t border-[#1a1a2e]/10 text-xs text-[#1a1a2e]/70 font-semibold leading-relaxed">
+                                            {faq.a}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </main>
+
+                {/* Footer bar */}
+                <footer className="border-t border-[#1a1a2e]/10 py-10 text-center text-[10px] font-bold text-[#1a1a2e]/40 uppercase tracking-widest pl-[clamp(24px, 7vw, 90px)] pr-6">
+                    <p>© 2026 Clarity AI. CBSE study resources. Est. 2025.</p>
+                </footer>
+            </div>
         </div>
     );
 };
