@@ -80,6 +80,10 @@ def init_db() -> None:
                 parent_email TEXT,
                 teacher_personality TEXT,
                 focus_chapters_json TEXT,
+                country TEXT DEFAULT 'India',
+                state TEXT DEFAULT 'Delhi',
+                city TEXT DEFAULT 'New Delhi',
+                points INTEGER DEFAULT 0,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             )
@@ -101,6 +105,14 @@ def init_db() -> None:
             conn.execute("ALTER TABLE users ADD COLUMN teacher_personality TEXT")
         if "focus_chapters_json" not in user_columns:
             conn.execute("ALTER TABLE users ADD COLUMN focus_chapters_json TEXT")
+        if "country" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN country TEXT DEFAULT 'India'")
+        if "state" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN state TEXT DEFAULT 'Delhi'")
+        if "city" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN city TEXT DEFAULT 'New Delhi'")
+        if "points" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN points INTEGER DEFAULT 0")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS sessions (
@@ -294,8 +306,9 @@ def create_user(username: str, password: str, profile: dict[str, Any]) -> bool:
                 preferred_language, preferred_pace, confidence_level,
                 revision_frequency, parent_email, 
                 teacher_personality, focus_chapters_json,
+                country, state, city, points,
                 created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 username,
@@ -317,6 +330,10 @@ def create_user(username: str, password: str, profile: dict[str, Any]) -> bool:
                 profile.get("parentEmail"),
                 profile.get("teacherPersonality"),
                 json.dumps(profile.get("focusChapters") or {}),
+                profile.get("country") or "India",
+                profile.get("state") or "Delhi",
+                profile.get("city") or "New Delhi",
+                profile.get("points") or 0,
                 now,
                 now,
             ),
@@ -369,7 +386,8 @@ def update_user_profile(username: str, profile: dict[str, Any]) -> None:
             SET school = ?, class_num = ?, subjects_json = ?, subscription_tier = ?, learning_style = ?, goal = ?,
                 study_hours = ?, focus_areas = ?, exam_board = ?, preferred_language = ?,
                 preferred_pace = ?, confidence_level = ?, revision_frequency = ?,
-                parent_email = ?, teacher_personality = ?, focus_chapters_json = ?, updated_at = ?
+                parent_email = ?, teacher_personality = ?, focus_chapters_json = ?, 
+                country = ?, state = ?, city = ?, updated_at = ?
             WHERE username = ?
             """,
             (
@@ -389,6 +407,9 @@ def update_user_profile(username: str, profile: dict[str, Any]) -> None:
                 profile.get("parentEmail"),
                 profile.get("teacherPersonality"),
                 json.dumps(profile.get("focusChapters") or {}),
+                profile.get("country"),
+                profile.get("state"),
+                profile.get("city"),
                 now,
                 username,
             ),
@@ -468,6 +489,14 @@ def set_user_subscription(
 
 
 def insert_progress_log(username: str, action: str, subject: str, chapter: str, score: Optional[int]) -> None:
+    points_to_add = 10
+    if action == "recall":
+        points_to_add = 30
+    elif action in ("practice", "simulator", "exam"):
+        points_to_add = 50
+    elif action == "ask_ai":
+        points_to_add = 10
+
     with _connect() as conn:
         conn.execute(
             """
@@ -475,6 +504,10 @@ def insert_progress_log(username: str, action: str, subject: str, chapter: str, 
             VALUES (?, ?, ?, ?, ?, ?)
             """,
             (username, action, subject, chapter, score, _utc_now_iso()),
+        )
+        conn.execute(
+            "UPDATE users SET points = points + ? WHERE username = ?",
+            (points_to_add, username),
         )
 
 

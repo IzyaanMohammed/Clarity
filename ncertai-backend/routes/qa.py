@@ -14,8 +14,13 @@ logger = logging.getLogger(__name__)
 @router.post("/ask", response_model=QAResponse)
 async def ask_question(request: QARequest, x_user_id: str = Header(None)):
     try:
+        board = "CBSE"
+        language = "English"
+        if request.learner_profile:
+            board = request.learner_profile.get("examBoard", "CBSE")
+            language = request.learner_profile.get("preferredLanguage", "English")
         system_prompt = build_system_prompt(
-            request.class_num, request.subject, request.chapter
+            request.class_num, request.subject, request.chapter, board, language
         )
         
         custom_context = None
@@ -96,8 +101,13 @@ async def ask_question(request: QARequest, x_user_id: str = Header(None)):
 async def ask_question_stream(request: QARequest, x_user_id: str = Header(None)):
     async def event_generator():
         try:
+            board = "CBSE"
+            language = "English"
+            if request.learner_profile:
+                board = request.learner_profile.get("examBoard", "CBSE")
+                language = request.learner_profile.get("preferredLanguage", "English")
             system_prompt = build_system_prompt(
-                request.class_num, request.subject, request.chapter
+                request.class_num, request.subject, request.chapter, board, language
             )
             
             custom_context = None

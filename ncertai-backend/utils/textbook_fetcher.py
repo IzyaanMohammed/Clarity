@@ -247,7 +247,89 @@ def _extract_text_from_pdf_bytes(pdf_bytes: bytes) -> tuple[str, list[int]]:
     return "", []
 
 
+async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str) -> str:
+    medium = "EN" if "EN" in class_num else "TM"
+    safe_subject = re.sub(r"[^a-zA-Z0-9_]", "_", subject.lower())
+    safe_chapter = re.sub(r"[^a-zA-Z0-9_]", "_", chapter.lower())
+    cache_filename = f"class_{class_num}_{safe_subject}_{safe_chapter}.txt"
+    cache_path = TEXTBOOKS_CACHE_DIR / cache_filename
+
+    if cache_path.exists():
+        try:
+            cached = cache_path.read_text(encoding="utf-8")
+            if len(cached.strip()) >= 80:
+                logger.info(f"TN Text cache hit: {cache_filename}")
+                return cached
+        except Exception:
+            pass
+
+    # Look up PDF in ./tamilnaduboard/{medium}/
+    tn_dir = Path(__file__).resolve().parents[2] / "tamilnaduboard" / medium
+    if not tn_dir.exists():
+        tn_dir = Path("./tamilnaduboard") / medium
+
+    pdf_path = None
+    if tn_dir.exists():
+        for f in tn_dir.glob("*.pdf"):
+            f_name = f.name.lower()
+            if subject.lower() in f_name or (subject.lower() == "maths" and "mathematics" in f_name):
+                pdf_path = f
+                break
+    
+    if not pdf_path or not pdf_path.exists():
+        logger.warning(f"Tamil Nadu Board PDF not found for {subject} {medium}")
+        return ""
+
+    logger.info(f"Extracting TN Board chapter '{chapter}' from {pdf_path.name}")
+    start_page = -1
+    try:
+        import PyPDF2
+        with open(pdf_path, "rb") as f_pdf:
+            reader = PyPDF2.PdfReader(f_pdf)
+            for page_idx in range(len(reader.pages)):
+                page_text = reader.pages[page_idx].extract_text() or ""
+                if chapter.lower() in page_text.lower():
+                    start_page = page_idx
+                    break
+    except Exception as e:
+        logger.warning(f"Fast PyPDF2 pre-pass failed: {e}")
+
+    try:
+        import pdfplumber
+        with pdfplumber.open(pdf_path) as pdf:
+            if start_page == -1:
+                # Fallback to search using pdfplumber on first 80 pages
+                for page_idx in range(min(80, len(pdf.pages))):
+                    page_text = pdf.pages[page_idx].extract_text() or ""
+                    if chapter.lower() in page_text.lower():
+                        start_page = page_idx
+                        break
+            
+            if start_page == -1:
+                start_page = 30
+                logger.warning(f"Chapter title '{chapter}' not found in PDF pages. Defaulting start page to 30.")
+
+            end_page = min(start_page + 25, len(pdf.pages))
+            extracted_pages = []
+            for p_idx in range(start_page, end_page):
+                page_text = pdf.pages[p_idx].extract_text() or ""
+                extracted_pages.append(page_text)
+            
+            full_text = "\n\n".join(extracted_pages)
+            if len(full_text.strip()) > 200:
+                cache_path.write_text(full_text, encoding="utf-8")
+                return full_text
+    except Exception as e:
+        logger.error(f"Error parsing Tamil Nadu Board PDF: {e}")
+    
+    return ""
+
+
 async def get_textbook_chapter_text(class_num: str, subject: str, chapter: str) -> str:
+    if "TN" in str(class_num):
+        tn_text = await get_tamil_nadu_chapter_text(str(class_num), subject, chapter)
+        if tn_text:
+            return tn_text
     """
     Get NCERT chapter text by downloading the actual PDF from ncert.nic.in/textbook/pdf/
     and extracting text with pdfplumber. No r.jina. No HTML scraping.

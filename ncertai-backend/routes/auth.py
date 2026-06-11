@@ -71,7 +71,7 @@ def _resolve_subscription_tier(username: str, requested_tier: Optional[str]) -> 
 
 class AuthProfile(BaseModel):
     name: str = Field(min_length=2, max_length=80)
-    class_num: int = Field(alias="class")
+    class_num: str | int = Field(alias="class")
     subjects: list[str] = []
     subscriptionTier: Literal["free", "pro", "pro_max"] = "free"
     school: Optional[str] = None
@@ -85,6 +85,12 @@ class AuthProfile(BaseModel):
     confidenceLevel: Optional[str] = None
     revisionFrequency: Optional[str] = None
     parentEmail: Optional[str] = None
+    country: Optional[str] = None
+    state: Optional[str] = None
+    city: Optional[str] = None
+    points: Optional[int] = 0
+    teacherPersonality: Optional[str] = "Kind"
+    focusChapters: Optional[dict[str, list[str]]] = None
 
 
 class RegisterRequest(BaseModel):
@@ -187,8 +193,11 @@ def _verify_stripe_signature(payload: bytes, signature_header: str, secret: str,
 
 
 def _resolve_lower_class(curriculum: dict[str, dict[str, list[str]]], class_num: str) -> str:
+    cleaned = str(class_num).strip()
+    if "TN" in cleaned:
+        return "9"
     try:
-        target = max(1, int(str(class_num).strip()) - 1)
+        target = max(1, int(cleaned) - 1)
     except Exception:
         target = 8
     return str(target)
@@ -1327,6 +1336,13 @@ def _auth_username(authorization: Optional[str]) -> str:
     username = get_username_by_token(token)
     if not username:
         raise HTTPException(status_code=401, detail="Unauthorized")
+    try:
+        from utils.context import board_var, language_var
+        profile = get_user_profile(username) or {}
+        board_var.set(profile.get("exam_board") or "CBSE")
+        language_var.set(profile.get("preferred_language") or "English")
+    except Exception:
+        pass
     return username
 
 
@@ -1388,6 +1404,10 @@ async def register(request: RegisterRequest):
             "parentEmail": parent_email,
             "teacherPersonality": request.profile.teacherPersonality,
             "focusChapters": request.profile.focusChapters or {},
+            "country": request.profile.country or "India",
+            "state": request.profile.state or "Delhi",
+            "city": request.profile.city or "New Delhi",
+            "points": 0,
         },
     }
 
@@ -1433,6 +1453,10 @@ async def login(request: LoginRequest):
             "parentEmail": row.get("parent_email"),
             "teacherPersonality": row.get("teacher_personality"),
             "focusChapters": json.loads(row.get("focus_chapters_json") or "{}"),
+            "country": row.get("country") or "India",
+            "state": row.get("state") or "Delhi",
+            "city": row.get("city") or "New Delhi",
+            "points": row.get("points") or 0,
         },
     }
 
@@ -1471,6 +1495,10 @@ async def me(authorization: Optional[str] = Header(default=None)):
         "parentEmail": row.get("parent_email"),
         "teacherPersonality": row.get("teacher_personality"),
         "focusChapters": json.loads(row.get("focus_chapters_json") or "{}"),
+        "country": row.get("country") or "India",
+        "state": row.get("state") or "Delhi",
+        "city": row.get("city") or "New Delhi",
+        "points": row.get("points") or 0,
     }
 
 

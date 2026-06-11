@@ -149,6 +149,7 @@ export const Landing = () => {
     const [terminalPrompt, setTerminalPrompt] = useState<string>('');
     const [terminalOutput, setTerminalOutput] = useState<string>('');
     const [isTyping, setIsTyping] = useState<boolean>(false);
+    const [visibleLinesCount, setVisibleLinesCount] = useState<number>(0);
     const [activePrompt, setActivePrompt] = useState<string | null>(null);
 
     // Scroll-triggered word switcher state
@@ -161,7 +162,7 @@ export const Landing = () => {
     useEffect(() => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Syne:wght@800&family=Space+Grotesk:wght@500;700&display=swap';
+        link.href = 'https://fonts.googleapis.com/css2?family=Sora:wght@700;800;900&family=Plus+Jakarta+Sans:wght@700;800&family=Outfit:wght@400;600;800;900&family=Syne:wght@800&family=Space+Grotesk:wght@500;700&display=swap';
         document.head.appendChild(link);
         return () => {
             document.head.removeChild(link);
@@ -191,6 +192,7 @@ export const Landing = () => {
         setActivePrompt(key);
         setTerminalPrompt('');
         setTerminalOutput('');
+        setVisibleLinesCount(0);
 
         const data = PROMPTS[key];
         let currentInput = '';
@@ -211,6 +213,7 @@ export const Landing = () => {
                         if (lineIdx < data.output.length) {
                             currentLines.push(data.output[lineIdx]);
                             setTerminalOutput(currentLines.join('\n'));
+                            setVisibleLinesCount(lineIdx + 1);
                             lineIdx++;
                         } else {
                             clearInterval(outputInterval);
@@ -260,7 +263,7 @@ export const Landing = () => {
         if (!isProblemVisible) return;
         const interval = setInterval(() => {
             setProblemWordIdx((prev) => (prev + 1) % problemWords.length);
-        }, 1500); // Slower interval
+        }, 3000); // Slower interval
         return () => clearInterval(interval);
     }, [isProblemVisible]);
 
@@ -363,8 +366,8 @@ export const Landing = () => {
                                 {heroStage === 'reveal' && (
                                     <div className="absolute inset-0 -m-8 border border-emerald-500/20 animate-ping opacity-75 rounded-3xl pointer-events-none" />
                                 )}
-                                <h1 className="text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-[900] tracking-[calc(-0.04em)] leading-none select-none transition-all duration-1000 transform scale-100" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                                    <span className="bg-gradient-to-r from-emerald-400 via-green-400 via-teal-300 via-cyan-400 via-emerald-400 to-indigo-500 bg-clip-text text-transparent animate-gradient-text text-glow">
+                                <h1 className="text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none transition-all duration-1000 transform scale-100" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
+                                    <span className="bg-gradient-to-r from-emerald-450 via-teal-300 via-indigo-550 to-emerald-450 bg-clip-text text-transparent animate-gradient-text text-glow">
                                         Clarity
                                     </span>
                                 </h1>
@@ -412,47 +415,50 @@ export const Landing = () => {
                                 ? 'opacity-100 translate-y-0 scale-100'
                                 : 'opacity-0 translate-y-8 scale-95'
                         }`}>
-                            <div className="w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+                            <div className="w-full bg-white/85 dark:bg-slate-900/85 border border-slate-200 dark:border-slate-805 rounded-3xl shadow-2xl backdrop-blur-md overflow-hidden flex flex-col">
                                 {/* Chat Header */}
-                                <div className="bg-slate-950 px-4 py-3.5 flex items-center justify-between border-b border-slate-850">
+                                <div className="bg-slate-50/70 dark:bg-slate-950/60 px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-850">
                                     <div className="flex items-center gap-2">
                                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                                        <span className="text-[11px] font-bold text-slate-300 tracking-wider">Clarity Study Workspace</span>
+                                        <span className="text-[11px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">Clarity Study Workspace</span>
                                     </div>
-                                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">Active Session</span>
+                                    <span className="text-[10px] font-mono text-slate-400 dark:text-slate-550 uppercase tracking-widest font-black">Active Session</span>
                                 </div>
                                 
                                 {/* Quick Prompt Selector Pills */}
-                                <div className="bg-slate-900/60 p-3 border-b border-slate-850 flex flex-wrap gap-2">
+                                <div className="bg-slate-50/30 dark:bg-slate-900/60 p-3 border-b border-slate-100 dark:border-slate-850 flex flex-wrap gap-2">
                                     <button 
+                                        type="button"
                                         onClick={() => simulateTerminal('wave-optics')}
                                         disabled={isTyping}
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all ${
+                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
                                             activePrompt === 'wave-optics'
-                                                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 font-bold'
-                                                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] border-[#1D9E75]/40 font-black shadow-sm'
+                                                : 'bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-850 dark:hover:text-slate-200 hover:border-slate-350 dark:hover:border-slate-700'
                                         }`}
                                     >
-                                        λ Wave Optics PYQ
+                                        💡 Wave Optics PYQ
                                     </button>
                                     <button 
+                                        type="button"
                                         onClick={() => simulateTerminal('biology')}
                                         disabled={isTyping}
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all ${
+                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
                                             activePrompt === 'biology'
-                                                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 font-bold'
-                                                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] border-[#1D9E75]/40 font-black shadow-sm'
+                                                : 'bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-850 dark:hover:text-slate-200 hover:border-slate-350 dark:hover:border-slate-700'
                                         }`}
                                     >
-                                        ☘ Grade Biology Note
+                                        🌿 Grade Biology Note
                                     </button>
                                     <button 
+                                        type="button"
                                         onClick={() => simulateTerminal('simulator')}
                                         disabled={isTyping}
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all ${
+                                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
                                             activePrompt === 'simulator'
-                                                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 font-bold'
-                                                : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] border-[#1D9E75]/40 font-black shadow-sm'
+                                                : 'bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-850 dark:hover:text-slate-200 hover:border-slate-350 dark:hover:border-slate-700'
                                         }`}
                                     >
                                         ⏱ Timed Exam Simulator
@@ -460,12 +466,12 @@ export const Landing = () => {
                                 </div>
 
                                 {/* Chat Conversation Display */}
-                                <div className="p-4 bg-slate-950 min-h-[280px] max-h-[340px] overflow-y-auto flex flex-col justify-start gap-4 select-none">
+                                <div className="p-4 bg-white dark:bg-[#0b0f19] min-h-[300px] max-h-[360px] overflow-y-auto flex flex-col justify-start gap-4 select-none">
                                     {terminalPrompt ? (
                                         <>
                                             {/* User Message Bubble */}
                                             <div className="flex justify-end w-full">
-                                                <div className="bg-slate-800 text-slate-100 px-4 py-2.5 rounded-2xl rounded-tr-none text-xs font-semibold max-w-[85%] border border-slate-700 shadow-sm text-left">
+                                                <div className="bg-[#1D9E75]/10 dark:bg-emerald-950/20 text-slate-800 dark:text-slate-100 px-4 py-2.5 rounded-2xl rounded-tr-none text-xs font-bold max-w-[85%] border border-[#1D9E75]/25 dark:border-emerald-500/20 shadow-sm text-left">
                                                     {terminalPrompt}
                                                     {isTyping && <span className="animate-pulse ml-0.5">|</span>}
                                                 </div>
@@ -480,20 +486,169 @@ export const Landing = () => {
                                                         </div>
                                                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Clarity Coach</span>
                                                     </div>
-                                                    <div className="bg-slate-900/50 text-slate-200 p-4 rounded-2xl rounded-tl-none text-xs font-medium max-w-[90%] border border-slate-800 shadow-inner whitespace-pre-wrap text-left w-full font-mono">
-                                                        {terminalOutput}
+                                                    <div className="bg-slate-50/80 dark:bg-slate-900/50 text-slate-800 dark:text-slate-250 p-4 rounded-3xl rounded-tl-none text-xs font-semibold max-w-[95%] border border-slate-200 dark:border-slate-850 shadow-sm text-left w-full space-y-4">
+                                                        {activePrompt === 'wave-optics' && (
+                                                            <div className="space-y-4">
+                                                                <p className="font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5 text-xs">
+                                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                                                                    Derive expression for fringe width in YDSE (CBSE 2024)
+                                                                </p>
+                                                                
+                                                                {visibleLinesCount >= 2 && (
+                                                                    <div className="p-3.5 bg-emerald-500/5 dark:bg-emerald-955/10 border border-emerald-500/10 dark:border-emerald-500/20 rounded-2xl space-y-1">
+                                                                        <p className="text-[9px] font-black uppercase text-[#1D9E75] tracking-wider">Concept Formula</p>
+                                                                        <p className="text-sm font-black tracking-tight text-slate-850 dark:text-slate-150 font-mono">Fringe Width (β) = λD/d</p>
+                                                                    </div>
+                                                                )}
+
+                                                                {visibleLinesCount >= 3 && (
+                                                                    <div className="p-3.5 bg-rose-500/5 dark:bg-rose-955/10 border border-rose-500/10 dark:border-rose-500/20 rounded-2xl space-y-1.5">
+                                                                        <p className="text-[9px] font-black uppercase text-rose-500 tracking-wider flex items-center gap-1">
+                                                                            ⚠️ CBSE Exam Trap Identified
+                                                                        </p>
+                                                                        <p className="text-[11px] font-bold text-slate-600 dark:text-slate-400 leading-relaxed">
+                                                                            Students often forget to explicitly state the path difference condition <span className="font-mono font-bold">Δx = nλ</span> for constructive interference. Skipping this loses <span className="font-bold text-rose-500">-0.5 Marks</span>.
+                                                                        </p>
+                                                                    </div>
+                                                                )}
+
+                                                                {visibleLinesCount >= 4 && (
+                                                                    <div className="space-y-2">
+                                                                        <p className="text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">CBSE Marking Scheme Table</p>
+                                                                        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden text-[10px]">
+                                                                            <table className="w-full text-left">
+                                                                                <thead>
+                                                                                    <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 font-bold text-slate-500">
+                                                                                        <th className="p-2">Step Description</th>
+                                                                                        <th className="p-2 text-right">Weight</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody className="divide-y divide-slate-150 dark:divide-slate-800 text-slate-655 dark:text-slate-350">
+                                                                                    <tr>
+                                                                                        <td className="p-2 font-semibold">Path Difference Formulation</td>
+                                                                                        <td className="p-2 text-right font-black text-[#1D9E75]">+0.5 M</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td className="p-2 font-semibold">Geometric Wavefront Construction</td>
+                                                                                        <td className="p-2 text-right font-black text-[#1D9E75]">+1.5 M</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td className="p-2 font-semibold">Final Fringe Width Simplification</td>
+                                                                                        <td className="p-2 text-right font-black text-[#1D9E75]">+1.0 M</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        {activePrompt === 'biology' && (
+                                                            <div className="space-y-4">
+                                                                <div className="flex justify-between items-center bg-slate-100 dark:bg-slate-900/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                                                                    <span className="text-[9px] font-black uppercase text-slate-500 tracking-wider">OCR Vision Analysis</span>
+                                                                    <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-[#1D9E75] text-[9px] font-black">98.2% Confidence</span>
+                                                                </div>
+
+                                                                {visibleLinesCount >= 3 && (
+                                                                    <div className="p-3 bg-white dark:bg-slate-950/40 rounded-xl border border-slate-200 dark:border-slate-850 text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                                                                        "...syngamy forms zygote. Second sperm cell fertilizes polar nuclei..."
+                                                                    </div>
+                                                                )}
+
+                                                                {visibleLinesCount >= 4 && (
+                                                                    <div className="space-y-2">
+                                                                        <p className="text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">Answer Key Rubric Checklist</p>
+                                                                        <div className="space-y-1.5 text-[10px] font-black">
+                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
+                                                                                <span>✔ Syngamy identified</span>
+                                                                                <span>+1.0 Mark</span>
+                                                                            </div>
+                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
+                                                                                <span>✔ Zygote formation described</span>
+                                                                                <span>+1.0 Mark</span>
+                                                                            </div>
+                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-rose-500/5 text-rose-500 border border-rose-500/10">
+                                                                                <span>✖ "Triple Fusion" term omitted</span>
+                                                                                <span>-0.5 Mark</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {visibleLinesCount >= 5 && (
+                                                                    <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800">
+                                                                        <div>
+                                                                            <span className="text-[9px] font-black uppercase text-slate-400">Notes Grade</span>
+                                                                            <p className="text-base font-black text-slate-850 dark:text-slate-100">2.5 / 3.0 (B+)</p>
+                                                                        </div>
+                                                                        <button type="button" className="px-3 py-1.5 bg-[#1D9E75] text-white rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md hover:bg-[#15805d]">
+                                                                            🎙️ Speak to Recover
+                                                                        </button>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+
+                                                        {activePrompt === 'simulator' && (
+                                                            <div className="space-y-4">
+                                                                <div className="flex justify-between items-center bg-slate-150/40 dark:bg-slate-900/60 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                                                                    <span className="text-[9px] font-black text-rose-500 tracking-wider flex items-center gap-1 uppercase">
+                                                                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping inline-block" />
+                                                                        TIMED BOARD SIMULATOR
+                                                                    </span>
+                                                                    <span className="font-mono text-xs font-black text-slate-800 dark:text-slate-250">03:00:00</span>
+                                                                </div>
+
+                                                                {visibleLinesCount >= 3 && (
+                                                                    <div className="space-y-2">
+                                                                        <div className="text-[11px] font-black text-slate-700 dark:text-slate-300">Q1: State Coulomb's Law (2 Marks)</div>
+                                                                        <div className="p-3 bg-white dark:bg-slate-950/40 rounded-xl border border-slate-200 dark:border-slate-850 text-[11px] leading-relaxed text-slate-655 dark:text-slate-400">
+                                                                            <span className="text-[8px] font-black text-slate-400 block uppercase mb-1">Your Voice Answer</span>
+                                                                            "Force is directly proportional to product of charges and inversely proportional to square of distance..."
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {visibleLinesCount >= 4 && (
+                                                                    <div className="space-y-2">
+                                                                        <p className="text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">Step-Marking Verification</p>
+                                                                        <div className="space-y-1.5 text-[10px] font-black">
+                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
+                                                                                <span>✔ State formula (F = k * q1 * q2 / r²)</span>
+                                                                                <span>+1.0 Mark</span>
+                                                                            </div>
+                                                                            <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-[#1D9E75] border border-emerald-500/10">
+                                                                                <span>✔ Define terms (permittivity constant)</span>
+                                                                                <span>+1.0 Mark</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {visibleLinesCount >= 5 && (
+                                                                    <div className="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-slate-800">
+                                                                        <span className="text-[9px] font-black uppercase text-slate-400">Verified Grade</span>
+                                                                        <span className="px-3 py-1 bg-emerald-500/10 text-[#1D9E75] rounded-xl font-black text-[11px] border border-emerald-500/20">
+                                                                            2.0 / 2.0 Marks (100%)
+                                                                        </span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             )}
                                         </>
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center py-16 text-slate-500 text-center space-y-3">
-                                            <div className="w-12 h-12 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center shadow-inner">
+                                        <div className="flex flex-col items-center justify-center py-16 text-slate-400 text-center space-y-3">
+                                            <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full flex items-center justify-center shadow-inner">
                                                 <Brain className="w-6 h-6 text-[#1D9E75] animate-pulse" />
                                             </div>
                                             <div>
-                                                <p className="text-slate-350 font-bold text-xs">Clarity Study Assistant</p>
-                                                <p className="text-[10px] text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed">Select a task pill above to simulate how the study assistant answers boards questions and grades notes.</p>
+                                                <p className="text-slate-700 dark:text-slate-300 font-extrabold text-xs">Clarity Study Assistant</p>
+                                                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed font-bold">Select a task pill above to simulate how the study assistant answers board questions and grades notes.</p>
                                             </div>
                                         </div>
                                     )}
@@ -515,7 +670,7 @@ export const Landing = () => {
                         </h2>
                         <div className="h-28 flex items-center justify-center">
                             <span className="text-5xl md:text-7xl font-mono font-bold tracking-tight text-red-500 select-none animate-pulse">
-                                {problemWords[problemWordIdx]}...
+                                {problemWords[problemWordIdx]}
                             </span>
                         </div>
                         <p className="text-slate-405 max-w-xl mx-auto text-sm md:text-base font-semibold">
@@ -771,19 +926,74 @@ export const Landing = () => {
                             <span className="text-[10px] uppercase font-black tracking-wider text-slate-450">Class 9-12 Supported</span>
                         </div>
 
-                        {/* Box 4: PDF Proxy & Caching */}
+                        {/* Box 4: Multi-Board & Multi-Medium Support */}
                         <div className="md:col-span-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 p-8 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-6 items-center rounded-3xl">
                             <div className="space-y-4 flex-1">
                                 <div className="w-12 h-12 bg-blue-50 dark:bg-blue-955/30 text-blue-650 dark:text-blue-450 flex items-center justify-center shadow-inner rounded-xl">
                                     <BookOpen size={22} />
                                 </div>
-                                <h3 className="font-black text-2xl text-slate-900 dark:text-white">Incremental PDF Reader</h3>
+                                <h3 className="font-black text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                                    Multi-Board & Dual Medium
+                                    <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] text-[9px] font-black rounded-full uppercase tracking-wider">Active</span>
+                                </h3>
                                 <p className="text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
-                                    Bypasses heavy loading times using native streaming. Points directly to our cached proxy so you can read textbooks and custom chapters instantly as you scroll.
+                                    Fully supports CBSE Board and Tamil Nadu State Board (TNSERT) across both English and Tamil Mediums. The AI model adapts questions, answers, and study resources according to your curriculum and instruction medium. (IB & IGCSE coming soon).
                                 </p>
                             </div>
-                            <div className="p-4 bg-slate-55/50 dark:bg-[#0c0e14] border border-slate-100 dark:border-slate-850 text-xs font-bold text-[#1D9E75] flex items-center gap-2 shrink-0 rounded-xl">
-                                <Check size={14} /> Permanent Cache Enabled
+                            <div className="p-4 bg-emerald-500/5 dark:bg-emerald-955/10 border border-emerald-500/10 dark:border-emerald-500/20 text-xs font-bold text-[#1D9E75] flex items-center gap-2 shrink-0 rounded-xl">
+                                <Check size={14} /> TNSERT & CBSE Live
+                            </div>
+                        </div>
+
+                        {/* Box 5: Worldwide & Local Leaderboards */}
+                        <div className="md:col-span-12 bg-gradient-to-br from-emerald-550/5 via-white to-indigo-500/5 dark:from-emerald-950/10 dark:via-slate-900 dark:to-indigo-950/10 border border-slate-200 dark:border-slate-850 p-8 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-8 items-center rounded-3xl">
+                            <div className="space-y-4 flex-1">
+                                <div className="w-12 h-12 bg-yellow-50 dark:bg-yellow-955/20 text-yellow-600 dark:text-yellow-455 flex items-center justify-center shadow-inner rounded-xl">
+                                    <Trophy size={22} className="animate-pulse" />
+                                </div>
+                                <h3 className="font-black text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                                    Worldwide & Local Leaderboards
+                                    <span className="px-2 py-0.5 bg-yellow-100 dark:bg-yellow-905/30 text-yellow-700 dark:text-yellow-400 text-[10px] font-black rounded-full uppercase tracking-wider">Active</span>
+                                </h3>
+                                <p className="text-sm text-slate-550 dark:text-slate-400 leading-relaxed font-semibold">
+                                    Stay motivated with a regional point-based grading system. Earn points for daily activities like asking the AI (+10), active recall logs (+30), and timed practice exams (+50). Check your ranking on the overall leaderboards, filterable by Grade, Country, State, or City.
+                                </p>
+                                <div className="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500">
+                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">⚡ Practice (+50 pts)</span>
+                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">🧠 Recall (+30 pts)</span>
+                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full">💬 AI Chat (+10 pts)</span>
+                                </div>
+                            </div>
+                            
+                            {/* Mini Leaderboard Graphic */}
+                            <div className="w-full md:w-80 bg-white/85 dark:bg-slate-950/85 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-lg shrink-0 space-y-3">
+                                <p className="text-[10px] font-black uppercase tracking-wider text-slate-450 dark:text-slate-500 flex justify-between items-center">
+                                    <span>Regional Rankings</span>
+                                    <span className="text-[#1D9E75]">Tamil Nadu (State-wise)</span>
+                                </p>
+                                <div className="space-y-2 text-xs font-semibold">
+                                    <div className="flex items-center justify-between p-2 rounded-xl bg-yellow-500/5 text-slate-800 dark:text-slate-250 border border-yellow-500/15">
+                                        <span className="flex items-center gap-2">
+                                            <span className="w-5 h-5 rounded-full bg-yellow-105 dark:bg-yellow-905/30 text-yellow-600 dark:text-yellow-400 flex items-center justify-center text-[10px] font-black">1</span>
+                                            <span>Rohan Gupta</span>
+                                        </span>
+                                        <span className="font-mono text-[#1D9E75] font-black">1,420 pts</span>
+                                    </div>
+                                    <div className="flex items-center justify-between p-2 rounded-xl bg-slate-505/5 text-slate-800 dark:text-slate-250 border border-slate-300 dark:border-slate-700">
+                                        <span className="flex items-center gap-2">
+                                            <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-350 flex items-center justify-center text-[10px] font-black">2</span>
+                                            <span>Priya Nair</span>
+                                        </span>
+                                        <span className="font-mono text-[#1D9E75] font-black">1,180 pts</span>
+                                    </div>
+                                    <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-500/5 text-slate-800 dark:text-slate-250 border border-emerald-500/15 font-bold ring-1 ring-emerald-500/20">
+                                        <span className="flex items-center gap-2">
+                                            <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-[#1D9E75] flex items-center justify-center text-[10px] font-black">3</span>
+                                            <span>You</span>
+                                        </span>
+                                        <span className="font-mono text-[#1D9E75] font-black">950 pts</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

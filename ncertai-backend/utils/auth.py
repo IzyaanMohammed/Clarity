@@ -19,6 +19,13 @@ def require_auth_username(authorization: Optional[str]) -> str:
     username = get_username_by_token(token)
     if not username:
         raise HTTPException(status_code=401, detail="Unauthorized")
+    try:
+        from utils.context import board_var, language_var
+        profile = get_user_profile(username) or {}
+        board_var.set(profile.get("exam_board") or "CBSE")
+        language_var.set(profile.get("preferred_language") or "English")
+    except Exception:
+        pass
     return username
 
 

@@ -20,7 +20,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { getUser, getAuthToken } from '../utils/storage';
 import { getStudyResources } from '../utils/studyResources';
-import { getChapterText, evaluateActiveRecall, askQuestionStream, getCustomTextbooks, type ActiveRecallEvaluateResponse } from '../api';
+import { getChapterText, evaluateActiveRecall, askQuestionStream, getCustomTextbooks, logProgress, type ActiveRecallEvaluateResponse } from '../api';
 import toast from 'react-hot-toast';
 import { MarkdownContent } from '../components/ui/MarkdownContent';
 
@@ -394,6 +394,12 @@ export const ActiveRecall = () => {
       });
       setScorecard(scorecardResult);
       setActiveStep(3);
+      logProgress({
+        action: 'recall',
+        subject: subjectFilter,
+        chapter: selectedChapter,
+        score: scorecardResult.accuracy_score
+      }).catch(e => console.error('Failed to log recall progress:', e));
     } catch (err: any) {
       toast.error(err?.response?.data?.detail || 'Failed to grade recall attempt. Please retry.');
     } finally {

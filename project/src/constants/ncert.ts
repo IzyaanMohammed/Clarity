@@ -152,6 +152,80 @@ export const NCERT_CHAPTERS: Record<string, Record<string, string[]>> = {
       "Father to Son (Poem)"
     ]
   },
+  "10_TN_EN": {
+    "Science": [
+      "Laws of Motion",
+      "Optics",
+      "Thermal Physics",
+      "Electricity",
+      "Acoustics",
+      "Nuclear Physics",
+      "Atoms and Molecules",
+      "Periodic Classification of Elements",
+      "Solutions",
+      "Types of Chemical Reactions",
+      "Carbon and its Compounds",
+      "Plant Anatomy and Plant Physiology",
+      "Structural Organisation of Animals",
+      "Transportation in Plants and Circulation in Animals",
+      "Nervous System",
+      "Plant and Animal Hormones",
+      "Reproduction in Plants and Animals",
+      "Genetics",
+      "Origin and Evolution of Life",
+      "Breeding and Biotechnology",
+      "Health and Diseases",
+      "Environmental Management",
+      "Visual Communication"
+    ],
+    "Maths": [
+      "Relations and Functions",
+      "Numbers and Sequences",
+      "Algebra",
+      "Geometry",
+      "Coordinate Geometry",
+      "Trigonometry",
+      "Mensuration",
+      "Statistics and Probability"
+    ]
+  },
+  "10_TN_TM": {
+    "Science": [
+      "இயக்க விதிகள்",
+      "ஒளியியல்",
+      "வெப்ப இயற்பியல்",
+      "மின்னோட்டவியல்",
+      "ஒலியியல்",
+      "அணுக்கரு இயற்பியல்",
+      "அணுக்களும் மூலக்கூறுகளும்",
+      "தனிமங்களின் ஆவர்த்தன வகைப்பாடு",
+      "கரைசல்கள்",
+      "வேதிவினைகளின் வகைகள்",
+      "கார்பனும் அதன் சேர்மங்களும்",
+      "தாவர அமைப்பியல் மற்றும் தாவர செயலியல்",
+      "விலங்கினங்களின் அமைப்பு நிலைகள்",
+      "தாவரங்களின் கடத்துதல் மற்றும் விலங்குகளின் சுற்றோட்டம்",
+      "நரம்பு மண்டலம்",
+      "தாவர மற்றும் விலங்கு ஹார்மோன்கள்",
+      "தாவரங்கள் மற்றும் விலங்குகளில் இனப்பெருக்கம்",
+      "மரபியல்",
+      "உயிரின் தோற்றமும் பரிணாமமும்",
+      "இனக்கலப்பு மற்றும் உயிரித்தொழில்நுட்பவியல்",
+      "உடல் நலம் மற்றும் நோய்கள்",
+      "சுற்றுச்சூழல் மேலாண்மை",
+      "காட்சித் தொடர்பு"
+    ],
+    "Maths": [
+      "உறவுகளும் சார்புகளும்",
+      "எண்களும் தொடர்வரிசைகளும்",
+      "இயற்கணிதம்",
+      "வடிவியல்",
+      "ஆயத்தொலை வடிவியல்",
+      "முக்கோணவியல்",
+      "அளவியல்",
+      "புள்ளியியலும் நிகழ்தகவும்"
+    ]
+  },
   "10": {
     "Science": [
       "Chemical Reactions and Equations",

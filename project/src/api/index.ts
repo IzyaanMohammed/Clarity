@@ -59,7 +59,7 @@ export interface AskQuestionPayload {
 
 export interface AuthUserPayload {
   name: string;
-  class: number;
+  class: number | string;
   subjects: string[];
   subscriptionTier?: 'free' | 'pro' | 'pro_max';
   subscriptionStatus?: string;
@@ -1459,6 +1459,30 @@ export const switchParentStudent = async (studentUsername: string): Promise<{ st
   const response = await apiClient.post('/auth/parent/switch-student', { student_username: studentUsername }, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  return response.data;
+};
+
+export interface LeaderboardUser {
+  rank: number;
+  username: string;
+  points: number;
+  class_num: number | string;
+  country: string;
+  state: string;
+  city: string;
+}
+
+export interface LeaderboardResponse {
+  leaderboard: LeaderboardUser[];
+}
+
+export const getLeaderboard = async (params: {
+  class_num?: number | string;
+  country?: string;
+  state?: string;
+  city?: string;
+} = {}): Promise<LeaderboardResponse> => {
+  const response = await apiClient.get('/progress/leaderboard', { params });
   return response.data;
 };
 

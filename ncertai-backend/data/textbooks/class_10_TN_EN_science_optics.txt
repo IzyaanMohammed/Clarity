@@ -1,0 +1,1379 @@
+TTaabbllee ooff CCoonntteennttss
+Unit Title Page No. Month
+1 Laws of Motion 1 June
+2 Optics 16 July
+3 Thermal Physics 32 August
+4 Electricity 42 September
+5 Acoustics 59 October
+6 Nuclear Physics 74 November
+7 Atoms and Molecules 91 June
+8 Periodic Classification of Elements 106 July
+9 Solutions 124 August
+10 Types of Chemical Reactions 137 October
+11 Carbon and its Compounds 155 November
+12 Plant Anatomy and Plant Physiology 173 June
+E - book Assessment
+VI
+Front page.indd 6 12/3/2022 3:20:55 PM
+
+Unit Title Page No. Month
+13 Structural Organisation of Animals 187 June
+Transportation in Plants and Circulation in
+14 200 July
+Animals
+15 Nervous System 218 July
+16 Plant and Animal Hormones 229 August
+17 Reproduction in Plants and Animals 243 August
+18 Genetics 261 September
+19 Origin and Evolution of Life 274 October
+20 Breeding and Biotechnology 286 October
+21 Health and Diseases 300 November
+22 Environmental Management 315 November
+23 Visual Communication 329 December
+Practicals 334
+Glossary 350
+VII
+Front page.indd 7 12/3/2022 3:20:55 PM
+
+STANDARD TEN
+SCIENCE
+VIII
+Front page.indd 8 12/3/2022 3:20:55 PM
+
+1
+LAWS OF MOTION
+Learning Objectives
+At the end of this lesson students will be able to:
+� Understand the concepts of force and motion.
+� Explain inertia and its types.
+� State the three laws of Newton.
+� Apply Newtonian concept of force and motion.
+� Define force, momentum and impulse.
+� Distinguish between mass and weight
+� Analyze weightlessness and the principle of conservation of momentum.
+� Explain the law of gravitation and its applications.
+� Understand the variations in 'g' due to height and depth.
+� Solve numerical problems related to force and motion
+up or slows down or changes its direction.
+INTRODUCTION
+what speeds up or slows down the body? What
+Human beings are so curious about things changes the direction of motion?
+around them. Things around us are related to One answer for all the above questions
+one another. Some bodies are at rest and some is ‘Force’. In a common man’s understanding
+are in motion. Rest and motion are interrelated of motion, a body needs a ‘push’ or ‘pull’ to
+terms. move, or bring to rest or change its velocity.
+In the previous classes you have learnt Hence, this ‘push’ or ‘pull’ is called as ‘force’.
+about various types of motion such as linear Let us define force in a more scientific
+motion, circular motion, oscillatory motion, manner using the three laws proposed by
+and so on. So far, you have discussed the motion Sir Isaac Newton. These laws help you to
+of bodies in terms of their displacement, understand the motion of a body and also to
+velocity, and acceleration. In this unit, let us predict the future course of its motion, if you
+investigate the cause of motion. know the forces acting on it. Before Newton
+When a body is at rest, starts moving, a formulated his three laws of motion, a different
+question that arises in our mind is ‘what causes perception about the force and motion of
+the body to move?’ Similarly, when a moving bodies prevailed. Let us first look at these ideas
+object comes to rest, you would like to know and then eventually learn about Newton’s laws
+what brings it to rest? If a moving object speeds in this unit.
+1
+10th_Science_Unit-1.indd 1 12/3/2022 2:48:45 PM
+
+Mechanics is the branch of physics that deals with
+1.2 INERTIA
+the effect of force on bodies. It is divided into two
+branches, namely, statics and dynamics. While you are travelling in a bus or in a car,
+when a sudden brake is applied, the upper part of
+Statics: It deals with the bodies, which are at
+your body leans in the forward direction. Similarly,
+rest under the action of forces.
+when the vehicle suddenly is move forward from
+Dynamics: It is the study of moving bodies
+rest, you lean backward. This is due to, any body
+under the action of forces. Dynamics is further
+would like to continue to be in its state of rest or
+divided as follows.
+the state of motion. This is known as ‘inertia’.
+Kinematics: It deals with the motion of bodies
+The inherent property of a body to resist
+without considering the cause of motion.
+any change in its state of rest or the state of
+Kinetics: It deals with the motion of bodies
+uniform motion, unless it is influenced upon
+considering the cause of motion.
+by an external unbalanced force, is known as
+‘inertia’.
+1.1 FORCE AND MOTION
+Activity 1
+According to Aristotle a Greek Philosopher
+and Scientist, the natural state of earthly
+Take a glass tumbler and place a small
+bodies is ‘rest’. He stated that a moving cardboard on it as shown in the figure. Now,
+body naturally comes to rest without any keep a coin at the centre of the cardboard.
+external influence of the force. Such motions Then, flick the cardboard quickly. What do
+are termed as ‘natural motion’ (Force you observe?
+independent). He also proposed that a force The cardboard falls off the ground and
+(a push or a pull) is needed to make the bodies to the coin falls into the glass tumbler.
+move from their natural state (rest) and behave
+Inertia of rest
+contrary to their own natural state called as
+‘violent motion’ (Force dependent). Further, he
+said, when two different mass bodies are dropped
+from a height, the heavier body falls faster than
+the lighter one.
+Galileo proposed the following concepts
+about force, motion and inertia of bodies:
+(i) The natural state of all earthly bodies In activity described above, the inertia of
+is either the state of rest or the state of the coin keeps it in the state of rest when the
+uniform motion. cardboard moves. Then, when the cardboard
+(ii) A body in motion will continue to be in has moved, the coin falls into the tumbler due
+the same state of motion as long as no to gravity. This happen due to ‘inertia of rest’.
+external force is applied.
+(iii) When a force is applied on bodies, they 1.2.1 Types of Inertia
+resist any change in their state. This
+a) Inertia of rest: The
+property of bodies is called ‘inertia’.
+resistance of a body to
+(iv) When dropped from a height in vacuum, change its state of rest is
+bodies of different size, shape and mass called inertia of rest.
+fall at the same rate and reach the ground b) Inertia of motion: The
+at the same time. resistance of a body to
+10th Standard Science 2
+10th_Science_Unit-1.indd 2 12/3/2022 2:48:45 PM
+
+change its state of motion is called inertia
+1.4 NEWTON’S LAWS OF
+of motion.
+MOTION
+c) Inertia of direction: The resistance of a
+body to change its direction of motion is 1.4.1 Newton’s First Law
+called inertia of direction.
+This law states that every body continues
+to be in its state of rest or the state of uniform
+1.2.2 Examples of Inertia
+motion along a straight line unless it is acted
+� An athlete runs some distance before
+upon by some external force. It gives the
+jumping. Because, this will help him jump
+definition of force as well as inertia.
+longer and higher. (Inertia of motion)
+� When you make a sharp turn while driving 1.4.2 Force
+a car, you tend to lean sideways, (Inertia of
+Force is an external effort in the form of
+direction).
+push or pull, which:
+� When you vigorously shake the branches
+1. produces or tries to produce the motion of
+of a tree, some of the leaves and fruits are
+a static body.
+detached and they fall down, (Inertia of rest).
+2. stops or tries to stop a moving body.
+3. changes or tries to change the direction of
+motion of a moving body.
+Force has both magnitude and direction.
+So, it is a vector quantity.
+1.4.3 Types of forces
+Based on the direction in which the forces
+Figure 1.1 Inertia of motion
+act, they can be classified into two types as:
+(a) Like parallel forces and (b) Unlike parallel
+forces.
+1.3 LINEAR MOMENTUM
+(a) Like parallel forces: Two or more forces of
+The impact of a force is more if the equal or unequal magnitude acting along
+velocity and the mass of the body is more. To the same direction, parallel to each other
+quantify the impact of a force exactly, a new are called like parallel forces.
+physical quantity known as linear momentum (b) Unlike parallel forces: If two or more equal
+is defined. The linear momentum measures the forces or unequal forces act along opposite
+impact of a force on a body. directions parallel to each other, then they
+The product of mass and velocity of a
+are called unlike parallel forces. Action of
+moving body gives the magnitude of linear
+forces are given in Table 1.1.
+momentum. It acts in the direction of the
+velocity of the object. Linear momentum is a 1.4.4 Resultant Force
+vector quantity.
+When several forces act simultaneously on
+Linear Momentum = mass × velocity
+the same body, then the combined effect of the
+p = mv ..........(1.1)
+multiple forces can be represented by a single
+It helps to measure the magnitude of force, which is termed as ‘resultant force’. It is
+a force. Unit of momentum in SI system is equal to the vector sum (adding the magnitude
+kg m s–1 and in C.G.S system its unit is g cm s-1. of the forces with their direction) of all the forces.
+3 Laws of motion
+10th_Science_Unit-1.indd 3 12/3/2022 2:48:46 PM
+
+Table 1.1 Action of forces
+Action of forces Diagram Resultant force (F )
+net
+Parallel forces are acting in the same F F = F + F
+1 net 1 2
+direction F
+2
+F = F – F (if F > F )
+net 1 2 1 2
+Parallel unequal forces are acting in F F F = F – F (if F > F )
+1 2 net 2 1 2 1
+opposite directions F is directed along
+net
+the greater force.
+Parallel equal forces are acting in opposite F F F = F – F
+1 2 net 1 2
+directions in the same line of action (F 1 = F 2 ) F = 0 since (F = F )
+net 1 2
+(c) Like parallel forces
+(a) Unlike parallel forces – (b) Unbalanced forces -
+Tug of war Action of a lever
+Figure 1.2 Combined effect of forces
+If the resultant force of all the forces The door can be easily opened or closed
+acting on a body is equal to zero, then the body when you apply the force at a point far away
+will be in equilibrium. Such forces are called from the fixed edge. In this case, the effect
+balanced forces. If the resultant force is not of the force you apply is to turn the door
+equal to zero, then it causes the motion of the about the fixed edge. This turning effect of
+body due to unbalanced forces the applied force is more when the distance
+Examples: Drawing water from a well, force between the fixed edge and the point of
+applied with a crow bar, forces on a weight application of force is more.
+balance, etc.
+AAxxiiss ooff rroottaattiioonn z
+A system can be brought to equilibrium +z
+Hinges
+by applying another force, which is equal to the
+resultant force in magnitude, but opposite in O d
+direction. Such force is called as ‘Equilibrant’.
+F
+1.4.5 Rotating Effect of Force
+Have you observed the position of the
+Figure 1.3 Rotating effect of a force
+handle in a door? It is always placed at the
+edge of door and not at some other place. The axis of the fixed edge about which
+Why? Have you tried to push a door by the door is rotated is called as the ‘axis of
+placing your hand closer to the hinges or the rotation’. Fix one end of a rod to the floor/wall,
+fixed edge? What do you observe? and apply a force at the other end tangentially.
+10th Standard Science 4
+10th_Science_Unit-1.indd 4 12/3/2022 2:48:47 PM
+
+The rod will be turned about the fixed point negative if it is rotate in the clockwise direction.
+is called as ‘point of rotation’. They are shown in Figures 1.4 (a and b)
+F F
+1.4.6 Moment of the Force
+s s
+The rotating or turning effect of a force
+about a fixed point or fixed axis is called
+moment of the force about that point or
+torque (τ). It is measured by the product F F
+of the force (F) and the perpendicular Figure 1.4 (a) Figure 1.4 (b)
+distance (d) between the fixed point or Clockwise moment Anticlockwise moment
+the fixed axis and the line of action of the
+force. τ = F × d . . . . . . . . . . (1.2)
+1.4.7 Application of Torque
+Torque is a vector quantity. It is acting
+1. Gears:
+along the direction, perpendicular to the
+plane containing the line of action of force A gear is a circular wheel
+and the distance. Its SI unit is Nm. with teeth around its rim. It
+helps to change the speed of
+Couple: Two equal and unlike parallel forces
+rotation of a wheel by changing
+applied simultaneously at two distinct points
+the torque and helps to transmit
+constitute a couple. The line of action of the
+power.
+two forces does not coincide. It does not
+produce any translatory motion since the 2. Seasaw
+resultant is zero. But, a couple results in causes
+Most of you have played on the seasaw.
+the rotation of the body. Rotating effect of a
+Since there is a difference in the weight of the
+couple is known as moment of a couple.
+persons sitting on it, the heavier person lifts
+Examples: Turning a tap, winding or the lighter person. When the heavier person
+unwinding a screw, spinning of a top, etc. comes closer to the pivot point (fulcrum)
+the distance of the line of action of the force
+Moment of a couple is measured by
+decreases. It causes less amount of torque to
+the product of any one of the forces and the
+act on it. This enables the lighter person to lift
+perpendicular distance between the line of
+the heavier person.
+action of two forces. The turning effect of a
+couple is measured by the magnitude of its
+3. Steering Wheel
+moment.
+A small steering wheel enables you to
+Moment of a couple = Force × perpendicular manoeuore a car easily by transferring a
+distance between the torque to the wheels with less effort.
+line of action of forces
+M = F × S ............ (1.3) 1.4.8 Principle of Moments
+The unit of moment of a couple is newton When a number of like or unlike parallel
+metre (N m) in SI system and dyne cm in forces act on a rigid body and the body is in
+CGS system. equilibrium, then the algebraic sum of the
+By convention, the direction of moment of moments in the clockwise direction is equal
+a force or couple is taken as positive if the body to the algebraic sum of the moments in the
+is rotated in the anti-clockwise direction and anticlockwise direction. In other words, at
+5 Laws of motion
+10th_Science_Unit-1.indd 5 12/3/2022 2:48:47 PM
+
+equilibrium, the algebraic sum of the moments Force, F ∝ rate of change of momentum
+of all the individual forces about any point is F ∝ change in momentum / time
+equal to zero.
+mv – mu
+F ∝
+t
+d d
+1 2
+km(v – u)
+F =
+t
+P
+Here, k is the proportionality constant.
+anticlockwise clockwise F
+2 k = 1 in all systems of units. Hence,
+F moment moment
+1
+m(v – u)
+Figure 1.5 Principle of moments F = (1.5)
+t
+In the illustration given in figure 1.5, the Since, acceleration = change in velocity/
+force F produces an anticlockwise rotation at time, a=(v-u)/t. Hence, we have
+1
+a distance d from the point of pivot P (called
+1
+fulcrum) and the force F produces a clockwise F = m × a (1.6)
+2
+rotation at a distance d from the point of pivot
+2 Force = mass × acceleration
+P. The principle of moments can be written as
+No external force is required to maintain
+follows:
+the motion of a body moving with uniform
+Moment in Moment in
+= velocity. When the net force acting on a
+clockwise direction anticlockwise direction
+body is not equal to zero, then definitely the
+velocity of the body will change. Thus, change
+F × d = F × d ........ (1.4)
+1 1 2 2
+in momentum takes place in the direction of
+the force. The change may take place either in
+1.5 N EWTON’S SECOND LAW magnitude or in direction or in both.
+OF MOTION Force is required to produce the
+acceleration of a body. In a uniform circular
+According to this law, “the force acting
+motion, even though the speed (magnitude of
+on a body is directly proportional to the rate
+velocity) remains constant, the direction of the
+of change of linear momentum of the body
+velocity changes at every point on the circular
+and the change in momentum takes place in
+path. So, the acceleration is produced along
+the direction of the force”.
+the radius called as centripetal acceleration.
+This law helps us to measure the amount The force, which produces this acceleration
+of force. So, it is also called as ‘law of force’. is called as centripetal force, about which you
+Let, ‘m’ be the mass of a moving body, moving have learnt in class IX.
+along a straight line with an initial speed ‘u’
+Units of force: SI unit of force is newton (N)
+After a time interval of ‘t’, the velocity of the
+and in C.G.S system its unit is dyne.
+body changes to ‘v’ due to the impact of an
+Definition of 1 newton (N): The amount of
+unbalanced external force F.
+force required for a body of mass 1 kg produces
+Initial momentum of the body P i = mu an acceleration of 1 m s–2, 1 N = 1 kgms–2
+Final momentum of the body P = mv
+f Definition of 1 dyne: The amount of force
+Change in momentum Δp = P –P required for a body of mass 1 gram produces
+f i
+= mv – mu an acceleration of 1 cm s–2, 1 dyne = 1 gcms–2;
+By Newton’s second law of motion, also 1 N = 105 dyne.
+10th Standard Science 6
+10th_Science_Unit-1.indd 6 12/3/2022 2:48:47 PM
+
+Unit force:
+The amount of force required to produce
+an acceleration of 1 ms–2 in a body of mass 1 kg
+is called ‘unit force’.
+Gravitational unit of force:
+In the SI system of units, gravitational
+unit of force is kilogram force, represented by
+kg f. In the CGS system its unit is gram force,
+Figure 1.6 Example of impulsive force
+represented by g f.
+1 kgf = 1 kg × 9.8 ms-2 = 9.8 N;
+1.7 NEWTON’S THIRD LAW
+1 gf = 1 g × 980 cms-2 = 980 dyne OF MOTION
+Newton’s third law states that ‘for every
+1.6 Impulse
+action, there is an equal and opposite reaction.
+A large force acting for a very short They always act on two different bodies’.
+interval of time is called as ‘Impulsive force’. If a body A applies a force F on a body
+A
+When a force F acts on a body for a period of B, then the body B reacts with force F on the
+B
+time t, then the product of force and time is body A, which is equal to F in magnitude, but
+A
+known as ‘impulse’ represented by ‘J’ opposite in direction. F = –F
+B A
+Impulse, J = F × t (1.7)
+Examples:
+By Newton’s second law
+� When birds fly they push the air
+F = Δp / t (Δ refers to change)
+downwards with their wings (Action)
+Δp = F × t (1.8)
+and the air pushes the bird upwards
+From 1.7 and 1.8
+(Reaction).
+J = Δp
+� When a person swims he pushes the water
+Impulse is also equal to the magnitude of
+using the hands backwards (Action), and
+change in momentum. Its unit is kgms–1 or Ns.
+the water pushes the swimmer in the
+Change in momentum can be achieved in forward direction (Reaction).
+two ways. They are: � When you fire a bullet, the gun recoils
+i. a large force acting for a short period of backward and the bullet is moving
+time and forward (Action) and the gun equalises
+this forward action by moving backward
+ii. a smaller force acting for a longer period
+(Reaction).
+of time.
+Examples:
+1.8 P RINCIPLE OF
+� Automobiles are fitted with springs and CONSERVATION OF LINEAR
+shock absorbers to reduce jerks while MOMENTUM
+moving on uneven roads.
+There is no change in the
+� In cricket, a fielder pulls back his hands
+linear momentum of a system
+while catching the ball. He experiences
+of bodies as long as no net
+a smaller force for a longer interval of
+time to catch the ball, resulting in a lesser external force acts on them.
+impulse on his hands.
+7 Laws of motion
+10th_Science_Unit-1.indd 7 12/3/2022 2:48:48 PM
+
+Let us prove the law of conservation filled with a fuel (either liquid or solid) in the
+of linear momentum with the following propellant tank. When the rocket is fired, this
+illustration: fuel is burnt and a hot gas is ejected with a high
+speed from the nozzle of the rocket, producing
+u u F F v v
+1 2 A B 1 2 a huge momentum. To balance this momentum,
+an equal and opposite reaction force is produced
+m mm m mm m m
+1 22 1 22 1 2 in the combustion chamber, which makes the
+A B A B A B
+rocket project forward.
+Figure 1.7 Conservation of
+While in motion, the mass of the rocket
+linear momentum
+gradually decreases, until the fuel is completely
+Proof: burnt out. Since, there is no net external force
+Let two bodies A and B having masses acting on it, the linear momentum of the
+m and m move with initial velocity u and u system is conserved. The mass of the rocket
+1 2 1 2
+in a straight line. Let the velocity of the first decreases with altitude, which results in the
+body be higher than that of the second body. gradual increase in velocity of the rocket.
+i.e., u >u . During an interval of time t second, At one stage, it reaches a velocity, which is
+1 2
+they tend to have a collision. After the impact, sufficient to just escape from the gravitational
+both of them move along the same straight line pull of the Earth. This velocity is called escape
+with a velocity v and v respectively. velocity. (This topic will be discussed in detail
+1 2
+in higher classes).
+Force on body B due to A,
+F = m (v –u )/t
+A 2 2 2 1.10 GRAVITATION
+Force on body A due to B,
+F = m (v –u )/t
+B 1 1 1 1.10.1 Newton’s universal law of
+By Newton’s III law of motion, gravitation
+Action force = Reaction force
+This law states that every particle of
+F = –F matter in this universe attracts every other
+B A
+m (v -u )/t = –m (v -u )/t particle with a force. This force is directly
+1 1 1 2 2 2
+proportional to the product of their masses
+and inversely proportional to the square of
+m v + m v = m u + m u ------ (1.9)
+1 1 2 2 1 1 2 2
+the distance between the centers of these
+masses. The direction of the force acts along
+The above equation confirms in the
+absence of an external force, the algebraic
+the line joining the masses.
+sum of the momentum after collision is Force between the masses is always
+numerically equal to sum of the momentum attractive and it does not depend on the
+before collision. medium where they are placed.
+Hence the law of conservation linear
+momentum is proved.
+m m
+1 F F
+1 2 2
+1.9 ROCKET PROPULSION
+r
+Propulsion of rockets is based on the law
+of conservation of linear momentum as well Figure 1.8 Gravitational force between
+as Newton’s III law of motion. Rockets are two masses
+10th Standard Science 8
+10th_Science_Unit-1.indd 8 12/3/2022 2:48:49 PM
+
+Let, m and m be the masses of two bodies assumed to be concentrated at its centre. The
+1 2
+A and B placed r metre apart in space radius of the Earth is R = 6378 km (= 6400 km
+Force F ∝ m × m approximately). By Newton’s law of gravitation,
+1 2
+the force acting on the body is given by
+F ∝ 1/ r2
+On combining the above two expressions G M m
+F = (1.11)
+m
+1
+× m
+2
+R2
+F ∝
+r2
+G m m
+F = 1 2 . . . . . . . . . . . . . . . . . .(1.10) F
+r2 m
+R
+Object
+Where G is the universal gravitational
+M
+constant. Its value in SI unit is
+6.674 × 10–11 Nm2kg–2.
+Earth
+Figure 1.9 Relation between g and G
+1.10.2 Acceleration due to
+gravity (g)
+Here, the radius of the body considered
+When you throw any object upwards, its is negligible when compared with the Earth’s
+velocity ceases at a particular height and then radius. Now, the same force can be obtained
+it falls down due to the gravitational force of from Newton’s second law of motion.
+the Earth. According to this law, the force acting on
+The velocity of the object keeps changing the body is given by the product of its mass
+as it falls down. This change in velocity must and acceleration (called as weight). Here,
+be due to the force acting on the object. The acceleration of the body is under the action
+acceleration of the body is due to the Earth’s
+of gravity hence a = g
+gravitational force. So, it is called as ‘acceleration
+F = ma = mg
+due to the gravitational force of the Earth’ or
+F = weight = mg ------------------- (1.12)
+‘acceleration due to gravity of the Earth’. It is
+represented as ‘g’. Its unit is ms–2 Comparing equations (1.7) and (1.8), we get
+GMm
+Mean value of the acceleration due to
+mg = ------------------------ (1.13)
+gravity is taken as 9.8 m s–2 on the surface of R2
+the Earth. This means that the velocity of a
+Acceleration due to gravity
+body during the downward free fall motion
+GM
+varies by 9.8 ms–1 for every 1 second. However, g = ------------------------------- (1.14)
+R2
+the value of ‘g’ is not the same at all points on
+the surface of the earth.
+1.10.4 Mass of the Earth (M)
+1.10.3 Relation between g and G
+Rearranging the equation (1.14), the mass
+When a body is at rests on the surface of
+of the Earth is obtained as follows:
+the Earth, it is acted upon by the gravitational
+Mass of the Earth M = g R2/G
+force of the Earth. Let us compute the
+Substituting the known values of g, R and G,
+magnitude of this force in two ways. Let, M
+you can calculate the mass of the Earth as
+be the mass of the Earth and m be the mass
+of the body. The entire mass of the Earth is M = 5.972 × 1024 kg
+9 Laws of motion
+10th_Science_Unit-1.indd 9 12/3/2022 2:48:49 PM
+
+1.10.5 Variation of acceleration This is about 0.1654 times the acceleration
+due to gravity (g): due to gravity of the Earth. If a person
+whose mass is 60 kg stands on the surface of
+Since, g depends on the geometric radius
+Earth, his weight would be 588 N (W = mg
+of the Earth, (g ∝ 1/R2), its value changes
+= 60 × 9.8). If the same person goes to the
+from one place to another on the surface of
+surface of the Moon, he would weigh only
+the Earth. Since, the geometric radius of the
+97.5 N (W = 60 × 1.625). But, his mass
+Earth is maximum in the equatorial region and
+remains the same (60 kg) on both the Earth
+minimum in the polar region, the value of g is
+and the Moon.
+maximum in the polar region and minimum at
+the equatorial region.
+1.12 APPARENT WEIGHT
+When you move to a higher altitude from
+the surface of the Earth, the value of g reduces.
+The weight that you
+In the same way, when you move deep below
+feel to possess during up
+the surface of the Earth, the value of g reduces.
+mg
+(This topic will be discussed in detail in the and down motion, is not
+higher classes). Value of g is zero at the centre same as your actual weight.
+of the Earth. Apparent weight is the
+R
+weight of the body acquired
+due to the action of gravity
+1.11 MASS AND WEIGHT W
+and other external forces Figure 1.10
+Mass: Mass is the basic property of a body. acting on the body. A person in a
+Let us see this from the moving lift
+Mass of a body is defined as the quantity of
+following illustration:
+matter contained in the body. Its SI unit is
+kilogram (kg). Let us consider a person of mass m, who
+is travelling in lift. The actual weight of the
+Weight: Weight of a body is defined as the
+person is W = mg, which is acting vertically
+gravitational force exerted on a body due to
+downwards. The reaction force exerted by the
+the gravity.
+lift’s surface ‘R’, taken as apparent weight is
+Weight = Gravitational Force acting vertically upwards.
+= mass (m)× acceleration due to
+Let us see different possibilities of
+gravity(g).
+the apparent weight 'R' of the person that
+g = acceleration due to gravity for Earth
+arise, depending on the motion of the lift;
+(at sea level) = 9.8 ms–2.
+upwards or downwards which are given in
+Weight is a vector quantity. Direction
+Table 1.2
+of weight is always towards the centre of
+the Earth. SI unit of weight is newton (N).
+1.12.1 Weightlessness
+Weight of a body varies from one place to
+another place on the Earth since it depends Have you gone to an
+on the acceleration due to gravity of the amusement park and taken
+Earth (g) weight of a body is more at the poles a ride in a roller coaster? or
+than at the equatorial region. in a giant wheel? During the
+The value of acceleration due to gravity fast downward and upward
+on the surface of the moon is 1.625 ms–2. movement, how did you feel?
+10th Standard Science 10
+10th_Science_Unit-1.indd 10 12/3/2022 2:48:49 PM
+
+Table 1.2 Apparent weight of a person in a moving lift
+Case 1: Lift Case 2: Lift Case 3: Lift is at rest. Case 4: Lift is falling down
+is moving is moving freely
+upward with an downward with
+acceleration 'a' an acceleration 'a'
+R – W = F = ma W – R = F = ma Here, the acceleration is zero Here, the acceleration is
+net net
+R = W + ma R = W - ma a = 0 equal to g
+R = mg + ma R = mg - ma R = W a = g
+R = m(g+a) R = m(g-a) R= mg R = m(g – g)
+R > W R < W R = W R = 0
+Apparent weight Apparent weight Apparent weight is equal Apparent weight is equal
+is greater than the is lesser than the to the actual weight. to zero.
+actual weight. actual weight.
+loss and weight gain when you are moving up
+and down in such rides.
+1.12.2 Weightlessness of
+the astronauts
+Some of us believe that the astronauts in
+the orbiting spacestation do not experience
+any gravitational force of the Earth. So they
+float. But this is absolutely wrong.
+Astronauts are not floating but falling
+Figure 1.11 Weightlessness in a roller coaster
+freely around the earth due to their huge
+Its amazing!!. You actually feel as if you are oribital velocity. Since spacestation and
+falling freely without having any weight. This is astronauts have equal acceleration, they are
+due to the phenomenon of ‘weightlessness’. You under free fall condition. (R = 0 refer case
+seem to have lost your weight when you move 4 in Table 1.2). Hence, both the astronauts
+down with a certain acceleration. Sometimes, and the spacestation are in the state of
+you experience the same feeling while travelling weightlessness.
+in a lift.
+When the person in a lift moves down with
+an acceleration (a) equal to the acceleration due
+to gravity (g), i.e., when a = g, this motion is
+called as ‘free fall’. Here, the apparent weight
+(R = m (g – g) = 0) of the person is zero.
+This condition or state refers to the state of
+weightlessness. (Refer case 4 from Table 1.2).
+The same effect takes place while falling
+freely in a roller coaster or on a swing or in a
+vertical giant wheel. You feel an apparent weight Figure 1.12 Weightlessness of astronauts
+11 Laws of motion
+10th_Science_Unit-1.indd 11 12/3/2022 2:48:49 PM
+
+1.12.3 Application of Newton’s � Whenever a body or a person falls freely
+law of gravitation under the action of Earth’s gravitational
+force alone, it appears to have zero
+1) Dimensions of the heavenly bodies can be
+weight. This state is referred to as
+measured using the gravitation law. Mass of
+‘weightlessness’.
+the Earth, radius of the Earth, acceleration
+due to gravity, etc. can be calculated with a
+higher accuracy.
+SOLVED PROBLEMS
+2) Helps in discovering new stars and planets.
+Problem-1: Calculate the velocity of a moving
+3) One of the irregularities in the motion body of mass 5 kg whose linear momentum is
+of stars is called ‘Wobble’ lead to the 2.5 kg m s–1.
+disturbance in the motion of a planet nearby.
+Solution: Linear momentum = mass × velocity
+In this condition the mass of the star can be
+calculated using the law of gravitation. Velocity = linear momentum / mass.
+4) Helps to explain germination of roots is due V = 2.5 / 5 = 0.5 ms–1
+to the property of geotropism which is the
+Problem 2: A door is pushed, at a point whose
+property of a root responding to the gravity.
+distance from the hinges is 90 cm, with a force
+5) Helps to predict the path of the astronomical
+of 40 N. Calculate the moment of the force
+bodies.
+about the hinges.
+Solution:
+Points to Remember
+Formula: The moment of a force M = F × d
+� Mechanics is divided into statics and
+dynamics. Given: F = 40 N and d = 90 cm = 0.9 m.
+� Ability of a body to maintain its state of
+Hence, moment of the force = 40 × 0.9 = 36 N m.
+rest or motion is called Inertia.
+� Moment of the couple is measured by Problem 3 : At what height from the centre of
+the product of any one of the forces and the Earth the acceleration due to gravity will be
+the perpendicular distance between two 1/4th of its value as at the Earth.
+forces.
+Solution:
+� SI unit of force is newton (N). C.G.S unit
+Data: Height from the centre of the Earth,
+is dyne.
+Rʹ = R + h
+� When a force F acts on a body for a period
+The acceleration due to gravity at that height,
+of time t, then the product of force and
+gʹ = g/4
+time is known as ‘impulse’.
+� The unit of weight is newton or kg f Formula: g = GM /R2, gʹ = GM /Rʹ2
+� The weight of a body is more at the poles g = Rʹ 2 = R+h 2 = 1 + h 2
+gʹ R R R
+than at the equatorial region.
+� Mass of a body is defined as the quantity of h 2
+4 = 1 + ,
+R
+matter contained in the object. Its SI unit
+is kilogram (kg). h
+2 = 1 + or h = R. Rʹ = 2R
+� Apparent weight is the weight of the body R
+acquired due to the action of gravity and From the centre of the Earth, the object is placed
+other external forces on the body. at twice the radius of the earth.
+10th Standard Science 12
+10th_Science_Unit-1.indd 12 12/3/2022 2:48:49 PM
+
+TEXTBOOK EVALUATION
+I. Choose the correct answer 9) If the Earth shrinks to 50% of its real radius
+its mass remaining the same, the weight of a
+1) Inertia of a body depends on
+body on the Earth will
+a) weight of the object
+a) decrease by 50% b) increase by 50%
+b) acceleration due to gravity of the planet
+c) decrease by 25% d) increase by 300%
+c) mass of the object
+10) To project the rockets which of the follow-
+d) Both a & b ing principle(s) is /(are) required?
+2) Impulse is equals to a) Newton’s third law of motion
+a) rate of change of momentum b) Newton’s law of gravitation
+c) law of conservation of linear momentum
+b) rate of force and time
+d) both a and c
+c) change of momentum
+II. Fill in the blanks
+d) rate of change of mass
+1. To produce a displacement ___________
+3) Newton’s III law is applicable
+is required
+a) for a body is at rest
+2. Passengers lean forward when sudden
+b) for a body in motion
+brake is applied in a moving vehicle. This
+c) both a & b can be explained by ___________
+d) only for bodies with equal masses 3. By convention, the clockwise moments
+are taken as ___________ and the
+4) Plotting a graph for momentum on the
+anticlockwise moments are taken
+Y-axis and time on X-axis. slope of momen-
+as__________
+tum-time graph gives
+4. ___________ is used to change the speed
+a) Impulsive force b) Acceleration
+of car.
+c) Force d) Rate of force
+5. A man of mass 100 kg has a weight of
+5) In which of the following sport the turning ___________ at the surface of the Earth
+of effect of force used
+III. State whether the following statements
+a) swimming b) tennis
+are true or false. Correct the statement
+c) cycling d) hockey if it is false
+6) The unit of ‘g’ is m s-2. It can be also expressed as 1. The linear momentum of a system of
+a) cms-1 b) Nkg-1 particles is always conserved.
+c) Nm2kg-1 d) cm2s-2 2. Apparent weight of a person is always equal
+to his actual weight
+7) One kilogram force equals to
+3. Weight of a body is greater at the equator
+a) 9.8 dyne b) 9.8 × 104 N
+and less at the polar region.
+c) 98 × 104 dyne d) 980 dyne
+4. Turning a nut with a spanner having a
+8) The mass of a body is measured on planet
+short handle is so easy than one with a long
+Earth as M kg. When it is taken to a planet
+handle.
+of radius half that of the Earth then its value
+5. There is no gravity in the orbiting space
+will be____kg
+station around the Earth. So the astronauts
+a) 4 M b) 2M c) M/4 d) M feel weightlessness.
+13 Laws of motion
+10th_Science_Unit-1.indd 13 12/3/2022 2:48:49 PM
+
+IV. Match the following 6. State the principle of moments.
+7. State Newton’s second law.
+Column I Column II
+8. Why a spanner with a long handle is
+a. Newton’s I law - propulsion of a
+preferred to tighten screws in heavy
+rocket
+vehicles?
+b. Newton’s II law - Stable equilibrium of
+9. While catching a cricket ball the fielder
+a body
+lowers his hands backwards. Why?
+c. Newton’s III law - Law of force
+10. How does an astronaut float in a space
+d. Law of conservation - Flying nature of bird
+shuttle?
+of Linear momentum
+VII. Solve the given problems
+V. Assertion & Reasoning
+1. Two bodies have a mass ratio of 3:4 The
+Mark the correct choice as
+force applied on the bigger mass produces
+(a) If both the assertion and the reason
+an acceleration of 12 ms-2.What could be
+are true and the reason is the correct
+the acceleration of the other body, if the
+explanation of assertion.
+same force acts on it.
+(b) If both the assertion and the reason are
+2. A ball of mass 1 kg moving with a speed
+true, but the reason is not the correct ex-
+-1
+of 10 ms rebounds after a perfect elastic
+planation of the assertion.
+collision with the floor. Calculate the
+(c) Assertion is true, but the reason is false.
+change in linear momentum of the ball.
+(d) Assertion is false, but the reason is true.
+3. A mechanic unscrew a nut by applying a
+1. Assertion: The sum of the clockwise force of 140 N with a spanner of length
+moments is equal to the sum of the 40 cm. What should be the length of the
+anticlockwise moments.
+spanner if a force of 40 N is applied to
+Reason: The principle of conservation of unscrew the same nut?
+momentum is valid if the external force on
+4. The ratio of masses of two planets is 2:3
+the system is zero.
+and the ratio of their radii is 4:7 Find the
+2. Assertion: The value of ‘g’ decreases as ratio of their accelerations due to gravity.
+height and depth increases from the surface
+VIII. A nswer in detail.
+of the Earth.
+Reason: ‘g’ depends on the mass of the 1. What are the types of inertia? Give an
+object and the Earth. example for each type.
+2. State Newton’s laws of motion?
+VI. Answer briefly. 3. Deduce the equation of a force using
+1. Define inertia. Give its classification. Newton’s second law of motion.
+2. Classify the types of force based on their 4. State and prove the law of conservation of
+application. linear momentum.
+3. If a 5 N and a 15 N forces are acting opposite 5. Describe rocket propulsion.
+to one another. Find the resultant force and 6. State the universal law of gravitation and
+the direction of action of the resultant force derive its mathematical expression
+4. Differentiate mass and weight. 7. Give the applications of universal law
+5. Define moment of a couple. gravitation.
+10th Standard Science 14
+10th_Science_Unit-1.indd 14 12/3/2022 2:48:49 PM
+
+IX. HOT Questions REFERENCE BOOKS
+1. Two blocks of masses 8 kg and 2 kg � Concept of physics-HC verma
+respectively lie on a smooth horizontal surface
+� Interactive physics(Newton’s law)MTG
+in contact with one other. They are pushed by
+learning.
+a horizontally applied force of 15 N. Calculate
+the force exerted on the 2 kg mass.
+INTERNET RESOURCES
+2. A heavy truck and bike are moving with
+the same kinetic energy. If the mass of
+https://www.grc.nasa.gov
+the truck is four times that of the bike,
+then calculate the ratio of their momenta. https://www.physicsclassroom.com
+(Ratio of momenta = 2:1
+https://www.britannica.com/science/
+3. “Wearing helmet and fastening the seat belt
+Newtons-law-of-gravitation
+is highly recommended for safe journey”
+Justify your answer using Newton’s laws of
+motion.
+Concept Map
+Kinematics
+Statics Dynamics
+First law of motion Inertia and its types
+Second law of motion Momentum and force Mass and weight
+Aristotle Issac newton
+Third law of motion Apparent weight Weightlessness
+Gallieo
+Gravitation Universal law Variation of g
+of gravitation
+Newton’s second law
+ICT CORNER
+Steps
+• Open the browser and type “olabs.edu.in” in the address bar. Click physics tab and then click “Newton’s
+second ” under class 9 section. Go to “simulator” tab to do the experiment.
+• Select the desired Cart mass (M ) and vertical mass (M ) using respective slider. Also select the desired
+1 2
+distance (s) by moving the slider. Click on the “Start” button to start the experiment.
+• Observe the time and note it down. Calculate acceleration (a) of the cart using the formula a = 2s/t2.
+Find the fore due to rate of change of momentum using (M +M ) a.
+1 2
+• Calculate force F = M g.
+2
+• You will observe (M +M )a = M g . Hence Newton’s Second Law is verified. Repeat
+1 2 2
+the experiment with different masses. Also do this in different environment like
+Earth, Moon, Uranus and Jupiter. Click reset to restart the experiment.
+Link: http://amrita.olabs.edu.in/?sub=1&brch=1&sim=44&cnt=4
+15 Laws of motion
+10th_Science_Unit-1.indd 15 12/3/2022 2:48:50 PM
+
+OPTICS
+2
+Learning Objectives
+At the end of this lesson, students will be able to:
+ state the laws of refraction.
+ list the properties of light.
+ explain the scattering of light and its various kinds.
+ understand the images formed by concave and convex lens.
+ analyze the ray diagram of concave and convex lens.
+ understand the working of human eye and optical instruments
+ solve numerical problems
+chapter, we shall discuss about the scattering
+INTRODUCTION
+of light, images formed by convex and concave
+Light is a form of energy which travels in lenses, human eye and optical instruments
+the form of waves. The path of light is called such as telescopes and microscopes.
+ray of light and group of these rays are called
+as beam of light. Any object which gives out
+2.1 PROPERTIES OF LIGHT
+light are termed as source of light. Some of the
+sources emit their own light and they are called Let us recall the properties of light and the
+as luminous objects. All the stars, including important aspects on refraction of light.
+the Sun, are examples for luminous objects.
+1. Light is a form of energy.
+We all know that we are able to see objects with
+2. Light always travels along a straight line.
+the help of our eyes. But, we cannot see any
+3. Light does not need any medium for its
+object in a dark room. Can you explain why?
+propagation. It can even travel through
+If your answer is ‘we need light to see objects’,
+vacuum.
+the next question is ‘if you make the light from
+a torch to fall on your eyes, will you be able to 4. The speed of light in vacuum or air is,
+see the objects?’ Definitely, ‘NO’. We can see c = 3 × 108 ms–1.
+the objects only when the light is made to fall 5. Since, light is in the form of waves, it is
+on the objects and the light reflected from the characterized by a wavelength (λ) and
+objects is viewed by our eyes. You would have a frequency (ν), which are related by the
+studied about the reflection and refraction of following equation: c = ν λ (c - velocity of
+light elaborately in your previous classes. In this light).
+10th Standard Science 16
+10th_Science_Unit-2.indd 16 12/2/2022 4:59:14 PM
+
+6. Different coloured light has different  When light travels from a rarer medium
+wavelength and frequency. into a denser medium, the refracted ray
+7. Among the visible light, violet light has the is bent towards the normal drawn to the
+lowest wavelength and red light has the interface.
+highest wavelength.
+8. When light is incident on the interface
+2.3 REFRACTION OF A
+between two media, it is partly reflected
+COMPOSITE LIGHT-
+and partly refracted.
+DISPERSION OF LIGHT
+2.2 REFRACTION OF LIGHT
+We know that Sun is the fundamental
+When a ray of light travels from one and natural source of light. If a source of light
+transparent medium into another obliquely, produces a light of single colour, it is known as
+the path of the light undergoes deviation. This a monochromatic source. On the other hand,
+deviation of ray of light is called refraction. a composite source of light produces a white
+Refraction takes place due to the difference light which contains light of different colours.
+in the velocity of light in different media. The Sun light is a composite light which consists
+velocity of light is more in a rarer medium and of light of various colours or wavelengths.
+less in a denser medium. Refraction of light Another example for a composite source is a
+obeys two laws of refraction. mercury vapour lamp. What do you observe
+when a white light is refracted through a glass
+2.2.1 First law of refraction:
+prism?
+The incident ray, the refracted ray of light
+When a beam of white light or composite
+and the normal to the refracting surface all lie
+light is refracted through any transparent
+in the same plane.
+media such as glass or water, it is split into
+2.2.2 Second law of refraction: its component colours. This phenomenon is
+The ratio of the sine of the angle of called as ‘dispersion of light’.
+incidence and sine of the angle of refraction
+The band of colours is termed as spectrum.
+is equal to the ratio of refractive indices of the
+This spectrum consists of following colours:
+two media. This law is also known as Snell’s law.
+Violet, Indigo, Blue, Green, Yellow, Orange,
+sin i and Red. These colours are represented by
+2 ...........
+(2.1)
+sin r the acronym “VIBGYOR”. Why do we get
+ Refractive index gives us an idea of how fast the spectrum when white light is refracted
+by a transparent medium? This is because,
+or how slow light travels in a medium. The
+different coloured lights are bent through
+ratio of speed of light in vacuum (c) to the
+different angles. That is the angle of refraction
+speed of light in a medium (v) is defined as
+is different for different colours.
+refractive index ‘m’ of that medium.
+c Angle of refraction is the smallest for
+m =
+v red and the highest for violet. From Snell’s
+ The speed of light in a medium is low if the law, we know that the angle of refraction is
+refractive index of the medium is high and determined in terms of the refractive index
+vice versa. of the medium. Hence, the refractive index of
+ When light travels from a denser medium the medium is different for different coloured
+into a rarer medium, the refracted ray is lights. This indicates that the refractive index
+bent away from the normal drawn to the of a medium is dependent on the wavelength
+interface.
+of the light.
+17 Optics
+10th_Science_Unit-2.indd 17 12/2/2022 4:59:15 PM
+
+Rayleigh scattering
+2.4 SCATTERING OF LIGHT
+The scattering of sunlight by the atoms
+When sunlight enters the Earth’s
+or molecules of the gases in the earth’s
+atmosphere, the atoms and molecules of
+atmosphere is known as Rayleigh scattering.
+different gases present in the atmosphere
+refract the light in all possible directions.
+This is called as ‘Scattering of light’. In this Rayleigh’s scattering law
+phenomenon, the beam of light is redirected in
+Rayleigh’s scattering law states that, “The
+all directions when it interacts with a particle
+amount of scattering of light is inversely
+of medium. The interacting particle of the
+proportional to the fourth power of its
+medium is called as ‘scatterer’.
+wavelength”.
+1
+Amount of scattering ‘S’ ∝
+λ4
+According to this law, the shorter
+wavelength colours are scattered much more
+than the longer wavelength colours.
+When sunlight passes through the
+atmosphere, the blue colour (shorter
+wavelength) is scattered to a greater extent
+Figure 2.1 Scattering of light than the red colour (longer wavelength). This
+scattering causes the sky to appear in blue
+2.4.1 Types of scattering colour.
+When a beam of light, interacts with At sunrise and sunset, the light rays from
+a constituent particle of the medium, it the Sun have to travel a larger distance in the
+undergoes many kinds of scattering. Based atmosphere than at noon. Hence, most of the
+on initial and final energy of the light beam, blue lights are scattered away and only the
+scattering can be classified as, red light which gets least scattered reaches
+us. Therefore, the colour of the Sun is red at
+1) Elastic scattering 2) Inelastic scattering
+sunrise and sunset.
+1) Elastic scattering
+If the energy of the incident beam of light Mie scattering
+and the scattered beam of light are same, then
+Mie scattering takes place when the
+it is called as ‘elastic scattering’.
+diameter of the scatterer is similar to or larger
+than the wavelength of the incident light. It
+2) Inelastic scattering
+is also an elastic scattering. The amount of
+If the energy of the incident beam of scattering is independent of wave length.
+light and the scattered beam of light are not
+Mie scattering is caused by pollen, dust,
+same, then it is called as ‘inelastic scattering’.
+smoke, water droplets, and other particles in
+The nature and size of the scatterer results in
+the lower portion of the atmosphere.
+different types of scattering. They are
+Mie scattering is responsible for the
+• Rayleigh scattering
+white appearance of the clouds. When white
+• Mie scattering light falls on the water drop, all the colours
+• Tyndall scattering are equally scattered which together form the
+white light.
+• Raman scattering
+10th Standard Science 18
+10th_Science_Unit-2.indd 18 12/2/2022 4:59:15 PM
+
+Tyndall Scattering Lens is basically classified into two types.
+They are: (i) Convex Lens (ii) Concave Lens
+When a beam of sunlight, enters into a
+dusty room through a window, then its path (i) Convex or bi-convex lens: It is a lens
+becomes visible to us. This is because, the tiny bounded by two spherical surfaces such
+dust particles present in the air of the room
+that it is thicker at the centre than at the
+scatter the beam of light. This is an example of
+edges. A beam of light passing through it,
+Tyndall Scattering
+is converged to a point. So, a convex lens is
+The scattering of light rays by the
+also called as converging lens.
+colloidal particles in the colloidal solution is
+(ii) Concave or bi-concave Lens: It is a lens
+called Tyndall Scattering or Tyndall Effect.
+bounded by two spherical surfaces such
+Do you Know that it is thinner at the centre than at the
+edges. A parallel beam of light passing
+Colloid is a microscopically small substance
+through it, is diverged or spread out. So, a
+that is equally dispersed throughout another
+concave lens is also called as diverging lens.
+material. Example: Milk, Ice cream, muddy
+water, smoke
+2.5.1 Other types of Lenses
+Raman scattering
+Plano-convex lens: If one of the faces of a
+When a parallel beam of monochromatic
+bi-convex lens is plane, it is known as a plano-
+(single coloured ) light passes through a gas or
+convex lens.
+liquid or transparent solid, a part of light rays
+Plano-concave lens: If one of the faces
+are scattered.
+of a bi-concave lens is plane, it is known as a
+The scattered light contains some additional
+plano-concave lens.
+frequencies (or wavelengths) other than that
+of incident frequency (or wavelength). This is All these lenses are shown in Figure 2.2
+known as Raman scattering or Raman Effect. given below:
+Raman Scattering is defined as “The
+interaction of light ray with the particles of pure
+liquids or transparent solids, which leads to a
+change in wavelength or frequency.”
+The spectral lines having frequency
+equal to the incident ray frequency is called
+‘Rayleigh line’ and the spectral lines which are
+having frequencies other than the incident ray
+frequency are called ‘Raman lines’. The lines
+having frequencies lower than the incident
+frequency is called stokes lines and the lines
+having frequencies higher than the incident
+frequency are called Antistokes lines.
+You will study more about Raman Effect
+in higher classes.
+2.5 LENSES
+A lens is an optically transparent medium
+bounded by two spherical refracting surfaces
+Figure 2.2 Types of lenses
+or one plane and one spherical surface.
+19 Optics
+10th_Science_Unit-2.indd 19 12/2/2022 4:59:15 PM
+
+2.6 IMAGES FORMED DUE TO 2.7 REFRACTION THROUGH A
+REFRACTION THROUGH CONVEX LENS
+A CONVEX AND CONCAVE
+LENS Let us discuss the
+formation of images by a
+When an object is placed in front of a
+convex lens when the object
+lens, the light rays from the object fall on the
+is placed at various positions.
+lens. The position, size and nature of the image
+formed can be understood only if we know Object at infinity
+certain basic rules.
+When an object is placed at infinity, a real
+Rule-1: When a ray of light strikes the image is formed at the principal focus. The size
+convex or concave lens obliquely at its optical of the image is much smaller than that of the
+centre, it continues to follow its path without object (Figure 2.6).
+any deviation (Figure 2.3).
+M
+O
+C F1 F2 C
+Figure 2.3 Rays passing through the
+N
+optical centre
+Figure 2.6 Object at infinity
+Rule-2: When rays parallel to the principal axis
+strikes a convex or concave lens, the refracted Object placed beyond C (>2F)
+rays are converged to (convex lens) or appear
+When an object is placed behind the
+to diverge from (concave lens) the principal
+center of curvature(beyond C), a real and
+focus (Figure 2.4).
+inverted image is formed between the center of
+curvature and the principal focus. The size of
+the image is the smaller than that of the object
+(Figure 2.7).
+M
+A
+Figure 2.4 Rays passing parallel to the optic
+axis B´
+B C F 1 O F 2 C
+Rule-3: When a ray passing through (convex
+A´
+lens) or directed towards (concave lens) the
+N
+principal focus strikes a convex or concave f
+lens, the refracted ray will be parallel to the
+Figure 2.7 Object placed beyond C (>2F)
+principal axis (Figure 2.5).
+Object placed at C
+When an object is placed at the center of
+curvature, a real and inverted image is formed
+at the other center of curvature. The size of
+Figure 2.5 Rays passing through or directed the image is the same as that of the object
+towards the principal focus (Figure 2.8).
+10th Standard Science 20
+10th_Science_Unit-2.indd 20 12/2/2022 4:59:15 PM
+
+Object placed between the
+M
+A
+principal focus F and optical
+centre O
+B C
+When an object is placed in between
+C F O F 2 B´ principal focus and optical centre, a virtual
+1
+image is formed. The size of the image is larger
+A´ than that of the object (Figure 2.11).
+N
+Figure.2.8 Object placed at C A(cid:31)
+Q
+A
+Object placed between F and C
+When an object is placed in between C B(cid:31) F 1 B O F 2 C
+f
+the center of curvature and principal focus, a
+real and inverted image is formed behind the
+Figure 2.11 Object placed between the
+center of curvature. The size of the image is
+principal focus F and optical centre O
+bigger than that of the object (Figure 2.9).
+M
+A 2.8 APPLICATIONS OF
+CONVEX LENSES
+F C B´
+2 1. Convex lenses are used as camera lenses
+C B F O
+1 2. They are used as magnifying lenses
+3. They are used in making microscope,
+telescope and slide projectors
+N
+A´ 4. They are used to correct the defect of vision
+called hypermetropia
+Figure 2.9 Object placed between F and C
+2.9 REFRACTION THROUGH A
+Object placed at the principal
+CONCAVE LENS
+focus F
+Let us discuss the formation of images by
+When an object is placed at the focus,
+a concave lens when the object is placed at two
+a real image is formed at infinity. The size
+possible positions.
+of the image is much larger than that of the
+object (Figure 2.10). Object at Infinity
+M When an object is placed at infinity, a
+A
+virtual image is formed at the focus. The size of
+the image is much smaller than that of the object
+B O F 2 C (Figure 2.12).
+C F
+1
+N C F 1 O
+Figure 2.10 Object placed at the principal
+focus F
+Figure 2.12 Concave lens-Object at infinity
+21 Optics
+10th_Science_Unit-2.indd 21 12/2/2022 4:59:15 PM
+
+Object anywhere on the principal
+2.11 LENS FORMULA
+axis at a finite distance
+Like spherical mirrors, we have lens
+When an object is placed at a finite distance
+formula for spherical lenses. The lens
+from the lens, a virtual image is formed between
+formula gives the relationship among
+optical center and focus of the concave lens.
+distance of the object (u), distance of the
+The size of the image is smaller than that of the
+image (v) and the focal length (f) of the
+object (Figure 2.13).
+lens. It is expressed as
+M 1 1 1
+A = − ............. 2.2
+f v u
+A1
+It is applicable to both convex and
+C B F B1 O
+1 concave lenses. We need to give an at most
+care while solving numerical problems
+N related to lenses in taking proper signs of
+different quantities.
+Figure 2.13 Concave lens-Object at a finite
+distance 2.12 SIGN CONVENTION
+But, as the distance between the object Cartesian sign conventions are used for
+and the lens is decreased, the distance measuring the various distances in the ray
+between the image and the lens also keeps diagrams of spherical lenses. According to
+decreasing. Further, the size of the image cartesian sign convention,
+formed increases as the distance between the 1. The object is always placed on the left side
+object and the lens is decreased. This is shown of the lens.
+in (figure 2.14). 2. All the distances are measured from the
+optical centre of the lens.
+3. The distances measured in the same
+1 2 3 4 5
+direction as that of incident light are taken
+12345
+as positive.
+C F F C
+1 2 4. The distances measured against the direction
+of incident light are taken as negative.
+5. The distances measured upward and
+Figure 2.14 Concave lens-Variation in perpendicular to the principal axis is taken
+as positive.
+position and size of image with object distance
+6. The distances measured downward and
+perpendicular to the principal axis is taken
+2.10 APPLICATIONS OF as negative.
+CONCAVE LENSES
+2.13 M AGNIFICATION OF A
+1. Concave lenses are used as eye lens of
+LENS
+‘Galilean Telescope’
+2. They are used in wide angle spy hole in Like spherical mirrors, we have
+doors. magnification for spherical lenses. Spherical
+3. They are used to correct the defect of vision lenses produce magnification and it is defined
+called ‘myopia’ as the ratio of the height of the image to the
+10th Standard Science 22
+10th_Science_Unit-2.indd 22 12/2/2022 4:59:16 PM

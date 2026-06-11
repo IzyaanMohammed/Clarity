@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { BookOpen, MessageCircle, ClipboardList, Book, FileText, Layers, CalendarClock, User, Sparkles, ScanText, FolderOpen, ChevronLeft, ChevronRight, BarChart3, Timer, Brain, Video } from 'lucide-react';
+import { BookOpen, MessageCircle, ClipboardList, Book, FileText, Layers, CalendarClock, User, Sparkles, ScanText, FolderOpen, ChevronLeft, ChevronRight, BarChart3, Timer, Brain, Video, Trophy } from 'lucide-react';
 import { getUser } from '../../utils/storage';
 
 export const Navbar = () => {
@@ -25,6 +25,7 @@ export const Navbar = () => {
     { to: '/dashboard', label: 'Dashboard', icon: BookOpen },
     { to: '/ask', label: 'Ask AI', icon: MessageCircle },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
+    { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
     { to: '/ai-tutor', label: 'AI Tutor', icon: Sparkles },
   ];
 
@@ -49,7 +50,7 @@ export const Navbar = () => {
     { to: '/dashboard', label: 'Home', icon: BookOpen },
     { to: '/ask', label: 'Ask', icon: MessageCircle },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
-    { to: '/ai-tutor', label: 'Tutor', icon: Sparkles },
+    { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
     { to: '/progress', label: 'Progress', icon: BarChart3 },
     { to: '/profile', label: 'Profile', icon: User },
   ];

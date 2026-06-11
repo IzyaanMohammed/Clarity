@@ -1030,3 +1030,53 @@ async def parent_portal_advisor_chat(
     from services.openrouter import ask_openrouter
     response_text = await ask_openrouter(messages, task_type="fast")
     return {"response": response_text}
+
+
+@router.get("/leaderboard")
+async def get_leaderboard(
+    class_num: Optional[str] = None,
+    country: Optional[str] = None,
+    state: Optional[str] = None,
+    city: Optional[str] = None,
+    authorization: Optional[str] = Header(default=None)
+):
+    from services.database import _connect
+    query = "SELECT username, points, class_num, country, state, city FROM users"
+    conditions = []
+    params = []
+    
+    if class_num:
+        conditions.append("class_num = ?")
+        params.append(class_num)
+    if country:
+        conditions.append("country = ?")
+        params.append(country)
+    if state:
+        conditions.append("state = ?")
+        params.append(state)
+    if city:
+        conditions.append("city = ?")
+        params.append(city)
+        
+    if conditions:
+        query += " WHERE " + " AND ".join(conditions)
+        
+    query += " ORDER BY points DESC LIMIT 50"
+    
+    with _connect() as conn:
+        rows = conn.execute(query, tuple(params)).fetchall()
+        
+    leaderboard_list = []
+    for idx, row in enumerate(rows):
+        leaderboard_list.append({
+            "rank": idx + 1,
+            "username": row["username"],
+            "points": row["points"] or 0,
+            "class_num": row["class_num"],
+            "country": row["country"] or "India",
+            "state": row["state"] or "Delhi",
+            "city": row["city"] or "New Delhi"
+        })
+        
+    return {"leaderboard": leaderboard_list}
+

@@ -33,7 +33,13 @@ const LEARNING_STYLES = [
 const GOALS = ['Score 95+', 'Score 80-95', 'Pass with Merit', 'Improve Gradually', 'Build Confidence'];
 const STUDY_HOURS = ['30 min/day', '1 hour/day', '2 hours/day', '3+ hours/day'];
 const CHALLENGES = ['Time Management', 'Weak Concepts', 'Exam Anxiety', 'Consistency', 'No Major Challenge'];
-const EXAM_BOARDS = ['CBSE', 'ICSE', 'State Board', 'IB'];
+const EXAM_BOARDS = [
+    { value: 'CBSE', label: 'CBSE', disabled: false },
+    { value: 'Tamil Nadu State Board', label: 'Tamil Nadu State Board', disabled: false },
+    { value: 'ICSE', label: 'ICSE (Coming Soon)', disabled: true },
+    { value: 'IB', label: 'IB (Coming Soon)', disabled: true },
+    { value: 'IGCSE', label: 'IGCSE (Coming Soon)', disabled: true },
+];
 const LANGUAGES = ['English', 'Hinglish', 'Hindi'];
 const PACES = ['Slow and detailed', 'Balanced', 'Fast and concise'];
 const CONFIDENCE_LEVELS = ['Needs strong support', 'Average confidence', 'High confidence'];
@@ -87,6 +93,10 @@ export const Onboarding = () => {
     const [teacherPersonality, setTeacherPersonality] = useState(existingUser?.teacherPersonality || 'Kind');
     const [focusChapters, setFocusChapters] = useState<Record<string, string[]>>(existingUser?.focusChapters || {});
     const [parentEmail, setParentEmail] = useState(existingUser?.parentEmail || '');
+    const [country, setCountry] = useState(existingUser?.country || 'India');
+    const [state, setState] = useState(existingUser?.state || 'Tamil Nadu');
+    const [city, setCity] = useState(existingUser?.city || 'Chennai');
+    const [tnMedium, setTnMedium] = useState<'English' | 'Tamil'>('English');
     const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});
     const [diagnosticScore, setDiagnosticScore] = useState<number | null>(null);
     const [diagnosticQuestions, setDiagnosticQuestions] = useState<DiagnosticQuestion[]>([]);
@@ -178,9 +188,15 @@ export const Onboarding = () => {
     }, [isEditing, selectedClass, selectedSubjects.join('|')]);
 
     const validateStep = () => {
-        if (step === 1 && (!name.trim() || !school.trim())) {
-            toast.error('Please fill in your full name and school.');
-            return false;
+        if (step === 1) {
+            if (!name.trim() || !school.trim()) {
+                toast.error('Please fill in your full name and school.');
+                return false;
+            }
+            if (!country.trim() || !state.trim() || !city.trim()) {
+                toast.error('Please enter your location details (country, state, and city).');
+                return false;
+            }
         }
 
         if (step === 3 && selectedSubjects.length === 0) {
@@ -260,17 +276,21 @@ export const Onboarding = () => {
 
     const handleComplete = async () => {
         if (isSubmitting) return;
+        const finalClass = examBoard === 'Tamil Nadu State Board'
+            ? (tnMedium === 'Tamil' ? '10_TN_TM' : '10_TN_EN')
+            : Number(selectedClass);
+
         const profile = {
             name: name.trim(),
             school: school.trim(),
-            class: Number(selectedClass),
+            class: finalClass,
             subjects: selectedSubjects,
             learningStyle,
             goal,
             studyHours,
             focusAreas: mainChallenge,
             examBoard,
-            preferredLanguage,
+            preferredLanguage: examBoard === 'Tamil Nadu State Board' ? (tnMedium === 'Tamil' ? 'Tamil' : 'English') : preferredLanguage,
             preferredPace,
             confidenceLevel,
             revisionFrequency,
@@ -278,10 +298,13 @@ export const Onboarding = () => {
             teacherPersonality,
             focusChapters,
             parentEmail: parentEmail.trim(),
+            country,
+            state,
+            city,
         };
 
         const diagnosticPayload = {
-            class_num: String(selectedClass),
+            class_num: String(finalClass),
             subject: diagnosticQuerySubject || selectedSubjects[0] || 'mixed',
             answers: diagnosticQuestions.map((question) => ({
                 question_id: question.id,
@@ -438,7 +461,7 @@ export const Onboarding = () => {
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
-                                    placeholder="e.g. Aditi Sharma"
+                                    placeholder="e.g. Rohan Gupta"
                                     autoFocus
                                 />
                             </div>
@@ -454,6 +477,80 @@ export const Onboarding = () => {
                                     className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
                                     placeholder="e.g. DPS Noida"
                                 />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                                <div>
+                                    <label className="block text-xs font-black text-slate-500 uppercase tracking-wide mb-2">Country</label>
+                                    <input
+                                        type="text"
+                                        value={country}
+                                        onChange={(e) => setCountry(e.target.value)}
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                        placeholder="Country"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-black text-slate-500 uppercase tracking-wide mb-2">State / Region</label>
+                                    <input
+                                        type="text"
+                                        value={state}
+                                        onChange={(e) => setState(e.target.value)}
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                        placeholder="State"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-black text-slate-500 uppercase tracking-wide mb-2">City</label>
+                                    <input
+                                        type="text"
+                                        value={city}
+                                        onChange={(e) => setCity(e.target.value)}
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                        placeholder="City"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 relative overflow-hidden h-36 flex items-center justify-center">
+                                <div className="absolute inset-0 opacity-20 pointer-events-none">
+                                    <svg width="100%" height="100%" className="text-slate-600 dark:text-slate-400">
+                                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="1"/>
+                                        </pattern>
+                                        <rect width="100%" height="100%" fill="url(#grid)" />
+                                        <path d="M10,80 Q50,20 150,60 T350,30 T500,90 T700,50" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" />
+                                        <path d="M30,120 Q120,40 250,110 T600,40" fill="none" stroke="currentColor" strokeWidth="2" />
+                                    </svg>
+                                </div>
+                                <div className="text-center z-10 space-y-1">
+                                    <div className="inline-flex p-2 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-[#1D9E75] animate-bounce">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-map-pin"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    </div>
+                                    <p className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                                        Map Marker: {city || 'Chennai'}, {state || 'Tamil Nadu'}, {country || 'India'}
+                                    </p>
+                                </div>
+                                <div className="absolute bottom-2 right-2 flex gap-1 z-20">
+                                    {[
+                                        { city: 'Chennai', state: 'Tamil Nadu', country: 'India' },
+                                        { city: 'New Delhi', state: 'Delhi', country: 'India' },
+                                        { city: 'Mumbai', state: 'Maharashtra', country: 'India' },
+                                    ].map((loc) => (
+                                        <button
+                                            key={loc.city}
+                                            type="button"
+                                            onClick={() => {
+                                                setCity(loc.city);
+                                                setState(loc.state);
+                                                setCountry(loc.country);
+                                            }}
+                                            className="px-2 py-1 bg-white dark:bg-slate-800 text-[10px] font-bold rounded-md border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm text-slate-700 dark:text-slate-300"
+                                        >
+                                            📍 {loc.city}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                             <div>
                                 <label className="flex items-center gap-2 text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wide mb-2">
@@ -472,19 +569,32 @@ export const Onboarding = () => {
                     )}
 
                     {step === 2 && (
-                        <div className="grid grid-cols-4 gap-3">
-                            {CLASSES.map((entry) => (
-                                <button
-                                    key={entry}
-                                    onClick={() => setSelectedClass(entry)}
-                                    className={`py-6 rounded-2xl font-black text-2xl transition-all ${selectedClass === entry
-                                        ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/30'
-                                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                                        }`}
-                                >
-                                    {entry}
-                                </button>
-                            ))}
+                        <div className="space-y-4">
+                            {examBoard === 'Tamil Nadu State Board' && (
+                                <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200/40">
+                                    ℹ️ Tamil Nadu State Board textbooks are currently supported for Grade 10 only. Other grades coming soon.
+                                </div>
+                            )}
+                            <div className="grid grid-cols-4 gap-3">
+                                {CLASSES.map((entry) => {
+                                    const disabled = examBoard === 'Tamil Nadu State Board' && entry !== '10';
+                                    return (
+                                        <button
+                                            key={entry}
+                                            disabled={disabled}
+                                            onClick={() => setSelectedClass(entry)}
+                                            className={`py-6 rounded-2xl font-black text-2xl transition-all ${disabled
+                                                ? 'bg-slate-50 dark:bg-slate-900/10 text-slate-300 dark:text-slate-700 cursor-not-allowed opacity-50'
+                                                : selectedClass === entry
+                                                    ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/30'
+                                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                                }`}
+                                        >
+                                            {entry}
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
                     )}
 
@@ -588,21 +698,64 @@ export const Onboarding = () => {
                         <div className="space-y-6">
                             <div>
                                 <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Exam Board</p>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                     {EXAM_BOARDS.map((entry) => (
                                         <button
-                                            key={entry}
-                                            onClick={() => setExamBoard(entry)}
-                                            className={`p-3 rounded-xl border-2 text-sm font-bold ${examBoard === entry
-                                                ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                                : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                            key={entry.value}
+                                            type="button"
+                                            disabled={entry.disabled}
+                                            onClick={() => {
+                                                setExamBoard(entry.value);
+                                                if (entry.value === 'Tamil Nadu State Board') {
+                                                    setSelectedClass('10');
+                                                    setState('Tamil Nadu');
+                                                    setCity('Chennai');
+                                                }
+                                            }}
+                                            className={`p-3 rounded-xl border-2 text-sm font-bold transition-all text-left flex justify-between items-center ${entry.disabled
+                                                ? 'border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                                                : examBoard === entry.value
+                                                    ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] shadow-sm shadow-[#1D9E75]/10'
+                                                    : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-350 dark:hover:border-slate-600'
                                                 }`}
                                         >
-                                            {entry}
+                                            <span>{entry.label}</span>
+                                            {examBoard === entry.value && !entry.disabled && (
+                                                <span className="w-2 h-2 rounded-full bg-[#1D9E75]" />
+                                            )}
                                         </button>
                                     ))}
                                 </div>
                             </div>
+
+                            {examBoard === 'Tamil Nadu State Board' && (
+                                <div className="p-4 rounded-2xl border-2 border-emerald-500/20 bg-emerald-50/30 dark:bg-emerald-950/10 space-y-3">
+                                    <p className="text-xs font-black uppercase tracking-wide text-[#1D9E75] flex items-center gap-1">
+                                        <Sparkles size={14} /> Tamil Nadu Board Settings
+                                    </p>
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-600 dark:text-slate-400 mb-2">Select Instruction Medium</p>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {['English', 'Tamil'].map((med) => (
+                                                <button
+                                                    key={med}
+                                                    type="button"
+                                                    onClick={() => setTnMedium(med as 'English' | 'Tamil')}
+                                                    className={`p-2.5 rounded-xl border-2 text-xs font-black transition-all ${tnMedium === med
+                                                        ? 'border-[#1D9E75] bg-[#1D9E75] text-white shadow-sm'
+                                                        : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
+                                                        }`}
+                                                >
+                                                    {med} Medium
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-2">
+                                            * Selecting Tamil Medium will set your preferred language to Tamil and instruct the AI tutor to communicate with you and generate materials in Tamil script.
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>

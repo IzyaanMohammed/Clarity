@@ -121,11 +121,50 @@ async def _call_model(messages: list, model: str, attempt: int = 1) -> tuple[str
     return None, MAX_RETRIES
 
 
+def _adapt_messages(messages: list) -> list:
+    try:
+        from utils.context import board_var, language_var
+        board = board_var.get()
+        language = language_var.get()
+    except Exception:
+        board = "CBSE"
+        language = "English"
+
+    if not board:
+        board = "CBSE"
+    if not language:
+        language = "English"
+
+    adapted = []
+    for msg in messages:
+        content = msg.get("content") or ""
+        role = msg.get("role") or ""
+        if isinstance(content, str):
+            # Adapt terminology
+            if board and "tamil" in board.lower():
+                content = content.replace("CBSE", "Tamil Nadu State Board")
+                content = content.replace("NCERT", "Tamil Nadu State Board (TNSERT)")
+            else:
+                content = content.replace("CBSE", board)
+            
+            # Inject language instructions only in the system prompt
+            if role == "system" and language and "tamil" in language.lower():
+                content += (
+                    "\n\nSTRICT LANGUAGE REQUIREMENT: Since the student's preferred medium is Tamil, "
+                    "you MUST write the entire explanation, questions, answers, and feedback in Tamil script. "
+                    "However, keep mathematical formulas, numerical units, and specific English words in English "
+                    "alongside their Tamil translation when necessary to maintain scientific accuracy."
+                )
+        adapted.append({"role": role, "content": content})
+    return adapted
+
+
 async def ask_openrouter(messages: list, task_type: str = "fast") -> str:
     """
     Route to the right model with automatic fallback list + retry logic.
     Each model automatically retries up to 3 times with exponential backoff before fallback.
     """
+    messages = _adapt_messages(messages)
     primary = MODELS.get(task_type, MODELS["fast"])
     result, attempts = await _call_model(messages, primary)
     if result:
@@ -255,6 +294,7 @@ async def ask_openrouter_stream(
     Route and stream tokens from OpenRouter with automatic fallback and retry logic.
     Each model gets retried before fallback. Streams tokens as they arrive.
     """
+    messages = _adapt_messages(messages)
     primary = MODELS.get(task_type, MODELS["fast"])
     tried_any = False
 
