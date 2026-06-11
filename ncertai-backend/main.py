@@ -30,14 +30,22 @@ IS_PRODUCTION = os.getenv("CLARITY_ENV", "development").strip().lower() == "prod
 
 def _parse_cors_origins() -> list[str]:
     raw = os.getenv("CLARITY_CORS_ORIGINS", "")
+    origins_list = []
     if raw.strip():
-        return [origin.strip() for origin in raw.split(",") if origin.strip()]
-    return [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ]
+        origins_list = [origin.strip() for origin in raw.split(",") if origin.strip()]
+    else:
+        origins_list = [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "https://claritystudy.vercel.app",
+        ]
+    
+    app_base = os.getenv("CLARITY_APP_BASE_URL", "").strip()
+    if app_base and app_base not in origins_list:
+        origins_list.append(app_base)
+    return origins_list
 
 # CORS setup
 origins = _parse_cors_origins()
