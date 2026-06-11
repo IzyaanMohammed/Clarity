@@ -112,9 +112,14 @@ export const Onboarding = () => {
     }, [location.state]);
 
     const pickDiagnosticSubject = (): string | undefined => {
-        if (!selectedSubjects.length) return undefined;
-        const stemPriority = ['Physics', 'Chemistry', 'Biology', 'Maths', 'Science'];
-        const normalized = selectedSubjects.map((s) => s.trim());
+        // Exclude English from diagnostic subject selection
+        const subjectsWithoutEnglish = selectedSubjects.filter(
+            (s) => s.trim().toLowerCase() !== 'english'
+        );
+        if (!subjectsWithoutEnglish.length) return undefined;
+
+        const stemPriority = ['Physics', 'Chemistry', 'Biology', 'Maths', 'Science', 'Social Science'];
+        const normalized = subjectsWithoutEnglish.map((s) => s.trim());
         const preferred = stemPriority.filter((s) => normalized.includes(s));
         const pool = preferred.length ? preferred : normalized;
         const index = Math.floor(Math.random() * pool.length);
