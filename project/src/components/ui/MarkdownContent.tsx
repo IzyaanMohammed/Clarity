@@ -64,6 +64,34 @@ export const MarkdownContent = ({ content, className = '' }: MarkdownContentProp
                 remarkPlugins={[remarkGfm, remarkMath]}
                 rehypePlugins={[rehypeKatex]}
                 components={{
+                    a: ({ href, children, ...props }) => {
+                        if (href && href.startsWith('page://')) {
+                            const pageNum = href.replace('page://', '');
+                            return (
+                                <button
+                                    id={`page-anchor-${pageNum}`}
+                                    onClick={() => {
+                                        const event = new CustomEvent('jump-to-pdf-page', { detail: { page: pageNum } });
+                                        window.dispatchEvent(event);
+                                    }}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1 my-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 text-emerald-700 dark:text-emerald-300 font-black text-xs hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all cursor-pointer select-none"
+                                >
+                                    📄 Page {pageNum}
+                                </button>
+                            );
+                        }
+                        return <a href={href} {...props}>{children}</a>;
+                    },
+                    h1: ({ ...props }) => <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mt-8 mb-4 tracking-tight border-b-2 border-[#1D9E75]/10 pb-2" {...props} />,
+                    h2: ({ ...props }) => <h2 className="text-xl md:text-2xl font-extrabold text-slate-800 dark:text-slate-100 mt-6 mb-3 tracking-tight border-b border-slate-100 dark:border-slate-900 pb-1" {...props} />,
+                    h3: ({ ...props }) => <h3 className="text-lg md:text-xl font-bold text-slate-700 dark:text-slate-205 mt-5 mb-2" {...props} />,
+                    h4: ({ ...props }) => <h4 className="text-base md:text-lg font-bold text-slate-650 dark:text-slate-300 mt-4 mb-2" {...props} />,
+                    p: ({ ...props }) => <p className="text-sm md:text-base leading-relaxed text-slate-600 dark:text-slate-300 mb-4 font-medium whitespace-pre-line" {...props} />,
+                    ul: ({ ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2 text-slate-600 dark:text-slate-350 text-sm md:text-base font-medium" {...props} />,
+                    ol: ({ ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2 text-slate-600 dark:text-slate-350 text-sm md:text-base font-medium" {...props} />,
+                    li: ({ ...props }) => <li className="pl-1 leading-relaxed" {...props} />,
+                    blockquote: ({ ...props }) => <blockquote className="pl-4 py-2 my-5 border-l-4 border-[#1D9E75] bg-slate-50/50 dark:bg-slate-900/30 rounded-r-xl italic text-slate-500 dark:text-slate-400" {...props} />,
+                    hr: ({ ...props }) => <hr className="my-6 border-t border-slate-200 dark:border-slate-800" {...props} />,
                     table: ({ ...props }) => (
                         <div className="my-6 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/60 backdrop-blur-sm overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
                             {/* Widget Header Bar */}

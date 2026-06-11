@@ -7,3 +7,14 @@ __pycache__/
 dist/
 node_modules/
 .eslintcache
+
+# Large binary assets (zip files and textbook PDFs should not be tracked)
+*.zip
+tamilnaduboard/
+ncertai-backend/data/ncert_pdf_cache/
+ncertai-backend/data/textbooks/
+
+# Aider tools
+.aider.tags.cache.v4/
+.aider.chat.history.md
+.aider.input.history

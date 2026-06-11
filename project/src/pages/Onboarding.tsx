@@ -282,7 +282,7 @@ export const Onboarding = () => {
     const handleComplete = async () => {
         if (isSubmitting) return;
         const finalClass = examBoard === 'Tamil Nadu State Board'
-            ? (tnMedium === 'Tamil' ? '10_TN_TM' : '10_TN_EN')
+            ? `${selectedClass}_TN_${tnMedium === 'Tamil' ? 'TM' : 'EN'}`
             : Number(selectedClass);
 
         const profile = {
@@ -576,13 +576,13 @@ export const Onboarding = () => {
                     {step === 2 && (
                         <div className="space-y-4">
                             {examBoard === 'Tamil Nadu State Board' && (
-                                <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200/40">
-                                    ℹ️ Tamil Nadu State Board textbooks are currently supported for Grade 10 only. Other grades coming soon.
+                                <div className="p-3 rounded-xl bg-[#1D9E75]/10 text-[#1D9E75] text-xs font-bold border border-[#1D9E75]/20">
+                                    ℹ️ Tamil Nadu State Board textbooks are supported for Grades 8, 9, 10, 11, and 12.
                                 </div>
                             )}
-                            <div className="grid grid-cols-4 gap-3">
+                            <div className="grid grid-cols-5 gap-3">
                                 {CLASSES.map((entry) => {
-                                    const disabled = examBoard === 'Tamil Nadu State Board' && entry !== '10';
+                                    const disabled = false;
                                     return (
                                         <button
                                             key={entry}

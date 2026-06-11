@@ -88,7 +88,7 @@ export const Leaderboard = () => {
                             : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
                             }`}
                     >
-                        <Award size={14} /> Grade {userClass.toString().replace('_TN_EN', ' (TN Eng)').replace('_TN_TM', ' (TN Tamil)')}
+                        <Award size={14} /> Grade {String(userClass).replace('_TN_EN', ' (TN Eng)').replace('_TN_TM', ' (TN Tamil)')}
                     </button>
                     <button
                         onClick={() => setScope('country')}
@@ -244,7 +244,7 @@ export const Leaderboard = () => {
                                                     )}
                                                 </td>
                                                 <td className="py-4 px-4 text-slate-500 font-bold">
-                                                    Class {user.class_num.toString().replace('_TN_EN', ' (TN EN)').replace('_TN_TM', ' (TN TM)')}
+                                                    Class {String(user.class_num || '').replace('_TN_EN', ' (TN EN)').replace('_TN_TM', ' (TN TM)')}
                                                 </td>
                                                 <td className="py-4 px-4 text-xs font-semibold text-slate-500">
                                                     📍 {user.city}, {user.state}, {user.country}

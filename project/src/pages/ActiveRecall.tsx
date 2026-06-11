@@ -20,7 +20,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { getUser, getAuthToken } from '../utils/storage';
 import { getStudyResources } from '../utils/studyResources';
-import { getChapterText, evaluateActiveRecall, askQuestionStream, getCustomTextbooks, logProgress, type ActiveRecallEvaluateResponse } from '../api';
+import { getChapterText, evaluateActiveRecall, askQuestionStream, getCustomTextbooks, logProgress, getBaseUrl, type ActiveRecallEvaluateResponse } from '../api';
 import toast from 'react-hot-toast';
 import { MarkdownContent } from '../components/ui/MarkdownContent';
 
@@ -66,8 +66,9 @@ export const ActiveRecall = () => {
 
     try {
       // 1. Try custom textbooks first
+      const baseClassNum = parseInt(classFilter.split('_')[0], 10) || 10;
       const customRes = await getCustomTextbooks({
-        class_num: Number(classFilter),
+        class_num: baseClassNum,
         subject: subjectFilter
       });
       const customBooks = customRes.textbooks || [];
@@ -96,7 +97,7 @@ export const ActiveRecall = () => {
 
     const chapterIdx = Math.max(1, resources.chapters.indexOf(selectedChapter) + 1);
     const bookCode = getBookCode(book.url);
-    const apiPath = `/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${chapterIdx}`;
+    const apiPath = `${getBaseUrl()}/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${chapterIdx}`;
 
     setViewerPdfUrl(apiPath);
     setViewerPdfLoading(false);
@@ -448,9 +449,16 @@ export const ActiveRecall = () => {
                 }}
                 className="bg-transparent text-sm font-black text-slate-700 dark:text-slate-200 outline-none px-3 py-1.5"
               >
-                {['8', '9', '10', '11', '12'].map(c => (
-                  <option key={c} value={c} className="dark:bg-slate-900">Class {c}</option>
-                ))}
+                {['8', '9', '10', '11', '12'].map(c => {
+                  const isEnrolled = user?.class ? String(user.class).startsWith(c) : c === '10';
+                  const value = (user?.class && String(user.class).startsWith(c)) ? user.class : c;
+                  const label = c + (user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_EN') ? ' (TN Eng)' : '') + (user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_TM') ? ' (TN Tamil)' : '');
+                  return (
+                    <option key={c} value={value} disabled={!isEnrolled} className="dark:bg-slate-900">
+                      Class {label} {!isEnrolled && '🔒'}
+                    </option>
+                  );
+                })}
               </select>
 
               <select 

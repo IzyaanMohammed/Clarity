@@ -2,9 +2,10 @@ import axios from 'axios';
 import { recordPerformanceMetric } from '../utils/analytics';
 import { getAuthToken } from '../utils/storage';
 
-// ── Base URL ──────────────────────────────────────────────────────────────────
-// Uses VITE_API_URL env var in production, falls back to localhost:8000
-// Backend main.py runs on 8000 — do NOT change to 8001
+export const getBaseUrl = (): string => {
+  return import.meta.env.VITE_API_URL || '';
+};
+
 const API_BASE_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api/v1`
   : '/api/v1';

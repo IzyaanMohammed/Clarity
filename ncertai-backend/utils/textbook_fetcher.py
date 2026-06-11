@@ -226,6 +226,7 @@ def _extract_text_from_pdf_bytes(pdf_bytes: bytes) -> tuple[str, list[int]]:
         with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
             for i, page in enumerate(pdf.pages):
                 page_text = page.extract_text() or ""
+                page_text = f"[Page {i + 1}](page://{i + 1})\n\n" + page_text
                 if bool(page.images) and len(page_text.strip()) < 120:
                     image_heavy_pages.append(i)
                 pages_text.append(page_text)
@@ -239,7 +240,12 @@ def _extract_text_from_pdf_bytes(pdf_bytes: bytes) -> tuple[str, list[int]]:
     try:
         import PyPDF2
         reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
-        text = "\n".join(p.extract_text() or "" for p in reader.pages)
+        pages_text: list[str] = []
+        for i, p in enumerate(reader.pages):
+            page_text = p.extract_text() or ""
+            page_text = f"[Page {i + 1}](page://{i + 1})\n\n" + page_text
+            pages_text.append(page_text)
+        text = "\n\n".join(pages_text)
         return text.strip(), []
     except Exception as e:
         logger.error(f"PyPDF2 fallback also failed: {e}")
@@ -249,9 +255,11 @@ def _extract_text_from_pdf_bytes(pdf_bytes: bytes) -> tuple[str, list[int]]:
 
 async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str) -> str:
     medium = "EN" if "EN" in class_num else "TM"
+    cls = class_num.split("_")[0]
+    
     safe_subject = re.sub(r"[^a-zA-Z0-9_]", "_", subject.lower())
     safe_chapter = re.sub(r"[^a-zA-Z0-9_]", "_", chapter.lower())
-    cache_filename = f"class_{class_num}_{safe_subject}_{safe_chapter}.txt"
+    cache_filename = f"class_{class_num}_{safe_subject}_{safe_chapter}_v2.txt"
     cache_path = TEXTBOOKS_CACHE_DIR / cache_filename
 
     if cache_path.exists():
@@ -263,7 +271,37 @@ async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str
         except Exception:
             pass
 
-    # Look up PDF in ./tamilnaduboard/{medium}/
+    # Resolve chapter index (1-based)
+    catalog = load_curriculum_catalog()
+    class_catalog = catalog.get(class_num, {})
+    
+    subject_key = None
+    subj_lower = subject.strip().lower()
+    for k in class_catalog:
+        if k.lower() == subj_lower or (subj_lower == "maths" and k.lower() == "maths") or (subj_lower == "math" and k.lower() == "maths"):
+            subject_key = k
+            break
+    if not subject_key:
+        for k in class_catalog:
+            if subj_lower in k.lower() or k.lower() in subj_lower:
+                subject_key = k
+                break
+                
+    chapter_idx = -1
+    if subject_key:
+        chapters = class_catalog[subject_key]
+        chapter_lower = chapter.strip().lower()
+        for i, ch in enumerate(chapters):
+            if ch.lower() == chapter_lower or chapter_lower in ch.lower() or ch.lower() in chapter_lower:
+                chapter_idx = i + 1
+                break
+
+    vol = 1
+    if cls in ("11", "12") and chapter_idx > 0:
+        from utils.drive_downloader import get_tn_volume_for_chapter
+        vol = get_tn_volume_for_chapter(class_num, subject, chapter_idx)
+
+    # Locate PDF in ./tamilnaduboard/{medium}/
     tn_dir = Path(__file__).resolve().parents[2] / "tamilnaduboard" / medium
     if not tn_dir.exists():
         tn_dir = Path("./tamilnaduboard") / medium
@@ -272,10 +310,35 @@ async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str
     if tn_dir.exists():
         for f in tn_dir.glob("*.pdf"):
             f_name = f.name.lower()
-            if subject.lower() in f_name or (subject.lower() == "maths" and "mathematics" in f_name):
+            # Must match class, subject, and volume (if split)
+            class_match = f"class_{cls}_" in f_name or f"class_{int(cls):02d}_" in f_name or f"_{cls}_" in f_name
+            subject_match = subject.lower() in f_name or (subject.lower() == "maths" and "mathematics" in f_name)
+            
+            vol_match = True
+            if cls in ("11", "12") and subject.lower() in ("physics", "chemistry", "maths"):
+                vol_match = f"volume_{vol}" in f_name
+                
+            if class_match and subject_match and vol_match:
                 pdf_path = f
                 break
-    
+                
+    # If 11/12 and not found, download on demand
+    if not pdf_path and cls in ("11", "12") and chapter_idx > 0:
+        from utils.drive_downloader import download_file, get_tn_book_url
+        download_url = get_tn_book_url(cls, subject, medium, vol)
+        if download_url:
+            tn_dir.mkdir(parents=True, exist_ok=True)
+            if subject.lower() in ("physics", "chemistry", "maths"):
+                pdf_name = f"Class_{cls}_{subject}_Volume_{vol}_{medium}_Medium.pdf"
+            else:
+                pdf_name = f"Class_{cls}_{subject}_{medium}_Medium.pdf"
+            pdf_path = tn_dir / pdf_name
+            logger.info(f"On-demand downloading TN Board book for text: {pdf_name}")
+            import asyncio
+            success = await download_file(download_url, pdf_path)
+            if not success:
+                pdf_path = None
+
     if not pdf_path or not pdf_path.exists():
         logger.warning(f"Tamil Nadu Board PDF not found for {subject} {medium}")
         return ""
@@ -291,28 +354,17 @@ async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str
                 if chapter.lower() in page_text.lower():
                     start_page = page_idx
                     break
-    except Exception as e:
-        logger.warning(f"Fast PyPDF2 pre-pass failed: {e}")
 
-    try:
-        import pdfplumber
-        with pdfplumber.open(pdf_path) as pdf:
-            if start_page == -1:
-                # Fallback to search using pdfplumber on first 80 pages
-                for page_idx in range(min(80, len(pdf.pages))):
-                    page_text = pdf.pages[page_idx].extract_text() or ""
-                    if chapter.lower() in page_text.lower():
-                        start_page = page_idx
-                        break
-            
             if start_page == -1:
                 start_page = 30
                 logger.warning(f"Chapter title '{chapter}' not found in PDF pages. Defaulting start page to 30.")
 
-            end_page = min(start_page + 25, len(pdf.pages))
+            end_page = min(start_page + 25, len(reader.pages))
             extracted_pages = []
             for p_idx in range(start_page, end_page):
-                page_text = pdf.pages[p_idx].extract_text() or ""
+                page_text = reader.pages[p_idx].extract_text() or ""
+                relative_page = p_idx - start_page + 1
+                page_text = f"[Page {relative_page}](page://{relative_page})\n\n" + page_text
                 extracted_pages.append(page_text)
             
             full_text = "\n\n".join(extracted_pages)
@@ -320,7 +372,7 @@ async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str
                 cache_path.write_text(full_text, encoding="utf-8")
                 return full_text
     except Exception as e:
-        logger.error(f"Error parsing Tamil Nadu Board PDF: {e}")
+        logger.error(f"Error parsing Tamil Nadu Board PDF using PyPDF2: {e}")
     
     return ""
 
@@ -339,7 +391,7 @@ async def get_textbook_chapter_text(class_num: str, subject: str, chapter: str) 
     """
     safe_subject = re.sub(r"[^a-zA-Z0-9_]", "_", subject.lower())
     safe_chapter = re.sub(r"[^a-zA-Z0-9_]", "_", chapter.lower())
-    cache_filename = f"class_{class_num}_{safe_subject}_{safe_chapter}.txt"
+    cache_filename = f"class_{class_num}_{safe_subject}_{safe_chapter}_v2.txt"
 
     os.makedirs(TEXTBOOKS_CACHE_DIR, exist_ok=True)
     cache_path = TEXTBOOKS_CACHE_DIR / cache_filename

@@ -107,6 +107,54 @@ async def get_textbook_content(url: str, max_chars: int = 22000, chapter_index: 
     from utils.textbook_fetcher import resolve_actual_ncert_filename
     book_code, local_ch = resolve_actual_ncert_filename(book_code, local_ch)
 
+    if book_code.startswith("tn"):
+        medium = "EN" if book_code.startswith("tnen") else "TM"
+        rest = book_code[4:]
+        cls_num = "10"
+        for c in ["8", "9", "11", "12"]:
+            if rest.startswith(c):
+                cls_num = c
+                rest = rest[len(c):]
+                break
+
+        subject = "Science"
+        if rest.startswith("sc"):
+            subject = "Science"
+        elif rest.startswith("ma"):
+            subject = "Maths"
+        elif rest.startswith("ph"):
+            subject = "Physics"
+        elif rest.startswith("ch"):
+            subject = "Chemistry"
+        elif rest.startswith("bi"):
+            subject = "Biology"
+            
+        class_num = f"{cls_num}_TN_{medium}"
+
+        from utils.curriculum import load_curriculum_catalog
+        catalog = load_curriculum_catalog()
+        chapters = catalog.get(class_num, {}).get(subject, [])
+        
+        if 1 <= local_ch <= len(chapters):
+            chapter = chapters[local_ch - 1]
+        else:
+            raise HTTPException(status_code=404, detail=f"Chapter {local_ch} not found in curriculum catalog for class {class_num} {subject}")
+
+        from utils.textbook_fetcher import get_tamil_nadu_chapter_text
+        text = await get_tamil_nadu_chapter_text(class_num, subject, chapter)
+        
+        if not text:
+            raise HTTPException(status_code=502, detail="Could not extract Tamil Nadu Board textbook content.")
+            
+        if max_chars > 0:
+            text = text[:max_chars]
+            
+        return {
+            "source_url": url,
+            "mirror_url": url,
+            "content": text,
+        }
+
     try:
         from utils.textbook_fetcher import _download_ncert_pdf, _extract_text_from_pdf_bytes
 
@@ -476,6 +524,39 @@ async def get_custom_textbook_text_content(
     return {"content": row["text_content"]}
 
 
+def get_fallback_pdf():
+    try:
+        import PyPDF2
+        import io
+        writer = PyPDF2.PdfWriter()
+        writer.add_blank_page(width=595, height=842)
+        pdf_bytes_io = io.BytesIO()
+        writer.write(pdf_bytes_io)
+        return pdf_bytes_io.getvalue()
+    except Exception:
+        return (
+            b"%PDF-1.4\n"
+            b"1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n"
+            b"2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n"
+            b"3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << >> /Contents 4 0 R >>\nendobj\n"
+            b"4 0 obj\n<< /Length 54 >>\nstream\n"
+            b"BT /F1 12 Tf 72 712 Td (Document placeholder - Try refreshing again later) Tj ET\n"
+            b"endstream\n"
+            b"endobj\n"
+            b"xref\n"
+            b"0 5\n"
+            b"0000000000 65535 f\n"
+            b"0000000009 00000 n\n"
+            b"0000000056 00000 n\n"
+            b"0000000111 00000 n\n"
+            b"0000000212 00000 n\n"
+            b"trailer\n<< /Size 5 /Root 1 0 R >>\n"
+            b"startxref\n"
+            b"315\n"
+            b"%%EOF"
+        )
+
+
 @router.get("/ncert-pdf-proxy")
 async def proxy_ncert_pdf(book_code: str, chapter_num: int):
     """
@@ -484,6 +565,7 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
     Uses browser-like headers to avoid NCERT server connection resets.
     """
     from fastapi.responses import FileResponse
+    from fastapi import Response
     from pathlib import Path
     import os
     from utils.textbook_fetcher import resolve_actual_ncert_filename
@@ -502,12 +584,180 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
     os.makedirs(cache_dir, exist_ok=True)
     cache_path = cache_dir / filename
 
-
     response_headers = {
         "Content-Disposition": f'inline; filename="{filename}"',
         "Cache-Control": "public, max-age=31536000, immutable",
         "X-Frame-Options": "",
     }
+
+    # Intercept Tamil Nadu Board requests
+    if book_code.startswith("tn"):
+        if cache_path.exists():
+            logger.info(f"TN PDF cache hit: {filename}")
+            return FileResponse(cache_path, media_type="application/pdf", headers=response_headers, filename=filename)
+
+        # Parse book_code to class_num, subject, medium
+        medium = "EN" if book_code.startswith("tnen") else "TM"
+        rest = book_code[4:]
+        cls_num = "10"
+        for c in ["8", "9", "11", "12"]:
+            if rest.startswith(c):
+                cls_num = c
+                rest = rest[len(c):]
+                break
+
+        subject = "Science"
+        if rest.startswith("sc"):
+            subject = "Science"
+        elif rest.startswith("ma"):
+            subject = "Maths"
+        elif rest.startswith("ph"):
+            subject = "Physics"
+        elif rest.startswith("ch"):
+            subject = "Chemistry"
+        elif rest.startswith("bi"):
+            subject = "Biology"
+
+        class_num_key = f"{cls_num}_TN_{medium}"
+
+        # Resolve chapter name from catalog
+        from utils.curriculum import load_curriculum_catalog
+        catalog = load_curriculum_catalog()
+        chapters = catalog.get(class_num_key, {}).get(subject, [])
+
+        chapter = None
+        if 1 <= chapter_num <= len(chapters):
+            chapter = chapters[chapter_num - 1]
+
+        # Resolve volume index
+        volume = 1
+        if cls_num in ["11", "12"]:
+            from utils.drive_downloader import get_tn_volume_for_chapter
+            volume = get_tn_volume_for_chapter(class_num_key, subject, chapter_num)
+
+        if cls_num in ["11", "12"]:
+            if subject.lower() in ["physics", "chemistry", "maths"]:
+                expected_pdf_name = f"Class_{cls_num}_{subject}_Volume_{volume}_{medium}_Medium.pdf"
+            else:
+                expected_pdf_name = f"Class_{cls_num}_{subject}_{medium}_Medium.pdf"
+        else:
+            expected_pdf_name = f"Class_{cls_num}_{subject}_{medium}_Medium.pdf"
+
+        # Locate local PDF in tamilnaduboard/medium
+        tn_dir = Path(__file__).resolve().parents[2] / "tamilnaduboard" / medium
+        if not tn_dir.exists():
+            tn_dir = Path("./tamilnaduboard") / medium
+
+        pdf_path = tn_dir / expected_pdf_name
+
+        # On-demand download for Grades 11 and 12
+        if cls_num in ["11", "12"] and not pdf_path.exists():
+            logger.info(f"TN Book {expected_pdf_name} not found locally. Initiating download...")
+            from utils.drive_downloader import get_tn_book_url, download_file
+            download_url = get_tn_book_url(cls_num, subject, medium, volume)
+            if download_url:
+                # Run download in async context
+                success = await download_file(download_url, pdf_path)
+                if not success:
+                    logger.error(f"Failed to download book from {download_url}")
+            else:
+                logger.error(f"No download URL found for Class {cls_num} {subject} {medium} Vol {volume}")
+
+        # Fuzzy glob search fallback if exact expected name not found
+        if not pdf_path.exists() and tn_dir.exists():
+            for f in tn_dir.glob("*.pdf"):
+                f_name = f.name.lower()
+                if cls_num in f_name:
+                    if cls_num in ["11", "12"]:
+                        vol_str = f"vol_{volume}"
+                        if (vol_str in f_name) and (subject.lower() in f_name or (subject.lower() == "maths" and "mathematics" in f_name)):
+                            pdf_path = f
+                            break
+                    else:
+                        if (subject.lower() in f_name or (subject.lower() == "maths" and "mathematics" in f_name)):
+                            pdf_path = f
+                            break
+
+        if not pdf_path or not pdf_path.exists():
+            logger.error(f"TN Board PDF not found for {subject} {medium} Class {cls_num}")
+            placeholder_pdf = get_fallback_pdf()
+            return Response(content=placeholder_pdf, media_type="application/pdf", headers=response_headers)
+
+        # Slice the PDF
+        start_page = -1
+        if chapter:
+            try:
+                import PyPDF2
+                with open(pdf_path, "rb") as f_pdf:
+                    reader = PyPDF2.PdfReader(f_pdf)
+                    num_pages = len(reader.pages)
+                    # Search page content
+                    for page_idx in range(num_pages):
+                        page_text = reader.pages[page_idx].extract_text() or ""
+                        if chapter.lower() in page_text.lower():
+                            start_page = page_idx
+                            break
+            except Exception as e:
+                logger.warning(f"PyPDF2 search failed for start page: {e}")
+
+        # Fallback start page if title search failed
+        if start_page == -1:
+            start_page = 20 + (chapter_num - 1) * 20
+            logger.warning(f"Chapter title '{chapter}' not found in PDF pages. Defaulting start page to {start_page}.")
+
+        # Find the next chapter start page to identify the end of current chapter
+        end_page = -1
+        if chapter and chapter_num < len(chapters):
+            next_chapter = chapters[chapter_num]
+            try:
+                import PyPDF2
+                with open(pdf_path, "rb") as f_pdf:
+                    reader = PyPDF2.PdfReader(f_pdf)
+                    # Search starting from start_page + 1
+                    for page_idx in range(start_page + 1, len(reader.pages)):
+                        page_text = reader.pages[page_idx].extract_text() or ""
+                        if next_chapter.lower() in page_text.lower():
+                            end_page = page_idx
+                            break
+            except Exception:
+                pass
+
+        if end_page == -1 or end_page <= start_page:
+            try:
+                import PyPDF2
+                with open(pdf_path, "rb") as f_pdf:
+                    reader = PyPDF2.PdfReader(f_pdf)
+                    end_page = min(start_page + 25, len(reader.pages))
+            except Exception:
+                end_page = start_page + 25
+
+        # Perform the actual page slicing and save to cache
+        try:
+            import PyPDF2
+            writer = PyPDF2.PdfWriter()
+            with open(pdf_path, "rb") as f_pdf:
+                reader = PyPDF2.PdfReader(f_pdf)
+                total_p = len(reader.pages)
+                sp = max(0, min(start_page, total_p - 1))
+                ep = max(sp + 1, min(end_page, total_p))
+                
+                for p_idx in range(sp, ep):
+                    writer.add_page(reader.pages[p_idx])
+                    
+                with open(cache_path, "wb") as f_out:
+                    writer.write(f_out)
+                    
+            logger.info(f"Sliced and cached TN Board PDF: {filename} (pages {sp} to {ep})")
+            return FileResponse(cache_path, media_type="application/pdf", headers=response_headers, filename=filename)
+        except Exception as e:
+            logger.error(f"Failed to slice TN Board PDF {filename}: {e}")
+            try:
+                if pdf_path.exists():
+                    return FileResponse(pdf_path, media_type="application/pdf", headers=response_headers, filename=pdf_path.name)
+            except Exception:
+                pass
+            placeholder_pdf = get_fallback_pdf()
+            return Response(content=placeholder_pdf, media_type="application/pdf", headers=response_headers)
 
     if cache_path.exists():
         logger.info(f"NCERT PDF cache hit: {filename}")
@@ -543,15 +793,16 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
                 else:
                     logger.warning(f"NCERT PDF download attempt {attempt+1} failed: status={response.status_code} ctype={ctype}")
                     if attempt == retries - 1:
-                        raise HTTPException(status_code=404, detail=f"NCERT PDF not found: {filename}")
-        except HTTPException:
-            raise
+                        placeholder_pdf = get_fallback_pdf()
+                        return Response(content=placeholder_pdf, media_type="application/pdf", headers=response_headers)
         except Exception as e:
             logger.warning(f"NCERT PDF download attempt {attempt+1} got exception: {e}")
             if attempt == retries - 1:
                 logger.error(f"Error proxying NCERT PDF {filename} after {retries} attempts: ", exc_info=True)
-                raise HTTPException(status_code=502, detail="Error fetching PDF from NCERT server")
+                placeholder_pdf = get_fallback_pdf()
+                return Response(content=placeholder_pdf, media_type="application/pdf", headers=response_headers)
         # Wait a bit before retrying
         await asyncio.sleep(1.0)
+
 
 

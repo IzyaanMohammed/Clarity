@@ -21,6 +21,22 @@ export const Navbar = () => {
     };
   }, [collapsed]);
 
+  useEffect(() => {
+    const container = document.getElementById('sidebar-scroll-container');
+    if (container) {
+      const savedScroll = sessionStorage.getItem('sidebar_scroll_position');
+      if (savedScroll) {
+        setTimeout(() => {
+          container.scrollTop = parseInt(savedScroll, 10);
+        }, 0);
+      }
+    }
+  }, []);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    sessionStorage.setItem('sidebar_scroll_position', e.currentTarget.scrollTop.toString());
+  };
+
   const mainLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: BookOpen },
     { to: '/ask', label: 'Ask AI', icon: MessageCircle },
@@ -102,7 +118,7 @@ export const Navbar = () => {
             )}
           </Link>
 
-          <div className="mt-5 space-y-5 overflow-y-auto pr-1">
+          <div id="sidebar-scroll-container" onScroll={handleScroll} className="mt-5 space-y-5 overflow-y-auto pr-1">
             <section>
               {!collapsed && <p className="px-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Core</p>}
               <div className="mt-2 space-y-1">

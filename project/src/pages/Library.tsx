@@ -161,22 +161,34 @@ export const Library = () => {
 
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex bg-white dark:bg-slate-800 p-1.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
-              {['9', '10', '11', '12'].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => {
-                    setClassFilter(c);
-                    const nextResources = getStudyResources(c, '');
-                    setSubjectFilter(nextResources.subject);
-                  }}
-                  className={`px-5 py-2 rounded-xl text-sm font-black transition-all ${classFilter === c
-                    ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/20'
-                    : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700'
+              {['8', '9', '10', '11', '12'].map((c) => {
+                const isEnrolled = user?.class ? String(user.class).startsWith(c) : c === '10';
+                const targetClass = (user?.class && String(user.class).startsWith(c)) ? user.class : c;
+                return (
+                  <button
+                    key={c}
+                    disabled={!isEnrolled}
+                    onClick={() => {
+                      if (!isEnrolled) return;
+                      setClassFilter(targetClass);
+                      const nextResources = getStudyResources(targetClass, '');
+                      setSubjectFilter(nextResources.subject);
+                    }}
+                    className={`px-5 py-2 rounded-xl text-sm font-black transition-all ${
+                      classFilter.startsWith(c)
+                        ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/20'
+                        : isEnrolled
+                        ? 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700'
+                        : 'text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'
                     }`}
-                >
-                  Class {c}
-                </button>
-              ))}
+                  >
+                    Class {c}
+                    {user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_EN') && ' (TN Eng)'}
+                    {user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_TM') && ' (TN Tamil)'}
+                    {!isEnrolled && ' 🔒'}
+                  </button>
+                );
+              })}
             </div>
 
             <div className="relative group">

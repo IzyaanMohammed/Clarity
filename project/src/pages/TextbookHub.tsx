@@ -31,6 +31,7 @@ import {
     deleteCustomTextbook,
     getCustomTextbookContent,
     getTextbookContent,
+    getBaseUrl,
     type CustomTextbookItem
 } from '../api';
 import { MarkdownContent } from '../components/ui/MarkdownContent';
@@ -82,11 +83,14 @@ const formatRawTextbookText = (text: string): string => {
         }
 
         // Check if it's a header
-        const isHeader = /^\d+(\.\d+)*\s+[A-Za-z]/.test(line) || 
-                         (/^[A-Z\s\-:\(\),]{5,60}$/.test(line) && line.length > 5);
+        const isHeader = (
+            /^\d+(\.\d+)+\s+/u.test(line) ||  // Section numbers like 1.1, 2.3.4
+            (/^\d+\.?\s+[\p{L}\p{N}]/u.test(line) && line.length < 65) || // Section numbers like 1. Introduction
+            (/^[A-Z\u0B80-\u0BFF\s\-:\(\),]{5,65}$/u.test(line) && line.length > 5)
+        );
 
         // Check if it's a list item
-        const isListItem = /^\s*([-*+•]|\d+\.\s|\([a-z0-9]+\)\s)/i.test(rawLines[i]);
+        const isListItem = /^\s*([-*+•]|\d+\.\s|\([a-z0-9\u0B80-\u0BFF]+\)\s)/ui.test(rawLines[i]);
 
         if (isHeader) {
             if (currentParagraph.length > 0) {
@@ -219,7 +223,7 @@ export const TextbookHub = () => {
         for (const book of books) {
             const match = book.url.match(/[?&]([a-z0-9]+)=([0-9]+)-([0-9]+)/i);
             if (match) {
-                const maxChapters = Number(match[4]);
+                const maxChapters = Number(match[3]);
                 if (chapterIdx <= currentOffset + maxChapters) {
                     return book;
                 }
@@ -245,7 +249,7 @@ export const TextbookHub = () => {
         const bookCode = getBookCode(selectedBook.url);
 
         // Point iframe directly to proxy endpoint — enables native incremental streaming
-        const apiPath = `/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${safeChapterNum}`;
+        const apiPath = `${getBaseUrl()}/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${safeChapterNum}`;
         setViewerPdfUrl(apiPath);
         setViewerPdfLoading(false);
 
@@ -275,7 +279,7 @@ export const TextbookHub = () => {
 
         // Serve PDF using token query param directly in iframe for instant streaming
         const token = getAuthToken();
-        const fallbackUrl = `/api/v1/upload/custom-textbook/${book.id}/pdf?token=${token}`;
+        const fallbackUrl = `${getBaseUrl()}/api/v1/upload/custom-textbook/${book.id}/pdf?token=${token}`;
         setViewerPdfUrl(fallbackUrl);
         setViewerPdfLoading(false);
 
@@ -333,8 +337,9 @@ export const TextbookHub = () => {
     const loadCustomBooks = async () => {
         setLoadingCustom(true);
         try {
+            const baseClassNum = parseInt(classFilter.split('_')[0], 10) || 10;
             const res = await getCustomTextbooks({
-                class_num: Number(classFilter),
+                class_num: baseClassNum,
                 subject: subjectFilter
             });
             setCustomBooks(res.textbooks || []);
@@ -348,6 +353,18 @@ export const TextbookHub = () => {
     useEffect(() => {
         loadCustomBooks();
     }, [classFilter, subjectFilter]);
+
+    useEffect(() => {
+        const handleJump = (e: Event) => {
+            const pageNum = (e as CustomEvent).detail.page;
+            setViewerPdfUrl(prev => {
+                const baseUrl = prev.split('#')[0];
+                return `${baseUrl}#page=${pageNum}`;
+            });
+        };
+        window.addEventListener('jump-to-pdf-page', handleJump);
+        return () => window.removeEventListener('jump-to-pdf-page', handleJump);
+    }, []);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -376,7 +393,8 @@ export const TextbookHub = () => {
                 const topic = fileTopics[file.name] || selectedChapter || 'General';
                 const formData = new FormData();
                 formData.append('file', file);
-                formData.append('class_num', classFilter);
+                const baseClassNum = classFilter.split('_')[0];
+                formData.append('class_num', baseClassNum);
                 formData.append('subject', subjectFilter);
                 formData.append('chapter', topic);
                 
@@ -555,23 +573,35 @@ export const TextbookHub = () => {
                 </div>
 
                 <div className="flex gap-2 bg-white dark:bg-slate-800 p-2 rounded-2xl border border-slate-100 dark:border-slate-700 mb-8">
-                    {['8', '9', '10', '11', '12'].map((cls) => (
-                        <button
-                            key={cls}
-                            onClick={() => {
-                                setClassFilter(cls);
-                                const next = getStudyResources(cls, '');
-                                setSubjectFilter(next.subject);
-                                setCoachPlan('');
-                            }}
-                            className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all ${classFilter === cls
-                                ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/20'
-                                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                    {['8', '9', '10', '11', '12'].map((cls) => {
+                        const isEnrolled = user?.class ? String(user.class).startsWith(cls) : cls === '10';
+                        const targetClass = (user?.class && String(user.class).startsWith(cls)) ? user.class : cls;
+                        return (
+                            <button
+                                key={cls}
+                                disabled={!isEnrolled}
+                                onClick={() => {
+                                    if (!isEnrolled) return;
+                                    setClassFilter(targetClass);
+                                    const next = getStudyResources(targetClass, '');
+                                    setSubjectFilter(next.subject);
+                                    setCoachPlan('');
+                                }}
+                                className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all ${
+                                    classFilter.startsWith(cls)
+                                        ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/20'
+                                        : isEnrolled
+                                        ? 'text-slate-600 dark:text-slate-350 hover:bg-slate-100 dark:hover:bg-slate-700'
+                                        : 'text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'
                                 }`}
-                        >
-                            Class {cls}
-                        </button>
-                    ))}
+                            >
+                                Class {cls}
+                                {user?.class && String(user.class).startsWith(cls) && String(user.class).includes('_TN_EN') && ' (TN Eng)'}
+                                {user?.class && String(user.class).startsWith(cls) && String(user.class).includes('_TN_TM') && ' (TN Tamil)'}
+                                {!isEnrolled && ' 🔒'}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-8">
@@ -922,6 +952,32 @@ export const TextbookHub = () => {
                             </div>
                             
                             <div className="flex items-center gap-3">
+                                {/* Page Sync Navigator */}
+                                <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl">
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">Sync Page:</span>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        placeholder="Page #"
+                                        className="w-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none rounded-lg text-xs font-bold text-center py-0.5 text-slate-800 dark:text-slate-200"
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                const pageNum = e.currentTarget.value;
+                                                if (pageNum) {
+                                                    setViewerPdfUrl(prev => {
+                                                        const baseUrl = prev.split('#')[0];
+                                                        return `${baseUrl}#page=${pageNum}`;
+                                                    });
+                                                    const el = document.getElementById(`page-anchor-${pageNum}`);
+                                                    if (el) {
+                                                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                    }
+                                                }
+                                            }
+                                        }}
+                                    />
+                                </div>
+
                                 {/* Layout Mode Toggles */}
                                 <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
                                     <button

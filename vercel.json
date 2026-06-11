@@ -23,6 +23,9 @@
       "dest": "/project/assets/$1"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "/project/index.html"
     }

@@ -195,7 +195,13 @@ def _verify_stripe_signature(payload: bytes, signature_header: str, secret: str,
 def _resolve_lower_class(curriculum: dict[str, dict[str, list[str]]], class_num: str) -> str:
     cleaned = str(class_num).strip()
     if "TN" in cleaned:
-        return "9"
+        # Extract the numeric grade part (e.g., "10_TN_EN" -> "10", "8_TN_TM" -> "8")
+        grade_str = cleaned.split("_")[0]
+        try:
+            grade = max(1, int(grade_str) - 1)
+        except Exception:
+            grade = 9
+        return str(grade)
     try:
         target = max(1, int(cleaned) - 1)
     except Exception:
@@ -1231,6 +1237,11 @@ def _build_diagnostic_questions(class_num: str, subject: Optional[str]) -> tuple
     curriculum = load_curriculum_catalog()
     diagnostic_class = _resolve_lower_class(curriculum, class_num)
     subject_map = curriculum.get(diagnostic_class) or {}
+
+    # For TN Board, if the resolved lower class isn't in TN catalog, use the TN class directly
+    if not subject_map and "TN" in str(class_num):
+        subject_map = curriculum.get(str(class_num)) or {}
+        diagnostic_class = str(class_num)
 
     requested_subject = (subject or "").strip().lower()
     mixed_mode = requested_subject in {"", "mixed", "random", "stem"}
