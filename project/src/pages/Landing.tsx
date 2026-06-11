@@ -316,7 +316,18 @@ export const Landing = () => {
                     animation: gradient-x 8s ease infinite;
                 }
                 .text-glow {
-                    text-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+                    text-shadow: 0 4px 20px rgba(16, 185, 129, 0.35), 0 0 40px rgba(99, 102, 241, 0.2);
+                }
+                @keyframes shine-anim {
+                    0% {
+                        transform: translateX(-100%) skewX(-15deg);
+                    }
+                    100% {
+                        transform: translateX(200%) skewX(-15deg);
+                    }
+                }
+                .animate-shine {
+                    animation: shine-anim 2.5s infinite ease-in-out;
                 }
             `}</style>
 
@@ -409,34 +420,49 @@ export const Landing = () => {
                                 onMouseMove={handleHeadingMouseMove}
                                 onMouseEnter={() => setIsHeadingHovered(true)}
                                 onMouseLeave={() => setIsHeadingHovered(false)}
-                                className="relative py-4 cursor-crosshair w-full max-w-max select-none"
+                                className="relative py-6 px-16 bg-white/10 dark:bg-slate-900/50 border border-slate-200/20 dark:border-slate-800/40 backdrop-blur-md rounded-[3rem] shadow-2xl overflow-hidden select-none cursor-zoom-in group max-w-max"
                             >
+                                {/* Shiny shimmer animation line */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shine pointer-events-none" />
+
                                 {heroStage === 'reveal' && (
                                     <div className="absolute inset-0 -m-8 border border-emerald-500/20 animate-ping opacity-75 rounded-3xl pointer-events-none" />
                                 )}
                                 
-                                {/* 1. Blurry Muddy Back Layer (Represents chaos/board stress) */}
-                                <h1 className="text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none transition-all duration-300 filter blur-[7px] opacity-25 select-none" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
-                                    <span className="bg-gradient-to-r from-emerald-450 via-teal-300 via-indigo-550 to-emerald-450 bg-clip-text text-transparent">
-                                        Clarity
-                                    </span>
-                                </h1>
-
-                                {/* 2. Sharp Clear Front Layer with Circle Clip-path (Revealed by cursor/lens) */}
-                                <h1 className="absolute top-4 left-0 text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none pointer-events-none transition-all duration-75" style={{
-                                    fontFamily: "'Sora', sans-serif",
-                                    fontWeight: 800,
-                                    clipPath: isHeadingHovered 
-                                        ? `circle(110px at ${headingMousePos.x}px ${headingMousePos.y}px)` 
-                                        : `circle(130px at 50% 50%)`,
-                                    WebkitClipPath: isHeadingHovered 
-                                        ? `circle(110px at ${headingMousePos.x}px ${headingMousePos.y}px)` 
-                                        : `circle(130px at 50% 50%)`
-                                }}>
+                                {/* 1. Base Layer (100% opaque, bright and glowing) */}
+                                <h1 className="text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
                                     <span className="bg-gradient-to-r from-emerald-450 via-teal-300 via-indigo-550 to-emerald-450 bg-clip-text text-transparent animate-gradient-text text-glow">
                                         Clarity
                                     </span>
                                 </h1>
+
+                                {/* 2. Magnifier Zoom Layer (Scaled up from pointer origin, clipped to circular mask) */}
+                                <div className="absolute inset-0 pointer-events-none" style={{
+                                    clipPath: isHeadingHovered ? `circle(90px at ${headingMousePos.x}px ${headingMousePos.y}px)` : 'circle(0px at 0px 0px)',
+                                    WebkitClipPath: isHeadingHovered ? `circle(90px at ${headingMousePos.x}px ${headingMousePos.y}px)` : 'circle(0px at 0px 0px)',
+                                    transform: isHeadingHovered ? 'scale(1.12)' : 'none',
+                                    transformOrigin: `${headingMousePos.x}px ${headingMousePos.y}px`,
+                                    transition: 'transform 0.08s ease-out'
+                                }}>
+                                    <h1 className="absolute top-6 left-16 text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none animate-gradient-text" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
+                                        <span className="bg-gradient-to-r from-emerald-400 via-teal-200 via-indigo-400 to-emerald-400 bg-clip-text text-transparent text-glow">
+                                            Clarity
+                                        </span>
+                                    </h1>
+                                </div>
+
+                                {/* 3. Circular Glass Magnifying Lens Border */}
+                                {isHeadingHovered && (
+                                    <div 
+                                        className="absolute pointer-events-none rounded-full border border-white/50 dark:border-white/40 shadow-2xl bg-white/5 backdrop-blur-[1.5px]" 
+                                        style={{
+                                            width: '180px',
+                                            height: '180px',
+                                            left: `${headingMousePos.x - 90}px`,
+                                            top: `${headingMousePos.y - 90}px`,
+                                        }}
+                                    />
+                                )}
                             </div>
 
                             {/* Subtext */}
