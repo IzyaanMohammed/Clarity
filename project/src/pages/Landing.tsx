@@ -318,6 +318,9 @@ export const Landing = () => {
                 .text-glow {
                     text-shadow: 0 4px 20px rgba(16, 185, 129, 0.35), 0 0 40px rgba(99, 102, 241, 0.2);
                 }
+                .text-glow-bright {
+                    text-shadow: 0 4px 30px rgba(52, 211, 153, 0.75), 0 0 60px rgba(129, 140, 248, 0.5);
+                }
                 @keyframes shine-anim {
                     0% {
                         transform: translateX(-100%) skewX(-15deg);
@@ -430,7 +433,7 @@ export const Landing = () => {
                                 )}
                                 
                                 {/* 1. Base Layer (100% opaque, bright and glowing) */}
-                                <h1 className="text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
+                                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
                                     <span className="bg-gradient-to-r from-emerald-450 via-teal-300 via-indigo-550 to-emerald-450 bg-clip-text text-transparent animate-gradient-text text-glow">
                                         Clarity
                                     </span>
@@ -444,8 +447,8 @@ export const Landing = () => {
                                     transformOrigin: `${headingMousePos.x}px ${headingMousePos.y}px`,
                                     transition: 'transform 0.08s ease-out'
                                 }}>
-                                    <h1 className="absolute top-6 left-16 text-8xl sm:text-[9.5rem] md:text-[11.5rem] lg:text-[13rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none animate-gradient-text" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
-                                        <span className="bg-gradient-to-r from-emerald-400 via-teal-200 via-indigo-400 to-emerald-400 bg-clip-text text-transparent text-glow">
+                                    <h1 className="absolute top-6 left-16 text-6xl sm:text-7xl md:text-8xl lg:text-[7rem] xl:text-[8.5rem] font-extrabold tracking-[calc(-0.04em)] leading-none select-none animate-gradient-text" style={{ fontFamily: "'Sora', sans-serif", fontWeight: 800 }}>
+                                        <span className="bg-gradient-to-r from-emerald-400 via-teal-200 via-indigo-400 to-emerald-400 bg-clip-text text-transparent text-glow-bright">
                                             Clarity
                                         </span>
                                     </h1>
