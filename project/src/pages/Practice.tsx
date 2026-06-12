@@ -43,17 +43,18 @@ const parseMcq = (qText: string) => {
     let answer = '';
 
     for (const line of lines) {
-      const mcqMatch = line.match(/^([A-D])[\)\.]\s*(.*)$/i);
-      const ansMatch = line.match(/^(?:Answer|Correct Answer):\s*([A-D])/i);
+      let cleanLine = line.replace(/[\*\#\_]/g, '').trim();
+      const mcqMatch = cleanLine.match(/^([A-D])[\)\.]\s*(.*)$/i);
+      const ansMatch = cleanLine.match(/^(?:Answer|Correct Answer):\s*([A-D])/i);
       if (mcqMatch) {
         options.push({ label: mcqMatch[1].toUpperCase(), text: mcqMatch[2] });
       } else if (ansMatch) {
         answer = ansMatch[1].toUpperCase();
       } else {
         if (!prompt) {
-          prompt = line;
+          prompt = cleanLine;
         } else {
-          prompt += '\n' + line;
+          prompt += '\n' + cleanLine;
         }
       }
     }
@@ -76,14 +77,15 @@ const parseBlank = (qText: string) => {
     let answer = '';
 
     for (const line of lines) {
-      const ansMatch = line.match(/^(?:Answer|Correct Answer):\s*(.*)$/i);
+      let cleanLine = line.replace(/[\*\#\_]/g, '').trim();
+      const ansMatch = cleanLine.match(/^(?:Answer|Correct Answer):\s*(.*)$/i);
       if (ansMatch) {
         answer = ansMatch[1].trim();
       } else {
         if (!prompt) {
-          prompt = line;
+          prompt = cleanLine;
         } else {
-          prompt += '\n' + line;
+          prompt += '\n' + cleanLine;
         }
       }
     }
@@ -110,7 +112,8 @@ const parseMatch = (qText: string) => {
     let isColB = false;
 
     for (const line of lines) {
-      const lineLower = line.toLowerCase();
+      let cleanLine = line.replace(/[\*\#\_\-]/g, '').trim();
+      const lineLower = cleanLine.toLowerCase();
       
       if (lineLower.startsWith('column a')) {
         isColA = true;
@@ -123,7 +126,7 @@ const parseMatch = (qText: string) => {
         continue;
       }
       
-      const ansMatch = line.match(/^(?:Answer|Correct Answer):\s*(.*)$/i);
+      const ansMatch = cleanLine.match(/^(?:Answer|Correct Answer):\s*(.*)$/i);
       if (ansMatch) {
         const matchesStr = ansMatch[1];
         const pairs = matchesStr.split(',');
@@ -137,18 +140,20 @@ const parseMatch = (qText: string) => {
       }
 
       if (isColA) {
-        const itemMatch = line.match(/^(\d+)[\)\.]\s*(.*)$/);
+        const itemMatch = cleanLine.match(/^\s*(\d+)[\)\.]\s*(.*)$/);
         if (itemMatch) {
-          columnA.push(line);
+          columnA.push(cleanLine);
+          continue;
         } else {
           isColA = false;
         }
       }
       
       if (isColB) {
-        const itemMatch = line.match(/^([A-Z])[\)\.]\s*(.*)$/i);
+        const itemMatch = cleanLine.match(/^\s*([A-Z])[\)\.]\s*(.*)$/i);
         if (itemMatch) {
-          columnB.push(line);
+          columnB.push(cleanLine);
+          continue;
         } else {
           isColB = false;
         }
@@ -156,9 +161,9 @@ const parseMatch = (qText: string) => {
 
       if (!isColA && !isColB) {
         if (!prompt) {
-          prompt = line;
+          prompt = cleanLine;
         } else {
-          prompt += '\n' + line;
+          prompt += '\n' + cleanLine;
         }
       }
     }
@@ -1264,7 +1269,7 @@ export const Practice = () => {
                               <div className="space-y-4">
                                 <h4 className="font-black text-slate-900 dark:text-white border-b-2 pb-2">Column A</h4>
                                 {parsedMatch.columnA.map((item) => {
-                                  const match = item.match(/^(\d+)[\)\.]\s*(.*)$/);
+                                  const match = item.match(/^\s*(\d+)[\)\.]\s*(.*)$/);
                                   if (!match) return null;
                                   const key = match[1];
                                   const text = match[2];
@@ -1280,7 +1285,7 @@ export const Practice = () => {
                                       >
                                         <option value="">Select...</option>
                                         {parsedMatch.columnB.map((bItem) => {
-                                          const bMatch = bItem.match(/^([A-Z])[\)\.]\s*(.*)$/i);
+                                          const bMatch = bItem.match(/^\s*([A-Z])[\)\.]\s*(.*)$/i);
                                           if (!bMatch) return null;
                                           const letter = bMatch[1].toUpperCase();
                                           return (
