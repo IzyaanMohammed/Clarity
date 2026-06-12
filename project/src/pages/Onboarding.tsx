@@ -405,8 +405,18 @@ export const Onboarding = () => {
                 toast.success('Existing account found. Logged in successfully.');
                 navigate('/dashboard');
             }
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Unable to complete onboarding right now.';
+        } catch (error: any) {
+            let message = 'Unable to complete onboarding right now.';
+            if (error?.response?.data?.detail) {
+                const detail = error.response.data.detail;
+                if (Array.isArray(detail)) {
+                    message = detail.map((d: any) => `${d.loc[d.loc.length - 1]}: ${d.msg}`).join(', ');
+                } else {
+                    message = detail;
+                }
+            } else if (error instanceof Error) {
+                message = error.message;
+            }
             toast.error(message);
         } finally {
             setIsSubmitting(false);
