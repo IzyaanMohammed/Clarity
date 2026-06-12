@@ -131,7 +131,7 @@ const parseMatch = (qText: string) => {
         const matchesStr = ansMatch[1];
         const pairs = matchesStr.split(',');
         for (const p of pairs) {
-          const split = p.split('-');
+          const split = p.includes(':') ? p.split(':') : p.split('-');
           if (split.length === 2) {
             matches[split[0].trim()] = split[1].trim().toUpperCase();
           }
@@ -177,6 +177,17 @@ const parseMatch = (qText: string) => {
     console.error("Failed to parse match", e);
   }
   return null;
+};
+
+const stripAnswerLine = (qText: string): string => {
+  if (!qText) return '';
+  return qText
+    .split('\n')
+    .filter((line) => {
+      const cleanLine = line.replace(/[\*\#\_]/g, '').trim();
+      return !/^(?:Answer|Correct Answer):/i.test(cleanLine);
+    })
+    .join('\n');
 };
 
 export const Practice = () => {
@@ -1086,7 +1097,10 @@ export const Practice = () => {
 
                     <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
                       <p className="text-xs font-black uppercase text-slate-400 mb-2 tracking-widest">Question</p>
-                      <MarkdownContent content={q} className="text-slate-900 dark:text-white font-bold" />
+                      <MarkdownContent 
+                        content={stripAnswerLine(q)} 
+                        className="text-slate-900 dark:text-white font-bold" 
+                      />
                     </div>
 
                     <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
@@ -1182,7 +1196,10 @@ export const Practice = () => {
 
             {/* Question Card */}
             <Card className="p-10 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px] shadow-xl">
-              <MarkdownContent content={questions[currentQuestionIndex]} className="text-slate-900 dark:text-white mb-8" />
+              <MarkdownContent 
+                content={stripAnswerLine(questions[currentQuestionIndex])} 
+                className="text-slate-900 dark:text-white mb-8" 
+              />
 
               {!gradeResult ? (
                 <div className="space-y-6">
