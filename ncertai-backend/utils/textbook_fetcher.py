@@ -302,7 +302,9 @@ async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str
         vol = get_tn_volume_for_chapter(class_num, subject, chapter_idx)
 
     # Locate PDF in ./tamilnaduboard/{medium}/
-    tn_dir = Path(__file__).resolve().parents[2] / "tamilnaduboard" / medium
+    tn_dir = Path(__file__).resolve().parents[1] / "tamilnaduboard" / medium
+    if not tn_dir.exists():
+        tn_dir = Path(__file__).resolve().parents[2] / "tamilnaduboard" / medium
     if not tn_dir.exists():
         tn_dir = Path("./tamilnaduboard") / medium
 

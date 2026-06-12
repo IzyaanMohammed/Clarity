@@ -639,7 +639,9 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
             expected_pdf_name = f"Class_{cls_num}_{subject}_{medium}_Medium.pdf"
 
         # Locate local PDF in tamilnaduboard/medium
-        tn_dir = Path(__file__).resolve().parents[2] / "tamilnaduboard" / medium
+        tn_dir = Path(__file__).resolve().parents[1] / "tamilnaduboard" / medium
+        if not tn_dir.exists():
+            tn_dir = Path(__file__).resolve().parents[2] / "tamilnaduboard" / medium
         if not tn_dir.exists():
             tn_dir = Path("./tamilnaduboard") / medium
 
