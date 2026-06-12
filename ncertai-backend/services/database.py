@@ -6,8 +6,129 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional, Union
-
 import shutil
+import threading
+import time
+import urllib.parse
+import ssl
+
+try:
+    import pg8000
+except ImportError:
+    pg8000 = None
+
+POSTGRES_URL = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
+_last_backup_mtime = 0.0
+
+def _get_pg_conn():
+    if not pg8000 or not POSTGRES_URL:
+        return None
+    try:
+        url = urllib.parse.urlparse(POSTGRES_URL)
+        username = url.username
+        password = url.password
+        database = url.path[1:]
+        hostname = url.hostname
+        port = url.port or 5432
+        
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        
+        return pg8000.connect(
+            user=username,
+            password=password,
+            host=hostname,
+            port=port,
+            database=database,
+            ssl_context=ctx
+        )
+    except Exception as e:
+        print(f"Warning: Failed to create PG connection: {e}")
+        return None
+
+def restore_db_from_pg() -> None:
+    global _last_backup_mtime
+    if not POSTGRES_URL:
+        return
+    try:
+        conn = _get_pg_conn()
+        if not conn:
+            return
+        cursor = conn.cursor()
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS db_backup (id INT PRIMARY KEY, db_file BYTEA, updated_at TIMESTAMP)"
+        )
+        conn.commit()
+        
+        cursor.execute("SELECT db_file FROM db_backup WHERE id = 1")
+        row = cursor.fetchone()
+        if row and row[0]:
+            db_bytes = row[0]
+            DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+            DB_PATH.write_bytes(db_bytes)
+            _last_backup_mtime = DB_PATH.stat().st_mtime
+            print(f"Successfully restored SQLite database from remote PostgreSQL ({len(db_bytes)} bytes)")
+        else:
+            print("No remote SQLite database backup found. Starting fresh.")
+        conn.close()
+    except Exception as e:
+        print(f"Warning: Failed to restore SQLite DB from remote PG: {e}")
+
+def backup_db_to_pg() -> None:
+    global _last_backup_mtime
+    if not POSTGRES_URL or not DB_PATH.exists():
+        return
+    try:
+        current_mtime = DB_PATH.stat().st_mtime
+        if current_mtime <= _last_backup_mtime:
+            return
+            
+        db_bytes = DB_PATH.read_bytes()
+        if not db_bytes:
+            return
+            
+        conn = _get_pg_conn()
+        if not conn:
+            return
+        cursor = conn.cursor()
+        cursor.execute(
+            "CREATE TABLE IF NOT EXISTS db_backup (id INT PRIMARY KEY, db_file BYTEA, updated_at TIMESTAMP)"
+        )
+        
+        cursor.execute("SELECT id FROM db_backup WHERE id = 1")
+        exists = cursor.fetchone()
+        
+        binary_data = pg8000.Binary(db_bytes)
+        
+        if exists:
+            cursor.execute(
+                "UPDATE db_backup SET db_file = %s, updated_at = NOW() WHERE id = 1",
+                (binary_data,)
+            )
+        else:
+            cursor.execute(
+                "INSERT INTO db_backup (id, db_file, updated_at) VALUES (1, %s, NOW())",
+                (binary_data,)
+            )
+            
+        conn.commit()
+        conn.close()
+        _last_backup_mtime = current_mtime
+        print(f"Successfully backed up SQLite database to remote PostgreSQL ({len(db_bytes)} bytes)")
+    except Exception as e:
+        print(f"Warning: Failed to backup SQLite DB to remote PG: {e}")
+
+def start_pg_backup_loop() -> None:
+    if not POSTGRES_URL:
+        return
+    def loop():
+        while True:
+            time.sleep(15)  # Sync check every 15 seconds
+            backup_db_to_pg()
+    t = threading.Thread(target=loop, daemon=True)
+    t.start()
+    print("Started remote PostgreSQL background backup loop.")
 
 # Detect Vercel environment
 IS_VERCEL = os.getenv("VERCEL") == "1" or "VERCEL" in os.environ
@@ -52,6 +173,8 @@ def _connect() -> sqlite3.Connection:
 
 
 def init_db() -> None:
+    restore_db_from_pg()
+    start_pg_backup_loop()
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with _connect() as conn:
         conn.execute(
@@ -344,6 +467,7 @@ def create_user(username: str, password: str, profile: dict[str, Any]) -> bool:
                 now,
             ),
         )
+    backup_db_to_pg()
     return True
 
 
