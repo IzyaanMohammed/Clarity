@@ -351,7 +351,7 @@ async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str
         import PyPDF2
         with open(pdf_path, "rb") as f_pdf:
             reader = PyPDF2.PdfReader(f_pdf)
-            for page_idx in range(len(reader.pages)):
+            for page_idx in range(10, len(reader.pages)):
                 page_text = reader.pages[page_idx].extract_text() or ""
                 if chapter.lower() in page_text.lower():
                     start_page = page_idx
@@ -523,6 +523,45 @@ def resolve_actual_ncert_filename(book_code: str, chapter_num: int) -> tuple[str
     by looking up in _BOOK_MAP. Since the frontend always passes the global chapter index,
     we find the subject/class parts and map the global index to the correct part and local index.
     """
+    # Hardcoded rationalization mappings to map frontend 1-based index to official NCERT PDF file numbers
+    if book_code == "jesc1":  # Class 10 Science
+        mapping = {
+            1: 1, 2: 2, 3: 3, 4: 4,
+            5: 6, 6: 7, 7: 8, 8: 9, 9: 10, 10: 11, 11: 12, 12: 13,
+            13: 15
+        }
+        chapter_num = mapping.get(chapter_num, chapter_num)
+    elif book_code == "jemh1":  # Class 10 Maths
+        if chapter_num >= 11:
+            chapter_num = chapter_num + 1
+    elif book_code == "iesc1":  # Class 9 Science
+        mapping = {
+            1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6,
+            7: 8, 8: 9, 9: 10, 10: 11, 11: 12,
+            12: 15
+        }
+        chapter_num = mapping.get(chapter_num, chapter_num)
+    elif book_code == "iemh1":  # Class 9 Maths
+        mapping = {
+            1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8,
+            9: 10, 10: 12, 11: 13, 12: 14
+        }
+        chapter_num = mapping.get(chapter_num, chapter_num)
+    elif book_code == "hesc1":  # Class 8 Science
+        mapping = {
+            1: 1, 2: 2,
+            3: 5, 4: 6, 5: 7,
+            6: 9, 7: 10, 8: 11, 9: 12, 10: 13, 11: 14, 12: 15, 13: 16
+        }
+        chapter_num = mapping.get(chapter_num, chapter_num)
+    elif book_code == "hemh1":  # Class 8 Maths
+        mapping = {
+            1: 1, 2: 2, 3: 3,
+            4: 5, 5: 6, 6: 7, 7: 8, 8: 9,
+            9: 11, 10: 12, 11: 13, 12: 14, 13: 15
+        }
+        chapter_num = mapping.get(chapter_num, chapter_num)
+
     # 1. Find the parts for this book_code
     found_parts = None
     for class_num, subjects in _BOOK_MAP.items():

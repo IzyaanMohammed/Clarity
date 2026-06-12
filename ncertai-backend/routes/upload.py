@@ -689,7 +689,7 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
                     reader = PyPDF2.PdfReader(f_pdf)
                     num_pages = len(reader.pages)
                     # Search page content
-                    for page_idx in range(num_pages):
+                    for page_idx in range(10, num_pages):
                         page_text = reader.pages[page_idx].extract_text() or ""
                         if chapter.lower() in page_text.lower():
                             start_page = page_idx
