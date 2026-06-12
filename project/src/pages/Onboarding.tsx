@@ -253,6 +253,10 @@ export const Onboarding = () => {
                 toast.error('Please fill in your full name and school.');
                 return false;
             }
+            if (name.trim().length < 2) {
+                toast.error('Name must be at least 2 characters.');
+                return false;
+            }
             if (!country.trim() || !state.trim() || !city.trim()) {
                 toast.error('Please enter your location details (country, state, and city).');
                 return false;
