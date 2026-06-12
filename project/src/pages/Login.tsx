@@ -89,6 +89,10 @@ export const Login = () => {
                         <p className="text-sm text-slate-500 font-bold mb-3">New to Clarity?</p>
                         <Link
                             to="/onboarding"
+                            onClick={() => {
+                                localStorage.removeItem('ncertai_user');
+                                localStorage.removeItem('ncertai_token');
+                            }}
                             className="text-[#1D9E75] font-black text-sm uppercase tracking-wider hover:underline"
                         >
                             Create Student Account

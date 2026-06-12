@@ -78,7 +78,7 @@ export const ActiveRecall = () => {
 
       if (matchingCustom) {
         const token = getAuthToken();
-        const fallbackUrl = `/api/v1/upload/custom-textbook/${matchingCustom.id}/pdf?token=${token}`;
+        const fallbackUrl = `${getBaseUrl()}/api/v1/upload/custom-textbook/${matchingCustom.id}/pdf?token=${token}`;
         setViewerPdfUrl(fallbackUrl);
         setViewerPdfLoading(false);
         return;

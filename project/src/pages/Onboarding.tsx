@@ -61,14 +61,41 @@ export const Onboarding = () => {
     const location = useLocation();
     const existingUser = getUser();
     const existingToken = getAuthToken();
-    const isEditing = !!existingUser;
+    const isEditing = !!existingUser && !!existingToken;
 
     const [step, setStep] = useState(0);
-    const [name, setName] = useState(existingUser?.name || '');
+    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-    const [school, setSchool] = useState(existingUser?.school || '');
-    const [selectedClass, setSelectedClass] = useState((existingUser?.class || '10').toString());
-    const [selectedSubjects, setSelectedSubjects] = useState<string[]>(existingUser?.subjects || []);
+    const [loginName, setLoginName] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
+    const [school, setSchool] = useState('');
+    const [selectedClass, setSelectedClass] = useState('10');
+    const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+    const [learningStyle, setLearningStyle] = useState('');
+    const [goal, setGoal] = useState('');
+    const [studyHours, setStudyHours] = useState('');
+    const [mainChallenge, setMainChallenge] = useState('');
+    const [examBoard, setExamBoard] = useState('CBSE');
+    const [preferredLanguage, setPreferredLanguage] = useState('English');
+    const [preferredPace, setPreferredPace] = useState('Balanced');
+    const [confidenceLevel, setConfidenceLevel] = useState('Average confidence');
+    const [revisionFrequency, setRevisionFrequency] = useState('Alternate days');
+    const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'pro' | 'pro_max'>('free');
+    const [teacherPersonality, setTeacherPersonality] = useState('Kind');
+    const [focusChapters, setFocusChapters] = useState<Record<string, string[]>>({});
+    const [parentEmail, setParentEmail] = useState('');
+    const [country, setCountry] = useState('India');
+    const [state, setState] = useState('Tamil Nadu');
+    const [city, setCity] = useState('Chennai');
+    const [tnMedium, setTnMedium] = useState<'English' | 'Tamil'>('English');
+    const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});
+    const [diagnosticScore, setDiagnosticScore] = useState<number | null>(null);
+    const [diagnosticQuestions, setDiagnosticQuestions] = useState<DiagnosticQuestion[]>([]);
+    const [diagnosticMeta, setDiagnosticMeta] = useState<{ diagnosticClass: string; diagnosticSubject: string } | null>(null);
+    const [diagnosticQuerySubject, setDiagnosticQuerySubject] = useState<string>('mixed');
+    const [diagnosticLoading, setDiagnosticLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const { subjectsForClass, chaptersForSubject } = useCurriculumCatalog(selectedClass);
     const availableSubjects = subjectsForClass.length ? subjectsForClass : [
         'Science',
@@ -80,30 +107,58 @@ export const Onboarding = () => {
         'Social Science',
         'Computer Science',
     ];
-    const [learningStyle, setLearningStyle] = useState(existingUser?.learningStyle || '');
-    const [goal, setGoal] = useState(existingUser?.goal || '');
-    const [studyHours, setStudyHours] = useState(existingUser?.studyHours || '');
-    const [mainChallenge, setMainChallenge] = useState(existingUser?.focusAreas || '');
-    const [examBoard, setExamBoard] = useState(existingUser?.examBoard || 'CBSE');
-    const [preferredLanguage, setPreferredLanguage] = useState(existingUser?.preferredLanguage || 'English');
-    const [preferredPace, setPreferredPace] = useState(existingUser?.preferredPace || 'Balanced');
-    const [confidenceLevel, setConfidenceLevel] = useState(existingUser?.confidenceLevel || 'Average confidence');
-    const [revisionFrequency, setRevisionFrequency] = useState(existingUser?.revisionFrequency || 'Alternate days');
-    const [subscriptionTier, setSubscriptionTier] = useState((existingUser?.subscriptionTier || 'free') as 'free' | 'pro' | 'pro_max');
-    const [teacherPersonality, setTeacherPersonality] = useState(existingUser?.teacherPersonality || 'Kind');
-    const [focusChapters, setFocusChapters] = useState<Record<string, string[]>>(existingUser?.focusChapters || {});
-    const [parentEmail, setParentEmail] = useState(existingUser?.parentEmail || '');
-    const [country, setCountry] = useState(existingUser?.country || 'India');
-    const [state, setState] = useState(existingUser?.state || 'Tamil Nadu');
-    const [city, setCity] = useState(existingUser?.city || 'Chennai');
-    const [tnMedium, setTnMedium] = useState<'English' | 'Tamil'>('English');
-    const [diagnosticAnswers, setDiagnosticAnswers] = useState<Record<string, string>>({});
-    const [diagnosticScore, setDiagnosticScore] = useState<number | null>(null);
-    const [diagnosticQuestions, setDiagnosticQuestions] = useState<DiagnosticQuestion[]>([]);
-    const [diagnosticMeta, setDiagnosticMeta] = useState<{ diagnosticClass: string; diagnosticSubject: string } | null>(null);
-    const [diagnosticQuerySubject, setDiagnosticQuerySubject] = useState<string>('mixed');
-    const [diagnosticLoading, setDiagnosticLoading] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // Clear all fields on mount if not in editing mode to avoid pre-population from previous sessions
+    useEffect(() => {
+        if (!isEditing) {
+            localStorage.removeItem('ncertai_user');
+            localStorage.removeItem('ncertai_token');
+            setName('');
+            setPassword('');
+            setLoginName('');
+            setLoginPassword('');
+            setSchool('');
+            setSelectedClass('10');
+            setSelectedSubjects([]);
+            setLearningStyle('');
+            setGoal('');
+            setStudyHours('');
+            setMainChallenge('');
+            setExamBoard('CBSE');
+            setPreferredLanguage('English');
+            setPreferredPace('Balanced');
+            setConfidenceLevel('Average confidence');
+            setRevisionFrequency('Alternate days');
+            setSubscriptionTier('free');
+            setTeacherPersonality('Kind');
+            setFocusChapters({});
+            setParentEmail('');
+            setCountry('India');
+            setState('Tamil Nadu');
+            setCity('Chennai');
+        } else {
+            setName(existingUser?.name || '');
+            setSchool(existingUser?.school || '');
+            setSelectedClass((existingUser?.class || '10').toString());
+            setSelectedSubjects(existingUser?.subjects || []);
+            setLearningStyle(existingUser?.learningStyle || '');
+            setGoal(existingUser?.goal || '');
+            setStudyHours(existingUser?.studyHours || '');
+            setMainChallenge(existingUser?.focusAreas || '');
+            setExamBoard(existingUser?.examBoard || 'CBSE');
+            setPreferredLanguage(existingUser?.preferredLanguage || 'English');
+            setPreferredPace(existingUser?.preferredPace || 'Balanced');
+            setConfidenceLevel(existingUser?.confidenceLevel || 'Average confidence');
+            setRevisionFrequency(existingUser?.revisionFrequency || 'Alternate days');
+            setSubscriptionTier((existingUser?.subscriptionTier || 'free') as 'free' | 'pro' | 'pro_max');
+            setTeacherPersonality(existingUser?.teacherPersonality || 'Kind');
+            setFocusChapters(existingUser?.focusChapters || {});
+            setParentEmail(existingUser?.parentEmail || '');
+            setCountry(existingUser?.country || 'India');
+            setState(existingUser?.state || 'Tamil Nadu');
+            setCity(existingUser?.city || 'Chennai');
+        }
+    }, [isEditing]);
 
     useEffect(() => {
         if (location.state?.editFocus) {
@@ -368,12 +423,12 @@ export const Onboarding = () => {
     const progress = ((step + 1) / steps.length) * 100;
 
     const handleLogin = async () => {
-        if (!name.trim() || !password.trim()) {
+        if (!loginName.trim() || !loginPassword.trim()) {
             toast.error('Enter name and password to login.');
             return;
         }
         try {
-            const result = await loginUser({ name: name.trim(), password: password.trim() });
+            const result = await loginUser({ name: loginName.trim(), password: loginPassword.trim() });
             saveAuthToken(result.token);
             saveUser(result.user);
             toast.success('Logged in successfully.');
@@ -427,15 +482,15 @@ export const Onboarding = () => {
                                     <div className="space-y-3">
                                         <input
                                             type="text"
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
+                                            value={loginName}
+                                            onChange={(e) => setLoginName(e.target.value)}
                                             placeholder="Name"
                                             className="w-full px-3 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold"
                                         />
                                         <input
                                             type="password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
+                                            value={loginPassword}
+                                            onChange={(e) => setLoginPassword(e.target.value)}
                                             placeholder="Password"
                                             className="w-full px-3 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold"
                                         />

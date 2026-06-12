@@ -26,8 +26,12 @@
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
+      "src": "/project/(.*)",
       "dest": "/project/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
