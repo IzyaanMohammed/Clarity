@@ -76,7 +76,7 @@ def _resolve_user_tier(username: str) -> str:
     profile = get_user_profile(username)
     if not profile:
         return "free"
-    return profile.get("subscriptionTier", "free")
+    return profile.get("subscription_tier") or profile.get("subscriptionTier") or "free"
 
 
 def _extract_youtube_video_id(video_id: str = "", video_url: str = "") -> str:
@@ -2489,6 +2489,8 @@ async def video_learning_assist(
     _require_non_empty(chapter, "chapter")
 
     tier = _resolve_user_tier(username)
+    if tier not in ("pro", "pro_max"):
+        raise HTTPException(status_code=403, detail="Video learning assist is a premium feature. Please upgrade to Pro/Pro Max.")
 
     resolved_video_id = _extract_youtube_video_id(video_id=video_id, video_url=video_url)
     if not resolved_video_id:
@@ -2607,8 +2609,8 @@ async def exam_simulation_start(request: ExamSimStartRequest, authorization: Opt
     profile = get_user_profile(username)
     exam_simulations_count = profile.get("exam_simulations_count", 0) if profile else 0
     
-    if tier == "free" and exam_simulations_count >= 3:
-        raise HTTPException(status_code=403, detail="Free mock exam limit reached (3/3). Please upgrade to Pro for unlimited mock exams.")
+    if tier == "free":
+        raise HTTPException(status_code=403, detail="Mock exams are a premium feature. Please upgrade to Pro/Pro Max.")
     
     increment_exam_simulations(username)
 
