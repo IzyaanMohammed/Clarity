@@ -233,6 +233,21 @@ export const TextbookHub = () => {
         return books[books.length - 1];
     };
 
+    const getFirstChapterIndexForBook = (books: NcertBook[], targetBook: NcertBook): number => {
+        let currentOffset = 0;
+        for (const b of books) {
+            if (b.title === targetBook.title && b.url === targetBook.url) {
+                return currentOffset + 1;
+            }
+            const match = b.url.match(/[?&]([a-z0-9]+)=([0-9]+)-([0-9]+)/i);
+            if (match) {
+                const maxChapters = Number(match[3]);
+                currentOffset += maxChapters;
+            }
+        }
+        return 1;
+    };
+
     const openNcertViewer = async () => {
         if (!selectedBook || !selectedChapter) return;
         resetPdfViewer();
@@ -667,6 +682,11 @@ export const TextbookHub = () => {
                                     onClick={() => {
                                         setSelectedBook(book);
                                         setCoachPlan('');
+                                        const firstChapterIdx = getFirstChapterIndexForBook(resources.textbooks, book);
+                                        const chapterName = resources.chapters[firstChapterIdx - 1];
+                                        if (chapterName) {
+                                            setSelectedChapter(chapterName);
+                                        }
                                     }}
                                     className={`w-full text-left p-3 rounded-2xl border transition-all ${selectedBook?.title === book.title && selectedBook?.subject === book.subject
                                         ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20'
