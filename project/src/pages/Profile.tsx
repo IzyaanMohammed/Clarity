@@ -251,12 +251,14 @@ export const Profile = () => {
                                         name: 'Pro',
                                         desc: 'Unlimited coach questions & AI notes',
                                         activeColor: 'border-slate-900 bg-slate-950 text-white dark:border-slate-800 dark:bg-black',
+                                        inactiveColor: 'border-slate-800 bg-slate-900 text-slate-200 dark:bg-black dark:border-slate-700',
                                     },
                                     {
                                         id: 'pro_max',
                                         name: 'Pro Max',
                                         desc: 'All Pro + Parent Portal & Milestones',
                                         activeColor: 'border-amber-500 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300',
+                                        inactiveColor: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-350',
                                     },
                                 ].map((plan) => (
                                     <button
@@ -266,12 +268,12 @@ export const Profile = () => {
                                         className={`p-5 rounded-2xl border-2 text-left transition-all hover:scale-[1.02] flex flex-col justify-between h-36 ${
                                             subscriptionTier === plan.id
                                                 ? plan.activeColor
-                                                : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-350'
+                                                : plan.inactiveColor || 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-350'
                                         }`}
                                     >
                                         <div>
-                                            <p className="font-black text-lg">{plan.name}</p>
-                                            <p className="text-xs mt-1 leading-relaxed opacity-90">{plan.desc}</p>
+                                            <p className={`font-black text-lg ${plan.id === 'pro' && subscriptionTier !== 'pro' ? 'text-white' : ''}`}>{plan.name}</p>
+                                            <p className={`text-xs mt-1 leading-relaxed opacity-90 ${plan.id === 'pro' && subscriptionTier !== 'pro' ? 'text-slate-300' : ''}`}>{plan.desc}</p>
                                         </div>
                                         <div className="mt-3 flex items-center gap-1">
                                             <span className="text-[10px] uppercase font-black tracking-widest px-2.5 py-1 bg-white/40 dark:bg-black/20 rounded-md">

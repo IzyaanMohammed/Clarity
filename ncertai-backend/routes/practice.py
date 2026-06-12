@@ -19,7 +19,7 @@ from models.schemas import (
     MockScheduleResponse,
 )
 from services.openrouter import ask_openrouter, ask_openrouter_stream
-from services.database import fetch_progress_logs, get_user_profile, get_username_by_token
+from services.database import fetch_progress_logs, get_user_profile, get_username_by_token, increment_exam_simulations
 from services.worksheet_discovery import merge_local_and_remote_worksheets
 from services.youtube_resource import get_best_cbse_videos
 from utils.curriculum import load_curriculum_catalog
@@ -73,8 +73,10 @@ class ExamSimSubmitRequest(BaseModel):
 
 
 def _resolve_user_tier(username: str) -> str:
-    # Bypass subscription tier gating for launch promotion (everything is free)
-    return "pro_max"
+    profile = get_user_profile(username)
+    if not profile:
+        return "free"
+    return profile.get("subscriptionTier", "free")
 
 
 def _extract_youtube_video_id(video_id: str = "", video_url: str = "") -> str:
@@ -2471,8 +2473,6 @@ async def video_learning_assist(
     _require_non_empty(chapter, "chapter")
 
     tier = _resolve_user_tier(username)
-    if tier not in {"pro", "pro_max"}:
-        raise HTTPException(status_code=403, detail="Pro or Pro Max plan required")
 
     resolved_video_id = _extract_youtube_video_id(video_id=video_id, video_url=video_url)
     if not resolved_video_id:
@@ -2584,7 +2584,17 @@ async def list_worksheets(
 
 @router.post("/exam-simulation/start")
 async def exam_simulation_start(request: ExamSimStartRequest, authorization: Optional[str] = Header(default=None)):
-    require_pro_max_username(authorization)
+    from utils.auth import require_auth_username
+    username = require_auth_username(authorization)
+    
+    tier = _resolve_user_tier(username)
+    profile = get_user_profile(username)
+    exam_simulations_count = profile.get("exam_simulations_count", 0) if profile else 0
+    
+    if tier == "free" and exam_simulations_count >= 3:
+        raise HTTPException(status_code=403, detail="Free mock exam limit reached (3/3). Please upgrade to Pro for unlimited mock exams.")
+    
+    increment_exam_simulations(username)
 
     _require_non_empty(request.class_num, "class_num")
     _require_non_empty(request.subject, "subject")

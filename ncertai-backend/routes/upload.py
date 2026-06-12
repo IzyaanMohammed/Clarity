@@ -287,7 +287,7 @@ async def analyze_file(
 @router.post("/custom-textbook")
 async def upload_custom_textbook(
     file: UploadFile = File(...),
-    class_num: int = Form(...),
+    class_num: str = Form(...),
     subject: str = Form(...),
     chapter: str = Form(...),
     x_user_id: str = Header(None),
@@ -410,7 +410,7 @@ async def upload_custom_textbook(
 
 @router.get("/custom-textbooks")
 async def list_custom_textbooks(
-    class_num: Optional[int] = None,
+    class_num: Optional[str] = None,
     subject: Optional[str] = None,
     x_user_id: str = Header(None),
 ):

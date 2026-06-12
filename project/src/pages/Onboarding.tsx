@@ -236,11 +236,8 @@ export const Onboarding = () => {
 
         if (step === 8) {
             const email = parentEmail.trim();
-            if (!email) {
-                toast.error('Parent email is mandatory.');
-                return false;
-            }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            // Parent email is optional — only validate format if one is provided
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 toast.error('Enter a valid parent email address.');
                 return false;
             }
@@ -814,14 +811,15 @@ export const Onboarding = () => {
                             </div>
 
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Parent Email (mandatory)</p>
+                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Parent Email <span className="normal-case font-semibold text-slate-400">(optional — for progress reports)</span></p>
                                 <input
                                     type="email"
                                     value={parentEmail}
                                     onChange={(e) => setParentEmail(e.target.value)}
-                                    placeholder="parent@example.com"
+                                    placeholder="parent@example.com (optional)"
                                     className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold"
                                 />
+                                <p className="mt-1 text-[11px] text-slate-400">If provided, your parent gets login credentials to view your progress dashboard.</p>
                             </div>
 
                             <div>

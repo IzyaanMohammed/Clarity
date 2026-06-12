@@ -1357,10 +1357,11 @@ def _auth_username(authorization: Optional[str]) -> str:
     return username
 
 
-def _normalize_parent_email(value: Optional[str]) -> str:
+def _normalize_parent_email(value: Optional[str]) -> Optional[str]:
+    """Validate and normalize parent email. Returns None if not provided."""
     email = (value or "").strip().lower()
     if not email:
-        raise HTTPException(status_code=422, detail="Parent email is mandatory")
+        return None  # Parent email is optional
     if not re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email):
         raise HTTPException(status_code=422, detail="Parent email is invalid")
     return email
@@ -1371,7 +1372,7 @@ async def register(request: RegisterRequest):
     profile_data = request.profile.model_dump(by_alias=False)
     parent_email = _normalize_parent_email(request.profile.parentEmail)
     subscription_tier = _resolve_subscription_tier(request.profile.name.strip(), request.profile.subscriptionTier)
-    profile_data["parentEmail"] = parent_email
+    profile_data["parentEmail"] = parent_email or ""
     profile_data["class"] = request.profile.class_num
     profile_data["subjects_json"] = json.dumps(request.profile.subjects or [])
     profile_data["subscriptionTier"] = subscription_tier
@@ -1383,13 +1384,14 @@ async def register(request: RegisterRequest):
     username = request.profile.name.strip()
     token = create_session(username)
 
-    # Create parent login credentials at account creation time.
-    parent_password = secrets.token_urlsafe(9)
-    try:
-        upsert_parent_account(username, parent_email, parent_password)
-        send_parent_welcome_credentials_email(username, parent_email, parent_password)
-    except ValueError as exc:
-        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    # Create parent login credentials only when parent email is provided.
+    if parent_email:
+        parent_password = secrets.token_urlsafe(9)
+        try:
+            upsert_parent_account(username, parent_email, parent_password)
+            send_parent_welcome_credentials_email(username, parent_email, parent_password)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
 
     return {
         "token": token,

@@ -489,7 +489,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
           </div>
 
           {/* Right Column: Conversational Chat OS */}
-          <div className="lg:col-span-2 flex flex-col h-[85vh] bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl shadow-lg overflow-hidden">
+          <div className="lg:col-span-2 flex flex-col h-[92vh] bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl shadow-lg overflow-hidden">
             {/* Conversational Screen Title */}
             <div className="p-4 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
               <div className="flex items-center gap-2">

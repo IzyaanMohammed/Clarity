@@ -2,13 +2,15 @@ import axios from 'axios';
 import { recordPerformanceMetric } from '../utils/analytics';
 import { getAuthToken } from '../utils/storage';
 
+const RENDER_BACKEND = 'https://clarity-twti.onrender.com';
+const LOCAL_BACKEND = 'http://localhost:8000';
+
 export const getBaseUrl = (): string => {
-  return import.meta.env.VITE_API_URL || '';
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  return import.meta.env.DEV ? LOCAL_BACKEND : RENDER_BACKEND;
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api/v1`
-  : '/api/v1';
+const API_BASE_URL = `${getBaseUrl()}/api/v1`;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

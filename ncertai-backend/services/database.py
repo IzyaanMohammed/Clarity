@@ -5,7 +5,7 @@ import secrets
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 import shutil
 
@@ -85,7 +85,9 @@ def init_db() -> None:
                 city TEXT DEFAULT 'New Delhi',
                 points INTEGER DEFAULT 0,
                 created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL
+                updated_at TEXT NOT NULL,
+                exam_simulations_count INTEGER DEFAULT 0,
+                ocr_uploads_count INTEGER DEFAULT 0
             )
             """
         )
@@ -105,6 +107,10 @@ def init_db() -> None:
             conn.execute("ALTER TABLE users ADD COLUMN teacher_personality TEXT")
         if "focus_chapters_json" not in user_columns:
             conn.execute("ALTER TABLE users ADD COLUMN focus_chapters_json TEXT")
+        if "exam_simulations_count" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN exam_simulations_count INTEGER DEFAULT 0")
+        if "ocr_uploads_count" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN ocr_uploads_count INTEGER DEFAULT 0")
         if "country" not in user_columns:
             conn.execute("ALTER TABLE users ADD COLUMN country TEXT DEFAULT 'India'")
         if "state" not in user_columns:
@@ -444,6 +450,30 @@ def get_user_profile(username: str) -> Optional[dict[str, Any]]:
             except Exception as e:
                 print("Error checking trial expiration:", e)
         return profile
+
+
+def increment_exam_simulations(username: str) -> None:
+    with _connect() as conn:
+        conn.execute(
+            """
+            UPDATE users
+            SET exam_simulations_count = COALESCE(exam_simulations_count, 0) + 1, updated_at = ?
+            WHERE username = ?
+            """,
+            (_utc_now_iso(), username),
+        )
+
+
+def increment_ocr_uploads(username: str) -> None:
+    with _connect() as conn:
+        conn.execute(
+            """
+            UPDATE users
+            SET ocr_uploads_count = COALESCE(ocr_uploads_count, 0) + 1, updated_at = ?
+            WHERE username = ?
+            """,
+            (_utc_now_iso(), username),
+        )
 
 
 def set_user_subscription_tier(username: str, subscription_tier: str) -> None:
@@ -823,12 +853,16 @@ def save_custom_textbook(username: str, class_num: int, subject: str, chapter: s
         return cursor.lastrowid
 
 
-def get_custom_textbooks(username: str, class_num: Optional[int] = None, subject: Optional[str] = None) -> list[dict[str, Any]]:
+def get_custom_textbooks(username: str, class_num: Optional[Union[str, int]] = None, subject: Optional[str] = None) -> list[dict[str, Any]]:
     query = "SELECT id, username, class_num, subject, chapter, filename, filepath, created_at FROM custom_textbooks WHERE username = ?"
     params = [username]
     if class_num is not None:
-        query += " AND class_num = ?"
-        params.append(class_num)
+        query += " AND (class_num = ? OR class_num = ?)"
+        try:
+            val_class = int(class_num)
+        except ValueError:
+            val_class = class_num
+        params.extend([str(class_num), val_class])
     if subject is not None:
         query += " AND subject = ?"
         params.append(subject)
@@ -838,15 +872,20 @@ def get_custom_textbooks(username: str, class_num: Optional[int] = None, subject
     return [dict(row) for row in rows]
 
 
-def get_custom_textbook_content(username: str, class_num: int, subject: str, chapter: str) -> Optional[str]:
+def get_custom_textbook_content(username: str, class_num: Union[str, int], subject: str, chapter: str) -> Optional[str]:
     # Try exact match first
+    try:
+        val_class = int(class_num)
+    except ValueError:
+        val_class = class_num
+
     with _connect() as conn:
         rows = conn.execute(
             """
             SELECT text_content FROM custom_textbooks
-            WHERE username = ? AND class_num = ? AND LOWER(subject) = LOWER(?) AND LOWER(chapter) = LOWER(?)
+            WHERE username = ? AND (class_num = ? OR class_num = ?) AND LOWER(subject) = LOWER(?) AND LOWER(chapter) = LOWER(?)
             """,
-            (username, class_num, subject, chapter),
+            (username, str(class_num), val_class, subject, chapter),
         ).fetchall()
         if rows:
             return "\n\n".join(row["text_content"] for row in rows)
@@ -855,9 +894,9 @@ def get_custom_textbook_content(username: str, class_num: int, subject: str, cha
         rows = conn.execute(
             """
             SELECT chapter, text_content FROM custom_textbooks
-            WHERE username = ? AND class_num = ? AND LOWER(subject) = LOWER(?)
+            WHERE username = ? AND (class_num = ? OR class_num = ?) AND LOWER(subject) = LOWER(?)
             """,
-            (username, class_num, subject),
+            (username, str(class_num), val_class, subject),
         ).fetchall()
         
         matched = []

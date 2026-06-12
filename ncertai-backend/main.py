@@ -40,6 +40,7 @@ def _parse_cors_origins() -> list[str]:
             "http://localhost:3000",
             "http://127.0.0.1:3000",
             "https://claritystudy.vercel.app",
+            "https://clarity-twti.onrender.com",
         ]
     
     app_base = os.getenv("CLARITY_APP_BASE_URL", "").strip()
