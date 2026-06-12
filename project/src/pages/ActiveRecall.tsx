@@ -455,7 +455,7 @@ export const ActiveRecall = () => {
                   const label = c + (user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_EN') ? ' (TN Eng)' : '') + (user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_TM') ? ' (TN Tamil)' : '');
                   return (
                     <option key={c} value={value} disabled={!isEnrolled} className="dark:bg-slate-900">
-                      Class {label} {!isEnrolled && '🔒'}
+                      Class {label}
                     </option>
                   );
                 })}

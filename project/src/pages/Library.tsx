@@ -185,7 +185,6 @@ export const Library = () => {
                     Class {c}
                     {user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_EN') && ' (TN Eng)'}
                     {user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_TM') && ' (TN Tamil)'}
-                    {!isEnrolled && ' 🔒'}
                   </button>
                 );
               })}

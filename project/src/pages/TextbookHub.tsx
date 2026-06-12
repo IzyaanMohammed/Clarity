@@ -598,7 +598,6 @@ export const TextbookHub = () => {
                                 Class {cls}
                                 {user?.class && String(user.class).startsWith(cls) && String(user.class).includes('_TN_EN') && ' (TN Eng)'}
                                 {user?.class && String(user.class).startsWith(cls) && String(user.class).includes('_TN_TM') && ' (TN Tamil)'}
-                                {!isEnrolled && ' 🔒'}
                             </button>
                         );
                     })}

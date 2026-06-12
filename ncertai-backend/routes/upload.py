@@ -568,30 +568,25 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
     from fastapi import Response
     from pathlib import Path
     import os
-    from utils.textbook_fetcher import resolve_actual_ncert_filename
-
-    book_code, chapter_num = resolve_actual_ncert_filename(book_code, chapter_num)
-
-    chapter_num = max(1, chapter_num)
-    padded = f"{chapter_num:02d}"
-    filename = f"{book_code}{padded}.pdf"
-
-    is_vercel = os.getenv("VERCEL") == "1" or "VERCEL" in os.environ
-    if is_vercel:
-        cache_dir = Path("/tmp") / "data" / "ncert_pdf_cache"
-    else:
-        cache_dir = Path(__file__).resolve().parents[1] / "data" / "ncert_pdf_cache"
-    os.makedirs(cache_dir, exist_ok=True)
-    cache_path = cache_dir / filename
 
     response_headers = {
-        "Content-Disposition": f'inline; filename="{filename}"',
+        "Content-Disposition": f'inline; filename="{book_code}{chapter_num:02d}.pdf"',
         "Cache-Control": "public, max-age=31536000, immutable",
         "X-Frame-Options": "",
     }
 
-    # Intercept Tamil Nadu Board requests
+    # Intercept Tamil Nadu Board requests BEFORE resolve_actual_ncert_filename
     if book_code.startswith("tn"):
+        is_vercel = os.getenv("VERCEL") == "1" or "VERCEL" in os.environ
+        if is_vercel:
+            cache_dir = Path("/tmp") / "data" / "ncert_pdf_cache"
+        else:
+            cache_dir = Path(__file__).resolve().parents[1] / "data" / "ncert_pdf_cache"
+        os.makedirs(cache_dir, exist_ok=True)
+        
+        filename = f"{book_code}{chapter_num:02d}.pdf"
+        cache_path = cache_dir / filename
+
         if cache_path.exists():
             logger.info(f"TN PDF cache hit: {filename}")
             return FileResponse(cache_path, media_type="application/pdf", headers=response_headers, filename=filename)
@@ -758,6 +753,27 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
                 pass
             placeholder_pdf = get_fallback_pdf()
             return Response(content=placeholder_pdf, media_type="application/pdf", headers=response_headers)
+
+    from utils.textbook_fetcher import resolve_actual_ncert_filename
+    book_code, chapter_num = resolve_actual_ncert_filename(book_code, chapter_num)
+
+    chapter_num = max(1, chapter_num)
+    padded = f"{chapter_num:02d}"
+    filename = f"{book_code}{padded}.pdf"
+
+    is_vercel = os.getenv("VERCEL") == "1" or "VERCEL" in os.environ
+    if is_vercel:
+        cache_dir = Path("/tmp") / "data" / "ncert_pdf_cache"
+    else:
+        cache_dir = Path(__file__).resolve().parents[1] / "data" / "ncert_pdf_cache"
+    os.makedirs(cache_dir, exist_ok=True)
+    cache_path = cache_dir / filename
+
+    response_headers = {
+        "Content-Disposition": f'inline; filename="{filename}"',
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "X-Frame-Options": "",
+    }
 
     if cache_path.exists():
         logger.info(f"NCERT PDF cache hit: {filename}")
