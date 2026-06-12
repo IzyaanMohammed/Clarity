@@ -48,8 +48,11 @@ export const updateUser = (updates: Partial<UserData>) => {
 };
 
 export const clearUser = () => {
-  localStorage.removeItem(STORAGE_KEYS.USER);
-  localStorage.removeItem(STORAGE_KEYS.TOKEN);
+  const theme = localStorage.getItem('ncertai_theme');
+  localStorage.clear();
+  if (theme) {
+    localStorage.setItem('ncertai_theme', theme);
+  }
 };
 
 export const saveAuthToken = (token: string) => {
