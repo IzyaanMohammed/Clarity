@@ -2241,27 +2241,35 @@ async def grade_answer(request: GradeRequest, x_user_id: str = Header(None)):
     _require_non_empty(request.user_answer, "user_answer")
     
     personality = request.teacher_personality or "Kind"
-    prompt = f"""You are a {personality} CBSE examiner grading a student's answer.
+    prompt = f"""You are a {personality} teacher grading a student's answer.
 
 QUESTION: {request.question}
 STUDENT'S ANSWER: {request.user_answer}
 TOTAL MARKS AVAILABLE: {request.marks_available}
 CLASS: {request.class_num} | SUBJECT: {request.subject}
 
-Grade this answer exactly as CBSE board examiners do. Be precise.
+Grade this answer. Be supportive, lenient, and use common sense like a kind teacher.
+- If the question is a "Match the Following" question:
+  * Check the student's answer for each pairing.
+  * In "WHAT WAS GOOD", list the pairs that the student got correct.
+  * In "WHAT WAS MISSING", list the pairs that the student got wrong, explain why, and write out the correct pairings.
+  * In "MODEL ANSWER", output the complete, correct matching list (e.g., a - 2, b - 4, c - 1, d - 3).
+- For short answers/fill-in-the-blanks, be extremely lenient with typos, spelling variations, plural/singular forms (e.g., accepting "dendrites" for "dendrite"), and grammar as long as the concept is correct.
 
 Return your response in this EXACT format (no extra text):
 MARKS: X/{request.marks_available}
-WHAT WAS GOOD: [specific points the student got right]
-WHAT WAS MISSING: [specific points that were missing or incorrect]
-MODEL ANSWER: [the ideal CBSE answer a student should write to get full marks]"""
+WHAT WAS GOOD: [specific points or pairings the student got right]
+WHAT WAS MISSING: [specific points or pairings that were missing or incorrect]
+MODEL ANSWER: [the ideal answer/pairings to get full marks]"""
 
     messages = [
         {
             "role": "system",
             "content": (
-                f"You are a CBSE board examiner with 20 years of experience. Your personality is {personality}. "
-                f"Grade answers fairly and strictly according to NCERT content, but express your feedback with a {personality} tone."
+                f"You are a kind and supportive school teacher. Your personality is {personality}. "
+                "Grade answers with common sense and leniency. Give full credit for correct conceptual understanding "
+                "even if there are minor spelling mistakes, plural/singular variations (e.g., 'dendrites' vs 'dendrite'), typos, or bad grammar. "
+                "For Match the Following questions, explicitly state which pairings were correct and incorrect, and provide the correct mappings. "
                 "Always return in the exact format requested."
             ),
         },
@@ -2307,27 +2315,35 @@ async def grade_answer_stream(request: GradeRequest, x_user_id: str = Header(Non
     _require_non_empty(request.user_answer, "user_answer")
     
     personality = request.teacher_personality or "Kind"
-    prompt = f"""You are a {personality} CBSE examiner grading a student's answer.
+    prompt = f"""You are a {personality} teacher grading a student's answer.
 
 QUESTION: {request.question}
 STUDENT'S ANSWER: {request.user_answer}
 TOTAL MARKS AVAILABLE: {request.marks_available}
 CLASS: {request.class_num} | SUBJECT: {request.subject}
 
-Grade this answer exactly as CBSE board examiners do. Be precise.
+Grade this answer. Be supportive, lenient, and use common sense like a kind teacher.
+- If the question is a "Match the Following" question:
+  * Check the student's answer for each pairing.
+  * In "WHAT WAS GOOD", list the pairs that the student got correct.
+  * In "WHAT WAS MISSING", list the pairs that the student got wrong, explain why, and write out the correct pairings.
+  * In "MODEL ANSWER", output the complete, correct matching list (e.g., a - 2, b - 4, c - 1, d - 3).
+- For short answers/fill-in-the-blanks, be extremely lenient with typos, spelling variations, plural/singular forms (e.g., accepting "dendrites" for "dendrite"), and grammar as long as the concept is correct.
 
 Return your response in this EXACT format (no extra text):
 MARKS: X/{request.marks_available}
-WHAT WAS GOOD: [specific points the student got right]
-WHAT WAS MISSING: [specific points that were missing or incorrect]
-MODEL ANSWER: [the ideal CBSE answer a student should write to get full marks]"""
+WHAT WAS GOOD: [specific points or pairings the student got right]
+WHAT WAS MISSING: [specific points or pairings that were missing or incorrect]
+MODEL ANSWER: [the ideal answer/pairings to get full marks]"""
 
     messages = [
         {
             "role": "system",
             "content": (
-                f"You are a CBSE board examiner with 20 years of experience. Your personality is {personality}. "
-                f"Grade answers fairly and strictly according to NCERT content, but express your feedback with a {personality} tone."
+                f"You are a kind and supportive school teacher. Your personality is {personality}. "
+                "Grade answers with common sense and leniency. Give full credit for correct conceptual understanding "
+                "even if there are minor spelling mistakes, plural/singular variations (e.g., 'dendrites' vs 'dendrite'), typos, or bad grammar. "
+                "For Match the Following questions, explicitly state which pairings were correct and incorrect, and provide the correct mappings. "
                 "Always return in the exact format requested."
             ),
         },

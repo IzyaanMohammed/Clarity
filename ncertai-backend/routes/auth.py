@@ -1383,15 +1383,17 @@ async def register(request: RegisterRequest):
 
     username = request.profile.name.strip()
     token = create_session(username)
-
     # Create parent login credentials only when parent email is provided.
     if parent_email:
         parent_password = secrets.token_urlsafe(9)
         try:
             upsert_parent_account(username, parent_email, parent_password)
-            send_parent_welcome_credentials_email(username, parent_email, parent_password)
         except ValueError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
+        try:
+            send_parent_welcome_credentials_email(username, parent_email, parent_password)
+        except Exception as e:
+            print(f"Swallowed parent credentials email error: {e}")
 
     return {
         "token": token,
@@ -1533,9 +1535,12 @@ async def update_me(profile: AuthProfile, authorization: Optional[str] = Header(
         parent_password = secrets.token_urlsafe(9)
         try:
             upsert_parent_account(username, parent_email, parent_password)
-            send_parent_welcome_credentials_email(username, parent_email, parent_password)
         except ValueError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
+        try:
+            send_parent_welcome_credentials_email(username, parent_email, parent_password)
+        except Exception as e:
+            print(f"Swallowed parent credentials email error: {e}")
 
     return {"status": "ok"}
 
@@ -1832,11 +1837,16 @@ async def resend_parent_credentials(authorization: Optional[str] = Header(defaul
 
     new_password = secrets.token_urlsafe(9)
     reset_parent_credentials(username, new_password)
-    send_parent_welcome_credentials_email(username, parent_email, new_password)
+    email_status = "sent"
+    try:
+        send_parent_welcome_credentials_email(username, parent_email, new_password)
+    except Exception as e:
+        print(f"Parent credentials email sending failed: {e}")
+        email_status = "failed_delivery"
 
     return {
-        "status": "sent",
-        "message": f"New parent credentials sent to {parent_email}.",
+        "status": email_status,
+        "message": f"New parent credentials generated. Email sending status: {email_status}.",
         "parent_email": parent_email,
     }
 

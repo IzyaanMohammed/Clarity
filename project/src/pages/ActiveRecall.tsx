@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Mic, 
   MicOff, 
@@ -26,6 +26,7 @@ import { MarkdownContent } from '../components/ui/MarkdownContent';
 
 export const ActiveRecall = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const user = getUser();
   const referencedChapter = (location.state?.chapter as string | undefined) || '';
 
@@ -422,6 +423,43 @@ export const ActiveRecall = () => {
     setActiveStep(1);
     loadChapter();
   };
+
+  const isTamilNadu = user?.examBoard === 'Tamil Nadu State Board' || String(user?.class).includes('_TN_');
+
+  if (isTamilNadu) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+        <Navbar />
+        <main className="max-w-3xl mx-auto px-6 py-20 text-center">
+          <Card className="p-12 bg-white dark:bg-[#0f172a] border-none shadow-2xl rounded-[32px] space-y-6 transform hover:scale-[1.01] transition-all duration-300">
+            <div className="w-20 h-20 mx-auto bg-amber-50 dark:bg-amber-950/30 rounded-full flex items-center justify-center text-amber-500 animate-pulse">
+              <Sparkles size={40} />
+            </div>
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white">Tamil Nadu Board Support Coming Soon!</h2>
+            <p className="text-slate-600 dark:text-slate-350 text-lg leading-relaxed max-w-xl mx-auto font-medium">
+              Tamil Nadu State Board support is coming in a very, very soon update! Currently, CBSE / NCERT is fully supported.
+            </p>
+            <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 text-left space-y-3">
+              <h4 className="font-bold text-slate-800 dark:text-slate-200">How to get started right now:</h4>
+              <ol className="list-decimal list-inside space-y-2 text-sm text-slate-600 dark:text-slate-400 font-medium">
+                <li>Go to your <span className="text-[#1D9E75] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
+                <li>Select a CBSE class and click <span className="text-slate-800 dark:text-slate-200 font-bold">Save</span></li>
+                <li>Start practicing and exploring Clarity's premium features!</li>
+              </ol>
+            </div>
+            <Button 
+              variant="primary" 
+              size="lg" 
+              className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#1D9E75]/25"
+              onClick={() => navigate('/profile')}
+            >
+              Go to Profile Settings
+            </Button>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">

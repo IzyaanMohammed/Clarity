@@ -35,7 +35,7 @@ const STUDY_HOURS = ['30 min/day', '1 hour/day', '2 hours/day', '3+ hours/day'];
 const CHALLENGES = ['Time Management', 'Weak Concepts', 'Exam Anxiety', 'Consistency', 'No Major Challenge'];
 const EXAM_BOARDS = [
     { value: 'CBSE', label: 'CBSE', disabled: false },
-    { value: 'Tamil Nadu State Board', label: 'Tamil Nadu State Board', disabled: false },
+    { value: 'Tamil Nadu State Board', label: 'Tamil Nadu State Board (Coming Soon)', disabled: true },
     { value: 'ICSE', label: 'ICSE (Coming Soon)', disabled: true },
     { value: 'IB', label: 'IB (Coming Soon)', disabled: true },
     { value: 'IGCSE', label: 'IGCSE (Coming Soon)', disabled: true },
