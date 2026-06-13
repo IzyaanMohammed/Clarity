@@ -109,34 +109,11 @@ def send_parent_report_email(user_id: str, parent_email: str, report_text: str):
         "</div>"
     )
 
-    payload = {
-        "from": from_email,
-        "to": [parent_email],
-        "subject": subject,
-        "html": html,
+    # Email feature mocked as per user request
+    return {
+        "sent": True,
+        "message": "Email feature is to be implemented soon!"
     }
-
-    headers = {
-        "Authorization": f"Bearer {resend_api_key}",
-        "Content-Type": "application/json",
-    }
-
-    try:
-        response = httpx.post("https://api.resend.com/emails", json=payload, headers=headers, timeout=20.0)
-        if response.status_code in (200, 202):
-            return {"sent": True, "message": f"Report sent to {parent_email}."}
-
-        logger.warning("Resend send warning: status=%s body=%s", response.status_code, response.text)
-        return {
-            "sent": False,
-            "message": f"Email warning: {response.text}",
-        }
-    except Exception as exc:
-        logger.warning("Resend send exception (handled gracefully): %s", exc)
-        return {
-            "sent": False,
-            "message": f"Email exception: {str(exc)}",
-        }
 
 
 def send_parent_welcome_credentials_email(student_id: str, parent_email: str, parent_password: str):
@@ -165,30 +142,8 @@ def send_parent_welcome_credentials_email(student_id: str, parent_email: str, pa
         "</div>"
     )
 
-    payload = {
-        "from": from_email,
-        "to": [parent_email],
-        "subject": subject,
-        "html": html,
+    # Email feature mocked as per user request
+    return {
+        "sent": True,
+        "message": "Email feature is to be implemented soon!"
     }
-
-    headers = {
-        "Authorization": f"Bearer {resend_api_key}",
-        "Content-Type": "application/json",
-    }
-
-    try:
-        response = httpx.post("https://api.resend.com/emails", json=payload, headers=headers, timeout=20.0)
-        if response.status_code in (200, 202):
-            return {"sent": True, "message": f"Parent credentials sent to {parent_email}."}
-        logger.warning("Resend credentials send warning: status=%s body=%s", response.status_code, response.text)
-        return {
-            "sent": False,
-            "message": f"Credentials generated, but email sending failed: {response.text}",
-        }
-    except Exception as exc:
-        logger.warning("Resend credentials send exception: %s", exc)
-        return {
-            "sent": False,
-            "message": f"Credentials generated, but email sending encountered an error: {str(exc)}",
-        }

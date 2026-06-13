@@ -14,4 +14,4 @@ aiofiles
 pytube
 youtube-search
 youtube-transcript-api
-pg8000
+psycopg2-binary

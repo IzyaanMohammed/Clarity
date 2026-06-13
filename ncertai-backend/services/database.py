@@ -13,36 +13,18 @@ import urllib.parse
 import ssl
 
 try:
-    import pg8000
+    import psycopg2
 except ImportError:
-    pg8000 = None
+    psycopg2 = None
 
 POSTGRES_URL = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
 _last_backup_mtime = 0.0
 
 def _get_pg_conn():
-    if not pg8000 or not POSTGRES_URL:
+    if not psycopg2 or not POSTGRES_URL:
         return None
     try:
-        url = urllib.parse.urlparse(POSTGRES_URL)
-        username = url.username
-        password = url.password
-        database = url.path[1:]
-        hostname = url.hostname
-        port = url.port or 5432
-        
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        
-        return pg8000.connect(
-            user=username,
-            password=password,
-            host=hostname,
-            port=port,
-            database=database,
-            ssl_context=ctx
-        )
+        return psycopg2.connect(POSTGRES_URL)
     except Exception as e:
         print(f"Warning: Failed to create PG connection: {e}")
         return None
@@ -99,7 +81,7 @@ def backup_db_to_pg() -> None:
         cursor.execute("SELECT id FROM db_backup WHERE id = 1")
         exists = cursor.fetchone()
         
-        binary_data = pg8000.Binary(db_bytes)
+        binary_data = psycopg2.Binary(db_bytes)
         
         if exists:
             cursor.execute(

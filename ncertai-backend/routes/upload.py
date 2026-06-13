@@ -5,7 +5,7 @@ from typing import Optional
 from models.schemas import UploadResponse
 from services.openrouter import ask_openrouter
 from services.file_processor import process_file_for_ai, _render_page_as_image_base64
-from utils.rate_limiter import check_rate_limit, increment_usage
+from services.database import get_user_profile, increment_ocr_uploads
 import logging
 
 router = APIRouter()
@@ -20,11 +20,16 @@ async def extract_ocr(
     file: UploadFile = File(...),
     x_user_id: str = Header(None),
 ):
-    if x_user_id and not check_rate_limit(x_user_id, "upload"):
-        raise HTTPException(
-            status_code=429,
-            detail="Daily upload limit reached. Upgrade to Pro for unlimited uploads! 📚",
-        )
+    if x_user_id:
+        profile = get_user_profile(x_user_id)
+        if profile:
+            tier = profile.get("subscription_tier", "free")
+            ocr_count = profile.get("ocr_uploads_count", 0)
+            if tier == "free" and ocr_count >= 20:
+                raise HTTPException(
+                    status_code=403,
+                    detail="Free OCR limit reached (20/20 scans). Please upgrade to Pro for unlimited uploads! 📚",
+                )
 
     file_bytes = await file.read()
     size_mb = len(file_bytes) / (1024 * 1024)
@@ -41,7 +46,7 @@ async def extract_ocr(
         if len(text) < 20:
             raise HTTPException(status_code=422, detail="Could not extract enough OCR text from PDF.")
         if x_user_id:
-            increment_usage(x_user_id, "upload")
+            increment_ocr_uploads(x_user_id)
         return {"text": text, "source": "pdf-text"}
 
     if content_data["type"] == "image":
