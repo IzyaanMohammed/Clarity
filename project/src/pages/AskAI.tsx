@@ -416,8 +416,8 @@ export const AskAI = () => {
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[calc(100vh-220px)]">
-          <div className="lg:col-span-3 flex flex-col gap-4">
+        <div className="flex flex-col gap-4 h-[calc(100vh-220px)]">
+          <div className="flex-1 flex flex-col gap-4">
             <Card className="flex-1 flex flex-col bg-white dark:bg-[#0f172a] border-none shadow-2xl rounded-[40px] overflow-hidden border border-white/50">
               <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-10 scrollbar-hide">
                 {messages.length === 0 ? (
@@ -438,50 +438,46 @@ export const AskAI = () => {
                         I've loaded the NCERT curriculum. What should we tackle first?
                       </p>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                      {quickActions.map((action) => (
-                        <button
-                          key={action.label}
-                          onClick={() => handleSendMessage(action.prompt)}
-                          className="p-5 text-left bg-slate-50 dark:bg-slate-800/50 hover:bg-[#1D9E75] hover:text-white hover:-translate-y-1 text-slate-700 dark:text-slate-200 rounded-[24px] transition-all group border border-slate-100 dark:border-slate-700 active:scale-95 shadow-sm"
-                        >
-                          <p className="text-xs font-black uppercase tracking-widest opacity-50 mb-1 group-hover:opacity-100">Study Goal</p>
-                          <p className="text-sm font-bold">{action.label}</p>
-                        </button>
-                      ))}
-                    </div>
                   </div>
                 ) : (
-                  messages.map((msg, index) => (
-                    <div key={index} className={`flex gap-5 ${msg.role === 'user' ? 'flex-row-reverse' : ''} animate-in slide-in-from-bottom-4 duration-300`}>
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg ${msg.role === 'user' ? 'bg-slate-900 text-white' : 'bg-[#1D9E75] text-white'
-                        }`}>
-                        {msg.role === 'user' ? <User size={24} /> : <Bot size={24} />}
+                  messages.map((m, i) => (
+                    <div
+                      key={i}
+                      className={`flex gap-6 max-w-4xl ${
+                        m.role === 'user' ? 'flex-row-reverse ml-auto' : 'mr-auto'
+                      }`}
+                    >
+                      <div
+                        className={`w-14 h-14 rounded-[22px] flex items-center justify-center flex-shrink-0 shadow-lg ${
+                          m.role === 'user'
+                            ? 'bg-slate-900 text-white dark:bg-slate-800'
+                            : 'bg-gradient-to-tr from-[#1D9E75] to-[#2cd6a0] text-white'
+                        }`}
+                      >
+                        {m.role === 'user' ? <User size={24} /> : <Bot size={24} />}
                       </div>
-                      <div className={`max-w-[85%] p-6 rounded-[32px] shadow-sm ${msg.role === 'user'
-                        ? 'bg-[#1D9E75] text-white rounded-tr-none shadow-emerald-200 dark:shadow-none'
-                        : 'bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none border border-slate-100 dark:border-slate-700'
-                        }`}>
-                        <MarkdownContent content={msg.content} className="text-inherit leading-relaxed font-medium" />
-                        {msg.role === 'assistant' && msg.content.trim().length > 0 && (
-                          <div className="mt-4 flex justify-end">
-                            <button
-                              onClick={() => saveAnswerBookmark(msg.content, index)}
-                              className="text-xs font-bold flex items-center gap-1 text-slate-500 hover:text-[#1D9E75]"
-                            >
-                              <BookmarkPlus size={14} />
-                              Save
-                            </button>
-                          </div>
-                        )}
+                      <div
+                        className={`p-8 rounded-[32px] leading-relaxed font-bold text-[15px] border ${
+                          m.role === 'user'
+                            ? 'bg-slate-50 border-slate-100 text-slate-800 rounded-tr-none dark:bg-slate-800 dark:border-slate-700 dark:text-white'
+                            : 'bg-[#1D9E75]/5 border-[#1D9E75]/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
+                        }`}
+                      >
+                        <MarkdownContent content={m.content} className="prose prose-sm dark:prose-invert" />
                       </div>
                     </div>
                   ))
                 )}
+
                 {isLoading && (
-                  <div className="flex gap-5 animate-pulse">
-                    <div className="w-12 h-12 bg-[#1D9E75]/20 rounded-2xl" />
-                    <div className="w-48 h-16 bg-slate-100 dark:bg-slate-800 rounded-[24px]" />
+                  <div className="flex gap-6 max-w-4xl mr-auto">
+                    <div className="w-14 h-14 rounded-[22px] bg-gradient-to-tr from-[#1D9E75] to-[#2cd6a0] text-white flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <Bot size={24} className="animate-pulse" />
+                    </div>
+                    <div className="p-8 rounded-[32px] rounded-tl-none bg-[#1D9E75]/5 border border-[#1D9E75]/10 text-slate-800 dark:text-slate-200 flex items-center gap-3 font-bold text-sm">
+                      <div className="animate-spin h-5 w-5 border-3 border-[#1D9E75] border-t-transparent rounded-full" />
+                      Clarity AI is researching and formulating response...
+                    </div>
                   </div>
                 )}
                 <div ref={messagesEndRef} />
@@ -519,51 +515,6 @@ export const AskAI = () => {
                     <Send size={24} />
                   </button>
                 </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Sidebar Tools */}
-          <div className="hidden lg:flex flex-col gap-6">
-            <Card className="p-8 bg-gradient-to-br from-slate-900 to-slate-800 text-white border-none rounded-[32px] shadow-2xl relative overflow-hidden group">
-              <div className="relative z-10">
-                <div className="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center mb-6">
-                  <Award className="text-slate-900" size={28} />
-                </div>
-                <h4 className="font-black text-xl mb-3 tracking-tight">Board Predictor</h4>
-                <p className="text-slate-400 text-sm mb-6 font-medium leading-relaxed">
-                  Based on last 10 years, **{selectedChapter}** has a 75% chance of appearing in 5-mark section.
-                </p>
-                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 text-xs italic font-bold text-yellow-300">
-                  "Focus on: Diagram of Electrolysis"
-                </div>
-              </div>
-              <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-[#1D9E75]/20 rounded-full blur-[40px] group-hover:scale-125 transition-transform" />
-            </Card>
-
-            <Card className="p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl flex-1 border border-slate-100 dark:border-slate-800">
-              <h4 className="font-black text-slate-900 dark:text-white mb-6 uppercase tracking-widest text-xs opacity-50">Tutor Toolbox</h4>
-              <div className="space-y-4">
-                {[
-                  { icon: <RefreshCw />, label: 'Flashcards', desc: 'AI Revision', prompt: `Generate 5 flashcards for the chapter "${selectedChapter}" in Question: Answer format.` },
-                  { icon: <BookOpen />, label: 'NCERT Solver', desc: 'Step-by-step', prompt: `Show me step-by-step solutions for the most difficult NCERT exercises in "${selectedChapter}".` },
-                  { icon: <Zap />, label: 'Cheat Sheet', desc: 'Formulas', prompt: `Create a one-page cheat sheet for "${selectedChapter}" including all formulas and key definitions.` },
-                  { icon: <Sparkles />, label: 'Vision Scan', desc: 'Handwritten Notes', action: () => fileInputRef.current?.click() },
-                ].map((tool, i) => (
-                  <button
-                    key={i}
-                    onClick={() => tool.prompt ? handleSendMessage(tool.prompt) : tool.action?.()}
-                    className="w-full p-5 rounded-[24px] border border-slate-50 dark:border-slate-800 hover:border-[#1D9E75] hover:bg-[#1D9E75]/5 text-left transition-all group flex items-center gap-4"
-                  >
-                    <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl group-hover:bg-[#1D9E75] group-hover:text-white transition-all shadow-sm">
-                      {tool.icon}
-                    </div>
-                    <div>
-                      <span className="font-black text-sm text-slate-800 dark:text-slate-200 block">{tool.label}</span>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{tool.desc}</p>
-                    </div>
-                  </button>
-                ))}
               </div>
             </Card>
           </div>

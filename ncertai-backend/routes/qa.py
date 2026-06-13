@@ -277,6 +277,8 @@ def build_tutor_system_prompt(username: str) -> str:
         "2. If they have weak chapters, gently remind them and suggest concrete ways to improve (e.g. asking specifically about those concepts, doing practice worksheets).\n"
         "3. Provide actionable CBSE Board Grade-specific advice. Use formatting (bullet points, bold text) to keep your advice clean, premium, and easy to read.\n"
         "4. Adopt the teacher personality defined in the profile.\n"
+        "5. CONVERSATIONAL EFFICIENCY FOR GREETINGS: If the student says a greeting (like 'hello', 'hi', 'hey', 'good morning'), or casual chit-chat, reply with a simple, friendly 2-4 line response. Do NOT output lists, study plans, tables, or massive responses for casual greetings.\n"
+        "6. Reserve detailed plans, checklists, tables, and structured breakdowns strictly for academic questions, study goals, planning questions, or subject topic discussions.\n"
     )
     return system_prompt
 
