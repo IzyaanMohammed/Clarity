@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
@@ -57,7 +58,7 @@ const preprocessMath = (text: string): string => {
     return processed;
 };
 
-export const MarkdownContent = ({ content, className = '' }: MarkdownContentProps) => {
+export const MarkdownContent = memo(({ content, className = '' }: MarkdownContentProps) => {
     return (
         <div className={`prose dark:prose-invert max-w-none ${className}`}>
             <ReactMarkdown
@@ -125,5 +126,5 @@ export const MarkdownContent = ({ content, className = '' }: MarkdownContentProp
             </ReactMarkdown>
         </div>
     );
-};
+});
 

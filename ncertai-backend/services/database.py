@@ -418,6 +418,7 @@ def _hash_password(password: str, salt: str) -> str:
 
 
 def create_user(username: str, password: str, profile: dict[str, Any]) -> bool:
+    username = username.strip().lower()
     salt = secrets.token_hex(16)
     password_hash = _hash_password(password, salt)
     now = _utc_now_iso()
@@ -472,6 +473,7 @@ def create_user(username: str, password: str, profile: dict[str, Any]) -> bool:
 
 
 def verify_user(username: str, password: str) -> bool:
+    username = username.strip().lower()
     with _connect() as conn:
         row = conn.execute("SELECT salt, password_hash FROM users WHERE username = ?", (username,)).fetchone()
         if not row:
@@ -481,6 +483,7 @@ def verify_user(username: str, password: str) -> bool:
 
 
 def create_session(username: str) -> str:
+    username = username.strip().lower()
     token = secrets.token_urlsafe(36)
     now = _utc_now_iso()
     with _connect() as conn:
@@ -508,6 +511,7 @@ def delete_session(token: str) -> None:
 
 
 def update_user_profile(username: str, profile: dict[str, Any]) -> None:
+    username = username.strip().lower()
     now = _utc_now_iso()
     with _connect() as conn:
         conn.execute(
@@ -547,6 +551,7 @@ def update_user_profile(username: str, profile: dict[str, Any]) -> None:
 
 
 def get_user_profile(username: str) -> Optional[dict[str, Any]]:
+    username = username.strip().lower()
     with _connect() as conn:
         row = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
         if not row:
@@ -577,6 +582,7 @@ def get_user_profile(username: str) -> Optional[dict[str, Any]]:
 
 
 def increment_exam_simulations(username: str) -> None:
+    username = username.strip().lower()
     with _connect() as conn:
         conn.execute(
             """
@@ -589,6 +595,7 @@ def increment_exam_simulations(username: str) -> None:
 
 
 def increment_ocr_uploads(username: str) -> None:
+    username = username.strip().lower()
     with _connect() as conn:
         conn.execute(
             """
@@ -601,6 +608,7 @@ def increment_ocr_uploads(username: str) -> None:
 
 
 def set_user_subscription_tier(username: str, subscription_tier: str) -> None:
+    username = username.strip().lower()
     tier = str(subscription_tier or "free").strip().lower()
     if tier not in {"free", "pro", "pro_max"}:
         tier = "free"
@@ -625,6 +633,7 @@ def set_user_subscription(
     trial_end: Optional[str] = None,
     subscription_end: Optional[str] = None,
 ) -> None:
+    username = username.strip().lower()
     now = _utc_now_iso()
     with _connect() as conn:
         conn.execute(
@@ -643,6 +652,7 @@ def set_user_subscription(
 
 
 def insert_progress_log(username: str, action: str, subject: str, chapter: str, score: Optional[int]) -> None:
+    username = username.strip().lower()
     points_to_add = 10
     if action == "recall":
         points_to_add = 30
@@ -666,6 +676,8 @@ def insert_progress_log(username: str, action: str, subject: str, chapter: str, 
 
 
 def fetch_progress_logs(username: Optional[str] = None) -> list[dict[str, Any]]:
+    if username:
+        username = username.strip().lower()
     with _connect() as conn:
         if username:
             rows = conn.execute(
@@ -680,6 +692,7 @@ def fetch_progress_logs(username: Optional[str] = None) -> list[dict[str, Any]]:
 
 
 def upsert_study_material(username: str, material: dict[str, Any]) -> None:
+    username = username.strip().lower()
     with _connect() as conn:
         conn.execute(
             """
@@ -711,6 +724,7 @@ def upsert_study_material(username: str, material: dict[str, Any]) -> None:
 
 
 def get_study_materials(username: str) -> list[dict[str, Any]]:
+    username = username.strip().lower()
     with _connect() as conn:
         rows = conn.execute(
             "SELECT id, type, title, subject, chapter, content, url, image_data_url as imageDataUrl, created_at as createdAt FROM study_materials WHERE username = ? ORDER BY created_at DESC",
@@ -720,6 +734,7 @@ def get_study_materials(username: str) -> list[dict[str, Any]]:
 
 
 def save_user_snapshot(username: str, payload_json: str) -> None:
+    username = username.strip().lower()
     with _connect() as conn:
         conn.execute(
             """
@@ -734,6 +749,7 @@ def save_user_snapshot(username: str, payload_json: str) -> None:
 
 
 def get_user_snapshot(username: str) -> Optional[str]:
+    username = username.strip().lower()
     with _connect() as conn:
         row = conn.execute("SELECT payload_json FROM user_snapshots WHERE username = ?", (username,)).fetchone()
     if not row:
@@ -742,6 +758,7 @@ def get_user_snapshot(username: str) -> Optional[str]:
 
 
 def get_parent_account_by_student(student_username: str) -> Optional[dict[str, Any]]:
+    student_username = student_username.strip().lower()
     with _connect() as conn:
         row = conn.execute(
             "SELECT * FROM parent_accounts WHERE student_username = ?",
@@ -764,6 +781,7 @@ def get_parent_account_by_email(parent_email: str) -> Optional[dict[str, Any]]:
 
 
 def upsert_parent_account(student_username: str, parent_email: str, password: str) -> bool:
+    student_username = student_username.strip().lower()
     # Check if any other student shares this parent email to reuse the password
     with _connect() as conn:
         existing_shared = conn.execute(
@@ -809,6 +827,7 @@ def upsert_parent_account(student_username: str, parent_email: str, password: st
 
 
 def reset_parent_credentials(student_username: str, password: str) -> bool:
+    student_username = student_username.strip().lower()
     salt = secrets.token_hex(16)
     password_hash = _hash_password(password, salt)
     now = _utc_now_iso()
@@ -857,6 +876,7 @@ def verify_parent_user(parent_email: str, password: str) -> Optional[str]:
 
 
 def create_parent_session(parent_email: str, student_username: str) -> str:
+    student_username = student_username.strip().lower()
     token = secrets.token_urlsafe(36)
     now = _utc_now_iso()
     with _connect() as conn:
@@ -896,6 +916,7 @@ def delete_parent_session(token: str) -> None:
 
 
 def switch_parent_session_student(token: str, student_username: str) -> None:
+    student_username = student_username.strip().lower()
     with _connect() as conn:
         conn.execute(
             "UPDATE parent_sessions SET student_username = ?, last_seen_at = ? WHERE token = ?",
@@ -904,6 +925,7 @@ def switch_parent_session_student(token: str, student_username: str) -> None:
 
 
 def update_parent_portal_settings(student_username: str, encouragement_note: Optional[str] = None, weekly_goals: Optional[str] = None) -> None:
+    student_username = student_username.strip().lower()
     with _connect() as conn:
         if encouragement_note is not None and weekly_goals is not None:
             conn.execute(
@@ -923,6 +945,7 @@ def update_parent_portal_settings(student_username: str, encouragement_note: Opt
 
 
 def get_parent_portal_settings(student_username: str) -> dict[str, Any]:
+    student_username = student_username.strip().lower()
     with _connect() as conn:
         row = conn.execute(
             "SELECT encouragement_note, weekly_goals FROM parent_accounts WHERE student_username = ?",
@@ -937,6 +960,7 @@ def get_parent_portal_settings(student_username: str) -> dict[str, Any]:
 
 
 def save_diagnostic_assessment(username: str, payload_json: str, subject_scores_json: str, total_score: int) -> None:
+    username = username.strip().lower()
     now = _utc_now_iso()
     with _connect() as conn:
         conn.execute(
@@ -954,6 +978,7 @@ def save_diagnostic_assessment(username: str, payload_json: str, subject_scores_
 
 
 def get_diagnostic_assessment(username: str) -> Optional[dict[str, Any]]:
+    username = username.strip().lower()
     with _connect() as conn:
         row = conn.execute(
             "SELECT * FROM diagnostic_assessments WHERE username = ?",
@@ -965,6 +990,7 @@ def get_diagnostic_assessment(username: str) -> Optional[dict[str, Any]]:
 
 
 def save_custom_textbook(username: str, class_num: int, subject: str, chapter: str, filename: str, filepath: str, text_content: str) -> int:
+    username = username.strip().lower()
     now = _utc_now_iso()
     with _connect() as conn:
         cursor = conn.execute(
@@ -978,6 +1004,7 @@ def save_custom_textbook(username: str, class_num: int, subject: str, chapter: s
 
 
 def get_custom_textbooks(username: str, class_num: Optional[Union[str, int]] = None, subject: Optional[str] = None) -> list[dict[str, Any]]:
+    username = username.strip().lower()
     query = "SELECT id, username, class_num, subject, chapter, filename, filepath, created_at FROM custom_textbooks WHERE username = ?"
     params = [username]
     if class_num is not None:
@@ -997,6 +1024,7 @@ def get_custom_textbooks(username: str, class_num: Optional[Union[str, int]] = N
 
 
 def get_custom_textbook_content(username: str, class_num: Union[str, int], subject: str, chapter: str) -> Optional[str]:
+    username = username.strip().lower()
     # Try exact match first
     try:
         val_class = int(class_num)
@@ -1035,6 +1063,7 @@ def get_custom_textbook_content(username: str, class_num: Union[str, int], subje
 
 
 def delete_custom_textbook(username: str, textbook_id: int) -> bool:
+    username = username.strip().lower()
     with _connect() as conn:
         cursor = conn.execute(
             "DELETE FROM custom_textbooks WHERE username = ? AND id = ?",

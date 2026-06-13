@@ -128,14 +128,14 @@ def send_parent_report_email(user_id: str, parent_email: str, report_text: str):
 
         logger.warning("Resend send warning: status=%s body=%s", response.status_code, response.text)
         return {
-            "sent": True,
-            "message": "Report generated successfully. Parent portal credentials remain active.",
+            "sent": False,
+            "message": f"Email warning: {response.text}",
         }
     except Exception as exc:
         logger.warning("Resend send exception (handled gracefully): %s", exc)
         return {
-            "sent": True,
-            "message": "Report generated successfully. Parent portal credentials remain active.",
+            "sent": False,
+            "message": f"Email exception: {str(exc)}",
         }
 
 
@@ -146,8 +146,8 @@ def send_parent_welcome_credentials_email(student_id: str, parent_email: str, pa
     if not resend_api_key:
         logger.warning("RESEND_API_KEY not configured; parent credentials email not sent for student=%s", student_id)
         return {
-            "sent": True,
-            "message": "Parent credentials generated. You can share them with your parents.",
+            "sent": False,
+            "message": "Parent credentials generated, but email API key is missing. No email sent.",
         }
 
     subject = f"Clarity Parent Access Credentials - {student_id}"
@@ -183,12 +183,12 @@ def send_parent_welcome_credentials_email(student_id: str, parent_email: str, pa
             return {"sent": True, "message": f"Parent credentials sent to {parent_email}."}
         logger.warning("Resend credentials send warning: status=%s body=%s", response.status_code, response.text)
         return {
-            "sent": True,
-            "message": "Parent credentials generated. You can share them with your parents.",
+            "sent": False,
+            "message": f"Credentials generated, but email sending failed: {response.text}",
         }
     except Exception as exc:
-        logger.warning("Resend credentials send exception (handled gracefully): %s", exc)
+        logger.warning("Resend credentials send exception: %s", exc)
         return {
-            "sent": True,
-            "message": "Parent credentials generated. You can share them with your parents.",
+            "sent": False,
+            "message": f"Credentials generated, but email sending encountered an error: {str(exc)}",
         }

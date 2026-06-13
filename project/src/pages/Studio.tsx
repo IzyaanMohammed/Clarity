@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Network, Sparkles, Image as ImageIcon, Layers3, Youtube, Brain, Play } from 'lucide-react';
+import { Network, Sparkles, Image as ImageIcon, Layers3, Youtube, Brain, Play, Bookmark } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
@@ -440,25 +440,24 @@ export const Studio = () => {
         }
     };
 
-    // Unused helpers:
-    // const saveCurrentVideoToLibrary = () => {
-    //     if (!videoAssistEnabled) {
-    //         toast.error('Saving to Video Library is Pro Max only.');
-    //         return;
-    //     }
-    //     if (!videoStack) {
-    //         toast.error('Fetch a video first.');
-    //         return;
-    //     }
-    //     const saved = saveVideoLibraryItem({
-    //         source: 'manual',
-    //         subject,
-    //         chapter,
-    //         stack: videoStack,
-    //         assist: videoAssist,
-    //     });
-    //     toast.success(saved ? 'Saved to Video Library.' : 'Already saved in Video Library.');
-    // };
+    const saveCurrentVideoToLibrary = () => {
+        if (!videoAssistEnabled) {
+            toast.error('Saving to Video Library is Pro Max only.');
+            return;
+        }
+        if (!videoStack) {
+            toast.error('Fetch a video first.');
+            return;
+        }
+        const saved = saveVideoLibraryItem({
+            source: 'manual',
+            subject,
+            chapter,
+            stack: videoStack,
+            assist: videoAssist,
+        });
+        toast.success(saved ? 'Saved to Video Library.' : 'Already saved in Video Library.');
+    };
     // 
     // const showNextVideo = () => {
     //     if (!playableVideos.length) {
@@ -882,14 +881,24 @@ export const Studio = () => {
                                         <div className="mt-8 flex flex-col lg:flex-row gap-8 items-start">
                                             {/* Left: Video Details & Coach */}
                                             <div className="flex-1 space-y-6">
-                                                <div className="px-4">
-                                                    <h2 className="text-3xl font-black text-slate-900 dark:text-white">
-                                                        {playableVideos[activeVideoIndex]?.title || 'Loading video...'}
-                                                    </h2>
-                                                    <p className="text-sm text-slate-500 mt-2 flex items-center gap-2">
-                                                        <Youtube size={16} className="text-rose-500" />
-                                                        {playableVideos[activeVideoIndex]?.channel || 'YouTube'}
-                                                    </p>
+                                                <div className="px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                                    <div>
+                                                        <h2 className="text-3xl font-black text-slate-900 dark:text-white">
+                                                            {playableVideos[activeVideoIndex]?.title || 'Loading video...'}
+                                                        </h2>
+                                                        <p className="text-sm text-slate-500 mt-2 flex items-center gap-2">
+                                                            <Youtube size={16} className="text-rose-500" />
+                                                            {playableVideos[activeVideoIndex]?.channel || 'YouTube'}
+                                                        </p>
+                                                    </div>
+                                                    <Button 
+                                                        onClick={saveCurrentVideoToLibrary}
+                                                        variant="primary"
+                                                        className="rounded-2xl px-6 py-3 font-black flex items-center gap-2 shadow-lg shadow-[#1D9E75]/20 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap self-start sm:self-auto"
+                                                    >
+                                                        <Bookmark size={18} />
+                                                        Save Video
+                                                    </Button>
                                                 </div>
 
                                                 {/* Live Clarity Coach (Full Width below video) */}

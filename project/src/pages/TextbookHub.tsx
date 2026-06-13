@@ -1164,16 +1164,22 @@ export const TextbookHub = () => {
                                                 <p className="text-xs text-slate-600 dark:text-slate-305 italic line-clamp-3">"{selectedText}"</p>
                                             </div>
                                             
-                                            <div className="p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm flex-1 overflow-y-auto min-h-[200px]">
-                                                <p className="text-xs font-black uppercase tracking-wider text-slate-400 mb-2">{aiActionName}</p>
-                                                {aiLoading && !aiResponse ? (
-                                                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                        <div className="animate-spin h-3.5 w-3.5 border-2 border-[#1D9E75] border-t-transparent rounded-full"></div>
-                                                        Thinking...
-                                                    </div>
-                                                ) : (
-                                                    <MarkdownContent className="text-xs leading-relaxed" content={aiResponse} />
-                                                )}
+                                            <div className="p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm flex-1 overflow-y-auto min-h-[200px] space-y-4">
+                                                <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200/30 rounded-xl text-[10px] text-amber-700 dark:text-amber-400 flex items-start gap-2">
+                                                    <span className="text-amber-500">💡</span>
+                                                    <span><strong>Tip:</strong> Highlight any text inside this explanation and right-click (or left-click) to ask the AI coach further questions!</span>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs font-black uppercase tracking-wider text-slate-400 mb-2">{aiActionName}</p>
+                                                    {aiLoading && !aiResponse ? (
+                                                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                                                            <div className="animate-spin h-3.5 w-3.5 border-2 border-[#1D9E75] border-t-transparent rounded-full"></div>
+                                                            Thinking...
+                                                        </div>
+                                                    ) : (
+                                                        <MarkdownContent className="text-xs leading-relaxed" content={aiResponse} />
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     ) : (
