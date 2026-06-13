@@ -20,6 +20,8 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
   const navigate = useNavigate();
   const user = getUser();
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const prevMessagesLengthRef = useRef(0);
 
   const [activeTab, setActiveTab] = useState<'chat' | 'planner'>(initialTab);
 
@@ -257,7 +259,21 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
   }, [user?.name]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const container = chatContainerRef.current;
+    const messageAdded = messages.length > prevMessagesLengthRef.current;
+    prevMessagesLengthRef.current = messages.length;
+
+    if (messageAdded) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    if (container) {
+      const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 250;
+      if (isNearBottom) {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   }, [messages, streamingResponse]);
 
   const handleSendMessage = async (e?: React.FormEvent) => {
@@ -504,7 +520,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
             </div>
 
             {/* Chat History Box */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
+            <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
               {messages.map((msg, index) => (
                 <div
                   key={index}
