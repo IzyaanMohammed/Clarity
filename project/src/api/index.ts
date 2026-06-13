@@ -260,6 +260,8 @@ export interface DailyPlanPayload {
   plan_depth?: 'lite' | 'balanced' | 'intensive';
   learner_profile?: Record<string, string>;
   teacher_personality?: string;
+  task_types?: string[];
+  custom_tasks?: string;
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

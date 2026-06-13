@@ -208,6 +208,13 @@ def _plan_prompt(request: DailyPlanRequest) -> str:
     weak_topics_text = ", ".join(request.weak_topics) if request.weak_topics else "None"
     subjects_text = ", ".join(request.subjects)
 
+    custom_tasks_instruction = ""
+    if request.task_types:
+        types_str = ", ".join(request.task_types)
+        custom_tasks_instruction += f"- Prioritize these categories/types of tasks: {types_str}\n"
+    if request.custom_tasks:
+        custom_tasks_instruction += f"- Include these specific tasks: {request.custom_tasks}\n"
+
     return (
         f"Create a practical one-day CBSE study plan for Class {request.class_num}.\n"
         f"Subjects: {subjects_text}\n"
@@ -219,8 +226,9 @@ def _plan_prompt(request: DailyPlanRequest) -> str:
         "- Use these exact sections: ## Morning Sprint, ## Afternoon Deep Work, ## Evening Review\n"
         "- In each section, use a markdown table with columns: Task | Duration (min) | Outcome | Action\n"
         "- Action column must use checkbox format like [ ] Revise notes\n"
-        f"- Include {max(4, request.task_count)} to {max(5, request.task_count + 1)} tasks total, each with a realistic duration in minutes\n"
+        f"- Include {max(4, request.task_count)} tasks total, each with a realistic duration in minutes\n"
         "- Include at least one revision task and one test task\n"
+        f"{custom_tasks_instruction}"
         "- Add a final section ## Priority Fixes with a markdown table: Topic | Fix Action | Deadline\n"
         f"- {depth_guideline}\n"
         "- Keep language simple, concrete, and motivating\n"

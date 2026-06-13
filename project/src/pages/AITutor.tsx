@@ -56,6 +56,8 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
   const [newDateLabel, setNewDateLabel] = useState('');
   const [newDateValue, setNewDateValue] = useState('');
   const [weakTopicsInput, setWeakTopicsInput] = useState('');
+  const [taskTypesInput, setTaskTypesInput] = useState('Revision, Practice Problems, Mock Tests');
+  const [customTasksInput, setCustomTasksInput] = useState('');
   const [taskCount, setTaskCount] = useState(7);
   const [planDepth, setPlanDepth] = useState<'lite' | 'balanced' | 'intensive'>('balanced');
   const [isPlannerLoading, setIsPlannerLoading] = useState(false);
@@ -162,6 +164,11 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
               .filter(Boolean);
 
           setPlan('');
+          const taskTypes = taskTypesInput
+              .split(',')
+              .map((t) => t.trim())
+              .filter(Boolean);
+
           await generateDailyPlanStream(
               {
                   class_num: classKey,
@@ -170,6 +177,8 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                   exam_date: examDate || undefined,
                   task_count: taskCount,
                   plan_depth: planDepth,
+                  task_types: taskTypes,
+                  custom_tasks: customTasksInput.trim() || undefined,
                   learner_profile: {
                       learning_style: user?.learningStyle || '',
                       goal: user?.goal || '',
@@ -618,64 +627,92 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
 
             {/* Inputs Config Card */}
             <Card className="p-6 md:p-8 bg-white dark:bg-slate-800 border-none shadow-xl rounded-3xl">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Exam Date</label>
-                  <input
-                    type="date"
-                    value={examDate}
-                    onChange={(e) => handleExamDateChange(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
-                  />
-                </div>
+              <div className="space-y-4">
+                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                   <div>
+                     <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Exam Date</label>
+                     <input
+                       type="date"
+                       value={examDate}
+                       onChange={(e) => handleExamDateChange(e.target.value)}
+                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
+                     />
+                   </div>
 
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Weak Topics</label>
-                  <input
-                    type="text"
-                    value={weakTopicsInput}
-                    onChange={(e) => setWeakTopicsInput(e.target.value)}
-                    placeholder="Light, Trigonometry, Electricity"
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
-                  />
-                </div>
+                   <div>
+                     <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Weak Topics</label>
+                     <input
+                       type="text"
+                       value={weakTopicsInput}
+                       onChange={(e) => setWeakTopicsInput(e.target.value)}
+                       placeholder="Light, Trigonometry, Electricity"
+                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
+                     />
+                   </div>
 
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Task Count</label>
-                  <div className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 border border-slate-200 dark:border-slate-700">
-                    <input
-                      type="range"
-                      min={4}
-                      max={10}
-                      value={taskCount}
-                      onChange={(e) => setTaskCount(Number(e.target.value))}
-                      className="w-full accent-[#1D9E75]"
-                    />
-                    <p className="text-xs font-bold text-slate-500 mt-1">{taskCount} tasks</p>
-                  </div>
-                </div>
+                   <div>
+                     <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Task Count</label>
+                     <div className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 border border-slate-200 dark:border-slate-700">
+                       <input
+                         type="range"
+                         min={4}
+                         max={12}
+                         value={taskCount}
+                         onChange={(e) => setTaskCount(Number(e.target.value))}
+                         className="w-full accent-[#1D9E75]"
+                       />
+                       <p className="text-xs font-bold text-slate-500 mt-1">{taskCount} tasks</p>
+                     </div>
+                   </div>
 
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Intensity</label>
-                  <select
-                    value={planDepth}
-                    onChange={(e) => setPlanDepth(e.target.value as 'lite' | 'balanced' | 'intensive')}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
-                  >
-                    <option value="lite">Lite</option>
-                    <option value="balanced">Balanced</option>
-                    <option value="intensive">Intensive</option>
-                  </select>
-                </div>
+                   <div>
+                     <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Intensity</label>
+                     <select
+                       value={planDepth}
+                       onChange={(e) => setPlanDepth(e.target.value as 'lite' | 'balanced' | 'intensive')}
+                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
+                     >
+                       <option value="lite">Lite</option>
+                       <option value="balanced">Balanced</option>
+                       <option value="intensive">Intensive</option>
+                     </select>
+                   </div>
+                 </div>
 
-                <Button
-                  onClick={handleGeneratePlan}
-                  disabled={isPlannerLoading}
-                  className="w-full bg-[#1D9E75] hover:bg-[#16805d] rounded-xl font-bold h-[48px]"
-                >
-                  {isPlannerLoading ? 'Streaming Plan...' : 'Generate Plan'}
-                </Button>
-              </div>
+                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                   <div className="md:col-span-2">
+                     <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Task Categories to Include</label>
+                     <input
+                       type="text"
+                       value={taskTypesInput}
+                       onChange={(e) => setTaskTypesInput(e.target.value)}
+                       placeholder="Revision, Mock Tests, Formulas, Diagrams"
+                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
+                     />
+                   </div>
+
+                   <div className="md:col-span-2">
+                     <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Specific Tasks / Custom Items</label>
+                     <input
+                       type="text"
+                       value={customTasksInput}
+                       onChange={(e) => setCustomTasksInput(e.target.value)}
+                       placeholder="e.g. Draw circuit diagram, solve 5 integration equations"
+                       className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-905 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 outline-none focus:ring-1 focus:ring-[#1D9E75]"
+                     />
+                   </div>
+
+                   <div className="md:col-span-1">
+                     <Button
+                       onClick={handleGeneratePlan}
+                       disabled={isPlannerLoading}
+                       className="w-full bg-[#1D9E75] hover:bg-[#16805d] rounded-xl font-bold h-[48px]"
+                     >
+                       {isPlannerLoading ? 'Streaming...' : 'Generate Plan'}
+                     </Button>
+                   </div>
+                 </div>
+               </div>
             </Card>
 
             {/* Milestones Card */}

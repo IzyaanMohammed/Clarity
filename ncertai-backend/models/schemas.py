@@ -140,6 +140,8 @@ class DailyPlanRequest(BaseModel):
     plan_depth: str = "balanced"  # lite | balanced | intensive
     learner_profile: Optional[Dict[str, str]] = None
     teacher_personality: Optional[str] = "Kind"
+    task_types: Optional[List[str]] = []
+    custom_tasks: Optional[str] = None
 
 
 class DailyPlanResponse(BaseModel):

@@ -40,6 +40,7 @@ export const Navbar = () => {
   const mainLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: BookOpen },
     { to: '/ask', label: 'Ask AI', icon: MessageCircle },
+    { to: '/plan', label: 'Study Planner', icon: CalendarClock },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
     { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
     { to: '/ai-tutor', label: 'AI Tutor', icon: Sparkles },
@@ -65,6 +66,7 @@ export const Navbar = () => {
   const mobileLinks = [
     { to: '/dashboard', label: 'Home', icon: BookOpen },
     { to: '/ask', label: 'Ask', icon: MessageCircle },
+    { to: '/plan', label: 'Planner', icon: CalendarClock },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
     { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
     { to: '/progress', label: 'Progress', icon: BarChart3 },
