@@ -17,7 +17,7 @@ try:
 except ImportError:
     psycopg2 = None
 
-POSTGRES_URL = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
+POSTGRES_URL = (os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL") or "").strip()
 _last_backup_mtime = 0.0
 
 def _get_pg_conn():
