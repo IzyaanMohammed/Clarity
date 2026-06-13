@@ -41,6 +41,7 @@ def restore_db_from_pg() -> None:
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS db_backup (id INT PRIMARY KEY, db_file BYTEA, updated_at TIMESTAMP)"
         )
+        cursor.execute("ALTER TABLE db_backup ENABLE ROW LEVEL SECURITY;")
         conn.commit()
         
         cursor.execute("SELECT db_file FROM db_backup WHERE id = 1")
@@ -77,6 +78,7 @@ def backup_db_to_pg() -> None:
         cursor.execute(
             "CREATE TABLE IF NOT EXISTS db_backup (id INT PRIMARY KEY, db_file BYTEA, updated_at TIMESTAMP)"
         )
+        cursor.execute("ALTER TABLE db_backup ENABLE ROW LEVEL SECURITY;")
         
         cursor.execute("SELECT id FROM db_backup WHERE id = 1")
         exists = cursor.fetchone()
