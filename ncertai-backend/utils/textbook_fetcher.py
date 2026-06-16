@@ -56,14 +56,24 @@ _BOOK_MAP: dict[str, dict[str, list[tuple[str, int, int]]]] = {
         "science":        [("jesc1", 13, 0)],
         "maths":          [("jemh1", 14, 0)],
         "math":           [("jemh1", 14, 0)],
-        "social":         [("jess1", 7, 0)],
+        "social":         [
+            ("jess3", 5, 0),   # History (1-5)
+            ("jess1", 7, 5),   # Geography (6-12)
+            ("jess4", 5, 12),  # Civics (13-17)
+            ("jess2", 5, 17)   # Economics (18-22)
+        ],
         "english":        [("jeff1", 9, 0)],
     },
     "9": {
         "science":        [("iesc1", 12, 0)],
         "maths":          [("iemh1", 12, 0)],
         "math":           [("iemh1", 12, 0)],
-        "social":         [("ieps1", 5, 0)],
+        "social":         [
+            ("iess3", 5, 0),   # History (1-5)
+            ("iess1", 6, 5),   # Geography (6-11)
+            ("iess4", 5, 11),  # Civics (12-16)
+            ("iess2", 4, 16)   # Economics (17-20)
+        ],
         "english":        [("iebe1", 9, 0)],
     },
     "8": {
@@ -110,13 +120,38 @@ def _resolve_book_code(class_num: str, subject: str, chapter_idx: int) -> Option
     parts = _resolve_book_parts(class_num, subject)
     if not parts:
         return None
-    for code, max_ch, offset in parts:
+        
+    code, local = "", 0
+    for c, max_ch, offset in parts:
         if chapter_idx <= offset + max_ch:
             local = max(1, min(chapter_idx - offset, max_ch))
-            return (code, local)
-    # Fallback: last part
-    code, max_ch, offset = parts[-1]
-    local = max(1, min(chapter_idx - offset, max_ch))
+            code = c
+            break
+    else:
+        # Fallback: last part
+        code, max_ch, offset = parts[-1]
+        local = max(1, min(chapter_idx - offset, max_ch))
+        
+    # Apply rationalization mappings
+    if code == "jesc1":
+        mapping = {1: 1, 2: 2, 3: 3, 4: 4, 5: 6, 6: 7, 7: 8, 8: 9, 9: 10, 10: 11, 11: 12, 12: 13, 13: 15}
+        local = mapping.get(local, local)
+    elif code == "jemh1":
+        if local >= 11:
+            local = local + 1
+    elif code == "iesc1":
+        mapping = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 8, 8: 9, 9: 10, 10: 11, 11: 12, 12: 15}
+        local = mapping.get(local, local)
+    elif code == "iemh1":
+        mapping = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 10, 10: 12, 11: 13, 12: 14}
+        local = mapping.get(local, local)
+    elif code == "hesc1":
+        mapping = {1: 1, 2: 2, 3: 5, 4: 6, 5: 7, 6: 9, 7: 10, 8: 11, 9: 12, 10: 13, 11: 14, 12: 15, 13: 16}
+        local = mapping.get(local, local)
+    elif code == "hemh1":
+        mapping = {1: 1, 2: 2, 3: 3, 4: 5, 5: 6, 6: 7, 7: 8, 8: 9, 9: 11, 10: 12, 11: 13, 12: 14, 13: 15}
+        local = mapping.get(local, local)
+        
     return (code, local)
 
 
