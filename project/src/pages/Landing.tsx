@@ -857,7 +857,7 @@ export const Landing = () => {
                             </div>
 
                             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800 }}>
-                                Complete syllabus study tools designed for absolute focus.
+                                The only AI that studies NCERT with you — not instead of you.
                             </h2>
 
                             <p className="text-sm md:text-base text-[#1a1a2e]/70 font-semibold leading-relaxed max-w-xl">
@@ -1120,24 +1120,29 @@ export const Landing = () => {
                             <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
                                 {[
                                     {
-                                        id: 'workspace',
-                                        title: 'Daily Mission Workspace',
-                                        desc: 'Checklists prioritizing high-ROI board revision and weak topic recover goals.'
+                                        id: 'tutor',
+                                        title: 'Ask AI',
+                                        desc: 'Answers formatted the way CBSE marks them.'
                                     },
                                     {
-                                        id: 'tutor',
-                                        title: 'AI CBSE Study Coach',
-                                        desc: 'Professional chat console resolving textbook questions and surfacing exam traps.'
+                                        id: 'workspace',
+                                        title: 'Practice',
+                                        desc: 'Questions based on actual board exam patterns — 1 mark, 3 mark, 5 mark.'
                                     },
                                     {
                                         id: 'simulator',
-                                        title: 'Timed Exam Simulator',
-                                        desc: 'Board-style exam practice featuring detailed step-marking grading checklists.'
+                                        title: 'Exam Simulator',
+                                        desc: 'Simulate your board exam. Same time limit. Same marking scheme.'
                                     },
                                     {
                                         id: 'parent',
-                                        title: 'Parent Portal Dashboard',
-                                        desc: 'Dashboard displaying coverage scores, risk assessments, and progress alerts.'
+                                        title: 'Chapter Deep Dive',
+                                        desc: 'Every NCERT chapter — explained, mapped, and linked to the best YouTube lessons.'
+                                    },
+                                    {
+                                        id: 'leaderboard',
+                                        title: 'Leaderboard',
+                                        desc: "Who's topping the boards this week?"
                                     }
                                 ].map((tab) => (
                                     <button
@@ -1166,7 +1171,7 @@ export const Landing = () => {
                                         <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
                                         <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
                                         <span className="text-[9px] font-black uppercase text-[#1a1a2e]/40 tracking-widest ml-2">
-                                            Clarity Student OS — {activeTab.toUpperCase()}
+                                            Clarity Student OS — {activeTab === 'parent' ? 'CHAPTER DEEP DIVE' : activeTab === 'workspace' ? 'PRACTICE' : activeTab.toUpperCase()}
                                         </span>
                                     </div>
 
@@ -1248,29 +1253,45 @@ export const Landing = () => {
                                         {activeTab === 'parent' && (
                                             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                                                 <div className="md:col-span-7 space-y-3">
-                                                    <div className="p-3.5 bg-white border border-[#1a1a2e]/10 flex items-center justify-between rounded-xl">
-                                                        <div>
-                                                            <p className="text-[9px] font-black uppercase text-[#1a1a2e]/40">Weekly Diagnostic Score</p>
-                                                            <h4 className="text-xl font-black text-[#1a1a2e]/80">82.5%</h4>
+                                                    <div className="p-4 bg-white border border-[#1a1a2e]/10 rounded-xl space-y-2">
+                                                        <div className="flex items-center justify-between">
+                                                            <p className="text-[10px] font-black uppercase text-[#1a1a2e]/50">NCERT Mapping</p>
+                                                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                                         </div>
-                                                        <span className="text-[8px] bg-emerald-50 border border-emerald-500/10 text-emerald-700 px-2 py-0.5 font-bold uppercase rounded-full">Low Risk</span>
-                                                    </div>
-                                                    <div className="p-3 bg-white border border-[#1a1a2e]/10 space-y-1 rounded-xl">
-                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/50 tracking-wider">Recommended Parent Action</p>
-                                                        <p className="text-[11px] text-[#1a1a2e]/70 leading-relaxed">
-                                                            Ensure Rohan completes 1 mock Physics practice exam on Wave Optics.
-                                                        </p>
+                                                        <p className="text-sm font-bold text-[#1a1a2e]">Chemical Reactions (Pg 12-18)</p>
+                                                        <div className="w-full bg-[#1a1a2e]/10 rounded-full h-1.5 mt-2 overflow-hidden">
+                                                            <div className="bg-[#1D9E75] h-1.5 rounded-full w-[85%]"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="md:col-span-5 flex flex-col items-center justify-center p-5 bg-[#fcfbf9] border border-[#1a1a2e]/10 rounded-xl">
-                                                    <div className="relative w-16 h-16 mb-1">
-                                                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                                                            <path className="text-slate-100" strokeWidth="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                            <path className="text-[#1a1a2e]" strokeDasharray="84, 100" strokeWidth="3.5" strokeLinecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                        </svg>
-                                                        <div className="absolute inset-0 flex items-center justify-center text-xs font-black">84%</div>
+                                                <div className="md:col-span-5 space-y-3">
+                                                    <div className="p-3 bg-[#fcfbf9] border border-[#1a1a2e]/10 rounded-xl flex items-center gap-3">
+                                                        <div className="w-10 h-10 bg-red-500/10 text-red-600 rounded-lg flex items-center justify-center"><Video size={16} /></div>
+                                                        <div>
+                                                            <p className="text-[10px] font-black uppercase text-[#1a1a2e]/50">Best YouTube</p>
+                                                            <p className="text-xs font-bold text-[#1a1a2e]">Ranked #1 for Board</p>
+                                                        </div>
                                                     </div>
-                                                    <p className="text-[8px] font-black uppercase tracking-wider text-[#1a1a2e]/50 mt-1">Syllabus Coverage</p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {activeTab === 'leaderboard' && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between border-b border-[#1a1a2e]/10 pb-2">
+                                                    <p className="text-sm font-black text-[#1a1a2e]">Top Board Scorer</p>
+                                                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Weekly Reset</span>
+                                                </div>
+                                                <div className="flex items-center gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                                                    <div className="w-8 h-8 rounded-full bg-yellow-400 text-yellow-900 flex items-center justify-center font-black text-xs">1</div>
+                                                    <div className="flex-1">
+                                                        <p className="text-xs font-bold text-[#1a1a2e]">Rahul S. <span className="ml-1 text-[10px] font-normal text-slate-500">Class 10</span></p>
+                                                        <p className="text-[10px] font-black text-yellow-700">14 Day Streak 🔥</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-sm font-black text-[#1a1a2e]">2400</p>
+                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40">XP</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}

@@ -25,6 +25,7 @@ import { Login } from './pages/Login';
 import { AITutor } from './pages/AITutor';
 import { ActiveRecall } from './pages/ActiveRecall';
 import { Leaderboard } from './pages/Leaderboard';
+import { AnswerChecker } from './pages/AnswerChecker';
 import { getMaterialsFromDatabase, getMyProfile, getUserSnapshot } from './api';
 import { clearAuthToken, clearUser, getAuthToken, getUser, hydrateLocalStateFromSnapshot, saveUser, type StudyMaterialItem } from './utils/storage';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -126,6 +127,14 @@ function App() {
               }
             />
 
+            <Route
+              path="/answer-checker"
+              element={
+                <ProtectedRoute>
+                  <AnswerChecker />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/library"
               element={

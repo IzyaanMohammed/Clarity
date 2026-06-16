@@ -37,39 +37,36 @@ export const Navbar = () => {
     sessionStorage.setItem('sidebar_scroll_position', e.currentTarget.scrollTop.toString());
   };
 
-  const mainLinks = [
+  const homeLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: BookOpen },
-    { to: '/ask', label: 'Ask AI', icon: MessageCircle },
-    { to: '/plan', label: 'Study Planner', icon: CalendarClock },
-    { to: '/practice', label: 'Practice', icon: ClipboardList },
     { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-    { to: '/ai-tutor', label: 'AI Tutor', icon: Sparkles },
   ];
 
-  const learnLinks = [
-    { to: '/library', label: 'Library', icon: Book },
-    { to: '/textbook-hub', label: 'Textbook Hub', icon: BookOpen },
-    { to: '/active-recall', label: 'Active Recall', icon: Brain },
+  const studyLinks = [
+    { to: '/textbook-hub', label: 'Chapter Hub', icon: Book },
+    { to: '/studio', label: 'Chapter Deep Dive', icon: Video },
+  ];
+
+  const practiceLinks = [
+    { to: '/practice', label: 'Practice Lab', icon: ClipboardList },
+    { to: '/exam-simulator', label: 'Exam Simulator', icon: Timer },
+  ];
+
+  const aiLinks = [
+    { to: '/ask', label: 'Clarifier AI', icon: Sparkles },
     { to: '/flashcards', label: 'Flashcards', icon: Layers },
-    { to: '/summary', label: 'Summary', icon: FileText },
-    { to: '/subscription', label: 'Subscription', icon: Sparkles },
   ];
 
   const toolsLinks = [
-    { to: '/exam-simulator', label: 'Exam Simulator', icon: Timer },
-    { to: '/studio', label: 'Studio', icon: Video },
-    { to: '/ocr', label: 'OCR', icon: ScanText },
-    { to: '/materials', label: 'Materials', icon: FolderOpen },
-    { to: '/progress', label: 'Progress', icon: BarChart3 },
+    { to: '/ocr', label: 'Scan & Digitize', icon: ScanText },
+    { to: '/materials', label: 'My Uploads', icon: FolderOpen },
   ];
 
   const mobileLinks = [
     { to: '/dashboard', label: 'Home', icon: BookOpen },
-    { to: '/ask', label: 'Ask', icon: MessageCircle },
-    { to: '/plan', label: 'Planner', icon: CalendarClock },
+    { to: '/ask', label: 'Clarifier', icon: Sparkles },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
-    { to: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-    { to: '/progress', label: 'Progress', icon: BarChart3 },
+    { to: '/textbook-hub', label: 'Chapters', icon: Book },
     { to: '/profile', label: 'Profile', icon: User },
   ];
 
@@ -122,16 +119,30 @@ export const Navbar = () => {
 
           <div id="sidebar-scroll-container" onScroll={handleScroll} className="mt-5 space-y-5 overflow-y-auto pr-1">
             <section>
-              {!collapsed && <p className="px-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Core</p>}
+              {!collapsed && <p className="px-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Home</p>}
               <div className="mt-2 space-y-1">
-                {mainLinks.map(renderLink)}
+                {homeLinks.map(renderLink)}
               </div>
             </section>
 
             <section>
-              {!collapsed && <p className="px-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Study</p>}
+              {!collapsed && <p className="px-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">NCERT Study</p>}
               <div className="mt-2 space-y-1">
-                {learnLinks.map(renderLink)}
+                {studyLinks.map(renderLink)}
+              </div>
+            </section>
+            
+            <section>
+              {!collapsed && <p className="px-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Practice</p>}
+              <div className="mt-2 space-y-1">
+                {practiceLinks.map(renderLink)}
+              </div>
+            </section>
+
+            <section>
+              {!collapsed && <p className="px-3 text-[10px] font-black uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Clarifier AI</p>}
+              <div className="mt-2 space-y-1">
+                {aiLinks.map(renderLink)}
               </div>
             </section>
 

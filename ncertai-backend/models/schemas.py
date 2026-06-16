@@ -45,6 +45,20 @@ class GradeResponse(BaseModel):
     weak_skill: Optional[str] = None
 
 
+class AnswerCheckerRequest(BaseModel):
+    class_num: str
+    subject: str
+    chapter: str
+    marks: int
+    user_input: str
+
+class AnswerCheckerResponse(BaseModel):
+    score: float
+    max_marks: int
+    missing_keywords: List[str]
+    model_answer: str
+    feedback: str
+
 class ChapterReadinessResponse(BaseModel):
     chapter: str
     readiness_score: int

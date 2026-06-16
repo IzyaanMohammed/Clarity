@@ -257,6 +257,7 @@ async def chapter_summary(request: SummaryRequest, x_user_id: str = Header(None)
                 f"Your primary knowledge base is the official NCERT textbook for chapter '{request.chapter}'. "
                 f"STRICT RULES: Use exact NCERT terminology and pedagogical logic. Align all points with CBSE board marking schemes. "
                 f"{get_ncert_context(request.class_num, request.subject, request.chapter) or ''} "
+                f"\nCRITICAL INSTRUCTION: You MUST base your summary strictly and entirely on the text provided above. Do NOT use external knowledge. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook.\n"
                 f"Ensure every 'Core Idea' and 'Key Term' matches the textbook definition exactly. "
                 f"{_profile_block(request.learner_profile)}"
                 + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
@@ -304,6 +305,7 @@ async def chapter_summary_stream(request: SummaryRequest, x_user_id: str = Heade
                 f"Your primary knowledge base is the official NCERT textbook for chapter '{request.chapter}'. "
                 f"STRICT RULES: Use exact NCERT terminology and pedagogical logic. Align all points with CBSE board marking schemes. "
                 f"{get_ncert_context(request.class_num, request.subject, request.chapter) or ''} "
+                f"\nCRITICAL INSTRUCTION: You MUST base your summary strictly and entirely on the text provided above. Do NOT use external knowledge. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook.\n"
                 f"{_profile_block(request.learner_profile)}"
                 + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),
@@ -347,6 +349,7 @@ async def formula_sheet(request: FormulaSheetRequest, x_user_id: str = Header(No
                 f"You are Clarity — the official CBSE AI Tutor for Class {request.class_num} {request.subject}. "
                 f"Produce an exam-ready formula/definition sheet strictly using NCERT definitions and symbols. "
                 f"{get_ncert_context(request.class_num, request.subject, request.chapter) or ''} "
+                f"\nCRITICAL INSTRUCTION: You MUST base your response strictly and entirely on the text provided above. Do NOT use external knowledge. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook.\n"
                 f"{_profile_block(request.learner_profile)}"
                 + (f"\nPersonality: {request.teacher_personality}" if request.teacher_personality else "")
             ),

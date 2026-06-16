@@ -32,13 +32,22 @@ async def ask_question(request: QARequest, x_user_id: str = Header(None)):
                 pass
                 
         if custom_context:
-            system_prompt += f"\n\nSTUDENT'S UPLOADED TEXTBOOK CONTEXT:\n{custom_context}"
+            system_prompt += (
+                f"\n\nSTUDENT'S UPLOADED TEXTBOOK CONTEXT:\n{custom_context}\n\n"
+                "CRITICAL INSTRUCTION: You MUST base your answer strictly and entirely on the text provided above. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook."
+                "Do NOT use external knowledge. If the answer is not in the text, clearly state that it is not covered in the textbook."
+            )
         else:
             ncert_context = get_ncert_context(
                 request.class_num, request.subject, request.chapter, request.question
             )
             if ncert_context:
-                system_prompt += f"\n\n{ncert_context}"
+                system_prompt += (
+                    f"\n\n{ncert_context}\n\n"
+                    "CRITICAL INSTRUCTION: You MUST base your answer strictly and entirely on the NCERT textbook text provided above. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook."
+                    "Do NOT use external knowledge to add facts not present in the text. "
+                    "If the answer is not in the text, clearly state that it is not covered in the NCERT chapter."
+                )
 
         if request.learner_profile:
             profile_bits = [
@@ -119,13 +128,22 @@ async def ask_question_stream(request: QARequest, x_user_id: str = Header(None))
                     pass
             
             if custom_context:
-                system_prompt += f"\n\nSTUDENT'S UPLOADED TEXTBOOK CONTEXT:\n{custom_context}"
+                system_prompt += (
+                    f"\n\nSTUDENT'S UPLOADED TEXTBOOK CONTEXT:\n{custom_context}\n\n"
+                    "CRITICAL INSTRUCTION: You MUST base your answer strictly and entirely on the text provided above. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook."
+                    "Do NOT use external knowledge. If the answer is not in the text, clearly state that it is not covered in the textbook."
+                )
             else:
                 ncert_context = get_ncert_context(
                     request.class_num, request.subject, request.chapter, request.question
                 )
                 if ncert_context:
-                    system_prompt += f"\n\n{ncert_context}"
+                    system_prompt += (
+                        f"\n\n{ncert_context}\n\n"
+                        "CRITICAL INSTRUCTION: You MUST base your answer strictly and entirely on the NCERT textbook text provided above. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook."
+                        "Do NOT use external knowledge to add facts not present in the text. "
+                        "If the answer is not in the text, clearly state that it is not covered in the NCERT chapter."
+                    )
 
             if request.learner_profile:
                 profile_bits = [

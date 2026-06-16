@@ -18,20 +18,17 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 # smart  → larger free model         : summaries, 5-mark answers, predictions
 # fallback → free image-capable model
 MODELS = {
-    "fast":     "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-    "vision":   "google/gemma-4-31b-it:free",
-    "smart":    "openai/gpt-oss-120b:free",
-    "fallback": "openrouter/free",
+    "fast":     "google/gemini-2.0-flash-exp:free",
+    "vision":   "google/gemini-2.0-flash-exp:free",
+    "smart":    "google/gemini-2.0-flash-exp:free",
+    "fallback": "google/gemini-1.5-pro:free",
 }
 
 FREE_FALLBACK_MODELS = [
-    "openrouter/free",
+    "google/gemini-1.5-pro:free",
+    "google/gemini-1.5-flash:free",
     "meta-llama/llama-3.3-70b-instruct:free",
-    "google/gemma-4-31b-it:free",
-    "meta-llama/llama-3.2-3b-instruct:free",
-    "qwen/qwen3-coder:free",
-    "openai/gpt-oss-120b:free",
-    "nousresearch/hermes-3-llama-3.1-405b:free",
+    "openrouter/free",
 ]
 
 # ── Retry Configuration ────────────────────────────────────────────────────────

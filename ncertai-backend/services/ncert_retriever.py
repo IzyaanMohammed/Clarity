@@ -35,33 +35,10 @@ def get_ncert_context(class_num: str, subject: str, chapter: str, query: str = "
             data = json.load(f)
             concepts = data.get("concepts", [])
             
-            # Simple keyword-based retrieval
+            # Full context stuffing: Gemini 2.0 Flash handles massive contexts
             relevant_snippets = []
-            query_lower = query.lower()
-            
             for concept in concepts:
-                # If query is empty, we might return all key concepts (limited)
-                # If query exists, we match against title and keywords
-                if not query:
-                    relevant_snippets.append(f"### {concept['title']}\n{concept['ncert_text']}")
-                    continue
-                
-                match = False
-                if concept['title'].lower() in query_lower:
-                    match = True
-                else:
-                    for kw in concept.get("keywords", []):
-                        if kw.lower() in query_lower:
-                            match = True
-                            break
-                
-                if match:
-                    relevant_snippets.append(f"### {concept['title']}\n{concept['ncert_text']}")
-            
-            if not relevant_snippets:
-                # Fallback: just return the first 2-3 concepts as general context
-                for concept in concepts[:2]:
-                    relevant_snippets.append(f"### {concept['title']}\n{concept['ncert_text']}")
+                relevant_snippets.append(f"### {concept['title']}\n{concept['ncert_text']}")
             
             context_block = "\n\nOFFICIAL NCERT TEXTBOOK EXCERPTS:\n" + "\n".join(relevant_snippets)
             return context_block

@@ -168,6 +168,9 @@ def get_best_cbse_videos(subject: str, grade: str, chapter: str, limit: int = 5)
             dedup[key] = row
 
     ranked = sorted(dedup.values(), key=lambda r: int(r.get("match_score", 0)), reverse=True)
+    if ranked:
+        ranked[0]["most_relevant"] = True
+        
     if not ranked:
         # Fallback map for common chapters to avoid serving Life Processes for everything
         chapter_l = _normalize_text(chapter)

@@ -42,6 +42,21 @@ export const AskAI = () => {
   const [markMode, setMarkMode] = useState<'1-mark' | '3-mark' | '5-mark'>(savedSession?.markMode || '3-mark');
   const [isLoading, setIsLoading] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showPersonalityModal, setShowPersonalityModal] = useState(!localStorage.getItem('clarity_personality_set'));
+
+  const handleSelectPersonality = async (personality: string) => {
+    localStorage.setItem('clarity_personality_set', 'true');
+    setShowPersonalityModal(false);
+    toast.success(`Clarifier personality set to: ${personality}`);
+    try {
+      await api.put('/me', { teacherPersonality: personality });
+      if (user) {
+        saveUser({ ...user, teacherPersonality: personality });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     const data = {
@@ -523,8 +538,41 @@ export const AskAI = () => {
       <PremiumModal
         isOpen={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
-        feature="Higher daily AI usage"
+        feature="Daily Upload & Request Limit Reached"
       />
+
+      {showPersonalityModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-2xl w-full shadow-2xl space-y-6">
+            <div className="text-center space-y-2">
+              <div className="w-16 h-16 bg-[#1D9E75]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Bot className="w-8 h-8 text-[#1D9E75]" />
+              </div>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Choose my teaching style</h2>
+              <p className="text-sm font-semibold text-slate-500">How do you want me to explain concepts to you?</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              {[
+                { name: 'Strict & To-The-Point', desc: 'No fluff. Direct answers and bullet points.' },
+                { name: 'Socratic Coach', desc: 'Asks questions to guide you to the answer.' },
+                { name: 'Encouraging & Patient', desc: 'Step-by-step with analogies. High empathy.' },
+                { name: 'Conversational & Casual', desc: 'Talks like a friend, easy to understand.' },
+                { name: 'Board Examiner', desc: 'Focuses strictly on marking schemes and exam traps.' },
+              ].map((style, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSelectPersonality(style.name)}
+                  className="p-5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-[#1D9E75] hover:bg-[#1D9E75]/5 transition-all text-left group"
+                >
+                  <p className="text-sm font-black text-slate-800 dark:text-slate-200 group-hover:text-[#1D9E75]">{style.name}</p>
+                  <p className="text-xs font-medium text-slate-500 mt-1">{style.desc}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -34,6 +34,7 @@ from services.database import (
     update_user_profile,
     verify_parent_user,
     verify_user,
+    update_streak,
 )
 from utils.curriculum import load_curriculum_catalog
 from services.report_generator import send_parent_welcome_credentials_email
@@ -87,6 +88,7 @@ class AuthProfile(BaseModel):
     parentEmail: Optional[str] = None
     country: Optional[str] = None
     state: Optional[str] = None
+    teacherPersonality: Optional[str] = None
     city: Optional[str] = None
     points: Optional[int] = 0
     teacherPersonality: Optional[str] = "Kind"
@@ -1479,6 +1481,7 @@ async def login(request: LoginRequest):
 @router.get("/me")
 async def me(authorization: Optional[str] = Header(default=None)):
     username = _auth_username(authorization)
+    update_streak(username)
     row = get_user_profile(username)
     if not row:
         raise HTTPException(status_code=404, detail="User not found")
@@ -1514,6 +1517,7 @@ async def me(authorization: Optional[str] = Header(default=None)):
         "state": row.get("state") or "Delhi",
         "city": row.get("city") or "New Delhi",
         "points": row.get("points") or 0,
+        "streakCount": row.get("streak_count") or 0,
     }
 
 
@@ -1526,6 +1530,8 @@ async def update_me(profile: AuthProfile, authorization: Optional[str] = Header(
     profile_data["parentEmail"] = parent_email
     profile_data["class"] = profile.class_num
     profile_data["subjects_json"] = json.dumps(profile.subjects or [])
+    if profile.teacherPersonality is not None:
+        profile_data["teacher_personality"] = profile.teacherPersonality
 
     # Keep username immutable in this iteration.
     update_user_profile(username, profile_data)

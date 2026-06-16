@@ -194,7 +194,9 @@ def init_db() -> None:
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL,
                 exam_simulations_count INTEGER DEFAULT 0,
-                ocr_uploads_count INTEGER DEFAULT 0
+                ocr_uploads_count INTEGER DEFAULT 0,
+                streak_count INTEGER DEFAULT 0,
+                last_active_date TEXT
             )
             """
         )
@@ -226,6 +228,10 @@ def init_db() -> None:
             conn.execute("ALTER TABLE users ADD COLUMN city TEXT DEFAULT 'New Delhi'")
         if "points" not in user_columns:
             conn.execute("ALTER TABLE users ADD COLUMN points INTEGER DEFAULT 0")
+        if "streak_count" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN streak_count INTEGER DEFAULT 0")
+        if "last_active_date" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN last_active_date TEXT")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS sessions (
@@ -590,6 +596,39 @@ def increment_ocr_uploads(username: str) -> None:
             (_utc_now_iso(), username),
         )
 
+
+def update_streak(username: str) -> None:
+    username = username.strip().lower()
+    now_date = datetime.utcnow().strftime("%Y-%m-%d")
+    with _connect() as conn:
+        row = conn.execute("SELECT last_active_date, streak_count FROM users WHERE username = ?", (username,)).fetchone()
+        if not row:
+            return
+        last_date = row["last_active_date"]
+        streak = row["streak_count"] or 0
+        
+        if last_date == now_date:
+            return  # Already active today
+            
+        if last_date:
+            last_dt = datetime.strptime(last_date, "%Y-%m-%d")
+            now_dt = datetime.strptime(now_date, "%Y-%m-%d")
+            diff = (now_dt - last_dt).days
+            if diff == 1:
+                streak += 1
+            else:
+                streak = 1
+        else:
+            streak = 1
+            
+        conn.execute(
+            """
+            UPDATE users
+            SET streak_count = ?, last_active_date = ?, points = COALESCE(points, 0) + 10, updated_at = ?
+            WHERE username = ?
+            """,
+            (streak, now_date, _utc_now_iso(), username),
+        )
 
 def set_user_subscription_tier(username: str, subscription_tier: str) -> None:
     username = username.strip().lower()

@@ -17,6 +17,8 @@ from models.schemas import (
     ResourceStackResponse,
     StudyNotificationResponse,
     MockScheduleResponse,
+    AnswerCheckerRequest,
+    AnswerCheckerResponse,
 )
 from services.openrouter import ask_openrouter, ask_openrouter_stream
 from services.database import fetch_progress_logs, get_user_profile, get_username_by_token, increment_exam_simulations
@@ -1250,7 +1252,7 @@ async def _generate_exam_questions(request: ExamSimStartRequest, chapters: list[
         try:
             text_content = await get_textbook_chapter_text(request.class_num, request.subject, ch)
             if text_content:
-                textbook_contexts.append(f"Chapter: {ch}\n{text_content[:15000]}")
+                textbook_contexts.append(f"Chapter: {ch}\n{text_content}")
         except Exception as e:
             logger.error(f"Error fetching textbook for chapter {ch}: {e}")
             
@@ -1260,9 +1262,9 @@ async def _generate_exam_questions(request: ExamSimStartRequest, chapters: list[
         messages.append({
             "role": "system",
             "content": (
-                f"You are a strict CBSE paper setter. You are provided with the official NCERT textbook "
-                f"context for the chapters in scope. Use this as the source of truth for terminology, "
-                f"concepts, equations, and exercises:\n\n{combined_textbook}"
+                f"CRITICAL INSTRUCTION: You MUST base your questions strictly and entirely on the official NCERT textbook text provided below. The format, style, and numerical values of your questions and answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook. "
+                f"Do NOT use external knowledge. Every question generated must have its answer directly verifiable in this text.\n\n"
+                f"--- NCERT TEXTBOOK CONTEXT ---\n{combined_textbook}"
             )
         })
     else:
@@ -1879,12 +1881,18 @@ async def generate_flashcards(request: FlashcardRequest, x_user_id: str = Header
         "- Use NCERT terms"
     )
 
+    text_content = await get_textbook_chapter_text(request.class_num, request.subject, request.chapter)
+    context_str = f"\n\n--- NCERT TEXTBOOK CONTEXT ---\n{text_content}" if text_content else ""
+
     messages = [
         {
             "role": "system",
             "content": (
                 f"You are Clarity, a CBSE tutor for Class {request.class_num} {request.subject}. "
-                "Create high-quality board revision flashcards."
+                "Create high-quality board revision flashcards. "
+                f"{context_str}\n\n"
+                "CRITICAL INSTRUCTION: You MUST base your flashcards strictly and entirely on the NCERT textbook text provided above. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook. "
+                "Do NOT use external knowledge."
             ),
         },
         {"role": "user", "content": prompt},
@@ -1940,12 +1948,18 @@ async def generate_flashcards_stream(request: FlashcardRequest, x_user_id: str =
         "- Use NCERT terms"
     )
 
+    text_content = await get_textbook_chapter_text(request.class_num, request.subject, request.chapter)
+    context_str = f"\n\n--- NCERT TEXTBOOK CONTEXT ---\n{text_content}" if text_content else ""
+
     messages = [
         {
             "role": "system",
             "content": (
                 f"You are Clarity, a CBSE tutor for Class {request.class_num} {request.subject}. "
-                "Create high-quality board revision flashcards."
+                "Create high-quality board revision flashcards. "
+                f"{context_str}\n\n"
+                "CRITICAL INSTRUCTION: You MUST base your flashcards strictly and entirely on the NCERT textbook text provided above. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook. "
+                "Do NOT use external knowledge."
             ),
         },
         {"role": "user", "content": prompt},
@@ -2656,3 +2670,47 @@ async def exam_simulation_submit(request: ExamSimSubmitRequest, authorization: O
         "chapters": request.chapters,
         **result,
     }
+
+
+@router.post("/check-answer")
+async def check_board_answer(request: AnswerCheckerRequest, authorization: Optional[str] = Header(default=None)):
+    _require_non_empty(request.class_num, "class_num")
+    _require_non_empty(request.subject, "subject")
+    _require_non_empty(request.chapter, "chapter")
+
+    text_content = await get_textbook_chapter_text(request.class_num, request.subject, request.chapter)
+    context_str = f"\n\n--- NCERT TEXTBOOK CONTEXT ---\n{text_content}" if text_content else ""
+    
+    prompt = (
+        f"You are a strict CBSE Board Examiner grading a Class {request.class_num} {request.subject} answer.\\n"
+        f"Chapter: {request.chapter}\\n"
+        f"Max Marks: {request.marks}\\n"
+        f"User Input (Question and Answer): {request.user_input}\\n\\n"
+        f"{context_str}\\n\\n"
+        f"CRITICAL INSTRUCTION: You MUST evaluate the answer strictly and entirely based on the NCERT textbook text provided above. The format, style, and numerical values of your answers (e.g. balancing equations with whole numbers instead of fractions) must exactly match how they are presented in the textbook.\\n"
+        f"Grade the answer strictly according to the CBSE step-marking scheme.\\n"
+        f"Respond ONLY with a valid JSON object matching this schema:\\n"
+        f"{{\\n"
+        f"  \\\"score\\\": float (0 to {request.marks}),\\n"
+        f"  \\\"missing_keywords\\\": [\\\"list of specific keywords missing\\\"],\\n"
+        f"  \\\"model_answer\\\": \\\"The perfect CBSE model answer\\\",\\n"
+        f"  \\\"feedback\\\": \\\"Constructive feedback on what to improve\\\"\\n"
+        f"}}\\n"
+        f"Do not include markdown blocks or any other text, just the raw JSON."
+    )
+    
+    try:
+        messages = [{"role": "user", "content": prompt}]
+        response_text = await ask_openrouter(messages, task_type="smart")
+        response_text = response_text.replace("```json", "").replace("```", "").strip()
+        data = json.loads(response_text)
+        return AnswerCheckerResponse(
+            score=float(data.get("score", 0)),
+            max_marks=request.marks,
+            missing_keywords=data.get("missing_keywords", []),
+            model_answer=data.get("model_answer", ""),
+            feedback=data.get("feedback", "")
+        )
+    except Exception as e:
+        logger.error(f"Failed to check answer: {e}")
+        raise HTTPException(status_code=500, detail="Failed to grade answer. Please try again.")
