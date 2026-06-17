@@ -53,7 +53,10 @@ export const Navbar = () => {
   ];
 
   const aiLinks = [
-    { to: '/ask', label: 'Clarifier AI', icon: Sparkles },
+    { to: '/ask', label: 'Ask AI', icon: Sparkles },
+    { to: '/ai-tutor', label: 'Arya Tutor', icon: Brain },
+    { to: '/study-plan', label: 'Study Planner', icon: CalendarClock },
+    { to: '/summary', label: 'Summary', icon: FileText },
     { to: '/flashcards', label: 'Flashcards', icon: Layers },
   ];
 

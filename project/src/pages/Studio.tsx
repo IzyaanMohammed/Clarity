@@ -583,6 +583,8 @@ export const Studio = () => {
                 setQuizChoices({});
                 setQuizSubmitted(false);
                 setShowQuiz(false);
+                setLoadingVideoAssist(false);
+                return;
             }
             try {
                 const response = await getVideoLearningAssist({
