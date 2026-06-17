@@ -1245,6 +1245,69 @@ def _build_diagnostic_questions(class_num: str, subject: Optional[str]) -> tuple
         subject_map = curriculum.get(str(class_num)) or {}
         diagnostic_class = str(class_num)
 
+    if diagnostic_class == "8":
+        questions = [
+            {
+                "id": "q1",
+                "chapter": "Science",
+                "prompt": "Which of the following is a physical change?",
+                "options": [
+                    {"key": "A", "text": "Burning of paper"},
+                    {"key": "B", "text": "Rusting of iron"},
+                    {"key": "C", "text": "Melting of ice"},
+                    {"key": "D", "text": "Digestion of food"}
+                ]
+            },
+            {
+                "id": "q2",
+                "chapter": "Maths",
+                "prompt": "A number is divisible by both 2 and 3. Which of the following could be the number?",
+                "options": [
+                    {"key": "A", "text": "45"},
+                    {"key": "B", "text": "52"},
+                    {"key": "C", "text": "78"},
+                    {"key": "D", "text": "95"}
+                ]
+            },
+            {
+                "id": "q3",
+                "chapter": "Civics",
+                "prompt": "Why do people elect representatives in a democracy?",
+                "options": [
+                    {"key": "A", "text": "To avoid paying taxes"},
+                    {"key": "B", "text": "To make laws and take decisions on behalf of citizens"},
+                    {"key": "C", "text": "To control the media"},
+                    {"key": "D", "text": "To own public property"}
+                ]
+            },
+            {
+                "id": "q4",
+                "chapter": "English",
+                "prompt": "Choose the sentence with the correct punctuation.",
+                "options": [
+                    {"key": "A", "text": "What a beautiful day."},
+                    {"key": "B", "text": "What a beautiful day?"},
+                    {"key": "C", "text": "What a beautiful day!"},
+                    {"key": "D", "text": "What a beautiful day,"}
+                ]
+            },
+            {
+                "id": "q5",
+                "chapter": "Maths",
+                "prompt": "If all squares are rectangles, which statement is definitely true?",
+                "options": [
+                    {"key": "A", "text": "All rectangles are squares."},
+                    {"key": "B", "text": "Some rectangles are squares."},
+                    {"key": "C", "text": "No rectangle is a square."},
+                    {"key": "D", "text": "Squares and rectangles are unrelated."}
+                ]
+            }
+        ]
+        answer_key = {"q1": "C", "q2": "C", "q3": "B", "q4": "C", "q5": "B"}
+        meta = {"diagnostic_class": "8", "diagnostic_subject": "Mixed"}
+        return questions, answer_key, meta
+
+
     requested_subject = (subject or "").strip().lower()
     mixed_mode = requested_subject in {"", "mixed", "random", "stem"}
 

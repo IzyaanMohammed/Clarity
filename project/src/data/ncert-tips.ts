@@ -1,0 +1,22 @@
+export const NCERT_TIPS = [
+  "Always define the keyword in the first sentence of your answer.",
+  "For 3-mark answers use: Point → Explanation → Example.",
+  "Never write 'etc.' in board exam answers — it loses marks.",
+  "In Science, always include units with every numerical answer.",
+  "Map questions: circle the location and write the name clearly.",
+  "For 5-mark answers, write a brief introduction and conclusion.",
+  "Diagrams in Biology and Physics should always be labelled.",
+  "In History answers, always mention the time period.",
+  "Economics: define all technical terms before using them.",
+  "For case-based questions, always refer back to the passage.",
+  "Write answers in points, not long paragraphs — easier to mark.",
+  "Leave 10 minutes at the end to re-read your answers.",
+  "In Maths, always show intermediate steps — partial marking exists.",
+  "Underline or bold key terms if you have time.",
+  "Start with questions you're most confident about.",
+  "In Geography, use compass directions when describing locations.",
+  "Civics: always name the relevant article or amendment if you know it.",
+  "Chemistry: balance equations before starting any numerical.",
+  "Physics: write the formula first, then substitute values.",
+  "For 1-mark questions, one clear sentence is enough — don't over-explain."
+];
