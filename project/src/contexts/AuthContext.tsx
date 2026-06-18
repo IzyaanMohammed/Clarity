@@ -15,7 +15,6 @@ export interface UserProfile {
 interface AuthContextType {
   user: UserProfile | null;
   loading: boolean;
-  loginWithGoogle: () => Promise<void>;
   loginWithEmail: (email: string) => Promise<void>;
   logout: () => void;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
@@ -55,16 +54,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
-  const loginWithGoogle = async () => {
-    // Mock Google Login
-    const mockUser: UserProfile = {
-      id: 'mock-google-user-' + Date.now(),
-      email: 'student@example.com',
-      onboarded: false,
-      avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'
-    };
-    setUser(mockUser);
-  };
 
   const loginWithEmail = async (email: string) => {
     // Mock Email Login
@@ -85,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, loginWithGoogle, loginWithEmail, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, loading, loginWithEmail, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
