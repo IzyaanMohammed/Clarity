@@ -4,10 +4,10 @@ import { FileText, Image as ImageIcon, Video, Headphones, AlignLeft, Sparkles, P
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import toast from 'react-hot-toast';
-import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '../api';
 import { askClarifi } from '../lib/ai';
+import { getUser } from '../utils/storage';
 
 type FileType = 'pdf' | 'image' | 'audio' | 'video' | 'note';
 
@@ -22,7 +22,7 @@ interface DumpItem {
 }
 
 export const Dump = () => {
-    const { user } = useAuth();
+    const user = getUser();
     const navigate = useNavigate();
     const location = useLocation();
     const [items, setItems] = useState<DumpItem[]>([]);
