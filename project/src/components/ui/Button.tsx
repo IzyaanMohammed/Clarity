@@ -16,13 +16,13 @@ export const Button = ({
   disabled,
   ...props
 }: ButtonProps) => {
-  const baseStyles = 'inline-flex items-center justify-center gap-2 font-bold rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#1D9E75]/40 focus:ring-offset-2 focus:ring-offset-transparent';
+  const baseStyles = 'inline-flex items-center justify-center gap-2 font-bold rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#8C5A35]/40 focus:ring-offset-2 focus:ring-offset-transparent';
 
   const variantStyles = {
-    primary: 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/25 hover:bg-[#178f69] active:scale-[0.98]',
-    secondary: 'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-slate-300 dark:hover:bg-slate-600',
-    outline: 'border-2 border-[#1D9E75] text-[#1D9E75] hover:bg-[#1D9E75] hover:text-white',
-    ghost: 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800',
+    primary: 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/25 hover:bg-[#178f69] active:scale-[0.98]',
+    secondary: 'bg-[#E8E4DB] text-[#2C241B] hover:bg-stone-300 :bg-stone-600',
+    outline: 'border-2 border-[#8C5A35] text-[#8C5A35] hover:bg-[#8C5A35] hover:text-white',
+    ghost: 'text-stone-700 hover:bg-[#F2EFE9] :bg-stone-800',
   };
 
   const sizeStyles = {

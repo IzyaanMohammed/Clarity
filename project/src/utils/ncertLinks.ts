@@ -119,15 +119,15 @@ export function generateResourceCard(resource: NCERTResourceLink): string {
     };
 
     return `
-    <div class="resource-card p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition">
+    <div class="resource-card p-4 rounded-lg border border-stone-200 hover:bg-[#FCFAF8] :bg-stone-800/50 cursor-pointer transition">
       <div class="flex items-start gap-3">
         <span class="text-xl">${sourceEmoji[resource.source]}</span>
         <div class="flex-1">
-          <a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="font-bold text-[#1D9E75] hover:underline">
+          <a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="font-bold text-[#8C5A35] hover:underline">
             ${resource.title}
           </a>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">${resource.description}</p>
-          <span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded mt-2 inline-block">
+          <p class="text-sm text-stone-600 mt-1">${resource.description}</p>
+          <span class="text-xs bg-[#F2EFE9] px-2 py-1 rounded mt-2 inline-block">
             ${resource.type === 'web' ? '🌐 Online' : '📄 PDF Viewer'}
           </span>
         </div>

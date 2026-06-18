@@ -578,29 +578,29 @@ export const TextbookHub = () => {
 
     if (isTamilNadu) {
         return (
-            <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+            <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
                 <Navbar />
                 <main className="max-w-3xl mx-auto px-6 py-20 text-center">
-                    <Card className="p-12 bg-white dark:bg-[#0f172a] border-none shadow-2xl rounded-[32px] space-y-6 transform hover:scale-[1.01] transition-all duration-300">
-                        <div className="w-20 h-20 mx-auto bg-amber-50 dark:bg-amber-950/30 rounded-full flex items-center justify-center text-amber-500 animate-pulse">
+                    <Card className="p-12 bg-[#FCFAF8] border-none shadow-2xl rounded-[32px] space-y-6 transform hover:scale-[1.01] transition-all duration-300">
+                        <div className="w-20 h-20 mx-auto bg-amber-50 rounded-full flex items-center justify-center text-amber-500 animate-pulse">
                             <Sparkles size={40} />
                         </div>
-                        <h2 className="text-3xl font-black text-slate-900 dark:text-white">Tamil Nadu Board Support Coming Soon!</h2>
-                        <p className="text-slate-600 dark:text-slate-350 text-lg leading-relaxed max-w-xl mx-auto font-medium">
+                        <h2 className="text-3xl font-black text-[#2C241B] ">Tamil Nadu Board Support Coming Soon!</h2>
+                        <p className="text-stone-600 text-lg leading-relaxed max-w-xl mx-auto font-medium">
                             Tamil Nadu State Board support is coming in a very, very soon update! Currently, CBSE / NCERT is fully supported.
                         </p>
-                        <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 text-left space-y-3">
-                            <h4 className="font-bold text-slate-800 dark:text-slate-200">How to get started right now:</h4>
-                            <ol className="list-decimal list-inside space-y-2 text-sm text-slate-600 dark:text-slate-400 font-medium">
-                                <li>Go to your <span className="text-[#1D9E75] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
-                                <li>Select a CBSE class and click <span className="text-slate-800 dark:text-slate-200 font-bold">Save</span></li>
+                        <div className="p-6 bg-[#FCFAF8] rounded-2xl border border-stone-100 text-left space-y-3">
+                            <h4 className="font-bold text-[#3E352B] ">How to get started right now:</h4>
+                            <ol className="list-decimal list-inside space-y-2 text-sm text-stone-600 font-medium">
+                                <li>Go to your <span className="text-[#8C5A35] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
+                                <li>Select a CBSE class and click <span className="text-[#3E352B] font-bold">Save</span></li>
                                 <li>Start practicing and exploring Clarity's premium features!</li>
                             </ol>
                         </div>
                         <Button 
                             variant="primary" 
                             size="lg" 
-                            className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#1D9E75]/25"
+                            className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#8C5A35]/25"
                             onClick={() => navigate('/profile')}
                         >
                             Go to Profile Settings
@@ -612,17 +612,17 @@ export const TextbookHub = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+        <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
             <Navbar />
             <main className="max-w-7xl mx-auto px-6 py-10">
                 <div className="mb-8">
-                    <h1 className="text-4xl font-black text-slate-900 dark:text-white">Textbook Mission Hub</h1>
-                    <p className="text-slate-500 mt-2 font-medium">
+                    <h1 className="text-4xl font-black text-[#2C241B] ">Textbook Mission Hub</h1>
+                    <p className="text-stone-500 mt-2 font-medium">
                         Reliable NCERT chapter access with autonomous study missions.
                     </p>
                 </div>
 
-                <div className="flex gap-2 bg-white dark:bg-slate-800 p-2 rounded-2xl border border-slate-100 dark:border-slate-700 mb-8">
+                <div className="flex gap-2 bg-[#FCFAF8] p-2 rounded-2xl border border-stone-100 mb-8">
                     {['8', '9', '10', '11', '12'].map((cls) => {
                         const isEnrolled = user?.class ? String(user.class).startsWith(cls) : cls === '10';
                         const targetClass = (user?.class && String(user.class).startsWith(cls)) ? user.class : cls;
@@ -639,10 +639,10 @@ export const TextbookHub = () => {
                                 }}
                                 className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all ${
                                     classFilter.startsWith(cls)
-                                        ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/20'
+                                        ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20'
                                         : isEnrolled
-                                        ? 'text-slate-600 dark:text-slate-350 hover:bg-slate-100 dark:hover:bg-slate-700'
-                                        : 'text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'
+                                        ? 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-700'
+                                        : 'text-stone-300 cursor-not-allowed opacity-50'
                                 }`}
                             >
                                 Class {cls}
@@ -662,8 +662,8 @@ export const TextbookHub = () => {
                                 setCoachPlan('');
                             }}
                             className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${resources.subject === subject
-                                ? 'bg-[#1D9E75] text-white'
-                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700'
+                                ? 'bg-[#8C5A35] text-white'
+                                : 'bg-[#FCFAF8] text-stone-600 border border-stone-100 '
                                 }`}
                         >
                             {subject}
@@ -673,8 +673,8 @@ export const TextbookHub = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     {/* Books Sidebar */}
-                    <Card className="p-5 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl lg:col-span-1">
-                        <h3 className="text-sm font-black uppercase tracking-wider text-slate-500 mb-4">Textbooks</h3>
+                    <Card className="p-5 bg-[#FCFAF8] border-none shadow-xl rounded-3xl lg:col-span-1">
+                        <h3 className="text-sm font-black uppercase tracking-wider text-stone-500 mb-4">Textbooks</h3>
                         <div className="space-y-2 max-h-[62vh] overflow-y-auto pr-1">
                             {resources.textbooks.map((book) => (
                                 <button
@@ -689,12 +689,12 @@ export const TextbookHub = () => {
                                         }
                                     }}
                                     className={`w-full text-left p-3 rounded-2xl border transition-all ${selectedBook?.title === book.title && selectedBook?.subject === book.subject
-                                        ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20'
-                                        : 'border-slate-100 dark:border-slate-700 hover:border-[#1D9E75]/40'
+                                        ? 'border-[#8C5A35] bg-amber-50 '
+                                        : 'border-stone-100 hover:border-[#8C5A35]/40'
                                         }`}
                                 >
-                                    <p className="font-bold text-slate-900 dark:text-white text-sm">{book.title}</p>
-                                    <p className="text-xs text-slate-500">{book.subject}</p>
+                                    <p className="font-bold text-[#2C241B] text-sm">{book.title}</p>
+                                    <p className="text-xs text-stone-500">{book.subject}</p>
                                 </button>
                             ))}
                         </div>
@@ -703,13 +703,13 @@ export const TextbookHub = () => {
                     {/* Main Content */}
                     <div className="lg:col-span-3 space-y-6">
                         {/* Chapter Selection */}
-                        <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
+                        <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
                             <div className="mb-4">
-                                <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2 mb-1">
-                                    <BookOpen size={20} className="text-[#1D9E75]" />
+                                <h2 className="text-xl font-black text-[#2C241B] flex items-center gap-2 mb-1">
+                                    <BookOpen size={20} className="text-[#8C5A35]" />
                                     {selectedBook?.title || 'Select a textbook'}
                                 </h2>
-                                <p className="text-sm text-slate-500">
+                                <p className="text-sm text-stone-500">
                                     Class {classFilter} • {resources.subject}
                                 </p>
                             </div>
@@ -723,8 +723,8 @@ export const TextbookHub = () => {
                                             setCoachPlan('');
                                         }}
                                         className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all text-center ${selectedChapter === chapter
-                                            ? 'bg-[#1D9E75] text-white'
-                                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                            ? 'bg-[#8C5A35] text-white'
+                                            : 'bg-[#F2EFE9] text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                                             }`}
                                     >
                                         {chapter}
@@ -735,7 +735,7 @@ export const TextbookHub = () => {
                             {/* Action Buttons */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <Button
-                                    className="h-12 rounded-2xl bg-[#1D9E75] hover:bg-[#16805d] font-bold"
+                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] font-bold"
                                     onClick={openNcertViewer}
                                     disabled={!selectedChapter}
                                 >
@@ -743,14 +743,14 @@ export const TextbookHub = () => {
                                     Open Textbook Viewer
                                 </Button>
                                 <Button
-                                    className="h-12 rounded-2xl bg-[#1D9E75] hover:bg-[#16805d] font-bold"
+                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] font-bold"
                                     onClick={goAsk}
                                 >
                                     <Brain size={16} className="mr-2" aria-hidden="true" />
                                     Ask AI This Chapter
                                 </Button>
                                 <Button
-                                    className="h-12 rounded-2xl bg-[#1D9E75] hover:bg-[#16805d] font-bold"
+                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] font-bold"
                                     onClick={goPractice}
                                 >
                                     <ClipboardCheck size={16} className="mr-2" aria-hidden="true" />
@@ -771,14 +771,14 @@ export const TextbookHub = () => {
                         </Card>
 
                         {/* Autonomous Coach */}
-                        <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
+                        <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
                             <div className="flex items-center justify-between gap-3 mb-4">
-                                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                                    <Sparkles size={18} className="text-[#1D9E75]" />
+                                <h3 className="text-lg font-black text-[#2C241B] flex items-center gap-2">
+                                    <Sparkles size={18} className="text-[#8C5A35]" />
                                     Autonomous Coach
                                 </h3>
                                 <Button
-                                    className="h-10 px-4 rounded-xl bg-[#1D9E75] hover:bg-[#16805d] font-bold text-sm"
+                                    className="h-10 px-4 rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold text-sm"
                                     onClick={generateAutoCoach}
                                     disabled={coachLoading || !selectedChapter}
                                 >
@@ -787,37 +787,37 @@ export const TextbookHub = () => {
                             </div>
 
                             {coachCached && (
-                                <div className="mb-3 p-2 px-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-2">
+                                <div className="mb-3 p-2 px-3 bg-amber-50 border border-amber-200 rounded-lg text-xs font-bold text-amber-700 flex items-center gap-2">
                                     <Sparkles size={12} />
                                     Loaded from cache (30 min TTL)
                                 </div>
                             )}
 
                             {!coachPlan && !coachLoading && (
-                                <p className="text-sm text-slate-500">Select a chapter and generate a focused 30-minute study mission with key points, mistakes to avoid, and a self test.</p>
+                                <p className="text-sm text-stone-500">Select a chapter and generate a focused 30-minute study mission with key points, mistakes to avoid, and a self test.</p>
                             )}
 
                             {coachLoading && (
-                                <div className="flex items-center gap-2 text-sm text-slate-500">
-                                    <div className="animate-spin h-4 w-4 border-2 border-[#1D9E75] border-t-transparent rounded-full"></div>
+                                <div className="flex items-center gap-2 text-sm text-stone-500">
+                                    <div className="animate-spin h-4 w-4 border-2 border-[#8C5A35] border-t-transparent rounded-full"></div>
                                     Building your study mission—please wait...
                                 </div>
                             )}
 
                             {coachPlan && (
-                                <article className="whitespace-pre-wrap text-sm leading-6 text-slate-700 dark:text-slate-200 max-h-[400px] overflow-y-auto pr-2">
+                                <article className="whitespace-pre-wrap text-sm leading-6 text-stone-700 max-h-[400px] overflow-y-auto pr-2">
                                     {coachPlan}
                                 </article>
                             )}
                         </Card>
 
                         {/* Custom Textbooks Manager */}
-                        <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
-                            <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2 mb-4">
-                                <Upload size={18} className="text-[#1D9E75]" />
+                        <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
+                            <h3 className="text-lg font-black text-[#2C241B] flex items-center gap-2 mb-4">
+                                <Upload size={18} className="text-[#8C5A35]" />
                                 Student Custom Textbooks
                             </h3>
-                            <p className="text-sm text-slate-500 mb-6">
+                            <p className="text-sm text-stone-500 mb-6">
                                 Upload your own textbook PDFs for <strong>Class {classFilter} {resources.subject}</strong>. These custom books will override default chapter search resources when you practice or ask AI questions.
                             </p>
 
@@ -851,14 +851,14 @@ export const TextbookHub = () => {
                                 }}
                                 className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
                                     isDragOver
-                                        ? 'border-[#1D9E75] bg-emerald-50/50 dark:bg-emerald-950/20'
-                                        : 'border-slate-200 dark:border-slate-700 hover:border-[#1D9E75]/50'
+                                        ? 'border-[#8C5A35] bg-amber-50/50 '
+                                        : 'border-stone-200 hover:border-[#8C5A35]/50'
                                 }`}
                             >
-                                <Upload size={32} className="mx-auto text-slate-400 mb-2" />
-                                <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                                <Upload size={32} className="mx-auto text-stone-400 mb-2" />
+                                <p className="text-sm font-bold text-stone-700 ">
                                     Drag & Drop custom textbook PDFs here, or{' '}
-                                    <label className="text-[#1D9E75] hover:underline cursor-pointer">
+                                    <label className="text-[#8C5A35] hover:underline cursor-pointer">
                                         browse files
                                         <input
                                             type="file"
@@ -869,32 +869,32 @@ export const TextbookHub = () => {
                                         />
                                     </label>
                                 </p>
-                                <p className="text-xs text-slate-400 mt-1">Supports multiple PDF uploads (up to 10-11 at once)</p>
+                                <p className="text-xs text-stone-400 mt-1">Supports multiple PDF uploads (up to 10-11 at once)</p>
                             </div>
 
                             {/* Files to Upload List */}
                             {uploadFiles.length > 0 && (
-                                <div className="mt-6 space-y-4 p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-2xl">
-                                    <p className="text-xs font-black uppercase tracking-wider text-slate-400 mb-2">Files Selected for Upload</p>
+                                <div className="mt-6 space-y-4 p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl">
+                                    <p className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2">Files Selected for Upload</p>
                                     {uploadFiles.map((file, idx) => (
-                                        <div key={file.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                                        <div key={file.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#FCFAF8] rounded-xl border border-stone-100 shadow-sm">
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{file.name}</p>
-                                                <p className="text-[10px] text-slate-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                                                <p className="text-sm font-bold text-[#2C241B] truncate">{file.name}</p>
+                                                <p className="text-[10px] text-stone-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
                                             </div>
                                             <div className="flex-1 min-w-[200px]">
-                                                <label className="block text-[10px] font-black text-slate-400 uppercase mb-1">Assign Topic/Chapter Name:</label>
+                                                <label className="block text-[10px] font-black text-stone-400 uppercase mb-1">Assign Topic/Chapter Name:</label>
                                                 <input
                                                     type="text"
                                                     value={fileTopics[file.name] || ''}
                                                     onChange={(e) => setFileTopics(prev => ({ ...prev, [file.name]: e.target.value }))}
                                                     placeholder="e.g. Life Processes"
-                                                    className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold focus:ring-1 focus:ring-[#1D9E75] outline-none text-slate-900 dark:text-white"
+                                                    className="w-full px-3 py-1.5 bg-[#FCFAF8] border border-stone-200 rounded-lg text-xs font-bold focus:ring-1 focus:ring-[#8C5A35] outline-none text-[#2C241B] "
                                                 />
                                             </div>
                                             <Button
                                                 variant="outline"
-                                                className="h-8 w-8 p-0 rounded-lg border-red-200 hover:bg-red-50 text-red-500 dark:border-red-900/30 dark:hover:bg-red-950/20"
+                                                className="h-8 w-8 p-0 rounded-lg border-red-200 hover:bg-red-50 text-red-500 :bg-red-950/20"
                                                 onClick={() => setUploadFiles(prev => prev.filter((_, i) => i !== idx))}
                                             >
                                                 <Trash2 size={14} />
@@ -910,7 +910,7 @@ export const TextbookHub = () => {
                                             Cancel
                                         </Button>
                                         <Button
-                                            className="bg-[#1D9E75] hover:bg-[#16805d] text-white rounded-xl text-xs font-bold h-9"
+                                            className="bg-[#8C5A35] hover:bg-[#70482B] text-white rounded-xl text-xs font-bold h-9"
                                             onClick={handleUploadAll}
                                             disabled={uploading}
                                         >
@@ -922,34 +922,34 @@ export const TextbookHub = () => {
 
                             {/* Already Uploaded Textbooks */}
                             <div className="mt-8 space-y-3">
-                                <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">Uploaded Custom Books</h4>
+                                <h4 className="text-xs font-black uppercase tracking-wider text-stone-400">Uploaded Custom Books</h4>
                                 {loadingCustom ? (
-                                    <p className="text-sm text-slate-500">Loading custom textbooks...</p>
+                                    <p className="text-sm text-stone-500">Loading custom textbooks...</p>
                                 ) : customBooks.length === 0 ? (
-                                    <p className="text-sm text-slate-500 italic">No custom textbooks uploaded yet for Class {classFilter} {resources.subject}.</p>
+                                    <p className="text-sm text-stone-500 italic">No custom textbooks uploaded yet for Class {classFilter} {resources.subject}.</p>
                                 ) : (
                                     <div className="space-y-3">
                                         {customBooks.map((book) => (
                                             <div
                                                 key={book.id}
-                                                className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-emerald-200 dark:hover:border-emerald-900/40 transition-colors"
+                                                className="flex items-center justify-between p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl hover:border-amber-200 :border-amber-900/40 transition-colors"
                                             >
                                                 <div className="min-w-0 pr-2">
-                                                    <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{book.filename}</p>
-                                                    <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Topic: {book.chapter}</p>
-                                                    <p className="text-[10px] text-slate-400">Uploaded {new Date(book.created_at + 'Z').toLocaleDateString()}</p>
+                                                    <p className="font-bold text-sm text-[#2C241B] truncate">{book.filename}</p>
+                                                    <p className="text-xs text-amber-600 font-semibold">Topic: {book.chapter}</p>
+                                                    <p className="text-[10px] text-stone-400">Uploaded {new Date(book.created_at + 'Z').toLocaleDateString()}</p>
                                                 </div>
                                                 <div className="flex gap-2 items-center flex-shrink-0">
                                                     <Button
                                                         variant="outline"
-                                                        className="h-9 px-3 rounded-xl border-emerald-100 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-950/20 dark:hover:bg-emerald-950/20 text-xs font-bold"
+                                                        className="h-9 px-3 rounded-xl border-amber-100 text-amber-600 hover:bg-amber-50 :bg-amber-950/20 text-xs font-bold"
                                                         onClick={() => openCustomViewer(book)}
                                                     >
                                                         Read
                                                     </Button>
                                                     <Button
                                                         variant="outline"
-                                                        className="h-9 w-9 p-0 rounded-xl border-red-100 text-red-500 hover:bg-red-50 dark:border-red-950/20 dark:hover:bg-red-950/20 flex-shrink-0"
+                                                        className="h-9 w-9 p-0 rounded-xl border-red-100 text-red-500 hover:bg-red-50 :bg-red-950/20 flex-shrink-0"
                                                         onClick={() => handleDeleteCustom(book.id)}
                                                     >
                                                         <Trash2 size={15} />
@@ -963,23 +963,23 @@ export const TextbookHub = () => {
                         </Card>
 
                         {/* Quick Launch Footer */}
-                        <Card className="p-6 bg-gradient-to-r from-slate-900 to-slate-800 text-white border-none shadow-xl rounded-3xl">
+                        <Card className="p-6 bg-gradient-to-r from-stone-900 to-stone-800 text-white border-none shadow-xl rounded-3xl">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <div>
                                     <h3 className="text-lg font-black flex items-center gap-2 mb-1">
                                         <Rocket size={18} />
                                         Quick Launch
                                     </h3>
-                                    <p className="text-sm text-slate-300">Jump straight into any mode with chapter context.</p>
+                                    <p className="text-sm text-stone-300">Jump straight into any mode with chapter context.</p>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    <Button className="rounded-xl bg-[#1D9E75] hover:bg-[#16805d] font-bold" onClick={goAsk}>
+                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold" onClick={goAsk}>
                                         Ask AI
                                     </Button>
-                                    <Button className="rounded-xl bg-[#1D9E75] hover:bg-[#16805d] font-bold" onClick={goPractice}>
+                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold" onClick={goPractice}>
                                         Practice
                                     </Button>
-                                    <Button className="rounded-xl bg-[#1D9E75] hover:bg-[#16805d] font-bold" onClick={goLibrary}>
+                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold" onClick={goLibrary}>
                                         <Library size={16} className="mr-2" />
                                         Library
                                     </Button>
@@ -993,27 +993,27 @@ export const TextbookHub = () => {
             {/* Textbook Viewer Modal */}
             {viewerOpen && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-0 transition-all animate-fadeIn">
-                    <div className="bg-white dark:bg-slate-900 w-full h-full flex flex-col overflow-hidden shadow-2xl relative">
+                    <div className="bg-[#FCFAF8] w-full h-full flex flex-col overflow-hidden shadow-2xl relative">
                         {/* Header */}
-                        <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+                        <div className="p-6 border-b border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFAF8]/50 ">
                             <div>
-                                <h3 className="text-lg font-black text-slate-900 dark:text-white truncate max-w-lg">
+                                <h3 className="text-lg font-black text-[#2C241B] truncate max-w-lg">
                                     {viewerTitle}
                                 </h3>
-                                <p className="text-xs text-slate-500 font-medium">
+                                <p className="text-xs text-stone-500 font-medium">
                                     Class {classFilter} • {resources.subject}
                                 </p>
                             </div>
                             
                             <div className="flex items-center gap-3">
                                 {/* Page Sync Navigator */}
-                                <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl">
-                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">Sync Page:</span>
+                                <div className="flex items-center gap-2 bg-[#F2EFE9] px-3 py-1.5 rounded-xl">
+                                    <span className="text-[10px] font-black text-stone-500 uppercase tracking-wider">Sync Page:</span>
                                     <input
                                         type="number"
                                         min="1"
                                         placeholder="Page #"
-                                        className="w-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 outline-none rounded-lg text-xs font-bold text-center py-0.5 text-slate-800 dark:text-slate-200"
+                                        className="w-12 bg-[#FCFAF8] border border-stone-200 outline-none rounded-lg text-xs font-bold text-center py-0.5 text-[#3E352B] "
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 const pageNum = e.currentTarget.value;
@@ -1033,13 +1033,13 @@ export const TextbookHub = () => {
                                 </div>
 
                                 {/* Layout Mode Toggles */}
-                                <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                                <div className="flex bg-[#F2EFE9] p-1 rounded-xl">
                                     <button
                                         onClick={() => setLayoutMode('split')}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                                             layoutMode === 'split'
-                                                ? 'bg-[#1D9E75] text-white shadow-sm'
-                                                : 'text-slate-600 dark:text-slate-350 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                                ? 'bg-[#8C5A35] text-white shadow-sm'
+                                                : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                                         }`}
                                     >
                                         Split View
@@ -1048,8 +1048,8 @@ export const TextbookHub = () => {
                                         onClick={() => setLayoutMode('pdf')}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                                             layoutMode === 'pdf'
-                                                ? 'bg-[#1D9E75] text-white shadow-sm'
-                                                : 'text-slate-600 dark:text-slate-355 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                                ? 'bg-[#8C5A35] text-white shadow-sm'
+                                                : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                                         }`}
                                     >
                                         Original PDF
@@ -1058,8 +1058,8 @@ export const TextbookHub = () => {
                                         onClick={() => setLayoutMode('text')}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                                             layoutMode === 'text'
-                                                ? 'bg-[#1D9E75] text-white shadow-sm'
-                                                : 'text-slate-600 dark:text-slate-355 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                                ? 'bg-[#8C5A35] text-white shadow-sm'
+                                                : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                                         }`}
                                     >
                                         Interactive Text
@@ -1068,7 +1068,7 @@ export const TextbookHub = () => {
                                 
                                 <button
                                     onClick={closeViewer}
-                                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all font-bold"
+                                    className="p-2 hover:bg-[#F2EFE9] :bg-stone-800 rounded-xl text-stone-500 hover:text-[#3E352B] :text-white transition-all font-bold"
                                 >
                                     ✕
                                 </button>
@@ -1076,22 +1076,22 @@ export const TextbookHub = () => {
                         </div>
 
                         {/* Body */}
-                        <div className="flex-1 overflow-hidden flex flex-col md:flex-row bg-slate-50 dark:bg-slate-950">
+                        <div className="flex-1 overflow-hidden flex flex-col md:flex-row bg-[#FCFAF8] ">
                             {/* Left Panel: PDF Viewer (shown if layoutMode !== 'text') */}
-                            <div className={`flex flex-col relative border-r border-slate-200 dark:border-slate-800 transition-all duration-300 ${
+                            <div className={`flex flex-col relative border-r border-stone-200 transition-all duration-300 ${
                                 layoutMode === 'split' ? 'w-full h-1/2 md:h-full md:w-1/2' : layoutMode === 'pdf' ? 'w-full h-full' : 'hidden'
                             }`}>
                                 {viewerPdfLoading ? (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-slate-500 bg-slate-50 dark:bg-slate-950">
-                                        <div className="animate-spin h-10 w-10 border-4 border-[#1D9E75] border-t-transparent rounded-full" />
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-stone-500 bg-[#FCFAF8] ">
+                                        <div className="animate-spin h-10 w-10 border-4 border-[#8C5A35] border-t-transparent rounded-full" />
                                         <p className="font-bold text-sm">Loading PDF...</p>
-                                        <p className="text-xs text-slate-400">Fetching securely from the NCERT servers</p>
+                                        <p className="text-xs text-stone-400">Fetching securely from the NCERT servers</p>
                                     </div>
                                 ) : viewerPdfError ? (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-500 px-8 bg-slate-50 dark:bg-slate-950">
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-500 px-8 bg-[#FCFAF8] ">
                                         <FileText size={40} className="opacity-30" />
                                         <p className="font-bold text-sm">PDF could not be loaded</p>
-                                        <p className="text-xs text-center text-slate-400">{viewerPdfError}</p>
+                                        <p className="text-xs text-center text-stone-400">{viewerPdfError}</p>
                                     </div>
                                 ) : viewerPdfUrl ? (
                                     <iframe
@@ -1100,7 +1100,7 @@ export const TextbookHub = () => {
                                         title="Textbook PDF Viewer"
                                     />
                                 ) : (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-400 bg-slate-50 dark:bg-slate-950">
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-400 bg-[#FCFAF8] ">
                                         <FileText size={40} className="opacity-30" />
                                         <p className="text-sm font-bold">No PDF available</p>
                                     </div>
@@ -1114,66 +1114,66 @@ export const TextbookHub = () => {
                                 {/* Left Text Column */}
                                 <div 
                                     onMouseUp={handleMouseUp}
-                                    className="flex-1 overflow-y-auto p-6 md:p-8 select-text bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800"
+                                    className="flex-1 overflow-y-auto p-6 md:p-8 select-text bg-[#FCFAF8] border-r border-stone-100 "
                                 >
                                     {/* Diagram-awareness banner */}
                                     {!loadingViewerText && viewerText && viewerText.includes('[Diagram / Figure') && (
-                                        <div className="mb-5 p-3 bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-800/40 rounded-2xl flex items-start gap-2.5">
+                                        <div className="mb-5 p-3 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-start gap-2.5">
                                             <span className="text-indigo-600 text-base mt-0.5">🔬</span>
                                             <div>
-                                                <p className="text-xs font-black text-indigo-700 dark:text-indigo-300 uppercase tracking-wider">AI Diagram Descriptions Included</p>
-                                                <p className="text-[11px] text-indigo-600 dark:text-indigo-400 mt-0.5">Diagrams, figures, chemical structures &amp; math formulas from image-heavy pages were described by AI vision and are shown inline below. Switch to <strong>Original PDF</strong> mode or view the left panel to see the actual graphics.</p>
+                                                <p className="text-xs font-black text-indigo-700 uppercase tracking-wider">AI Diagram Descriptions Included</p>
+                                                <p className="text-[11px] text-indigo-600 mt-0.5">Diagrams, figures, chemical structures &amp; math formulas from image-heavy pages were described by AI vision and are shown inline below. Switch to <strong>Original PDF</strong> mode or view the left panel to see the actual graphics.</p>
                                             </div>
                                         </div>
                                     )}
                                     {loadingViewerText ? (
-                                        <div className="flex flex-col items-center justify-center h-full gap-3 text-slate-500">
-                                            <div className="animate-spin h-8 w-8 border-4 border-[#1D9E75] border-t-transparent rounded-full"></div>
+                                        <div className="flex flex-col items-center justify-center h-full gap-3 text-stone-500">
+                                            <div className="animate-spin h-8 w-8 border-4 border-[#8C5A35] border-t-transparent rounded-full"></div>
                                             <p className="font-bold text-sm">Extracting text from NCERT PDF...</p>
-                                            <p className="text-xs text-slate-400">The Original PDF is already loaded and ready to read</p>
+                                            <p className="text-xs text-stone-400">The Original PDF is already loaded and ready to read</p>
                                         </div>
                                     ) : !viewerText ? (
                                         <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
-                                            <FileText size={44} className="text-slate-300 dark:text-slate-700" />
+                                            <FileText size={44} className="text-stone-300 " />
                                             <div>
-                                                <p className="font-black text-sm text-slate-700 dark:text-slate-200 mb-1">Text extraction not available</p>
-                                                <p className="text-xs text-slate-500 leading-relaxed max-w-xs">
+                                                <p className="font-black text-sm text-stone-700 mb-1">Text extraction not available</p>
+                                                <p className="text-xs text-stone-500 leading-relaxed max-w-xs">
                                                     This chapter's text could not be extracted from the PDF (may be image-based or not yet cached).
                                                     Please refer to the <strong>Original PDF</strong> panel on the left.
                                                 </p>
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="prose dark:prose-invert max-w-none">
+                                        <div className="prose max-w-none">
                                             <MarkdownContent content={viewerText} />
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Right AI Panel */}
-                                <div className="w-full md:w-80 h-full bg-slate-50/50 dark:bg-slate-950/20 p-5 flex flex-col overflow-y-auto">
+                                <div className="w-full md:w-80 h-full bg-[#FCFAF8]/50 p-5 flex flex-col overflow-y-auto">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <Sparkles size={16} className="text-[#1D9E75]" />
-                                        <h4 className="font-black text-sm text-slate-900 dark:text-white uppercase tracking-wider">AI Study Coach</h4>
+                                        <Sparkles size={16} className="text-[#8C5A35]" />
+                                        <h4 className="font-black text-sm text-[#2C241B] uppercase tracking-wider">AI Study Coach</h4>
                                     </div>
 
                                     {aiActionName ? (
                                         <div className="space-y-3 flex-1 flex flex-col">
-                                            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40 rounded-2xl">
-                                                <p className="text-[10px] font-black uppercase text-[#1D9E75] mb-1">Selected Excerpt:</p>
-                                                <p className="text-xs text-slate-600 dark:text-slate-305 italic line-clamp-3">"{selectedText}"</p>
+                                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+                                                <p className="text-[10px] font-black uppercase text-[#8C5A35] mb-1">Selected Excerpt:</p>
+                                                <p className="text-xs text-stone-600 italic line-clamp-3">"{selectedText}"</p>
                                             </div>
                                             
-                                            <div className="p-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm flex-1 overflow-y-auto min-h-[200px] space-y-4">
-                                                <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200/30 rounded-xl text-[10px] text-amber-700 dark:text-amber-400 flex items-start gap-2">
+                                            <div className="p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl shadow-sm flex-1 overflow-y-auto min-h-[200px] space-y-4">
+                                                <div className="p-3 bg-amber-50 border border-amber-200/30 rounded-xl text-[10px] text-amber-700 flex items-start gap-2">
                                                     <span className="text-amber-500">💡</span>
                                                     <span><strong>Tip:</strong> Highlight any text inside this explanation and right-click (or left-click) to ask the AI coach further questions!</span>
                                                 </div>
                                                 <div>
-                                                    <p className="text-xs font-black uppercase tracking-wider text-slate-400 mb-2">{aiActionName}</p>
+                                                    <p className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2">{aiActionName}</p>
                                                     {aiLoading && !aiResponse ? (
-                                                        <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                            <div className="animate-spin h-3.5 w-3.5 border-2 border-[#1D9E75] border-t-transparent rounded-full"></div>
+                                                        <div className="flex items-center gap-2 text-xs text-stone-500">
+                                                            <div className="animate-spin h-3.5 w-3.5 border-2 border-[#8C5A35] border-t-transparent rounded-full"></div>
                                                             Thinking...
                                                         </div>
                                                     ) : (
@@ -1184,9 +1184,9 @@ export const TextbookHub = () => {
                                         </div>
                                     ) : (
                                         <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
-                                            <Brain size={36} className="text-slate-350 dark:text-slate-700 mb-3" />
-                                            <p className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Interactive Reader</p>
-                                            <p className="text-[11px] text-slate-500 leading-relaxed">
+                                            <Brain size={36} className="text-stone-350 mb-3" />
+                                            <p className="text-xs font-bold text-stone-700 mb-1">Interactive Reader</p>
+                                            <p className="text-[11px] text-stone-500 leading-relaxed">
                                                 Highlight any sentence or paragraph in the textbook to trigger AI explanations, summaries, or memory tricks.
                                             </p>
                                         </div>
@@ -1200,7 +1200,7 @@ export const TextbookHub = () => {
                     {showContextMenu && (
                         <div
                             onMouseDown={(e) => e.preventDefault()}
-                            className="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl z-[60] p-1.5 flex flex-col w-48 text-xs font-semibold animate-scaleIn"
+                            className="fixed bg-[#FCFAF8] border border-stone-200 rounded-2xl shadow-2xl z-[60] p-1.5 flex flex-col w-48 text-xs font-semibold animate-scaleIn"
                             style={{
                                 top: `${menuPosition.y + 10}px`,
                                 left: `${menuPosition.x}px`,
@@ -1209,30 +1209,30 @@ export const TextbookHub = () => {
                         >
                             <button
                                 onClick={() => runAiAction('Meaning & Context', 'Explain the meaning, key terms, and context of this textbook excerpt clearly.')}
-                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                                className="w-full text-left px-3 py-2 hover:bg-[#F2EFE9] :bg-stone-700 rounded-xl flex items-center gap-2 text-stone-700 "
                             >
-                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                <Sparkles size={12} className="text-[#8C5A35]" />
                                 Ask Meaning
                             </button>
                             <button
                                 onClick={() => runAiAction('Summary', 'Provide a concise summary of this textbook excerpt.')}
-                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                                className="w-full text-left px-3 py-2 hover:bg-[#F2EFE9] :bg-stone-700 rounded-xl flex items-center gap-2 text-stone-700 "
                             >
-                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                <Sparkles size={12} className="text-[#8C5A35]" />
                                 Summarize
                             </button>
                             <button
                                 onClick={() => runAiAction('Key Points', 'Extract the key values, points, and takeaways from this textbook excerpt as a bulleted list.')}
-                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                                className="w-full text-left px-3 py-2 hover:bg-[#F2EFE9] :bg-stone-700 rounded-xl flex items-center gap-2 text-stone-700 "
                             >
-                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                <Sparkles size={12} className="text-[#8C5A35]" />
                                 Convert to Points
                             </button>
                             <button
                                 onClick={() => runAiAction('Memory Tricks', 'Provide fun mnemonics, associations, or tricks to easily memorize this textbook excerpt.')}
-                                className="w-full text-left px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                                className="w-full text-left px-3 py-2 hover:bg-[#F2EFE9] :bg-stone-700 rounded-xl flex items-center gap-2 text-stone-700 "
                             >
-                                <Sparkles size={12} className="text-[#1D9E75]" />
+                                <Sparkles size={12} className="text-[#8C5A35]" />
                                 Tricks to Memorize
                             </button>
                         </div>

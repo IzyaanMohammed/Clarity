@@ -80,22 +80,22 @@ export const OCR = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+        <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
             <Navbar />
             <main className="max-w-6xl mx-auto px-6 py-10">
                 <div className="mb-8">
-                    <h1 className="text-4xl font-black text-slate-900 dark:text-white">OCR Workspace</h1>
-                    <p className="text-slate-500 font-medium mt-2">Upload handwritten notes or scanned pages and save extracted text.</p>
+                    <h1 className="text-4xl font-black text-[#2C241B] ">OCR Workspace</h1>
+                    <p className="text-stone-500 font-medium mt-2">Upload handwritten notes or scanned pages and save extracted text.</p>
                 </div>
 
-                <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
+                <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
                     <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
-                        <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                            <ScanText size={20} className="text-[#1D9E75]" />
+                        <h2 className="text-xl font-black text-[#2C241B] flex items-center gap-2">
+                            <ScanText size={20} className="text-[#8C5A35]" />
                             OCR Extractor
                         </h2>
                         <div className="flex gap-2">
-                            <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1D9E75] text-white font-black cursor-pointer hover:bg-[#16805d] transition-colors">
+                            <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8C5A35] text-white font-black cursor-pointer hover:bg-[#70482B] transition-colors">
                                 <Upload size={16} />
                                 Upload for OCR
                                 <input
@@ -114,7 +114,7 @@ export const OCR = () => {
                     <textarea
                         value={ocrLoading ? 'Extracting text...' : ocrText}
                         onChange={(e) => setOcrText(e.target.value)}
-                        className="w-full min-h-[320px] rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4 text-sm font-medium"
+                        className="w-full min-h-[320px] rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4 text-sm font-medium"
                         placeholder="Upload an image or PDF to extract text."
                     />
                 </Card>

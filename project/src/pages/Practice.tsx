@@ -384,65 +384,65 @@ export const Practice = () => {
     '1-mark': {
       desc: 'Quick definition, 1-2 sentences',
       icon: Target,
-      color: 'text-blue-600 dark:text-blue-400',
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'border-blue-200 dark:border-blue-800',
+      color: 'text-blue-600 ',
+      bg: 'bg-blue-50 ',
+      border: 'border-blue-200 ',
     },
     '3-mark': {
       desc: 'Explanation with 3 key points',
       icon: Brain,
-      color: 'text-purple-600 dark:text-purple-400',
-      bg: 'bg-purple-50 dark:bg-purple-900/20',
-      border: 'border-purple-200 dark:border-purple-800',
+      color: 'text-purple-600 ',
+      bg: 'bg-purple-50 ',
+      border: 'border-purple-200 ',
     },
     '5-mark': {
       desc: 'Comprehensive answer with example',
       icon: BookOpen,
-      color: 'text-orange-600 dark:text-orange-400',
-      bg: 'bg-orange-50 dark:bg-orange-900/20',
-      border: 'border-orange-200 dark:border-orange-800',
+      color: 'text-orange-600 ',
+      bg: 'bg-orange-50 ',
+      border: 'border-orange-200 ',
     },
     mixed: {
       desc: 'Mix of 1, 3, and 5-mark questions',
       icon: TrendingUp,
-      color: 'text-green-600 dark:text-green-400',
-      bg: 'bg-green-50 dark:bg-green-900/20',
-      border: 'border-green-200 dark:border-green-800',
+      color: 'text-green-600 ',
+      bg: 'bg-green-50 ',
+      border: 'border-green-200 ',
     },
     variety: {
       desc: 'Diverse topics from the chapter',
       icon: Lightbulb,
-      color: 'text-yellow-600 dark:text-yellow-400',
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      border: 'border-yellow-200 dark:border-yellow-800',
+      color: 'text-yellow-600 ',
+      bg: 'bg-yellow-50 ',
+      border: 'border-yellow-200 ',
     },
     'past-paper': {
       desc: 'Real questions from board exams',
       icon: Award,
-      color: 'text-red-600 dark:text-red-400',
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800',
+      color: 'text-red-600 ',
+      bg: 'bg-red-50 ',
+      border: 'border-red-200 ',
     },
     'mcq': {
       desc: 'Multiple choice with options A-D',
       icon: Target,
-      color: 'text-teal-600 dark:text-teal-400',
-      bg: 'bg-teal-50 dark:bg-teal-900/20',
-      border: 'border-teal-200 dark:border-teal-800',
+      color: 'text-teal-600 ',
+      bg: 'bg-teal-50 ',
+      border: 'border-teal-200 ',
     },
     'fill-blanks': {
       desc: 'Fill in the missing words',
       icon: Lightbulb,
-      color: 'text-indigo-600 dark:text-indigo-400',
-      bg: 'bg-indigo-50 dark:bg-indigo-900/20',
-      border: 'border-indigo-200 dark:border-indigo-800',
+      color: 'text-indigo-600 ',
+      bg: 'bg-indigo-50 ',
+      border: 'border-indigo-200 ',
     },
     'match-following': {
       desc: 'Match column items correctly',
       icon: Brain,
-      color: 'text-rose-600 dark:text-rose-400',
-      bg: 'bg-rose-50 dark:bg-rose-900/20',
-      border: 'border-rose-200 dark:border-rose-800',
+      color: 'text-rose-600 ',
+      bg: 'bg-rose-50 ',
+      border: 'border-rose-200 ',
     },
   };
 
@@ -804,29 +804,29 @@ export const Practice = () => {
 
   if (isTamilNadu) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+      <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
         <Navbar />
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
-          <Card className="p-12 bg-white dark:bg-[#0f172a] border-none shadow-2xl rounded-[32px] space-y-6 transform hover:scale-[1.01] transition-all duration-300">
-            <div className="w-20 h-20 mx-auto bg-amber-50 dark:bg-amber-950/30 rounded-full flex items-center justify-center text-amber-500 animate-pulse">
+          <Card className="p-12 bg-[#FCFAF8] border-none shadow-2xl rounded-[32px] space-y-6 transform hover:scale-[1.01] transition-all duration-300">
+            <div className="w-20 h-20 mx-auto bg-amber-50 rounded-full flex items-center justify-center text-amber-500 animate-pulse">
               <Brain size={40} />
             </div>
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white">Tamil Nadu Board Support Coming Soon!</h2>
-            <p className="text-slate-600 dark:text-slate-350 text-lg leading-relaxed max-w-xl mx-auto font-medium">
+            <h2 className="text-3xl font-black text-[#2C241B] ">Tamil Nadu Board Support Coming Soon!</h2>
+            <p className="text-stone-600 text-lg leading-relaxed max-w-xl mx-auto font-medium">
               Tamil Nadu State Board support is coming in a very, very soon update! Currently, CBSE / NCERT is fully supported.
             </p>
-            <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 text-left space-y-3">
-              <h4 className="font-bold text-slate-800 dark:text-slate-200">How to get started right now:</h4>
-              <ol className="list-decimal list-inside space-y-2 text-sm text-slate-600 dark:text-slate-400 font-medium">
-                <li>Go to your <span className="text-[#1D9E75] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
-                <li>Select a CBSE class and click <span className="text-slate-800 dark:text-slate-200 font-bold">Save</span></li>
+            <div className="p-6 bg-[#FCFAF8] rounded-2xl border border-stone-100 text-left space-y-3">
+              <h4 className="font-bold text-[#3E352B] ">How to get started right now:</h4>
+              <ol className="list-decimal list-inside space-y-2 text-sm text-stone-600 font-medium">
+                <li>Go to your <span className="text-[#8C5A35] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
+                <li>Select a CBSE class and click <span className="text-[#3E352B] font-bold">Save</span></li>
                 <li>Start practicing and exploring Clarity's premium features!</li>
               </ol>
             </div>
             <Button 
               variant="primary" 
               size="lg" 
-              className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#1D9E75]/25"
+              className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#8C5A35]/25"
               onClick={() => navigate('/profile')}
             >
               Go to Profile Settings
@@ -838,25 +838,25 @@ export const Practice = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-[#020617] dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-stone-50 to-blue-50 ">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 md:px-8 py-8">
         {/* Header with back button */}
         <div className="mb-10">
           <button
             onClick={() => navigate(-1)}
-            className="mb-6 flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[#1D9E75] transition-colors font-bold"
+            className="mb-6 flex items-center gap-2 text-stone-600 hover:text-[#8C5A35] transition-colors font-bold"
           >
             <ArrowLeft size={20} />
             Back
           </button>
           <div className="flex items-center gap-4">
-            <div className="p-4 bg-gradient-to-br from-[#1D9E75] to-emerald-600 rounded-3xl">
+            <div className="p-4 bg-gradient-to-br from-[#8C5A35] to-amber-600 rounded-3xl">
               <Target className="text-white" size={40} />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2">Practice Hub</h1>
-              <p className="text-slate-600 dark:text-slate-400 font-bold">Master every chapter with AI-graded practice sessions</p>
+              <h1 className="text-4xl font-black text-[#2C241B] mb-2">Practice Hub</h1>
+              <p className="text-stone-600 font-bold">Master every chapter with AI-graded practice sessions</p>
             </div>
           </div>
         </div>
@@ -882,17 +882,17 @@ export const Practice = () => {
             })()}
 
             {/* Settings Card */}
-            <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-                <Zap size={28} className="text-[#1D9E75]" />
+            <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+              <h2 className="text-2xl font-black text-[#2C241B] mb-8 flex items-center gap-3">
+                <Zap size={28} className="text-[#8C5A35]" />
                 Configure Your Practice Session
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 {/* Subject Selection */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                    <BookOpen size={16} className="text-[#1D9E75]" />
+                  <label className="block text-sm font-black text-stone-700 uppercase tracking-wider flex items-center gap-2">
+                    <BookOpen size={16} className="text-[#8C5A35]" />
                     Subject
                   </label>
                   <select
@@ -901,7 +901,7 @@ export const Practice = () => {
                       setSelectedSubject(e.target.value);
                       setSelectedChapter('');
                     }}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all"
                   >
                     <option value="">Select Subject</option>
                     {user?.subjects.map((subject: string) => (
@@ -912,14 +912,14 @@ export const Practice = () => {
 
                 {/* Chapter Selection */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                    <Brain size={16} className="text-[#1D9E75]" />
+                  <label className="block text-sm font-black text-stone-700 uppercase tracking-wider flex items-center gap-2">
+                    <Brain size={16} className="text-[#8C5A35]" />
                     Chapter
                   </label>
                   <select
                     value={selectedChapter}
                     onChange={(e) => setSelectedChapter(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent transition-all disabled:opacity-50"
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all disabled:opacity-50"
                     disabled={!selectedSubject}
                   >
                     <option value="">Select Chapter</option>
@@ -934,9 +934,9 @@ export const Practice = () => {
 
               {/* Number of Questions */}
               <div className="space-y-4 mb-8">
-                <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                  <TrendingUp size={16} className="text-[#1D9E75]" />
-                  Number of Questions: <span className="text-[#1D9E75] ml-2">{numQuestions}</span>
+                <label className="block text-sm font-black text-stone-700 uppercase tracking-wider flex items-center gap-2">
+                  <TrendingUp size={16} className="text-[#8C5A35]" />
+                  Number of Questions: <span className="text-[#8C5A35] ml-2">{numQuestions}</span>
                 </label>
                 <div className="flex flex-wrap items-center gap-3">
                   {[3, 5, 10].map((num) => (
@@ -944,8 +944,8 @@ export const Practice = () => {
                       key={num}
                       onClick={() => setNumQuestions(num)}
                       className={`p-3 rounded-2xl border-2 font-black text-lg w-16 h-16 transition-all transform hover:scale-110 flex items-center justify-center ${numQuestions === num
-                        ? 'border-[#1D9E75] bg-[#1D9E75]/10 text-[#1D9E75]'
-                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                        ? 'border-[#8C5A35] bg-[#8C5A35]/10 text-[#8C5A35]'
+                        : 'border-stone-200 text-stone-600 '
                         }`}
                     >
                       {num}
@@ -955,9 +955,9 @@ export const Practice = () => {
               </div>
 
               {/* Question Rigor / Source Selection */}
-              <div className="space-y-4 mb-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10 rounded-2xl border-2 border-emerald-200 dark:border-emerald-800">
-                <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                  <BookOpen size={16} className="text-[#1D9E75]" />
+              <div className="space-y-4 mb-8 p-6 bg-gradient-to-r from-amber-50 to-teal-50 rounded-2xl border-2 border-amber-200 ">
+                <label className="block text-sm font-black text-stone-700 uppercase tracking-wider flex items-center gap-2">
+                  <BookOpen size={16} className="text-[#8C5A35]" />
                   Question Variety Style
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -965,8 +965,8 @@ export const Practice = () => {
                     type="button"
                     onClick={() => setStickToTextbook(true)}
                     className={`flex-1 p-4 rounded-2xl border-2 font-bold text-sm transition-all text-center flex flex-col justify-center items-center gap-1 ${stickToTextbook
-                      ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75]'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 hover:border-[#1D9E75]/50'
+                      ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                      : 'border-stone-200 text-stone-600 bg-[#FCFAF8] hover:border-[#8C5A35]/50'
                       }`}
                   >
                     <span className="text-lg">📖</span>
@@ -977,8 +977,8 @@ export const Practice = () => {
                     type="button"
                     onClick={() => setStickToTextbook(false)}
                     className={`flex-1 p-4 rounded-2xl border-2 font-bold text-sm transition-all text-center flex flex-col justify-center items-center gap-1 ${!stickToTextbook
-                      ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75]'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 hover:border-[#1D9E75]/50'
+                      ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                      : 'border-stone-200 text-stone-600 bg-[#FCFAF8] hover:border-[#8C5A35]/50'
                       }`}
                   >
                     <span className="text-lg">🎨</span>
@@ -989,16 +989,16 @@ export const Practice = () => {
               </div>
 
               {/* Timed Mode */}
-              <div className="space-y-4 mb-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl border-2 border-amber-200 dark:border-amber-800">
-                <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
+              <div className="space-y-4 mb-8 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200 ">
+                <label className="block text-sm font-black text-stone-700 uppercase tracking-wider flex items-center gap-2">
                   <Clock size={16} className="text-amber-600" />
                   Timed Board Mode (Optional)
                 </label>
                 <button
                   onClick={() => setTimedMode((prev) => !prev)}
                   className={`w-full p-4 rounded-2xl border-2 font-bold transition-all ${timedMode
-                    ? 'border-amber-500 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
-                    : 'border-amber-300 dark:border-amber-700 text-slate-700 dark:text-slate-400'
+                    ? 'border-amber-500 bg-amber-100 text-amber-700 '
+                    : 'border-amber-300 text-stone-700 '
                     }`}
                 >
                   {timedMode ? '⏱️ Timed Mode: ACTIVE' : '⏱️ Timed Mode: OFF'}
@@ -1010,8 +1010,8 @@ export const Practice = () => {
                         key={mins}
                         onClick={() => setTimeMinutes(mins)}
                         className={`flex-1 p-3 rounded-xl border-2 font-bold text-sm transition-all ${timeMinutes === mins
-                          ? 'border-amber-500 bg-amber-100 dark:bg-amber-900/30 text-amber-700'
-                          : 'border-amber-300 dark:border-amber-700 text-slate-600'
+                          ? 'border-amber-500 bg-amber-100 text-amber-700'
+                          : 'border-amber-300 text-stone-600'
                           }`}
                       >
                         {mins} min
@@ -1023,7 +1023,7 @@ export const Practice = () => {
 
               {/* Start Button */}
               <Button
-                className="w-full py-5 text-lg font-black bg-gradient-to-r from-[#1D9E75] to-emerald-600 hover:from-[#16805d] hover:to-emerald-700 text-white rounded-2xl shadow-2xl shadow-[#1D9E75]/30 transition-all transform hover:scale-105 active:scale-95"
+                className="w-full py-5 text-lg font-black bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white rounded-2xl shadow-2xl shadow-[#8C5A35]/30 transition-all transform hover:scale-105 active:scale-95"
                 onClick={handleStartSession}
                 disabled={isLoading || !selectedSubject || !selectedChapter}
               >
@@ -1041,51 +1041,51 @@ export const Practice = () => {
               </Button>
 
               {isLoading && generationPreview && (
-                <div className="mt-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
-                  <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-2">Streaming Question Builder</p>
-                  <MarkdownContent content={generationPreview} className="text-sm text-slate-700 dark:text-slate-300" />
+                <div className="mt-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                  <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-2">Streaming Question Builder</p>
+                  <MarkdownContent content={generationPreview} className="text-sm text-stone-700 " />
                 </div>
               )}
             </Card>
           </div>
         ) : sessionFinished ? (
-          <Card className="p-12 text-center bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border-2 border-emerald-200 dark:border-emerald-800 rounded-[40px]">
-            <div className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-8">
-              <Award className="text-emerald-600 dark:text-emerald-400" size={48} />
+          <Card className="p-12 text-center bg-gradient-to-br from-amber-50 to-teal-50 border-2 border-amber-200 rounded-[40px]">
+            <div className="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-8">
+              <Award className="text-amber-600 " size={48} />
             </div>
-            <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-4">Session Complete!</h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400 mb-12 font-bold">
+            <h2 className="text-4xl font-black text-[#2C241B] mb-4">Session Complete!</h2>
+            <p className="text-lg text-stone-600 mb-12 font-bold">
               Amazing effort on {selectedChapter}! Your answers have been graded.
             </p>
 
             {timedMode && mockRecoveryPlan.length > 0 && (
-              <Card className="mb-8 p-6 rounded-[24px] bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 text-left max-w-3xl mx-auto">
-                <p className="text-xs font-black uppercase tracking-widest text-blue-700 dark:text-blue-300 mb-2">Performance Recovery Plan</p>
-                <p className="text-sm font-bold text-blue-900 dark:text-blue-100 mb-3">48-hour recovery plan generated automatically:</p>
+              <Card className="mb-8 p-6 rounded-[24px] bg-blue-50 border-2 border-blue-200 text-left max-w-3xl mx-auto">
+                <p className="text-xs font-black uppercase tracking-widest text-blue-700 mb-2">Performance Recovery Plan</p>
+                <p className="text-sm font-bold text-blue-900 mb-3">48-hour recovery plan generated automatically:</p>
                 <div className="space-y-2">
                   {mockRecoveryPlan.map((step) => (
-                    <p key={step} className="text-sm text-blue-900 dark:text-blue-100">• {step}</p>
+                    <p key={step} className="text-sm text-blue-900 ">• {step}</p>
                   ))}
                 </div>
               </Card>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-8">
-              <div className="p-6 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-200 dark:border-emerald-800">
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2 font-bold uppercase tracking-wider">Questions Attempted</p>
-                <p className="text-4xl font-black text-[#1D9E75]">{attemptedQuestions}/{questions.length}</p>
+              <div className="p-6 bg-[#FCFAF8] rounded-3xl border-2 border-amber-200 ">
+                <p className="text-sm text-stone-600 mb-2 font-bold uppercase tracking-wider">Questions Attempted</p>
+                <p className="text-4xl font-black text-[#8C5A35]">{attemptedQuestions}/{questions.length}</p>
               </div>
-              <div className="p-6 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-200 dark:border-emerald-800">
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2 font-bold uppercase tracking-wider">Score (Attempted)</p>
-                <p className="text-4xl font-black text-slate-900 dark:text-white">{score}/{attemptedTotalMarks}</p>
+              <div className="p-6 bg-[#FCFAF8] rounded-3xl border-2 border-amber-200 ">
+                <p className="text-sm text-stone-600 mb-2 font-bold uppercase tracking-wider">Score (Attempted)</p>
+                <p className="text-4xl font-black text-[#2C241B] ">{score}/{attemptedTotalMarks}</p>
               </div>
-              <div className="p-6 bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-200 dark:border-emerald-800">
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-2 font-bold uppercase tracking-wider">Score (Full Set)</p>
-                <p className="text-4xl font-black text-slate-900 dark:text-white">{score}/{fullSetTotalMarks}</p>
+              <div className="p-6 bg-[#FCFAF8] rounded-3xl border-2 border-amber-200 ">
+                <p className="text-sm text-stone-600 mb-2 font-bold uppercase tracking-wider">Score (Full Set)</p>
+                <p className="text-4xl font-black text-[#2C241B] ">{score}/{fullSetTotalMarks}</p>
               </div>
             </div>
 
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-12 font-semibold">
+            <p className="text-sm text-stone-500 mb-12 font-semibold">
               {timedMode
                 ? 'Timed mode ended. Unattempted questions were counted as not attempted.'
                 : 'Session completed. Showing both attempted score and full-set score.'}
@@ -1093,13 +1093,13 @@ export const Practice = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button
-                className="px-8 py-4 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white font-black rounded-2xl hover:bg-slate-300 dark:hover:bg-slate-600"
+                className="px-8 py-4 bg-[#E8E4DB] text-[#2C241B] font-black rounded-2xl hover:bg-stone-300 :bg-stone-600"
                 onClick={() => navigate('/dashboard')}
               >
                 Back to Home
               </Button>
               <Button
-                className="px-8 py-4 bg-[#1D9E75] hover:bg-[#16805d] text-white font-black rounded-2xl shadow-lg"
+                className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-black rounded-2xl shadow-lg"
                 onClick={() => {
                   setQuestions([]);
                   setSessionFinished(false);
@@ -1116,7 +1116,7 @@ export const Practice = () => {
 
             {/* Detailed Results List */}
             <div className="mt-16 space-y-12 text-left max-w-4xl mx-auto">
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white border-b-4 border-[#1D9E75] inline-block pb-1">Question-by-Question Review</h3>
+              <h3 className="text-2xl font-black text-[#2C241B] border-b-4 border-[#8C5A35] inline-block pb-1">Question-by-Question Review</h3>
               {questions.map((q, idx) => {
                 const grade = allGrades[idx];
                 const ans = userAnswers[idx];
@@ -1125,53 +1125,53 @@ export const Practice = () => {
                 return (
                   <div key={idx} className="space-y-6">
                     <div className="flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-black text-sm">{idx + 1}</span>
-                      <div className="h-1 flex-1 bg-slate-100 dark:bg-slate-800 rounded-full" />
-                      <span className={`font-black text-sm px-3 py-1 rounded-full ${grade.marks_awarded === grade.total_marks ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                      <span className="w-8 h-8 rounded-full bg-stone-900 text-white flex items-center justify-center font-black text-sm">{idx + 1}</span>
+                      <div className="h-1 flex-1 bg-[#F2EFE9] rounded-full" />
+                      <span className={`font-black text-sm px-3 py-1 rounded-full ${grade.marks_awarded === grade.total_marks ? 'bg-amber-100 text-amber-700' : 'bg-amber-100 text-amber-700'}`}>
                         {grade.marks_awarded} / {grade.total_marks} Marks
                       </span>
                     </div>
 
-                    <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
-                      <p className="text-xs font-black uppercase text-slate-400 mb-2 tracking-widest">Question</p>
+                    <div className="p-6 bg-[#FCFAF8] rounded-2xl border-2 border-stone-100 ">
+                      <p className="text-xs font-black uppercase text-stone-400 mb-2 tracking-widest">Question</p>
                       <MarkdownContent 
                         content={stripAnswerLine(q)} 
-                        className="text-slate-900 dark:text-white font-bold" 
+                        className="text-[#2C241B] font-bold" 
                       />
                     </div>
 
-                    <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-slate-100 dark:border-slate-700">
-                      <p className="text-xs font-black uppercase text-slate-400 mb-2 tracking-widest">Your Answer</p>
-                      <p className="text-slate-700 dark:text-slate-300 font-medium whitespace-pre-wrap">{ans || "No answer provided."}</p>
+                    <div className="p-6 bg-[#FCFAF8] rounded-2xl border-2 border-stone-100 ">
+                      <p className="text-xs font-black uppercase text-stone-400 mb-2 tracking-widest">Your Answer</p>
+                      <p className="text-stone-700 font-medium whitespace-pre-wrap">{ans || "No answer provided."}</p>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Main Box: Model Answer */}
-                      <Card className="p-6 bg-emerald-50 dark:bg-emerald-900/10 border-2 border-emerald-200 dark:border-emerald-800 rounded-3xl">
-                        <div className="flex items-center gap-2 mb-4 text-emerald-700 dark:text-emerald-400">
+                      <Card className="p-6 bg-amber-50 border-2 border-amber-200 rounded-3xl">
+                        <div className="flex items-center gap-2 mb-4 text-amber-700 ">
                           <CheckCircle2 size={18} />
                           <p className="text-sm font-black uppercase tracking-widest">Model Answer</p>
                         </div>
-                        <MarkdownContent content={grade.model_answer} className="text-slate-800 dark:text-slate-200 text-sm font-medium leading-relaxed" />
+                        <MarkdownContent content={grade.model_answer} className="text-[#3E352B] text-sm font-medium leading-relaxed" />
                       </Card>
 
                       {/* Feedback & Tips Box */}
                       <div className="space-y-4">
-                        <Card className="p-6 bg-sky-50 dark:bg-sky-900/10 border-2 border-sky-200 dark:border-sky-800 rounded-3xl">
-                          <div className="flex items-center gap-2 mb-4 text-sky-700 dark:text-sky-400">
+                        <Card className="p-6 bg-sky-50 border-2 border-sky-200 rounded-3xl">
+                          <div className="flex items-center gap-2 mb-4 text-sky-700 ">
                             <Lightbulb size={18} />
                             <p className="text-sm font-black uppercase tracking-widest">Expert Tips & Feedback</p>
                           </div>
-                          <MarkdownContent content={grade.feedback} className="text-slate-800 dark:text-slate-200 text-sm font-medium leading-relaxed" />
+                          <MarkdownContent content={grade.feedback} className="text-[#3E352B] text-sm font-medium leading-relaxed" />
                         </Card>
 
                         {grade.micro_explanation && (
-                          <Card className="p-6 bg-amber-50 dark:bg-amber-900/10 border-2 border-amber-200 dark:border-amber-800 rounded-3xl">
-                            <div className="flex items-center gap-2 mb-4 text-amber-700 dark:text-amber-400">
+                          <Card className="p-6 bg-amber-50 border-2 border-amber-200 rounded-3xl">
+                            <div className="flex items-center gap-2 mb-4 text-amber-700 ">
                               <Brain size={18} />
                               <p className="text-sm font-black uppercase tracking-widest">Concept Hint</p>
                             </div>
-                            <p className="text-slate-800 dark:text-slate-200 text-sm font-medium leading-relaxed">{grade.micro_explanation}</p>
+                            <p className="text-[#3E352B] text-sm font-medium leading-relaxed">{grade.micro_explanation}</p>
                           </Card>
                         )}
                       </div>
@@ -1184,14 +1184,14 @@ export const Practice = () => {
         ) : (
           <div className="space-y-6">
             {/* Progress Header */}
-            <Card className="p-6 bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-900 dark:to-slate-800 text-white rounded-[24px] border-none shadow-xl">
+            <Card className="p-6 bg-gradient-to-r from-stone-900 to-stone-800 text-white rounded-[24px] border-none shadow-xl">
               <div className="flex items-center justify-between gap-6 flex-wrap">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-[#1D9E75]/20 rounded-2xl">
-                    <Target className="text-[#1D9E75]" size={24} />
+                  <div className="p-3 bg-[#8C5A35]/20 rounded-2xl">
+                    <Target className="text-[#8C5A35]" size={24} />
                   </div>
                   <div>
-                    <p className="text-sm text-slate-300 font-bold uppercase tracking-wider">Question {currentQuestionIndex + 1} of {questions.length}</p>
+                    <p className="text-sm text-stone-300 font-bold uppercase tracking-wider">Question {currentQuestionIndex + 1} of {questions.length}</p>
                     <p className="text-lg font-black text-white">{selectedSubject} • {selectedChapter}</p>
                   </div>
                 </div>
@@ -1199,19 +1199,19 @@ export const Practice = () => {
                 <div className="flex items-center gap-6">
                   {/* Progress Bar */}
                   <div className="hidden md:flex items-center gap-3">
-                    <div className="w-32 h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div className="w-32 h-2 bg-stone-700 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-[#1D9E75] to-emerald-500 transition-all"
+                        className="h-full bg-gradient-to-r from-[#8C5A35] to-amber-500 transition-all"
                         style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
                       />
                     </div>
-                    <p className="text-xs font-black text-[#1D9E75]">{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</p>
+                    <p className="text-xs font-black text-[#8C5A35]">{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</p>
                   </div>
 
                   {/* Score Box */}
-                  <div className="p-3 bg-[#1D9E75]/20 rounded-2xl text-center min-w-[80px]">
-                    <p className="text-xs text-slate-300 font-bold uppercase tracking-wider">Score</p>
-                    <p className="text-2xl font-black text-[#1D9E75]">{score}</p>
+                  <div className="p-3 bg-[#8C5A35]/20 rounded-2xl text-center min-w-[80px]">
+                    <p className="text-xs text-stone-300 font-bold uppercase tracking-wider">Score</p>
+                    <p className="text-2xl font-black text-[#8C5A35]">{score}</p>
                   </div>
 
                   {/* Timer */}
@@ -1220,7 +1220,7 @@ export const Practice = () => {
                       ? 'bg-red-500/20'
                       : 'bg-amber-500/20'
                       }`}>
-                      <p className="text-xs text-slate-300 font-bold">⏱ Time</p>
+                      <p className="text-xs text-stone-300 font-bold">⏱ Time</p>
                       <p className={`text-2xl font-black ${timeLeft < 60 ? 'text-red-400' : 'text-amber-400'
                         }`}>
                         {formatTime(timeLeft)}
@@ -1232,16 +1232,16 @@ export const Practice = () => {
             </Card>
 
             {/* Question Card */}
-            <Card className="p-10 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px] shadow-xl">
+            <Card className="p-10 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px] shadow-xl">
               <MarkdownContent 
                 content={stripAnswerLine(questions[currentQuestionIndex])} 
-                className="text-slate-900 dark:text-white mb-8" 
+                className="text-[#2C241B] mb-8" 
               />
 
               {!gradeResult ? (
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+                    <label className="block text-sm font-black text-stone-700 uppercase tracking-wider mb-3">
                       Your Answer
                     </label>
                     {(() => {
@@ -1259,12 +1259,12 @@ export const Practice = () => {
                                   onClick={() => setUserAnswer(opt.label)}
                                   className={`p-5 rounded-2xl border-2 font-bold text-left transition-all flex gap-4 items-center ${
                                     isSelected
-                                      ? 'border-[#1D9E75] bg-[#1D9E75]/10 text-slate-900 dark:text-white ring-2 ring-[#1D9E75]'
-                                      : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-[#1D9E75]/50 bg-slate-50 dark:bg-slate-900/50'
+                                      ? 'border-[#8C5A35] bg-[#8C5A35]/10 text-[#2C241B] ring-2 ring-[#8C5A35]'
+                                      : 'border-stone-200 text-stone-700 hover:border-[#8C5A35]/50 bg-[#FCFAF8] '
                                   }`}
                                 >
                                   <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black ${
-                                    isSelected ? 'bg-[#1D9E75] text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                                    isSelected ? 'bg-[#8C5A35] text-white' : 'bg-[#E8E4DB] text-stone-600 '
                                   }`}>
                                     {opt.label}
                                   </span>
@@ -1280,13 +1280,13 @@ export const Practice = () => {
                       if (parsedBlank) {
                         return (
                           <div className="space-y-4">
-                            <p className="text-slate-600 dark:text-slate-400 text-sm italic">Type the missing word or phrase to fill in the blank:</p>
+                            <p className="text-stone-600 text-sm italic">Type the missing word or phrase to fill in the blank:</p>
                             <input
                               type="text"
                               value={userAnswer}
                               onChange={(e) => setUserAnswer(e.target.value)}
                               placeholder="Type your answer here..."
-                              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent outline-none transition-all font-bold text-lg"
+                              className="w-full px-6 py-4 bg-[#FCFAF8] text-[#2C241B] rounded-2xl border-2 border-stone-200 focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent outline-none transition-all font-bold text-lg"
                             />
                           </div>
                         );
@@ -1318,10 +1318,10 @@ export const Practice = () => {
 
                         return (
                           <div className="space-y-6">
-                            <p className="text-slate-600 dark:text-slate-400 text-sm italic">For each item in Column A, select the matching option from Column B:</p>
+                            <p className="text-stone-600 text-sm italic">For each item in Column A, select the matching option from Column B:</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                               <div className="space-y-4">
-                                <h4 className="font-black text-slate-900 dark:text-white border-b-2 pb-2">Column A</h4>
+                                <h4 className="font-black text-[#2C241B] border-b-2 pb-2">Column A</h4>
                                 {parsedMatch.columnA.map((item) => {
                                   const match = item.match(/^\s*(\d+)[\)\.]\s*(.*)$/);
                                   if (!match) return null;
@@ -1330,12 +1330,12 @@ export const Practice = () => {
                                   const selectedVal = currentSelections[key] || '';
 
                                   return (
-                                    <div key={key} className="flex items-center gap-4 justify-between bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                                      <span className="font-bold text-slate-800 dark:text-slate-200">{key}. {text}</span>
+                                    <div key={key} className="flex items-center gap-4 justify-between bg-[#FCFAF8] p-4 rounded-xl border border-stone-100 ">
+                                      <span className="font-bold text-[#3E352B] ">{key}. {text}</span>
                                       <select
                                         value={selectedVal}
                                         onChange={(e) => handleSelectMatch(key, e.target.value)}
-                                        className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                                        className="px-3 py-2 rounded-lg border border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]"
                                       >
                                         <option value="">Select...</option>
                                         {parsedMatch.columnB.map((bItem) => {
@@ -1355,10 +1355,10 @@ export const Practice = () => {
                               </div>
 
                               <div className="space-y-4">
-                                <h4 className="font-black text-slate-900 dark:text-white border-b-2 pb-2">Column B</h4>
-                                <div className="space-y-2 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                                <h4 className="font-black text-[#2C241B] border-b-2 pb-2">Column B</h4>
+                                <div className="space-y-2 bg-[#FCFAF8] p-4 rounded-xl border border-stone-100 ">
                                   {parsedMatch.columnB.map((item, idx) => (
-                                    <div key={idx} className="p-2 font-medium text-sm text-slate-700 dark:text-slate-300">
+                                    <div key={idx} className="p-2 font-medium text-sm text-stone-700 ">
                                       {item}
                                     </div>
                                   ))}
@@ -1374,7 +1374,7 @@ export const Practice = () => {
                           value={userAnswer}
                           onChange={(e) => setUserAnswer(e.target.value)}
                           placeholder="Write your answer here. Think carefully and provide a complete, well-structured response..."
-                          className="w-full h-40 p-6 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent outline-none transition-all resize-none text-base font-medium"
+                          className="w-full h-40 p-6 bg-[#FCFAF8] text-[#2C241B] rounded-2xl border-2 border-stone-200 focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent outline-none transition-all resize-none text-base font-medium"
                         />
                       );
                     })()}
@@ -1390,7 +1390,7 @@ export const Practice = () => {
                         {isExplaining ? 'Explaining...' : 'Explain This Question'}
                       </Button>
                       <Button
-                        className="px-8 py-4 bg-[#1D9E75] hover:bg-[#16805d] text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-105 active:scale-95"
+                        className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-105 active:scale-95"
                         onClick={handleSubmitAndNext}
                         disabled={isGrading || !userAnswer.trim()}
                       >
@@ -1403,28 +1403,28 @@ export const Practice = () => {
                   </div>
 
                   {isSessionGrading && (
-                    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-6">
-                      <Card className="p-10 max-w-md w-full text-center bg-white dark:bg-slate-900 rounded-[40px] shadow-2xl">
-                        <div className="w-20 h-20 bg-[#1D9E75]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                          <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#1D9E75] border-t-transparent"></div>
+                    <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-md z-50 flex items-center justify-center p-6">
+                      <Card className="p-10 max-w-md w-full text-center bg-[#FCFAF8] rounded-[40px] shadow-2xl">
+                        <div className="w-20 h-20 bg-[#8C5A35]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#8C5A35] border-t-transparent"></div>
                         </div>
-                        <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">Grading your session...</h3>
-                        <p className="text-slate-500 font-medium">Clarity AI is evaluating your answers based on board patterns and NCERT precision.</p>
+                        <h3 className="text-2xl font-black text-[#2C241B] mb-2">Grading your session...</h3>
+                        <p className="text-stone-500 font-medium">Clarity AI is evaluating your answers based on board patterns and NCERT precision.</p>
                       </Card>
                     </div>
                   )}
 
                   {isGrading && gradingPreview && (
-                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
-                      <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-2">Streaming Evaluation</p>
-                      <MarkdownContent content={gradingPreview} className="text-sm text-slate-700 dark:text-slate-300" />
+                    <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                      <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-2">Streaming Evaluation</p>
+                      <MarkdownContent content={gradingPreview} className="text-sm text-stone-700 " />
                     </div>
                   )}
 
                   {explainResult && (
-                    <Card className="p-6 bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-[24px]">
-                      <p className="text-xs font-black uppercase tracking-widest text-[#1D9E75] mb-3">Explain Mode</p>
-                      <MarkdownContent content={explainResult} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed" />
+                    <Card className="p-6 bg-[#FCFAF8] border-2 border-stone-200 rounded-[24px]">
+                      <p className="text-xs font-black uppercase tracking-widest text-[#8C5A35] mb-3">Explain Mode</p>
+                      <MarkdownContent content={explainResult} className="text-sm text-stone-700 leading-relaxed" />
                     </Card>
                   )}
                 </div>
@@ -1432,10 +1432,10 @@ export const Practice = () => {
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   {/* Score Display */}
                   <div className={`p-6 rounded-2xl border-2 flex items-center justify-between ${gradeResult.marks_awarded === gradeResult.total_marks
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200'
+                    ? 'bg-amber-50 border-amber-300 text-amber-800 '
                     : gradeResult.marks_awarded >= gradeResult.total_marks * 0.7
-                      ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200'
-                      : 'bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 text-red-800 dark:text-red-200'
+                      ? 'bg-amber-50 border-amber-300 text-amber-800 '
+                      : 'bg-red-50 border-red-300 text-red-800 '
                     }`}>
                     <div className="flex items-center gap-3">
                       <CheckCircle2 size={24} />
@@ -1446,41 +1446,41 @@ export const Practice = () => {
 
                   {/* Feedback Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-[24px] border-2 border-emerald-200 dark:border-emerald-800">
-                      <h4 className="font-black text-emerald-700 dark:text-emerald-300 text-sm mb-4 uppercase tracking-widest flex items-center gap-2">
+                    <div className="p-6 bg-amber-50 rounded-[24px] border-2 border-amber-200 ">
+                      <h4 className="font-black text-amber-700 text-sm mb-4 uppercase tracking-widest flex items-center gap-2">
                         <CheckCircle2 size={18} />
                         Teacher's Praise
                       </h4>
-                      <p className="text-sm text-emerald-800 dark:text-emerald-200 font-medium leading-relaxed">
+                      <p className="text-sm text-amber-800 font-medium leading-relaxed">
                         {gradeResult.feedback.split('Missing:')[0].replace('Good: ', '') || '✓ Great effort!'}
                       </p>
                     </div>
-                    <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-[24px] border-2 border-red-200 dark:border-red-800">
-                      <h4 className="font-black text-red-700 dark:text-red-300 text-sm mb-4 uppercase tracking-widest flex items-center gap-2">
+                    <div className="p-6 bg-red-50 rounded-[24px] border-2 border-red-200 ">
+                      <h4 className="font-black text-red-700 text-sm mb-4 uppercase tracking-widest flex items-center gap-2">
                         <AlertCircle size={18} />
                         Needs Attention
                       </h4>
-                      <p className="text-sm text-red-800 dark:text-red-200 font-medium leading-relaxed">
+                      <p className="text-sm text-red-800 font-medium leading-relaxed">
                         {gradeResult.feedback.split('Missing:')[1] || '✓ Nothing major! Keep it up.'}
                       </p>
                     </div>
                   </div>
 
                   {/* Model Answer */}
-                  <div className="p-8 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-[24px] shadow-xl relative overflow-hidden">
+                  <div className="p-8 bg-gradient-to-br from-stone-900 to-stone-800 text-white rounded-[24px] shadow-xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 opacity-10">
                       <Lightbulb size={80} />
                     </div>
                     <div className="relative z-10">
-                      <h4 className="font-black text-xs uppercase tracking-[0.2em] text-[#1D9E75] mb-4">✨ Model Answer by AI Tutor</h4>
-                      <MarkdownContent content={gradeResult.model_answer} className="text-sm text-slate-200 font-medium leading-loose" />
+                      <h4 className="font-black text-xs uppercase tracking-[0.2em] text-[#8C5A35] mb-4">✨ Model Answer by AI Tutor</h4>
+                      <MarkdownContent content={gradeResult.model_answer} className="text-sm text-stone-200 font-medium leading-loose" />
                     </div>
                   </div>
 
                   {/* Pro Tip */}
-                  <Card className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-2xl">
-                    <p className="text-sm font-bold text-blue-800 dark:text-blue-200 flex items-start gap-3">
-                      <Lightbulb size={18} className="flex-shrink-0 mt-1 text-blue-600 dark:text-blue-400" />
+                  <Card className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-2xl">
+                    <p className="text-sm font-bold text-blue-800 flex items-start gap-3">
+                      <Lightbulb size={18} className="flex-shrink-0 mt-1 text-blue-600 " />
                       <span>
                         💭 <strong>Reflection:</strong> Review this concept once more before your next study session to lock it into long-term memory. Consider creating a summary or flashcard.
                       </span>
@@ -1490,38 +1490,38 @@ export const Practice = () => {
                   {(gradeResult.micro_explanation || gradeResult.related_question || gradeResult.flashcard_due || gradeResult.weak_skill) && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {gradeResult.micro_explanation && (
-                        <div className="p-6 bg-sky-50 dark:bg-sky-900/20 rounded-[24px] border-2 border-sky-200 dark:border-sky-800">
-                          <p className="text-xs font-black uppercase tracking-widest text-sky-700 dark:text-sky-300 mb-2">Micro Explanation</p>
-                          <MarkdownContent content={gradeResult.micro_explanation} className="text-sm text-sky-900 dark:text-sky-100 font-medium leading-relaxed" />
+                        <div className="p-6 bg-sky-50 rounded-[24px] border-2 border-sky-200 ">
+                          <p className="text-xs font-black uppercase tracking-widest text-sky-700 mb-2">Micro Explanation</p>
+                          <MarkdownContent content={gradeResult.micro_explanation} className="text-sm text-sky-900 font-medium leading-relaxed" />
                         </div>
                       )}
                       {gradeResult.related_question && (
-                        <div className="p-6 bg-violet-50 dark:bg-violet-900/20 rounded-[24px] border-2 border-violet-200 dark:border-violet-800">
-                          <p className="text-xs font-black uppercase tracking-widest text-violet-700 dark:text-violet-300 mb-2">Related Practice Question</p>
-                          <MarkdownContent content={gradeResult.related_question} className="text-sm text-violet-900 dark:text-violet-100 font-medium leading-relaxed" />
+                        <div className="p-6 bg-violet-50 rounded-[24px] border-2 border-violet-200 ">
+                          <p className="text-xs font-black uppercase tracking-widest text-violet-700 mb-2">Related Practice Question</p>
+                          <MarkdownContent content={gradeResult.related_question} className="text-sm text-violet-900 font-medium leading-relaxed" />
                         </div>
                       )}
                       {gradeResult.flashcard_due && (
-                        <div className="p-6 bg-amber-50 dark:bg-amber-900/20 rounded-[24px] border-2 border-amber-200 dark:border-amber-800">
-                          <p className="text-xs font-black uppercase tracking-widest text-amber-700 dark:text-amber-300 mb-2">Flashcard Due</p>
-                          <MarkdownContent content={gradeResult.flashcard_due} className="text-sm text-amber-900 dark:text-amber-100 font-medium leading-relaxed" />
+                        <div className="p-6 bg-amber-50 rounded-[24px] border-2 border-amber-200 ">
+                          <p className="text-xs font-black uppercase tracking-widest text-amber-700 mb-2">Flashcard Due</p>
+                          <MarkdownContent content={gradeResult.flashcard_due} className="text-sm text-amber-900 font-medium leading-relaxed" />
                         </div>
                       )}
                       {gradeResult.weak_skill && (
-                        <div className="p-6 bg-rose-50 dark:bg-rose-900/20 rounded-[24px] border-2 border-rose-200 dark:border-rose-800">
-                          <p className="text-xs font-black uppercase tracking-widest text-rose-700 dark:text-rose-300 mb-2">Weak Skill</p>
-                          <MarkdownContent content={gradeResult.weak_skill} className="text-sm text-rose-900 dark:text-rose-100 font-medium leading-relaxed" />
+                        <div className="p-6 bg-rose-50 rounded-[24px] border-2 border-rose-200 ">
+                          <p className="text-xs font-black uppercase tracking-widest text-rose-700 mb-2">Weak Skill</p>
+                          <MarkdownContent content={gradeResult.weak_skill} className="text-sm text-rose-900 font-medium leading-relaxed" />
                         </div>
                       )}
                     </div>
                   )}
 
                   {doubtSignal && (
-                    <Card className="p-6 bg-gradient-to-r from-rose-50 to-amber-50 dark:from-rose-900/20 dark:to-amber-900/20 border-2 border-rose-200 dark:border-rose-800 rounded-2xl">
+                    <Card className="p-6 bg-gradient-to-r from-rose-50 to-amber-50 border-2 border-rose-200 rounded-2xl">
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div>
-                          <p className="text-sm font-black text-rose-800 dark:text-rose-200">Auto Doubt Detector: {doubtSignal.title}</p>
-                          <p className="text-xs text-rose-700 dark:text-rose-300 mt-1">{doubtSignal.clue}</p>
+                          <p className="text-sm font-black text-rose-800 ">Auto Doubt Detector: {doubtSignal.title}</p>
+                          <p className="text-xs text-rose-700 mt-1">{doubtSignal.clue}</p>
                         </div>
                         <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${doubtSignal.confidence === 'high' ? 'bg-rose-200 text-rose-800' : 'bg-amber-200 text-amber-800'}`}>
                           {doubtSignal.confidence}
@@ -1556,7 +1556,7 @@ export const Practice = () => {
                   {/* Next Button */}
                   <div className="flex justify-end pt-4">
                     <Button
-                      className="px-8 py-4 bg-[#1D9E75] hover:bg-[#16805d] text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2"
+                      className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2"
                       onClick={handleNextQuestion}
                     >
                       {currentQuestionIndex < questions.length - 1 ? (

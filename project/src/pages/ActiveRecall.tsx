@@ -428,29 +428,29 @@ export const ActiveRecall = () => {
 
   if (isTamilNadu) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+      <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
         <Navbar />
         <main className="max-w-3xl mx-auto px-6 py-20 text-center">
-          <Card className="p-12 bg-white dark:bg-[#0f172a] border-none shadow-2xl rounded-[32px] space-y-6 transform hover:scale-[1.01] transition-all duration-300">
-            <div className="w-20 h-20 mx-auto bg-amber-50 dark:bg-amber-950/30 rounded-full flex items-center justify-center text-amber-500 animate-pulse">
+          <Card className="p-12 bg-[#FCFAF8] border-none shadow-2xl rounded-[32px] space-y-6 transform hover:scale-[1.01] transition-all duration-300">
+            <div className="w-20 h-20 mx-auto bg-amber-50 rounded-full flex items-center justify-center text-amber-500 animate-pulse">
               <Sparkles size={40} />
             </div>
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white">Tamil Nadu Board Support Coming Soon!</h2>
-            <p className="text-slate-600 dark:text-slate-350 text-lg leading-relaxed max-w-xl mx-auto font-medium">
+            <h2 className="text-3xl font-black text-[#2C241B] ">Tamil Nadu Board Support Coming Soon!</h2>
+            <p className="text-stone-600 text-lg leading-relaxed max-w-xl mx-auto font-medium">
               Tamil Nadu State Board support is coming in a very, very soon update! Currently, CBSE / NCERT is fully supported.
             </p>
-            <div className="p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 text-left space-y-3">
-              <h4 className="font-bold text-slate-800 dark:text-slate-200">How to get started right now:</h4>
-              <ol className="list-decimal list-inside space-y-2 text-sm text-slate-600 dark:text-slate-400 font-medium">
-                <li>Go to your <span className="text-[#1D9E75] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
-                <li>Select a CBSE class and click <span className="text-slate-800 dark:text-slate-200 font-bold">Save</span></li>
+            <div className="p-6 bg-[#FCFAF8] rounded-2xl border border-stone-100 text-left space-y-3">
+              <h4 className="font-bold text-[#3E352B] ">How to get started right now:</h4>
+              <ol className="list-decimal list-inside space-y-2 text-sm text-stone-600 font-medium">
+                <li>Go to your <span className="text-[#8C5A35] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
+                <li>Select a CBSE class and click <span className="text-[#3E352B] font-bold">Save</span></li>
                 <li>Start practicing and exploring Clarity's premium features!</li>
               </ol>
             </div>
             <Button 
               variant="primary" 
               size="lg" 
-              className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#1D9E75]/25"
+              className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#8C5A35]/25"
               onClick={() => navigate('/profile')}
             >
               Go to Profile Settings
@@ -462,37 +462,37 @@ export const ActiveRecall = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+    <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
       <Navbar />
       <main className="max-w-7xl mx-auto px-6 py-10">
         
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
           <div>
-            <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight flex items-center gap-3">
-              <Brain className="text-[#1D9E75] h-10 w-10 animate-pulse" />
+            <h1 className="text-4xl font-black text-[#2C241B] mb-2 tracking-tight flex items-center gap-3">
+              <Brain className="text-[#8C5A35] h-10 w-10 animate-pulse" />
               Active Recall Board
             </h1>
-            <p className="text-slate-500 font-medium">Read chapter text, hide the page, state everything you remember out loud, and get detailed key points coaching.</p>
+            <p className="text-stone-500 font-medium">Read chapter text, hide the page, state everything you remember out loud, and get detailed key points coaching.</p>
           </div>
 
           {/* Setup Selectors */}
           {activeStep === 1 && (
-            <div className="flex flex-wrap items-center gap-2 bg-white dark:bg-slate-800 p-2 rounded-2xl border border-slate-100 dark:border-slate-700">
+            <div className="flex flex-wrap items-center gap-2 bg-[#FCFAF8] p-2 rounded-2xl border border-stone-100 ">
               <select 
                 value={classFilter} 
                 onChange={(e) => {
                   setClassFilter(e.target.value);
                   setReaderContent('');
                 }}
-                className="bg-transparent text-sm font-black text-slate-700 dark:text-slate-200 outline-none px-3 py-1.5"
+                className="bg-transparent text-sm font-black text-stone-700 outline-none px-3 py-1.5"
               >
                 {['8', '9', '10', '11', '12'].map(c => {
                   const isEnrolled = user?.class ? String(user.class).startsWith(c) : c === '10';
                   const value = (user?.class && String(user.class).startsWith(c)) ? user.class : c;
                   const label = c + (user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_EN') ? ' (TN Eng)' : '') + (user?.class && String(user.class).startsWith(c) && String(user.class).includes('_TN_TM') ? ' (TN Tamil)' : '');
                   return (
-                    <option key={c} value={value} disabled={!isEnrolled} className="dark:bg-slate-900">
+                    <option key={c} value={value} disabled={!isEnrolled} className="">
                       Class {label}
                     </option>
                   );
@@ -505,10 +505,10 @@ export const ActiveRecall = () => {
                   setSubjectFilter(e.target.value);
                   setReaderContent('');
                 }}
-                className="bg-transparent text-sm font-black text-slate-700 dark:text-slate-200 outline-none px-3 py-1.5 border-l border-slate-100 dark:border-slate-700"
+                className="bg-transparent text-sm font-black text-stone-700 outline-none px-3 py-1.5 border-l border-stone-100 "
               >
                 {resources.subjects.map(s => (
-                  <option key={s} value={s} className="dark:bg-slate-900">{s}</option>
+                  <option key={s} value={s} className="">{s}</option>
                 ))}
               </select>
 
@@ -518,17 +518,17 @@ export const ActiveRecall = () => {
                   setSelectedChapter(e.target.value);
                   setReaderContent('');
                 }}
-                className="bg-transparent text-sm font-black text-slate-700 dark:text-slate-200 outline-none px-3 py-1.5 border-l border-slate-100 dark:border-slate-700 max-w-[200px]"
+                className="bg-transparent text-sm font-black text-stone-700 outline-none px-3 py-1.5 border-l border-stone-100 max-w-[200px]"
               >
                 {resources.chapters.map(ch => (
-                  <option key={ch} value={ch} className="dark:bg-slate-900">{ch}</option>
+                  <option key={ch} value={ch} className="">{ch}</option>
                 ))}
               </select>
               
               <button 
                 onClick={loadChapter}
                 title="Reload Chapter"
-                className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-l border-slate-100 dark:border-slate-700"
+                className="p-1.5 rounded-lg text-stone-500 hover:bg-[#FCFAF8] :bg-stone-700 transition-colors border-l border-stone-100 "
               >
                 <RefreshCw size={14} className={readerLoading ? 'animate-spin' : ''} />
               </button>
@@ -537,16 +537,16 @@ export const ActiveRecall = () => {
         </div>
 
         {/* Step Wizard Bar */}
-        <div className="flex items-center justify-center gap-2 mb-10 max-w-lg mx-auto bg-white dark:bg-slate-800/60 p-2 rounded-2xl border border-slate-100 dark:border-slate-800">
-          <div className={`flex-1 text-center py-2 rounded-xl text-xs font-black transition-all ${activeStep === 1 ? 'bg-[#1D9E75] text-white shadow-sm' : 'text-slate-400 dark:text-slate-500'}`}>
+        <div className="flex items-center justify-center gap-2 mb-10 max-w-lg mx-auto bg-[#FCFAF8] p-2 rounded-2xl border border-stone-100 ">
+          <div className={`flex-1 text-center py-2 rounded-xl text-xs font-black transition-all ${activeStep === 1 ? 'bg-[#8C5A35] text-white shadow-sm' : 'text-stone-400 '}`}>
             1. Read Chapter
           </div>
-          <ChevronRight size={14} className="text-slate-300 dark:text-slate-700" />
-          <div className={`flex-1 text-center py-2 rounded-xl text-xs font-black transition-all ${activeStep === 2 ? 'bg-[#1D9E75] text-white shadow-sm' : 'text-slate-400 dark:text-slate-500'}`}>
+          <ChevronRight size={14} className="text-stone-300 " />
+          <div className={`flex-1 text-center py-2 rounded-xl text-xs font-black transition-all ${activeStep === 2 ? 'bg-[#8C5A35] text-white shadow-sm' : 'text-stone-400 '}`}>
             2. Audio Recall
           </div>
-          <ChevronRight size={14} className="text-slate-300 dark:text-slate-700" />
-          <div className={`flex-1 text-center py-2 rounded-xl text-xs font-black transition-all ${activeStep === 3 ? 'bg-[#1D9E75] text-white shadow-sm' : 'text-slate-400 dark:text-slate-500'}`}>
+          <ChevronRight size={14} className="text-stone-300 " />
+          <div className={`flex-1 text-center py-2 rounded-xl text-xs font-black transition-all ${activeStep === 3 ? 'bg-[#8C5A35] text-white shadow-sm' : 'text-stone-400 '}`}>
             3. Scorecard
           </div>
         </div>
@@ -555,10 +555,10 @@ export const ActiveRecall = () => {
         {activeStep === 1 && (
           <>
             {!readerOpen ? (
-              <Card className="p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-[32px] text-center max-w-2xl mx-auto my-6 animate-fadeIn">
-                <Brain className="text-[#1D9E75] h-14 w-14 mx-auto mb-4 animate-pulse" />
-                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">Start Active Recall Study Session</h3>
-                <p className="text-slate-500 dark:text-slate-400 font-semibold mb-6 text-sm">
+              <Card className="p-8 bg-[#FCFAF8] border-none shadow-xl rounded-[32px] text-center max-w-2xl mx-auto my-6 animate-fadeIn">
+                <Brain className="text-[#8C5A35] h-14 w-14 mx-auto mb-4 animate-pulse" />
+                <h3 className="text-xl font-black text-[#2C241B] mb-2">Start Active Recall Study Session</h3>
+                <p className="text-stone-500 font-semibold mb-6 text-sm">
                   Select your class, subject, and chapter using the filters at the top, then open the full-screen textbook viewer. Read the concepts, memorize them, and then proceed to state what you remember.
                 </p>
                 <div className="flex justify-center gap-3">
@@ -570,7 +570,7 @@ export const ActiveRecall = () => {
                         loadChapter();
                       }
                     }}
-                    className="bg-[#1D9E75] hover:bg-[#16805d] rounded-2xl font-black h-12 px-8 shadow-lg shadow-[#1D9E75]/25 flex items-center gap-2 text-sm"
+                    className="bg-[#8C5A35] hover:bg-[#70482B] rounded-2xl font-black h-12 px-8 shadow-lg shadow-[#8C5A35]/25 flex items-center gap-2 text-sm"
                   >
                     <BookOpen size={18} />
                     <span>Open Full-Screen Reader</span>
@@ -579,27 +579,27 @@ export const ActiveRecall = () => {
               </Card>
             ) : (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-0 transition-all animate-fadeIn">
-                <div className="bg-white dark:bg-slate-900 w-full h-full flex flex-col overflow-hidden shadow-2xl relative animate-scaleIn">
+                <div className="bg-[#FCFAF8] w-full h-full flex flex-col overflow-hidden shadow-2xl relative animate-scaleIn">
                   {/* Header */}
-                  <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50">
+                  <div className="p-6 border-b border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FCFAF8]/50 ">
                     <div>
-                      <h3 className="text-lg font-black text-slate-900 dark:text-white truncate max-w-lg">
+                      <h3 className="text-lg font-black text-[#2C241B] truncate max-w-lg">
                         {selectedChapter}
                       </h3>
-                      <p className="text-xs text-slate-500 font-medium">
+                      <p className="text-xs text-stone-500 font-medium">
                         Class {classFilter} • {subjectFilter}
                       </p>
                     </div>
                     
                     <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
                       {/* Layout Mode Toggles */}
-                      <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                      <div className="flex bg-[#F2EFE9] p-1 rounded-xl">
                         <button
                           onClick={() => setLayoutMode('split')}
                           className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                             layoutMode === 'split'
-                              ? 'bg-[#1D9E75] text-white shadow-sm'
-                              : 'text-slate-600 dark:text-slate-350 hover:bg-slate-200 dark:hover:bg-slate-700'
+                              ? 'bg-[#8C5A35] text-white shadow-sm'
+                              : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                           }`}
                         >
                           Split View
@@ -608,8 +608,8 @@ export const ActiveRecall = () => {
                           onClick={() => setLayoutMode('pdf')}
                           className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                             layoutMode === 'pdf'
-                              ? 'bg-[#1D9E75] text-white shadow-sm'
-                              : 'text-slate-600 dark:text-slate-355 hover:bg-slate-200 dark:hover:bg-slate-700'
+                              ? 'bg-[#8C5A35] text-white shadow-sm'
+                              : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                           }`}
                         >
                           Original PDF
@@ -618,8 +618,8 @@ export const ActiveRecall = () => {
                           onClick={() => setLayoutMode('text')}
                           className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                             layoutMode === 'text'
-                              ? 'bg-[#1D9E75] text-white shadow-sm'
-                              : 'text-slate-600 dark:text-slate-355 hover:bg-slate-200 dark:hover:bg-slate-700'
+                              ? 'bg-[#8C5A35] text-white shadow-sm'
+                              : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                           }`}
                         >
                           Interactive Text
@@ -631,7 +631,7 @@ export const ActiveRecall = () => {
                           setReaderOpen(false);
                           setActiveStep(2);
                         }}
-                        className="bg-[#1D9E75] hover:bg-[#16805d] rounded-xl font-black h-11 px-6 shadow-md shadow-[#1D9E75]/10 flex items-center gap-2"
+                        className="bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-black h-11 px-6 shadow-md shadow-[#8C5A35]/10 flex items-center gap-2"
                         disabled={!readerContent}
                       >
                         <span>Ready to Recall</span>
@@ -640,7 +640,7 @@ export const ActiveRecall = () => {
                       
                       <button
                         onClick={() => setReaderOpen(false)}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white transition-all font-bold"
+                        className="p-2 hover:bg-[#F2EFE9] :bg-stone-800 rounded-xl text-stone-500 hover:text-[#3E352B] :text-white transition-all font-bold"
                         title="Close Reader"
                       >
                         ✕
@@ -649,18 +649,18 @@ export const ActiveRecall = () => {
                   </div>
 
                   {/* Split Content */}
-                  <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative border-t border-slate-100 dark:border-slate-800 min-h-[60vh]">
+                  <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative border-t border-stone-100 min-h-[60vh]">
                     {/* Left Panel: PDF Viewer (shown if layoutMode !== 'text') */}
-                    <div className={`flex flex-col relative border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 transition-all duration-300 ${
+                    <div className={`flex flex-col relative border-r border-stone-200 bg-[#FCFAF8] transition-all duration-300 ${
                       layoutMode === 'split' ? 'w-full h-1/2 md:h-full md:w-1/2' : layoutMode === 'pdf' ? 'w-full h-full' : 'hidden'
                     }`}>
                       {viewerPdfLoading ? (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-500 bg-white dark:bg-slate-900">
-                          <Loader2 className="animate-spin text-[#1D9E75]" size={32} />
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-500 bg-[#FCFAF8] ">
+                          <Loader2 className="animate-spin text-[#8C5A35]" size={32} />
                           <p className="text-xs font-bold">Loading textbook PDF...</p>
                         </div>
                       ) : viewerPdfError ? (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-500 p-6 bg-white dark:bg-slate-900 text-center">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-500 p-6 bg-[#FCFAF8] text-center">
                           <AlertCircle className="text-rose-500" size={24} />
                           <p className="text-xs font-bold">{viewerPdfError}</p>
                         </div>
@@ -671,7 +671,7 @@ export const ActiveRecall = () => {
                           title="Active Recall PDF Viewer"
                         />
                       ) : (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-400 bg-white dark:bg-slate-900">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-400 bg-[#FCFAF8] ">
                           <BookOpen size={32} className="opacity-30" />
                           <p className="text-xs font-bold">PDF loading...</p>
                         </div>
@@ -679,7 +679,7 @@ export const ActiveRecall = () => {
                     </div>
 
                     {/* Right Panel: Interactive Text & AI Context help (shown if layoutMode !== 'pdf') */}
-                    <div className={`h-full flex flex-col md:flex-row overflow-hidden bg-white dark:bg-[#0c0e14] transition-all duration-300 ${
+                    <div className={`h-full flex flex-col md:flex-row overflow-hidden bg-[#FCFAF8] transition-all duration-300 ${
                       layoutMode === 'split' ? 'w-full h-1/2 md:h-full md:w-1/2' : layoutMode === 'text' ? 'w-full h-full' : 'hidden'
                     }`}>
                       {/* Left Text Column */}
@@ -690,24 +690,24 @@ export const ActiveRecall = () => {
                       >
                         {readerLoading ? (
                           <div className="flex flex-col items-center justify-center py-20 gap-3">
-                            <Loader2 className="animate-spin text-[#1D9E75]" size={28} />
-                            <p className="text-xs font-bold text-slate-400">Extracting text for interactive study...</p>
-                            <p className="text-[10px] text-slate-400">You can already read the PDF on the left</p>
+                            <Loader2 className="animate-spin text-[#8C5A35]" size={28} />
+                            <p className="text-xs font-bold text-stone-400">Extracting text for interactive study...</p>
+                            <p className="text-[10px] text-stone-400">You can already read the PDF on the left</p>
                           </div>
                         ) : readerError ? (
                           <div className="text-center py-20 max-w-sm mx-auto">
                             <AlertCircle className="text-rose-500 mx-auto mb-2" size={24} />
-                            <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Interactive reader offline</p>
-                            <p className="text-[10px] text-slate-500 mb-4">{readerError}</p>
+                            <p className="text-xs font-bold text-[#3E352B] ">Interactive reader offline</p>
+                            <p className="text-[10px] text-stone-500 mb-4">{readerError}</p>
                           </div>
                         ) : (
                           <div className="max-w-none">
-                            <div className="p-3 bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl mb-4 text-[10px] font-bold text-[#1D9E75] flex items-center gap-2">
+                            <div className="p-3 bg-amber-50/50 border border-amber-100 rounded-xl mb-4 text-[10px] font-bold text-[#8C5A35] flex items-center gap-2">
                               <Sparkles size={12} className="shrink-0 animate-pulse" />
                               <span>Highlight text to summon Clarity AI CBSE board help!</span>
                             </div>
 
-                            <article className="font-serif text-slate-850 dark:text-slate-100 text-base leading-relaxed select-text selection:bg-[#1D9E75]/25">
+                            <article className="font-serif text-stone-850 text-base leading-relaxed select-text selection:bg-[#8C5A35]/25">
                               {readerContent ? (
                                 <MarkdownContent content={readerContent} />
                               ) : (
@@ -720,32 +720,32 @@ export const ActiveRecall = () => {
 
                       {/* Right Column: AI Panel Drawer */}
                       {aiPanelOpen && (
-                        <div className="w-full md:w-64 border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0c0e14] flex flex-col h-full overflow-hidden shadow-2xl relative z-10 animate-in slide-in-from-bottom md:slide-in-from-right duration-200">
-                          <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
-                            <h4 className="font-black text-xs text-slate-900 dark:text-white flex items-center gap-1.5">
-                              <Sparkles size={12} className="text-[#1D9E75] animate-pulse" />
+                        <div className="w-full md:w-64 border-t md:border-t-0 md:border-l border-stone-200 bg-[#FCFAF8] flex flex-col h-full overflow-hidden shadow-2xl relative z-10 animate-in slide-in-from-bottom md:slide-in-from-right duration-200">
+                          <div className="px-4 py-3 border-b border-stone-200 flex items-center justify-between bg-[#FCFAF8] ">
+                            <h4 className="font-black text-xs text-[#2C241B] flex items-center gap-1.5">
+                              <Sparkles size={12} className="text-[#8C5A35] animate-pulse" />
                               {aiPanelTitle}
                             </h4>
                             <button
                               onClick={() => setAiPanelOpen(false)}
-                              className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                              className="p-1 rounded-lg text-stone-500 hover:bg-[#F2EFE9] :bg-stone-800 transition-colors"
                             >
                               <X size={14} />
                             </button>
                           </div>
 
                           <div className="flex-1 overflow-y-auto p-4 select-text">
-                            <div className="bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 p-3 rounded-xl shadow-sm mb-3">
-                              <p className="text-[9px] font-black uppercase text-slate-400 dark:text-slate-550 tracking-wider mb-1">Quote</p>
-                              <blockquote className="text-[11px] italic font-medium text-slate-600 dark:text-slate-305 border-l-2 border-[#1D9E75] pl-2 py-0.5 line-clamp-3">
+                            <div className="bg-[#FCFAF8] border border-stone-200/60 p-3 rounded-xl shadow-sm mb-3">
+                              <p className="text-[9px] font-black uppercase text-stone-400 tracking-wider mb-1">Quote</p>
+                              <blockquote className="text-[11px] italic font-medium text-stone-600 border-l-2 border-[#8C5A35] pl-2 py-0.5 line-clamp-3">
                                 "{highlightedText}"
                               </blockquote>
                             </div>
 
                             {aiPanelLoading && !aiPanelText ? (
                               <div className="flex flex-col items-center justify-center py-6 gap-2">
-                                <Loader2 className="animate-spin text-[#1D9E75]" size={16} />
-                                <p className="text-[10px] font-bold text-slate-500">Generating...</p>
+                                <Loader2 className="animate-spin text-[#8C5A35]" size={16} />
+                                <p className="text-[10px] font-bold text-stone-500">Generating...</p>
                               </div>
                             ) : (
                               <MarkdownContent className="text-xs leading-relaxed" content={aiPanelText} />
@@ -765,16 +765,16 @@ export const ActiveRecall = () => {
         {activeStep === 2 && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Recorder Interface */}
-            <Card className="lg:col-span-2 p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-[32px] flex flex-col justify-between min-h-[500px]">
+            <Card className="lg:col-span-2 p-8 bg-[#FCFAF8] border-none shadow-xl rounded-[32px] flex flex-col justify-between min-h-[500px]">
               <div>
-                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2">Explain Everything You Remember</h3>
-                <p className="text-slate-400 text-sm font-semibold mb-6">Hit start and summarize the concepts in your own words. We will evaluate how many key textbook terms you remembered!</p>
+                <h3 className="text-xl font-black text-[#2C241B] mb-2">Explain Everything You Remember</h3>
+                <p className="text-stone-400 text-sm font-semibold mb-6">Hit start and summarize the concepts in your own words. We will evaluate how many key textbook terms you remembered!</p>
 
                 {/* Recorder layout */}
-                <div className="flex flex-col items-center justify-center py-10 bg-slate-50 dark:bg-slate-900/60 rounded-[24px] border border-slate-100 dark:border-slate-800/80 mb-6">
+                <div className="flex flex-col items-center justify-center py-10 bg-[#FCFAF8] rounded-[24px] border border-stone-100 mb-6">
                   {isRecording ? (
                     <div className="relative flex items-center justify-center mb-6">
-                      <span className="absolute inline-flex h-24 w-24 rounded-full bg-[#1D9E75]/20 animate-ping"></span>
+                      <span className="absolute inline-flex h-24 w-24 rounded-full bg-[#8C5A35]/20 animate-ping"></span>
                       <button 
                         onClick={stopRecording}
                         className="relative bg-rose-500 hover:bg-rose-600 text-white rounded-full p-6 shadow-lg transition-transform active:scale-95 z-10"
@@ -785,35 +785,35 @@ export const ActiveRecall = () => {
                   ) : (
                     <button 
                       onClick={startRecording}
-                      className="bg-[#1D9E75] hover:bg-[#16805d] text-white rounded-full p-6 shadow-lg shadow-[#1D9E75]/20 mb-6 transition-transform active:scale-95"
+                      className="bg-[#8C5A35] hover:bg-[#70482B] text-white rounded-full p-6 shadow-lg shadow-[#8C5A35]/20 mb-6 transition-transform active:scale-95"
                     >
                       <Mic size={28} />
                     </button>
                   )}
 
-                  <span className={`text-xs font-black uppercase tracking-wider ${isRecording ? 'text-rose-500' : 'text-[#1D9E75]'}`}>
+                  <span className={`text-xs font-black uppercase tracking-wider ${isRecording ? 'text-rose-500' : 'text-[#8C5A35]'}`}>
                     {isRecording ? `Recording • ${formatTime(recordingSeconds)}` : 'Click Microphone to Start'}
                   </span>
                 </div>
 
                 {/* Live Transcript Box */}
                 <div>
-                  <label className="block text-xs font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2">Recall Transcript</label>
-                  <div className="w-full min-h-[120px] max-h-[220px] overflow-y-auto p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-800 dark:text-slate-100 text-sm font-medium leading-relaxed">
+                  <label className="block text-xs font-black uppercase text-stone-400 tracking-wider mb-2">Recall Transcript</label>
+                  <div className="w-full min-h-[120px] max-h-[220px] overflow-y-auto p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl text-[#3E352B] text-sm font-medium leading-relaxed">
                     {transcript || interimText ? (
                       <>
-                        <span className="text-slate-900 dark:text-white">{transcript}</span>
-                        {interimText && <span className="text-slate-400 italic"> {interimText}</span>}
+                        <span className="text-[#2C241B] ">{transcript}</span>
+                        {interimText && <span className="text-stone-400 italic"> {interimText}</span>}
                       </>
                     ) : (
-                      <span className="text-slate-400 italic">Spoken transcript will appear here in real-time...</span>
+                      <span className="text-stone-400 italic">Spoken transcript will appear here in real-time...</span>
                     )}
                   </div>
                 </div>
               </div>
 
               {/* Action buttons */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-4 mt-8 pt-4 border-t border-stone-100 ">
                 <Button 
                   variant="outline" 
                   className="rounded-2xl font-bold h-11 px-5"
@@ -834,7 +834,7 @@ export const ActiveRecall = () => {
                     Go Back to Text
                   </Button>
                   <Button 
-                    className="bg-[#1D9E75] hover:bg-[#16805d] rounded-2xl font-black h-11 px-6 flex items-center gap-2 shadow-md shadow-[#1D9E75]/10"
+                    className="bg-[#8C5A35] hover:bg-[#70482B] rounded-2xl font-black h-11 px-6 flex items-center gap-2 shadow-md shadow-[#8C5A35]/10"
                     onClick={handleRecallSubmit}
                     disabled={evaluating || !transcript.trim()}
                   >
@@ -855,31 +855,31 @@ export const ActiveRecall = () => {
             </Card>
 
             {/* Instruction Sidebar */}
-            <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-[32px] flex flex-col justify-between">
+            <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-[32px] flex flex-col justify-between">
               <div>
-                <h4 className="font-black text-slate-950 dark:text-white text-sm mb-4">Active Recall Tips</h4>
-                <ul className="space-y-4 text-xs font-semibold text-slate-500 leading-relaxed">
+                <h4 className="font-black text-stone-950 text-sm mb-4">Active Recall Tips</h4>
+                <ul className="space-y-4 text-xs font-semibold text-stone-500 leading-relaxed">
                   <li className="flex items-start gap-2.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] shrink-0 font-bold">1</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-50 text-[#8C5A35] shrink-0 font-bold">1</span>
                     <span>Explain concepts as if you are teaching them to a beginner. This forces your brain to structure the information logically.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] shrink-0 font-bold">2</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-50 text-[#8C5A35] shrink-0 font-bold">2</span>
                     <span>Speak clearly and use official CBSE/NCERT terms (e.g. say "chlorophyll" or "anaerobic respiration") because they are heavily weighted in board criteria.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] shrink-0 font-bold">3</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-50 text-[#8C5A35] shrink-0 font-bold">3</span>
                     <span>Don't worry about minor grammar slips. Focus on recalling structure, processes, exceptions, and formulas.</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="mt-8 p-4 bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl">
-                <h5 className="font-bold text-[#1D9E75] text-xs flex items-center gap-1.5 mb-1.5">
+              <div className="mt-8 p-4 bg-amber-50/50 border border-amber-100 rounded-2xl">
+                <h5 className="font-bold text-[#8C5A35] text-xs flex items-center gap-1.5 mb-1.5">
                   <Sparkles size={14} />
                   CBSE Grading Focus
                 </h5>
-                <p className="text-[10px] text-slate-500 font-semibold leading-relaxed">Examiners search for specific "Value Points" in board answers. Our AI checks your speech against these exact points to calculate your recall accuracy.</p>
+                <p className="text-[10px] text-stone-500 font-semibold leading-relaxed">Examiners search for specific "Value Points" in board answers. Our AI checks your speech against these exact points to calculate your recall accuracy.</p>
               </div>
             </Card>
           </div>
@@ -890,49 +890,49 @@ export const ActiveRecall = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Left Main Card: Results Scorecard */}
-            <Card className="lg:col-span-2 p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-[32px] flex flex-col justify-between">
+            <Card className="lg:col-span-2 p-8 bg-[#FCFAF8] border-none shadow-xl rounded-[32px] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
                   <div>
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white">CBSE Active Recall Scorecard</h3>
-                    <p className="text-xs text-slate-400 font-semibold">Evaluation for {selectedChapter}</p>
+                    <h3 className="text-xl font-black text-[#2C241B] ">CBSE Active Recall Scorecard</h3>
+                    <p className="text-xs text-stone-400 font-semibold">Evaluation for {selectedChapter}</p>
                   </div>
-                  <div className="px-4 py-2 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl text-xs font-black text-[#1D9E75] uppercase">
+                  <div className="px-4 py-2 bg-amber-50 rounded-xl text-xs font-black text-[#8C5A35] uppercase">
                     Attempt Complete
                   </div>
                 </div>
 
                 {/* Score Dial and Metrics */}
-                <div className="flex flex-col md:flex-row items-center justify-around bg-slate-50 dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-100 dark:border-slate-800/80 mb-8 gap-6">
+                <div className="flex flex-col md:flex-row items-center justify-around bg-[#FCFAF8] p-6 rounded-3xl border border-stone-100 mb-8 gap-6">
                   {/* Accuracy Dial */}
                   <div className="relative flex items-center justify-center">
                     <svg className="w-32 h-32 transform -rotate-90">
-                      <circle cx="64" cy="64" r="52" strokeWidth="10" stroke="currentColor" className="text-slate-200 dark:text-slate-800" fill="transparent" />
-                      <circle cx="64" cy="64" r="52" strokeWidth="10" stroke="#1D9E75" fill="transparent"
+                      <circle cx="64" cy="64" r="52" strokeWidth="10" stroke="currentColor" className="text-stone-200 " fill="transparent" />
+                      <circle cx="64" cy="64" r="52" strokeWidth="10" stroke="#8C5A35" fill="transparent"
                         strokeDasharray={2 * Math.PI * 52}
                         strokeDashoffset={2 * Math.PI * 52 * (1 - scorecard.accuracy_score / 100)}
                         strokeLinecap="round"
                       />
                     </svg>
                     <div className="absolute text-center">
-                      <span className="text-3xl font-black text-slate-900 dark:text-white">{scorecard.accuracy_score}%</span>
-                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">Accuracy</p>
+                      <span className="text-3xl font-black text-[#2C241B] ">{scorecard.accuracy_score}%</span>
+                      <p className="text-[10px] text-stone-400 font-black uppercase tracking-wider">Accuracy</p>
                     </div>
                   </div>
 
                   {/* Summary of points */}
                   <div className="space-y-3 flex-1 max-w-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-slate-500">Recalled Keywords:</span>
-                      <span className="text-sm font-black text-emerald-600 dark:text-emerald-400">{scorecard.recalled_keywords.length}</span>
+                      <span className="text-sm font-bold text-stone-500">Recalled Keywords:</span>
+                      <span className="text-sm font-black text-amber-600 ">{scorecard.recalled_keywords.length}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-slate-500">Missed Concepts:</span>
+                      <span className="text-sm font-bold text-stone-500">Missed Concepts:</span>
                       <span className="text-sm font-black text-rose-500">{scorecard.missed_concepts.length}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-slate-500">Grade Level Assessment:</span>
-                      <span className="text-sm font-black text-slate-900 dark:text-white">
+                      <span className="text-sm font-bold text-stone-500">Grade Level Assessment:</span>
+                      <span className="text-sm font-black text-[#2C241B] ">
                         {scorecard.accuracy_score >= 85 ? 'Excellent Board Prep' : scorecard.accuracy_score >= 65 ? 'Good Progress' : 'Requires Review'}
                       </span>
                     </div>
@@ -942,17 +942,17 @@ export const ActiveRecall = () => {
                 {/* Keywords comparison lists */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   {/* Recalled Keywords */}
-                  <div className="p-5 bg-emerald-50/20 dark:bg-emerald-950/5 border border-emerald-100/50 dark:border-emerald-900/10 rounded-2xl">
-                    <p className="text-xs font-black uppercase text-emerald-700 dark:text-emerald-400 tracking-wider mb-3 flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                  <div className="p-5 bg-amber-50/20 border border-amber-100/50 rounded-2xl">
+                    <p className="text-xs font-black uppercase text-amber-700 tracking-wider mb-3 flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-amber-500"></span>
                       Recalled Terms/Phrases
                     </p>
                     {scorecard.recalled_keywords.length === 0 ? (
-                      <p className="text-xs text-slate-400 italic">No specific textbook keywords identified.</p>
+                      <p className="text-xs text-stone-400 italic">No specific textbook keywords identified.</p>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
                         {scorecard.recalled_keywords.map((word, i) => (
-                          <span key={i} className="px-2.5 py-1 bg-emerald-100/70 dark:bg-emerald-950/35 text-emerald-700 dark:text-emerald-300 text-xs font-bold rounded-lg border border-emerald-200/30">
+                          <span key={i} className="px-2.5 py-1 bg-amber-100/70 text-amber-700 text-xs font-bold rounded-lg border border-amber-200/30">
                             {word}
                           </span>
                         ))}
@@ -961,17 +961,17 @@ export const ActiveRecall = () => {
                   </div>
 
                   {/* Missed Concepts */}
-                  <div className="p-5 bg-rose-50/20 dark:bg-rose-950/5 border border-rose-100/50 dark:border-rose-900/10 rounded-2xl">
-                    <p className="text-xs font-black uppercase text-rose-700 dark:text-rose-400 tracking-wider mb-3 flex items-center gap-1.5">
+                  <div className="p-5 bg-rose-50/20 border border-rose-100/50 rounded-2xl">
+                    <p className="text-xs font-black uppercase text-rose-700 tracking-wider mb-3 flex items-center gap-1.5">
                       <span className="h-2 w-2 rounded-full bg-rose-500"></span>
                       Missed Core Concepts
                     </p>
                     {scorecard.missed_concepts.length === 0 ? (
-                      <p className="text-xs text-slate-400 italic">Perfect recall! No major concepts missed.</p>
+                      <p className="text-xs text-stone-400 italic">Perfect recall! No major concepts missed.</p>
                     ) : (
                       <div className="flex flex-wrap gap-1.5">
                         {scorecard.missed_concepts.map((word, i) => (
-                          <span key={i} className="px-2.5 py-1 bg-rose-100/70 dark:bg-rose-950/35 text-rose-700 dark:text-rose-300 text-xs font-bold rounded-lg border border-rose-200/30">
+                          <span key={i} className="px-2.5 py-1 bg-rose-100/70 text-rose-700 text-xs font-bold rounded-lg border border-rose-200/30">
                             {word}
                           </span>
                         ))}
@@ -981,19 +981,19 @@ export const ActiveRecall = () => {
                 </div>
 
                 {/* Coach Notes */}
-                <div className="p-6 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl">
-                  <h4 className="text-sm font-black text-slate-900 dark:text-white mb-2 flex items-center gap-1.5">
-                    <Sparkles size={16} className="text-[#1D9E75]" />
+                <div className="p-6 bg-[#FCFAF8] border border-stone-100 rounded-3xl">
+                  <h4 className="text-sm font-black text-[#2C241B] mb-2 flex items-center gap-1.5">
+                    <Sparkles size={16} className="text-[#8C5A35]" />
                     AI Tutor Coaching
                   </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-350 leading-relaxed whitespace-pre-wrap font-medium">
+                  <p className="text-xs text-stone-600 leading-relaxed whitespace-pre-wrap font-medium">
                     {scorecard.feedback_notes}
                   </p>
                 </div>
               </div>
 
               {/* Action Footer */}
-              <div className="flex flex-wrap justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex flex-wrap justify-end gap-3 mt-8 pt-4 border-t border-stone-100 ">
                 <Button 
                   variant="outline" 
                   className="rounded-2xl font-bold h-11 px-5"
@@ -1006,7 +1006,7 @@ export const ActiveRecall = () => {
                   Recall Again
                 </Button>
                 <Button 
-                  className="bg-[#1D9E75] hover:bg-[#16805d] rounded-2xl font-black h-11 px-6 shadow-md shadow-[#1D9E75]/10"
+                  className="bg-[#8C5A35] hover:bg-[#70482B] rounded-2xl font-black h-11 px-6 shadow-md shadow-[#8C5A35]/10"
                   onClick={startOverWizard}
                 >
                   Start Over (New Chapter)
@@ -1015,9 +1015,9 @@ export const ActiveRecall = () => {
             </Card>
 
             {/* Transcript Summary Sidebar */}
-            <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-[32px] overflow-hidden flex flex-col">
-              <h4 className="font-black text-slate-950 dark:text-white text-sm mb-4">Your Attempt Transcript</h4>
-              <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl text-xs font-medium text-slate-600 dark:text-slate-400 leading-relaxed max-h-[400px]">
+            <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-[32px] overflow-hidden flex flex-col">
+              <h4 className="font-black text-stone-950 text-sm mb-4">Your Attempt Transcript</h4>
+              <div className="flex-1 overflow-y-auto p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl text-xs font-medium text-stone-600 leading-relaxed max-h-[400px]">
                 "{transcript}"
               </div>
             </Card>
@@ -1038,31 +1038,31 @@ export const ActiveRecall = () => {
             }}
           />
           <div
-            className="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl p-2.5 z-[160] flex flex-col gap-1 min-w-[200px] backdrop-blur-md ai-context-menu"
+            className="fixed bg-[#FCFAF8] border border-stone-200 rounded-2xl shadow-2xl p-2.5 z-[160] flex flex-col gap-1 min-w-[200px] backdrop-blur-md ai-context-menu"
             style={{ left: `${menuPosition.x}px`, top: `${menuPosition.y}px` }}
           >
-            <p className="px-3 py-1.5 text-[9px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-widest border-b border-slate-100 dark:border-slate-700 mb-1">Clarity AI Highlight</p>
+            <p className="px-3 py-1.5 text-[9px] font-black uppercase text-stone-400 tracking-widest border-b border-stone-100 mb-1">Clarity AI Highlight</p>
             <button
               onClick={() => handleAiAction('explain')}
-              className="w-full text-left px-3 py-2 text-xs font-black text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-[#1D9E75] rounded-xl transition-all flex items-center gap-2"
+              className="w-full text-left px-3 py-2 text-xs font-black text-stone-700 hover:bg-amber-50 :bg-amber-950/30 hover:text-[#8C5A35] rounded-xl transition-all flex items-center gap-2"
             >
               🔍 Ask Meaning
             </button>
             <button
               onClick={() => handleAiAction('summarize')}
-              className="w-full text-left px-3 py-2 text-xs font-black text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-[#1D9E75] rounded-xl transition-all flex items-center gap-2"
+              className="w-full text-left px-3 py-2 text-xs font-black text-stone-700 hover:bg-amber-50 :bg-amber-950/30 hover:text-[#8C5A35] rounded-xl transition-all flex items-center gap-2"
             >
               📝 Summarize Passage
             </button>
             <button
               onClick={() => handleAiAction('points')}
-              className="w-full text-left px-3 py-2 text-xs font-black text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-[#1D9E75] rounded-xl transition-all flex items-center gap-2"
+              className="w-full text-left px-3 py-2 text-xs font-black text-stone-700 hover:bg-amber-50 :bg-amber-950/30 hover:text-[#8C5A35] rounded-xl transition-all flex items-center gap-2"
             >
               📌 Convert to Points
             </button>
             <button
               onClick={() => handleAiAction('trick')}
-              className="w-full text-left px-3 py-2 text-xs font-black text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 hover:text-[#1D9E75] rounded-xl transition-all flex items-center gap-2"
+              className="w-full text-left px-3 py-2 text-xs font-black text-stone-700 hover:bg-amber-50 :bg-amber-950/30 hover:text-[#8C5A35] rounded-xl transition-all flex items-center gap-2"
             >
               💡 Tricks to Memorize
             </button>

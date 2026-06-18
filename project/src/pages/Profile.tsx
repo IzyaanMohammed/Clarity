@@ -102,26 +102,26 @@ export const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-[#020617] dark:to-slate-900">
+        <div className="min-h-screen bg-gradient-to-br from-stone-50 to-blue-50 ">
             <Navbar />
             <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 mt-20 md:mt-0">
                 {/* Header */}
                 <div className="mb-10">
                     <button
                         onClick={() => navigate('/dashboard')}
-                        className="mb-8 flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[#1D9E75] transition-all font-bold group"
+                        className="mb-8 flex items-center gap-2 text-stone-600 hover:text-[#8C5A35] transition-all font-bold group"
                     >
-                        <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                        <ArrowLeft size={20} className="group-hover:-transtone-x-1 transition-transform" />
                         Back to Dashboard
                     </button>
 
                     <div className="flex items-end gap-6">
-                        <div className="p-6 bg-gradient-to-br from-[#1D9E75] to-emerald-600 rounded-3xl">
+                        <div className="p-6 bg-gradient-to-br from-[#8C5A35] to-amber-600 rounded-3xl">
                             <User className="text-white" size={48} />
                         </div>
                         <div>
-                            <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2">Profile Settings</h1>
-                            <p className="text-slate-600 dark:text-slate-400 font-bold">Customize your study journey</p>
+                            <h1 className="text-4xl font-black text-[#2C241B] mb-2">Profile Settings</h1>
+                            <p className="text-stone-600 font-bold">Customize your study journey</p>
                         </div>
                     </div>
                 </div>
@@ -130,14 +130,14 @@ export const Profile = () => {
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Identity Section */}
-                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                                <User className="text-[#1D9E75]" size={28} />
+                        <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+                            <h2 className="text-2xl font-black text-[#2C241B] mb-6 flex items-center gap-3">
+                                <User className="text-[#8C5A35]" size={28} />
                                 Identity
                             </h2>
                             <div className="space-y-6">
                                 <div>
-                                    <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-3">
+                                    <label className="block text-sm font-black text-stone-600 uppercase tracking-wider mb-3">
                                         Full Name
                                     </label>
                                     <input
@@ -145,12 +145,12 @@ export const Profile = () => {
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Your name"
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
+                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-3">
+                                    <label className="block text-sm font-black text-stone-600 uppercase tracking-wider mb-3">
                                         School Name
                                     </label>
                                     <input
@@ -158,12 +158,12 @@ export const Profile = () => {
                                         value={school}
                                         onChange={(e) => setSchool(e.target.value)}
                                         placeholder="Your school"
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
+                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-3">
+                                    <label className="block text-sm font-black text-stone-600 uppercase tracking-wider mb-3">
                                         Parent Email
                                     </label>
                                     <input
@@ -171,22 +171,22 @@ export const Profile = () => {
                                         value={parentEmail}
                                         onChange={(e) => setParentEmail(e.target.value)}
                                         placeholder="parent@example.com"
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-lg outline-none focus:ring-2 focus:ring-[#1D9E75] focus:border-transparent"
+                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                     />
                                 </div>
                             </div>
                         </Card>
 
                         {/* Board Settings */}
-                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                                <BookOpen className="text-[#1D9E75]" size={28} />
+                        <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+                            <h2 className="text-2xl font-black text-[#2C241B] mb-6 flex items-center gap-3">
+                                <BookOpen className="text-[#8C5A35]" size={28} />
                                 Board & Subjects
                             </h2>
 
                             <div className="space-y-6">
                                 <div>
-                                    <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-4">
+                                    <label className="block text-sm font-black text-stone-600 uppercase tracking-wider mb-4">
                                         Class
                                     </label>
                                     <div className="grid grid-cols-4 gap-3">
@@ -195,8 +195,8 @@ export const Profile = () => {
                                                 key={c}
                                                 onClick={() => setSelectedClass(c)}
                                                 className={`py-4 rounded-2xl font-black text-lg transition-all transform hover:scale-105 ${selectedClass === c
-                                                    ? 'bg-[#1D9E75] text-white shadow-lg'
-                                                    : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                                                    ? 'bg-[#8C5A35] text-white shadow-lg'
+                                                    : 'bg-[#F2EFE9] text-stone-600 hover:bg-[#E8E4DB]'
                                                     }`}
                                             >
                                                 {c}
@@ -206,7 +206,7 @@ export const Profile = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-black text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-4">
+                                    <label className="block text-sm font-black text-stone-600 uppercase tracking-wider mb-4">
                                         Subjects
                                     </label>
                                     {/* Dynamically filter subjects based on grade to combine Physics/Chemistry/Biology under Science for grades 8, 9, 10 */}
@@ -219,8 +219,8 @@ export const Profile = () => {
                                                 key={subject}
                                                 onClick={() => toggleSubject(subject)}
                                                 className={`p-4 rounded-2xl border-2 font-bold text-sm transition-all ${selectedSubjects.includes(subject)
-                                                    ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                                    : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
+                                                    ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                                    : 'border-stone-200 text-stone-600 '
                                                     }`}
                                             >
                                                 {subject}
@@ -233,9 +233,9 @@ export const Profile = () => {
                         </Card>
 
                         {/* Subscription Tier Selection */}
-                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                                <Sparkles className="text-[#1D9E75]" size={28} />
+                        <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+                            <h2 className="text-2xl font-black text-[#2C241B] mb-6 flex items-center gap-3">
+                                <Sparkles className="text-[#8C5A35]" size={28} />
                                 Subscription Plan
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -244,21 +244,21 @@ export const Profile = () => {
                                         id: 'free',
                                         name: 'Free',
                                         desc: 'Standard limits, CBSE core practice',
-                                        activeColor: 'border-slate-400 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-slate-200',
+                                        activeColor: 'border-stone-400 bg-[#FCFAF8] text-[#3E352B] ',
                                     },
                                     {
                                         id: 'pro',
                                         name: 'Pro',
                                         desc: 'Unlimited coach questions & AI notes',
-                                        activeColor: 'border-slate-900 bg-slate-950 text-white dark:border-slate-800 dark:bg-black',
-                                        inactiveColor: 'border-slate-800 bg-slate-900 text-slate-200 dark:bg-black dark:border-slate-700',
+                                        activeColor: 'border-stone-900 bg-stone-950 text-white ',
+                                        inactiveColor: 'border-stone-800 bg-stone-900 text-stone-200 ',
                                     },
                                     {
                                         id: 'pro_max',
                                         name: 'Pro Max',
                                         desc: 'All Pro + Parent Portal & Milestones',
-                                        activeColor: 'border-amber-500 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300',
-                                        inactiveColor: 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-350',
+                                        activeColor: 'border-amber-500 bg-amber-50 text-amber-700 ',
+                                        inactiveColor: 'border-stone-200 text-stone-600 hover:border-stone-350',
                                     },
                                 ].map((plan) => (
                                     <button
@@ -268,30 +268,30 @@ export const Profile = () => {
                                         className={`p-5 rounded-2xl border-2 text-left transition-all hover:scale-[1.02] flex flex-col justify-between h-36 ${
                                             subscriptionTier === plan.id
                                                 ? plan.activeColor
-                                                : plan.inactiveColor || 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-350'
+                                                : plan.inactiveColor || 'border-stone-200 text-stone-600 hover:border-stone-350'
                                         }`}
                                     >
                                         <div>
                                             <p className={`font-black text-lg ${plan.id === 'pro' && subscriptionTier !== 'pro' ? 'text-white' : ''}`}>{plan.name}</p>
-                                            <p className={`text-xs mt-1 leading-relaxed opacity-90 ${plan.id === 'pro' && subscriptionTier !== 'pro' ? 'text-slate-300' : ''}`}>{plan.desc}</p>
+                                            <p className={`text-xs mt-1 leading-relaxed opacity-90 ${plan.id === 'pro' && subscriptionTier !== 'pro' ? 'text-stone-300' : ''}`}>{plan.desc}</p>
                                         </div>
                                         <div className="mt-3 flex items-center gap-1">
-                                            <span className="text-[10px] uppercase font-black tracking-widest px-2.5 py-1 bg-white/40 dark:bg-black/20 rounded-md">
+                                            <span className="text-[10px] uppercase font-black tracking-widest px-2.5 py-1 bg-[#FCFAF8]/40 rounded-md">
                                                 {subscriptionTier === plan.id ? 'Active' : 'Select'}
                                             </span>
                                         </div>
                                     </button>
                                 ))}
                             </div>
-                            <p className="text-[10px] text-slate-400 mt-4 italic font-semibold">
+                            <p className="text-[10px] text-stone-400 mt-4 italic font-semibold">
                                 * Plan upgrades are processed instantly. In development, self-assigned subscription changes are allowed.
                             </p>
                         </Card>
 
                         {/* Learning Preferences */}
-                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                                <Brain className="text-[#1D9E75]" size={28} />
+                        <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+                            <h2 className="text-2xl font-black text-[#2C241B] mb-6 flex items-center gap-3">
+                                <Brain className="text-[#8C5A35]" size={28} />
                                 Learning Style
                             </h2>
                             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -300,24 +300,24 @@ export const Profile = () => {
                                         key={style}
                                         onClick={() => setLearningStyle(style)}
                                         className={`py-4 px-3 rounded-2xl border-2 font-bold text-sm transition-all ${learningStyle === style
-                                            ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                            : 'border-slate-200 dark:border-slate-700 text-slate-600'
+                                            ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                            : 'border-stone-200 text-stone-600'
                                             }`}
                                     >
                                         {style}
                                     </button>
                                 ))}
                             </div>
-                            <p className="text-xs text-slate-500 mt-4 italic">
+                            <p className="text-xs text-stone-500 mt-4 italic">
                                 💡 We'll adapt content based on your learning style
                             </p>
                         </Card>
 
                         {/* Goals & Study Hours */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-                                <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                                    <Target className="text-[#1D9E75]" size={24} />
+                            <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+                                <h2 className="text-xl font-black text-[#2C241B] mb-4 flex items-center gap-3">
+                                    <Target className="text-[#8C5A35]" size={24} />
                                     Board Goal
                                 </h2>
                                 <div className="space-y-2">
@@ -326,8 +326,8 @@ export const Profile = () => {
                                             key={g}
                                             onClick={() => setGoal(g)}
                                             className={`w-full text-left py-3 px-4 rounded-xl border-2 font-bold transition-all ${goal === g
-                                                ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                                : 'border-slate-200 dark:border-slate-700 text-slate-600'
+                                                ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                                : 'border-stone-200 text-stone-600'
                                                 }`}
                                         >
                                             {g}
@@ -336,9 +336,9 @@ export const Profile = () => {
                                 </div>
                             </Card>
 
-                            <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-                                <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-3">
-                                    <Clock className="text-[#1D9E75]" size={24} />
+                            <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+                                <h2 className="text-xl font-black text-[#2C241B] mb-4 flex items-center gap-3">
+                                    <Clock className="text-[#8C5A35]" size={24} />
                                     Daily Commitment
                                 </h2>
                                 <div className="space-y-2">
@@ -347,8 +347,8 @@ export const Profile = () => {
                                             key={hours}
                                             onClick={() => setStudyHours(hours)}
                                             className={`w-full text-left py-3 px-4 rounded-xl border-2 font-bold transition-all ${studyHours === hours
-                                                ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                                : 'border-slate-200 dark:border-slate-700 text-slate-600'
+                                                ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                                : 'border-stone-200 text-stone-600'
                                                 }`}
                                         >
                                             {hours}
@@ -360,18 +360,18 @@ export const Profile = () => {
 
 
                         {/* School Focus Chapters */}
-                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
+                        <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
                             <div className="flex justify-between items-start gap-4 flex-wrap mb-6">
                                 <div>
-                                    <h2 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                                        <Target className="text-[#1D9E75]" size={28} />
+                                    <h2 className="text-2xl font-black text-[#2C241B] flex items-center gap-3">
+                                        <Target className="text-[#8C5A35]" size={28} />
                                         School Focus Chapters
                                     </h2>
-                                    <p className="text-xs text-slate-500 mt-1">Select the chapters you are covering in class this week to personalize your AI tutor.</p>
+                                    <p className="text-xs text-stone-500 mt-1">Select the chapters you are covering in class this week to personalize your AI tutor.</p>
                                 </div>
                                 <Button
                                     onClick={() => navigate('/onboarding', { state: { editFocus: true } })}
-                                    className="bg-emerald-50 dark:bg-emerald-950/20 text-[#1D9E75] hover:bg-[#1D9E75]/10 border border-[#1D9E75]/30 font-bold px-4 py-2 rounded-xl text-sm"
+                                    className="bg-amber-50 text-[#8C5A35] hover:bg-[#8C5A35]/10 border border-[#8C5A35]/30 font-bold px-4 py-2 rounded-xl text-sm"
                                 >
                                     Select / Edit Chapters
                                 </Button>
@@ -383,25 +383,25 @@ export const Profile = () => {
                                         {Object.entries(user.focusChapters).map(([subj, chaps]) => {
                                             if (!chaps || chaps.length === 0) return null;
                                             return (
-                                                <div key={subj} className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                                    <p className="text-xs font-black uppercase text-slate-400 mb-1">{subj}</p>
-                                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{chaps.join(', ')}</p>
+                                                <div key={subj} className="p-4 bg-[#FCFAF8] rounded-2xl border border-stone-100 ">
+                                                    <p className="text-xs font-black uppercase text-stone-400 mb-1">{subj}</p>
+                                                    <p className="text-sm font-bold text-[#3E352B] ">{chaps.join(', ')}</p>
                                                 </div>
                                             );
                                         })}
                                     </div>
                                 ) : (
-                                    <div className="p-6 text-center bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700">
-                                        <p className="text-sm text-slate-500 font-bold">No school focus chapters selected for this week.</p>
+                                    <div className="p-6 text-center bg-[#FCFAF8] rounded-2xl border-2 border-dashed border-stone-200 ">
+                                        <p className="text-sm text-stone-500 font-bold">No school focus chapters selected for this week.</p>
                                     </div>
                                 )}
                             </div>
                         </Card>
 
                         {/* Focus Areas */}
-                        <Card className="p-8 bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-[32px]">
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                                <Zap className="text-[#1D9E75]" size={28} />
+                        <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-100 rounded-[32px]">
+                            <h2 className="text-2xl font-black text-[#2C241B] mb-6 flex items-center gap-3">
+                                <Zap className="text-[#8C5A35]" size={28} />
                                 Weak Areas (Need Focus)
                             </h2>
                             <div className="space-y-4">
@@ -412,11 +412,11 @@ export const Profile = () => {
                                         onChange={(e) => setFocusInput(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && addFocusArea()}
                                         placeholder="e.g. Organic Chemistry, Trigonometry..."
-                                        className="flex-1 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                                        className="flex-1 px-4 py-3 rounded-xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-medium outline-none focus:ring-2 focus:ring-[#8C5A35]"
                                     />
                                     <button
                                         onClick={addFocusArea}
-                                        className="px-4 py-3 bg-[#1D9E75] text-white rounded-xl font-bold hover:bg-[#16805d] transition-all"
+                                        className="px-4 py-3 bg-[#8C5A35] text-white rounded-xl font-bold hover:bg-[#70482B] transition-all"
                                     >
                                         Add
                                     </button>
@@ -425,7 +425,7 @@ export const Profile = () => {
                                     {focusAreas.map((area, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex items-center gap-2 px-4 py-2 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 rounded-full border border-amber-200 dark:border-amber-800 font-medium text-sm"
+                                            className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full border border-amber-200 font-medium text-sm"
                                         >
                                             {area}
                                             <button
@@ -444,31 +444,31 @@ export const Profile = () => {
                     {/* Sidebar */}
                     <div className="space-y-6">
                         {/* Summary Card */}
-                        <Card className="p-6 bg-gradient-to-br from-[#1D9E75]/10 to-emerald-50/50 dark:from-emerald-900/20 dark:to-emerald-950/20 border-2 border-[#1D9E75]/30 rounded-[24px]">
-                            <h3 className="font-black text-[#1D9E75] mb-4 flex items-center gap-2">
+                        <Card className="p-6 bg-gradient-to-br from-[#8C5A35]/10 to-amber-50/50 border-2 border-[#8C5A35]/30 rounded-[24px]">
+                            <h3 className="font-black text-[#8C5A35] mb-4 flex items-center gap-2">
                                 <Sparkles size={20} />
                                 Your Profile
                             </h3>
                             <div className="space-y-3 text-sm">
                                 <div>
-                                    <p className="text-slate-600 dark:text-slate-400 font-bold">Class</p>
-                                    <p className="text-lg font-black text-slate-900 dark:text-white">{selectedClass}</p>
+                                    <p className="text-stone-600 font-bold">Class</p>
+                                    <p className="text-lg font-black text-[#2C241B] ">{selectedClass}</p>
                                 </div>
                                 <div>
-                                    <p className="text-slate-600 dark:text-slate-400 font-bold">Subjects ({selectedSubjects.length})</p>
-                                    <p className="text-slate-900 dark:text-white font-bold">{selectedSubjects.join(', ') || 'None'}</p>
+                                    <p className="text-stone-600 font-bold">Subjects ({selectedSubjects.length})</p>
+                                    <p className="text-[#2C241B] font-bold">{selectedSubjects.join(', ') || 'None'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-slate-600 dark:text-slate-400 font-bold">Goal</p>
-                                    <p className="text-slate-900 dark:text-white font-bold">{goal}</p>
+                                    <p className="text-stone-600 font-bold">Goal</p>
+                                    <p className="text-[#2C241B] font-bold">{goal}</p>
                                 </div>
                                 <div>
-                                    <p className="text-slate-600 dark:text-slate-400 font-bold">Daily Study</p>
-                                    <p className="text-slate-900 dark:text-white font-bold">{studyHours}</p>
+                                    <p className="text-stone-600 font-bold">Daily Study</p>
+                                    <p className="text-[#2C241B] font-bold">{studyHours}</p>
                                 </div>
                                 <div>
-                                    <p className="text-slate-600 dark:text-slate-400 font-bold">Plan</p>
-                                    <p className="text-slate-900 dark:text-white font-black uppercase text-xs tracking-wider">
+                                    <p className="text-stone-600 font-bold">Plan</p>
+                                    <p className="text-[#2C241B] font-black uppercase text-xs tracking-wider">
                                         {subscriptionTier === 'pro_max' ? 'Pro Max 🌟' : subscriptionTier === 'pro' ? 'Pro ⚡' : 'Free 📚'}
                                     </p>
                                 </div>
@@ -478,7 +478,7 @@ export const Profile = () => {
                         {/* Action Buttons */}
                         <Button
                             onClick={handleSave}
-                            className="w-full py-4 bg-gradient-to-r from-[#1D9E75] to-emerald-600 hover:from-[#16805d] hover:to-emerald-700 text-white font-black rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white font-black rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
                         >
                             <Save size={20} />
                             Save Changes
@@ -486,7 +486,7 @@ export const Profile = () => {
 
                         <Button
                             onClick={handleLogout}
-                            className="w-full py-4 bg-red-100 dark:bg-red-900/20 hover:bg-red-200 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 font-black rounded-xl transition-all flex items-center justify-center gap-2 border-2 border-red-200 dark:border-red-800"
+                            className="w-full py-4 bg-red-100 hover:bg-red-200 :bg-red-900/40 text-red-600 font-black rounded-xl transition-all flex items-center justify-center gap-2 border-2 border-red-200 "
                         >
                             <LogOut size={20} />
                             Logout

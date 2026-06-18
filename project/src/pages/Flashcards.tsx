@@ -192,32 +192,32 @@ export const Flashcards = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+        <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
             <Navbar />
             <main className="max-w-6xl mx-auto px-6 py-10">
                 <div className="mb-8">
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+                    <h1 className="text-3xl md:text-4xl font-black text-[#2C241B] ">
                         Flashcard Lab
                     </h1>
-                    <p className="text-slate-500 mt-2 font-medium">
+                    <p className="text-stone-500 mt-2 font-medium">
                         Generate rapid-revision flashcards with smart spaced repetition scheduling.
                     </p>
                 </div>
 
-                <Card className="p-5 mb-8 bg-gradient-to-r from-violet-50 to-rose-50 dark:from-slate-800 dark:to-slate-900 border border-violet-100 dark:border-slate-700 rounded-3xl">
+                <Card className="p-5 mb-8 bg-gradient-to-r from-violet-50 to-rose-50 border border-violet-100 rounded-3xl">
                     <div className="flex items-start gap-3">
                         <Info className="text-violet-600 mt-0.5" size={18} />
-                        <div className="text-sm text-slate-700 dark:text-slate-200">
+                        <div className="text-sm text-stone-700 ">
                             <p className="font-bold">Smart Spaced Repetition:</p>
                             <p className="mt-1">Cards are automatically scheduled based on difficulty. Easy cards get longer gaps, while harder ones come back sooner. Use 6-8 cards for quick drill, 10-12 for deeper revision. Rate each card—your feedback tunes the review schedule!</p>
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
+                <Card className="p-6 md:p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div>
-                            <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Subject</label>
+                            <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Subject</label>
                             <select
                                 value={selectedSubject}
                                 onChange={(e) => {
@@ -226,7 +226,7 @@ export const Flashcards = () => {
                                     const nextChapters = chaptersForSubject(nextSubject);
                                     setSelectedChapter(nextChapters[0] || '');
                                 }}
-                                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700"
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
                             >
                                 {subjects.map((subject) => (
                                     <option key={subject} value={subject}>
@@ -239,7 +239,7 @@ export const Flashcards = () => {
                         <select
                             value={selectedChapter}
                             onChange={(e) => setSelectedChapter(e.target.value)}
-                            className="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 md:col-span-2"
+                            className="px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 md:col-span-2"
                         >
                             {chapters.map((chapter) => (
                                 <option key={chapter} value={chapter}>
@@ -249,11 +249,11 @@ export const Flashcards = () => {
                         </select>
 
                         <div>
-                            <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Card Count</label>
+                            <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Card Count</label>
                             <select
                                 value={count}
                                 onChange={(e) => setCount(Number(e.target.value))}
-                                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700"
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
                             >
                                 {[6, 8, 10, 12].map((n) => (
                                     <option key={n} value={n}>
@@ -266,7 +266,7 @@ export const Flashcards = () => {
                         <Button
                             onClick={handleGenerate}
                             disabled={isLoading}
-                            className="w-full bg-[#1D9E75] hover:bg-[#16805d] rounded-xl font-bold"
+                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold"
                         >
                             {isLoading ? 'Streaming...' : 'Generate'}
                         </Button>
@@ -274,50 +274,50 @@ export const Flashcards = () => {
                 </Card>
 
                 {cards.length > 0 && (
-                    <Card className="p-4 md:p-6 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-slate-800 dark:to-slate-900 border border-emerald-100 dark:border-slate-700 rounded-3xl mb-8">
+                    <Card className="p-4 md:p-6 bg-gradient-to-r from-amber-50 to-teal-50 border border-amber-100 rounded-3xl mb-8">
                         <div className="flex items-center gap-2 mb-4">
-                            <TrendingUp size={18} className="text-emerald-600" />
-                            <p className="font-bold text-slate-900 dark:text-white">Spaced Repetition Progress</p>
+                            <TrendingUp size={18} className="text-amber-600" />
+                            <p className="font-bold text-[#2C241B] ">Spaced Repetition Progress</p>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-sm">
                             <div>
-                                <p className="text-xs text-slate-500 uppercase font-black mb-1">Total Cards</p>
-                                <p className="text-2xl font-bold text-emerald-600">{reviewStats.total}</p>
+                                <p className="text-xs text-stone-500 uppercase font-black mb-1">Total Cards</p>
+                                <p className="text-2xl font-bold text-amber-600">{reviewStats.total}</p>
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500 uppercase font-black mb-1">Reviewed</p>
+                                <p className="text-xs text-stone-500 uppercase font-black mb-1">Reviewed</p>
                                 <p className="text-2xl font-bold text-blue-600">{reviewStats.reviewed}</p>
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500 uppercase font-black mb-1">Due Now</p>
+                                <p className="text-xs text-stone-500 uppercase font-black mb-1">Due Now</p>
                                 <p className="text-2xl font-bold text-orange-600">{reviewStats.due}</p>
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500 uppercase font-black mb-1">This Week</p>
+                                <p className="text-xs text-stone-500 uppercase font-black mb-1">This Week</p>
                                 <p className="text-2xl font-bold text-purple-600">{reviewStats.dueThisWeek}</p>
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500 uppercase font-black mb-1">Ease Factor</p>
+                                <p className="text-xs text-stone-500 uppercase font-black mb-1">Ease Factor</p>
                                 <p className="text-2xl font-bold text-indigo-600">{reviewStats.averageEaseFactor}</p>
                             </div>
                             <div>
-                                <p className="text-xs text-slate-500 uppercase font-black mb-1">Avg Interval</p>
+                                <p className="text-xs text-stone-500 uppercase font-black mb-1">Avg Interval</p>
                                 <p className="text-2xl font-bold text-rose-600">{reviewStats.averageInterval}d</p>
                             </div>
                         </div>
                     </Card>
                 )}
 
-                <Card className="p-6 md:p-10 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl min-h-[500px]">
+                <Card className="p-6 md:p-10 bg-[#FCFAF8] border-none shadow-xl rounded-3xl min-h-[500px]">
                     {activeCard ? (
                         <div>
                             <div className="flex items-center justify-between mb-6">
                                 <div>
-                                    <p className="text-xs uppercase tracking-widest font-black text-slate-500">
+                                    <p className="text-xs uppercase tracking-widest font-black text-stone-500">
                                         Card {activeIndex + 1} / {cards.length}
                                     </p>
                                     {activeCard.nextReviewAt && (
-                                        <p className="text-xs text-slate-400 mt-1">
+                                        <p className="text-xs text-stone-400 mt-1">
                                             {formatTimeUntilReview(activeCard.nextReviewAt)} • Ease: {activeCard.easeFactor.toFixed(2)} • Reps: {activeCard.repetitions}
                                         </p>
                                     )}
@@ -329,58 +329,58 @@ export const Flashcards = () => {
                             </div>
 
                             <div
-                                className="rounded-3xl border border-slate-200 dark:border-slate-700 p-8 md:p-12 min-h-[250px] flex items-center justify-center text-center cursor-pointer bg-gradient-to-br from-violet-50 via-white to-rose-50 dark:from-[#111827] dark:to-[#0b1220]"
+                                className="rounded-3xl border border-stone-200 p-8 md:p-12 min-h-[250px] flex items-center justify-center text-center cursor-pointer bg-gradient-to-br from-violet-50 via-white to-rose-50 "
                                 onClick={() => setShowAnswer((prev) => !prev)}
                             >
                                 <div>
-                                    <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-4">
+                                    <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-4">
                                         {showAnswer ? 'Answer' : 'Question'}
                                     </p>
-                                    <p className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-relaxed">
+                                    <p className="text-xl md:text-2xl font-bold text-[#2C241B] leading-relaxed">
                                         {showAnswer ? activeCard.answer : activeCard.question}
                                     </p>
-                                    <p className="text-xs text-slate-400 mt-5">Tap card to flip instantly</p>
+                                    <p className="text-xs text-stone-400 mt-5">Tap card to flip instantly</p>
                                 </div>
                             </div>
 
                             {/* Quality Rating Buttons (only show after revealing answer) */}
                             {showAnswer && (
-                                <div className="mt-8 p-4 bg-sky-50 dark:bg-slate-800 rounded-2xl border border-sky-100 dark:border-slate-700">
-                                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4">How well did you remember this?</p>
+                                <div className="mt-8 p-4 bg-sky-50 rounded-2xl border border-sky-100 ">
+                                    <p className="text-sm font-bold text-stone-700 mb-4">How well did you remember this?</p>
                                     <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
                                         <button
                                             onClick={() => handleCardRating(0)}
-                                            className="px-3 py-2 rounded-lg bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 text-red-700 dark:text-red-200 font-bold text-xs"
+                                            className="px-3 py-2 rounded-lg bg-red-100 hover:bg-red-200 :bg-red-800 text-red-700 font-bold text-xs"
                                         >
                                             Blackout
                                         </button>
                                         <button
                                             onClick={() => handleCardRating(1)}
-                                            className="px-3 py-2 rounded-lg bg-orange-100 hover:bg-orange-200 dark:bg-orange-900 dark:hover:bg-orange-800 text-orange-700 dark:text-orange-200 font-bold text-xs"
+                                            className="px-3 py-2 rounded-lg bg-orange-100 hover:bg-orange-200 :bg-orange-800 text-orange-700 font-bold text-xs"
                                         >
                                             Incorrect
                                         </button>
                                         <button
                                             onClick={() => handleCardRating(2)}
-                                            className="px-3 py-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900 dark:hover:bg-yellow-800 text-yellow-700 dark:text-yellow-200 font-bold text-xs"
+                                            className="px-3 py-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 :bg-yellow-800 text-yellow-700 font-bold text-xs"
                                         >
                                             Difficult
                                         </button>
                                         <button
                                             onClick={() => handleCardRating(3)}
-                                            className="px-3 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 dark:bg-amber-900 dark:hover:bg-amber-800 text-amber-700 dark:text-amber-200 font-bold text-xs"
+                                            className="px-3 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 :bg-amber-800 text-amber-700 font-bold text-xs"
                                         >
                                             Okay
                                         </button>
                                         <button
                                             onClick={() => handleCardRating(4)}
-                                            className="px-3 py-2 rounded-lg bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 text-green-700 dark:text-green-200 font-bold text-xs"
+                                            className="px-3 py-2 rounded-lg bg-green-100 hover:bg-green-200 :bg-green-800 text-green-700 font-bold text-xs"
                                         >
                                             Good
                                         </button>
                                         <button
                                             onClick={() => handleCardRating(5)}
-                                            className="px-3 py-2 rounded-lg bg-emerald-100 hover:bg-emerald-200 dark:bg-emerald-900 dark:hover:bg-emerald-800 text-emerald-700 dark:text-emerald-200 font-bold text-xs"
+                                            className="px-3 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 :bg-amber-800 text-amber-700 font-bold text-xs"
                                         >
                                             Perfect
                                         </button>
@@ -410,8 +410,8 @@ export const Flashcards = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center text-slate-500">
-                            <Sparkles size={34} className="mb-3 text-[#1D9E75]" />
+                        <div className="h-full flex flex-col items-center justify-center text-center text-stone-500">
+                            <Sparkles size={34} className="mb-3 text-[#8C5A35]" />
                             <p className="font-semibold">No flashcards yet.</p>
                             <p className="text-sm mt-1 max-w-md">Select subject, chapter, and card count, then click Generate. Your cards will appear here ready for smart spaced repetition.</p>
                         </div>

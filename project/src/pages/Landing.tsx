@@ -804,7 +804,7 @@ export const Landing = () => {
                 >
                     <div className="max-w-7xl mx-auto flex items-center justify-between font-medium">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 flex items-center justify-center border-1.5 border-[#1a1a2e] rounded-xl bg-white shadow-[2px_2px_0px_#1a1a2e]">
+                            <div className="w-10 h-10 flex items-center justify-center border-1.5 border-[#1a1a2e] rounded-xl bg-[#FCFAF8] shadow-[2px_2px_0px_#1a1a2e]">
                                 <img src="/mind_pen_logo.png" alt="Clarity Logo" className="w-8 h-8 object-contain" />
                             </div>
                             <div>
@@ -867,7 +867,7 @@ export const Landing = () => {
                             <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
                                 <Link 
                                     to="/onboarding" 
-                                    className="px-6 py-3 bg-[#1a1a2e] text-[#f7f5f0] font-black inline-flex items-center gap-2 rounded-xl border border-[#1a1a2e] shadow-[3px_3px_0px_rgba(26,26,46,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_rgba(26,26,46,0.3)] transition-all"
+                                    className="px-6 py-3 bg-[#1a1a2e] text-[#f7f5f0] font-black inline-flex items-center gap-2 rounded-xl border border-[#1a1a2e] shadow-[3px_3px_0px_rgba(26,26,46,0.3)] hover:transtone-x-[2px] hover:transtone-y-[2px] hover:shadow-[1px_1px_0px_rgba(26,26,46,0.3)] transition-all"
                                     onMouseEnter={() => setIsHoveredWord(true)}
                                     onMouseLeave={() => setIsHoveredWord(false)}
                                 >
@@ -888,7 +888,7 @@ export const Landing = () => {
 
                         {/* Top Right: Simulated workspace widget */}
                         <div className="lg:col-span-5 w-full flex flex-col justify-center">
-                            <div className="w-full bg-white border-1.5 border-[#1a1a2e] rounded-3xl shadow-[5px_5px_0px_rgba(26,26,46,0.15)] overflow-hidden flex flex-col">
+                            <div className="w-full bg-[#FCFAF8] border-1.5 border-[#1a1a2e] rounded-3xl shadow-[5px_5px_0px_rgba(26,26,46,0.15)] overflow-hidden flex flex-col">
                                 {/* Snippet Header */}
                                 <div className="bg-[#fcfbf9] px-4 py-3 flex items-center justify-between border-b border-[#1a1a2e]/10">
                                     <div className="flex items-center gap-1.5">
@@ -909,7 +909,7 @@ export const Landing = () => {
                                             className={`px-3 py-1 rounded-lg text-[10px] font-black border transition-all ${
                                                 activePrompt === key
                                                     ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] shadow-sm'
-                                                    : 'bg-white text-[#1a1a2e]/60 border-[#1a1a2e]/15 hover:text-[#1a1a2e] hover:border-[#1a1a2e]/30'
+                                                    : 'bg-[#FCFAF8] text-[#1a1a2e]/60 border-[#1a1a2e]/15 hover:text-[#1a1a2e] hover:border-[#1a1a2e]/30'
                                             }`}
                                             onMouseEnter={() => setIsHoveredWord(true)}
                                             onMouseLeave={() => setIsHoveredWord(false)}
@@ -920,7 +920,7 @@ export const Landing = () => {
                                 </div>
 
                                 {/* Console content - Styled like a ruled worksheet sheet card */}
-                                <div className="p-4 bg-white min-h-[300px] max-h-[360px] overflow-y-auto flex flex-col justify-start gap-4 text-xs font-semibold leading-relaxed">
+                                <div className="p-4 bg-[#FCFAF8] min-h-[300px] max-h-[360px] overflow-y-auto flex flex-col justify-start gap-4 text-xs font-semibold leading-relaxed">
                                     {terminalPrompt && (
                                         <>
                                             {/* User prompt write-in card */}
@@ -935,7 +935,7 @@ export const Landing = () => {
                                             {terminalOutput && (
                                                 <div className="flex flex-col gap-2 items-start w-full">
                                                     <div className="flex items-center gap-2">
-                                                        <div className="w-5 h-5 border border-[#1a1a2e] bg-white flex items-center justify-center rounded-full text-[9px] font-black">
+                                                        <div className="w-5 h-5 border border-[#1a1a2e] bg-[#FCFAF8] flex items-center justify-center rounded-full text-[9px] font-black">
                                                             C
                                                         </div>
                                                         <span className="text-[9px] text-[#1a1a2e]/50 font-black uppercase tracking-wider">Clarity Coach</span>
@@ -949,7 +949,7 @@ export const Landing = () => {
                                                                 </p>
                                                                 
                                                                 {visibleLinesCount >= 2 && (
-                                                                    <div className="p-3 bg-white border border-[#1a1a2e]/10 rounded-xl space-y-1">
+                                                                    <div className="p-3 bg-[#FCFAF8] border border-[#1a1a2e]/10 rounded-xl space-y-1">
                                                                         <p className="text-[8px] font-black uppercase text-[#1a1a2e]/50 tracking-wider">Concept Formula</p>
                                                                         <p className="text-xs font-bold text-[#1a1a2e]">Fringe Width (β) = λD/d</p>
                                                                     </div>
@@ -969,7 +969,7 @@ export const Landing = () => {
                                                                 {visibleLinesCount >= 4 && (
                                                                     <div className="space-y-2">
                                                                         <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">CBSE Step-Marking Scheme</p>
-                                                                        <div className="border border-[#1a1a2e]/10 rounded-lg overflow-hidden text-[10px] bg-white">
+                                                                        <div className="border border-[#1a1a2e]/10 rounded-lg overflow-hidden text-[10px] bg-[#FCFAF8]">
                                                                             <table className="w-full text-left">
                                                                                 <thead>
                                                                                     <tr className="bg-[#fcfbf9] border-b border-[#1a1a2e]/10 font-bold text-[#1a1a2e]/60">
@@ -980,11 +980,11 @@ export const Landing = () => {
                                                                                 <tbody className="divide-y divide-[#1a1a2e]/5 text-[#1a1a2e]/80">
                                                                                     <tr>
                                                                                         <td className="p-2">Path Difference Formulation</td>
-                                                                                        <td className="p-2 text-right text-emerald-700 font-bold">+0.5 M</td>
+                                                                                        <td className="p-2 text-right text-amber-700 font-bold">+0.5 M</td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td className="p-2">Geometric Wavefront Construction</td>
-                                                                                        <td className="p-2 text-right text-emerald-700 font-bold">+1.5 M</td>
+                                                                                        <td className="p-2 text-right text-amber-700 font-bold">+1.5 M</td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
@@ -996,7 +996,7 @@ export const Landing = () => {
 
                                                         {activePrompt === 'biology' && (
                                                             <div className="space-y-4">
-                                                                <div className="flex justify-between items-center bg-white p-2 rounded-lg border border-[#1a1a2e]/10 text-[9px]">
+                                                                <div className="flex justify-between items-center bg-[#FCFAF8] p-2 rounded-lg border border-[#1a1a2e]/10 text-[9px]">
                                                                     <span className="font-black text-[#1a1a2e]/50 uppercase">OCR Handwritten Grading</span>
                                                                     <span className="text-[#1a1a2e] font-black">98.2% Confidence</span>
                                                                 </div>
@@ -1011,11 +1011,11 @@ export const Landing = () => {
                                                                     <div className="space-y-2">
                                                                         <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">Answer Key Checklist</p>
                                                                         <div className="space-y-1 text-[10px]">
-                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-emerald-500/5 text-emerald-800 border border-emerald-500/10">
+                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-amber-500/5 text-amber-800 border border-amber-500/10">
                                                                                 <span>✔ Syngamy identified</span>
                                                                                 <span className="font-bold">+1.0 M</span>
                                                                             </div>
-                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-emerald-500/5 text-emerald-800 border border-emerald-500/10">
+                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-amber-500/5 text-amber-800 border border-amber-500/10">
                                                                                 <span>✔ Zygote formation described</span>
                                                                                 <span className="font-bold">+1.0 M</span>
                                                                             </div>
@@ -1057,10 +1057,10 @@ export const Landing = () => {
 
                                                                 {visibleLinesCount >= 4 && (
                                                                     <div className="space-y-1.5 text-[9px]">
-                                                                        <div className="flex items-center gap-1.5 text-emerald-800">
+                                                                        <div className="flex items-center gap-1.5 text-amber-800">
                                                                             <Check size={10} /> <span>State formula: F = k*q1*q2/r² (+1.0 M)</span>
                                                                         </div>
-                                                                        <div className="flex items-center gap-1.5 text-emerald-800">
+                                                                        <div className="flex items-center gap-1.5 text-amber-800">
                                                                             <Check size={10} /> <span>Define vacuum permittivity (+1.0 M)</span>
                                                                         </div>
                                                                         <div className="flex items-center justify-between border-t border-[#1a1a2e]/5 pt-1.5 mt-1 text-[11px] font-black">
@@ -1151,7 +1151,7 @@ export const Landing = () => {
                                         className={`w-full text-left p-5 border transition-all flex flex-col gap-1 rounded-xl ${
                                             activeTab === tab.id 
                                                 ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] shadow-[3px_3px_0px_rgba(26,26,46,0.3)] scale-[1.01]' 
-                                                : 'bg-white border-[#1a1a2e]/10 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5'
+                                                : 'bg-[#FCFAF8] border-[#1a1a2e]/10 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5'
                                         }`}
                                         onMouseEnter={() => setIsHoveredWord(true)}
                                         onMouseLeave={() => setIsHoveredWord(false)}
@@ -1166,7 +1166,7 @@ export const Landing = () => {
 
                             {/* Display Window mockup */}
                             <div className="lg:col-span-8 relative flex items-stretch">
-                                <div className="w-full border border-[#1a1a2e]/15 bg-white shadow-2xl p-6 flex flex-col justify-between rounded-2xl overflow-hidden relative">
+                                <div className="w-full border border-[#1a1a2e]/15 bg-[#FCFAF8] shadow-2xl p-6 flex flex-col justify-between rounded-2xl overflow-hidden relative">
                                     <div className="flex items-center gap-1 mb-6 pb-3 border-b border-[#1a1a2e]/10">
                                         <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
                                         <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
@@ -1184,8 +1184,8 @@ export const Landing = () => {
                                                         <p className="text-[9px] font-black uppercase tracking-widest text-[#f7f5f0]/60">Today's Daily Mission</p>
                                                         <div className="space-y-1.5">
                                                             <div className="flex items-center justify-between text-xs p-2.5 bg-[#f7f5f0]/5 border border-[#f7f5f0]/10 rounded-lg">
-                                                                <span className="flex items-center gap-2"><CheckCircle2 size={13} className="text-emerald-400" /> Solve 5 Wave Optics PYQs</span>
-                                                                <span className="text-[8px] font-black tracking-wider bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">+15 XP</span>
+                                                                <span className="flex items-center gap-2"><CheckCircle2 size={13} className="text-amber-400" /> Solve 5 Wave Optics PYQs</span>
+                                                                <span className="text-[8px] font-black tracking-wider bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded">+15 XP</span>
                                                             </div>
                                                             <div className="flex items-center justify-between text-xs p-2.5 bg-[#f7f5f0]/5 border border-[#f7f5f0]/5 rounded-lg opacity-60">
                                                                 <span className="flex items-center gap-2"><div className="w-3.5 h-3.5 border-1.5 border-[#f7f5f0]/30 rounded" /> Revise 2 Biology Traps</span>
@@ -1198,7 +1198,7 @@ export const Landing = () => {
                                                             <p className="text-[9px] font-black uppercase text-[#1a1a2e]/40">CBSE Readiness</p>
                                                             <h4 className="text-xl font-black">78%</h4>
                                                         </div>
-                                                        <span className="text-[10px] font-black text-emerald-850 bg-emerald-50 px-2 py-0.5 rounded-full">High prep stability</span>
+                                                        <span className="text-[10px] font-black text-amber-850 bg-amber-50 px-2 py-0.5 rounded-full">High prep stability</span>
                                                     </div>
                                                 </div>
                                                 <div className="md:col-span-5 flex flex-col items-center justify-center p-5 bg-[#fcfbf9] border border-[#1a1a2e]/10 rounded-xl">
@@ -1242,7 +1242,7 @@ export const Landing = () => {
                                                 </div>
                                                 <div className="p-4 bg-[#fcfbf9] border border-[#1a1a2e]/10 rounded-b-xl space-y-3 font-mono text-[11px]">
                                                     <p className="font-bold text-[#1a1a2e]">Q1: State Coulomb's law. (2 Marks)</p>
-                                                    <div className="space-y-1 text-emerald-800 text-[10px]">
+                                                    <div className="space-y-1 text-amber-800 text-[10px]">
                                                         <p className="flex items-center gap-1"><Check size={11} /> Formula: F = k*q1*q2/r² (+1.0 Mark)</p>
                                                         <p className="flex items-center gap-1"><Check size={11} /> Define variables & vacuum permittivity (+1.0 Mark)</p>
                                                     </div>
@@ -1253,14 +1253,14 @@ export const Landing = () => {
                                         {activeTab === 'parent' && (
                                             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                                                 <div className="md:col-span-7 space-y-3">
-                                                    <div className="p-4 bg-white border border-[#1a1a2e]/10 rounded-xl space-y-2">
+                                                    <div className="p-4 bg-[#FCFAF8] border border-[#1a1a2e]/10 rounded-xl space-y-2">
                                                         <div className="flex items-center justify-between">
                                                             <p className="text-[10px] font-black uppercase text-[#1a1a2e]/50">NCERT Mapping</p>
-                                                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                                                         </div>
                                                         <p className="text-sm font-bold text-[#1a1a2e]">Chemical Reactions (Pg 12-18)</p>
                                                         <div className="w-full bg-[#1a1a2e]/10 rounded-full h-1.5 mt-2 overflow-hidden">
-                                                            <div className="bg-[#1D9E75] h-1.5 rounded-full w-[85%]"></div>
+                                                            <div className="bg-[#8C5A35] h-1.5 rounded-full w-[85%]"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1280,12 +1280,12 @@ export const Landing = () => {
                                             <div className="space-y-4">
                                                 <div className="flex items-center justify-between border-b border-[#1a1a2e]/10 pb-2">
                                                     <p className="text-sm font-black text-[#1a1a2e]">Top Board Scorer</p>
-                                                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Weekly Reset</span>
+                                                    <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Weekly Reset</span>
                                                 </div>
                                                 <div className="flex items-center gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
                                                     <div className="w-8 h-8 rounded-full bg-yellow-400 text-yellow-900 flex items-center justify-center font-black text-xs">1</div>
                                                     <div className="flex-1">
-                                                        <p className="text-xs font-bold text-[#1a1a2e]">Rahul S. <span className="ml-1 text-[10px] font-normal text-slate-500">Class 10</span></p>
+                                                        <p className="text-xs font-bold text-[#1a1a2e]">Rahul S. <span className="ml-1 text-[10px] font-normal text-stone-500">Class 10</span></p>
                                                         <p className="text-[10px] font-black text-yellow-700">14 Day Streak 🔥</p>
                                                     </div>
                                                     <div className="text-right">
@@ -1404,32 +1404,32 @@ export const Landing = () => {
                                 </div>
                                 
                                 {/* Mini Leaderboard Scoreboard */}
-                                <div className="w-full md:w-72 bg-white border border-[#1a1a2e]/15 p-4 rounded-xl shrink-0 space-y-3">
+                                <div className="w-full md:w-72 bg-[#FCFAF8] border border-[#1a1a2e]/15 p-4 rounded-xl shrink-0 space-y-3">
                                     <p className="text-[9px] font-black uppercase tracking-wider text-[#1a1a2e]/55 flex justify-between items-center border-b border-[#1a1a2e]/10 pb-1.5">
                                         <span>Regional rankings</span>
                                         <span className="text-[#1a1a2e] font-bold">Tamil Nadu (State-wise)</span>
                                     </p>
                                     <div className="space-y-1.5 text-[11px] font-bold">
-                                        <div className="flex items-center justify-between p-1.5 rounded bg-white text-[#1a1a2e] border border-[#1a1a2e]/10">
+                                        <div className="flex items-center justify-between p-1.5 rounded bg-[#FCFAF8] text-[#1a1a2e] border border-[#1a1a2e]/10">
                                             <span className="flex items-center gap-2">
                                                 <span className="w-4 h-4 rounded-full bg-yellow-100 text-yellow-800 flex items-center justify-center text-[9px] font-black">1</span>
                                                 <span>Rohan Gupta</span>
                                             </span>
-                                            <span className="font-mono text-emerald-800 font-black">1,420 pts</span>
+                                            <span className="font-mono text-amber-800 font-black">1,420 pts</span>
                                         </div>
-                                        <div className="flex items-center justify-between p-1.5 rounded bg-white text-[#1a1a2e] border border-[#1a1a2e]/10">
+                                        <div className="flex items-center justify-between p-1.5 rounded bg-[#FCFAF8] text-[#1a1a2e] border border-[#1a1a2e]/10">
                                             <span className="flex items-center gap-2">
-                                                <span className="w-4 h-4 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[9px] font-black">2</span>
+                                                <span className="w-4 h-4 rounded-full bg-[#F2EFE9] text-stone-500 flex items-center justify-center text-[9px] font-black">2</span>
                                                 <span>Priya Nair</span>
                                             </span>
-                                            <span className="font-mono text-emerald-800 font-black">1,180 pts</span>
+                                            <span className="font-mono text-amber-800 font-black">1,180 pts</span>
                                         </div>
                                         <div className="flex items-center justify-between p-1.5 rounded bg-yellow-100/70 text-[#1a1a2e] border border-[#1a1a2e]/25 font-black ring-1 ring-[#1a1a2e]/10">
                                             <span className="flex items-center gap-2">
                                                 <span className="w-4 h-4 rounded-full bg-[#1a1a2e] text-[#f7f5f0] flex items-center justify-center text-[9px] font-black">3</span>
                                                 <span>You</span>
                                             </span>
-                                            <span className="font-mono text-emerald-800 font-black">950 pts</span>
+                                            <span className="font-mono text-amber-800 font-black">950 pts</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1438,7 +1438,7 @@ export const Landing = () => {
                     </section>
 
                     {/* Section: Family Hub Showcase */}
-                    <section className="relative overflow-hidden border border-[#1a1a2e]/15 bg-white p-8 md:p-12 shadow-lg rounded-3xl pl-[clamp(24px, 7vw, 90px)]">
+                    <section className="relative overflow-hidden border border-[#1a1a2e]/15 bg-[#FCFAF8] p-8 md:p-12 shadow-lg rounded-3xl pl-[clamp(24px, 7vw, 90px)]">
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
                             {/* Parent Portal Info */}
                             <div className="lg:col-span-6 space-y-6">
@@ -1477,7 +1477,7 @@ export const Landing = () => {
                                 <div className="pt-2">
                                     <Link 
                                         to="/parent-portal" 
-                                        className="px-5 py-3 bg-[#1a1a2e] text-[#f7f5f0] text-xs font-black inline-flex items-center gap-2 rounded-xl shadow-[3px_3px_0px_rgba(26,26,46,0.3)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_rgba(26,26,46,0.3)] transition-all"
+                                        className="px-5 py-3 bg-[#1a1a2e] text-[#f7f5f0] text-xs font-black inline-flex items-center gap-2 rounded-xl shadow-[3px_3px_0px_rgba(26,26,46,0.3)] hover:transtone-x-[2px] hover:transtone-y-[2px] hover:shadow-[1px_1px_0px_rgba(26,26,46,0.3)] transition-all"
                                         onMouseEnter={() => setIsHoveredWord(true)}
                                         onMouseLeave={() => setIsHoveredWord(false)}
                                     >
@@ -1500,24 +1500,24 @@ export const Landing = () => {
                                                 <p className="text-[9px] font-bold text-[#1a1a2e]/40 uppercase">Access Active</p>
                                             </div>
                                         </div>
-                                        <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                                        <span className="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse" />
                                     </div>
 
                                     <div className="space-y-3 font-mono text-[11px]">
                                         {/* Linked Student Card */}
-                                        <div className="p-3 bg-white border border-[#1a1a2e]/10 flex items-center justify-between rounded-xl">
+                                        <div className="p-3 bg-[#FCFAF8] border border-[#1a1a2e]/10 flex items-center justify-between rounded-xl">
                                             <div>
                                                 <p className="text-[8px] font-bold text-[#1a1a2e]/40 uppercase">Student Profile</p>
                                                 <p className="font-bold text-[#1a1a2e]">Izyaan Mohammed</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-[8px] font-bold text-[#1a1a2e]/40 uppercase">Risk Index</p>
-                                                <p className="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-500/10">Low Risk</p>
+                                                <p className="text-[9px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-500/10">Low Risk</p>
                                             </div>
                                         </div>
 
                                         {/* Action Plan */}
-                                        <div className="p-3 bg-white border border-[#1a1a2e]/10 space-y-1.5 rounded-xl">
+                                        <div className="p-3 bg-[#FCFAF8] border border-[#1a1a2e]/10 space-y-1.5 rounded-xl">
                                             <p className="text-[8px] font-black uppercase text-[#1a1a2e]/55">Recommended Action Plan</p>
                                             <p className="text-[#1a1a2e]/80 leading-relaxed text-[10px]">
                                                 Ensure Rohan completes 1 mock Physics practice exam on <strong>Wave Optics</strong> this week.
@@ -1550,11 +1550,11 @@ export const Landing = () => {
                                     className={`p-6 border flex flex-col justify-between transition-all rounded-3xl ${
                                         tier.highlight 
                                             ? 'border-2 border-[#1a1a2e] bg-[#fcfbf9]/50 shadow-[5px_5px_0px_#1a1a2e] relative' 
-                                            : 'border-[#1a1a2e]/15 bg-white shadow-[3px_3px_0px_rgba(26,26,46,0.15)] hover:shadow-[5px_5px_0px_rgba(26,26,46,0.15)]'
+                                            : 'border-[#1a1a2e]/15 bg-[#FCFAF8] shadow-[3px_3px_0px_rgba(26,26,46,0.15)] hover:shadow-[5px_5px_0px_rgba(26,26,46,0.15)]'
                                     }`}
                                 >
                                     {tier.highlight && (
-                                        <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-0.5 bg-[#1a1a2e] text-[#f7f5f0] text-[8px] font-black uppercase tracking-widest shadow border border-[#1a1a2e] rounded-full">
+                                        <span className="absolute -top-3 left-1/2 transform -transtone-x-1/2 px-3 py-0.5 bg-[#1a1a2e] text-[#f7f5f0] text-[8px] font-black uppercase tracking-widest shadow border border-[#1a1a2e] rounded-full">
                                             Most Popular
                                         </span>
                                     )}
@@ -1584,7 +1584,7 @@ export const Landing = () => {
                                             to="/onboarding" 
                                             className={`inline-flex w-full items-center justify-center gap-1.5 py-3 text-xs font-black shadow-sm rounded-xl transition-all border ${
                                                 tier.highlight 
-                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] shadow-[2px_2px_0px_rgba(26,26,46,0.3)] hover:translate-x-[1px] hover:translate-y-[1px]' 
+                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] shadow-[2px_2px_0px_rgba(26,26,46,0.3)] hover:transtone-x-[1px] hover:transtone-y-[1px]' 
                                                     : 'bg-transparent text-[#1a1a2e] border-[#1a1a2e]/25 hover:bg-[#1a1a2e]/5'
                                             }`}
                                             onMouseEnter={() => setIsHoveredWord(true)}
@@ -1610,7 +1610,7 @@ export const Landing = () => {
                             {faqsList.map((faq, index) => (
                                 <div 
                                     key={index} 
-                                    className="border border-[#1a1a2e]/15 bg-white overflow-hidden shadow-[2px_2px_0px_rgba(26,26,46,0.1)] rounded-xl"
+                                    className="border border-[#1a1a2e]/15 bg-[#FCFAF8] overflow-hidden shadow-[2px_2px_0px_rgba(26,26,46,0.1)] rounded-xl"
                                 >
                                     <button
                                         onClick={() => toggleFaq(index)}

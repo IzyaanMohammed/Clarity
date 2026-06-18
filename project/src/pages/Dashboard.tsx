@@ -312,14 +312,14 @@ export const Dashboard = () => {
   void launchResourceStack;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+    <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
       <Navbar />
       <main className="max-w-[1600px] mx-auto px-6 py-10">
         {/* Hero Section with Glassmorphism */}
-        <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#1D9E75] to-[#059669] p-10 mb-12 shadow-2xl shadow-[#1D9E75]/30">
+        <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#8C5A35] to-[#059669] p-10 mb-12 shadow-2xl shadow-[#8C5A35]/30">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="max-w-xl">
-              <div className="inline-flex items-center px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-bold mb-4 border border-white/30">
+              <div className="inline-flex items-center px-3 py-1 bg-[#FCFAF8]/20 backdrop-blur-md rounded-full text-white text-xs font-bold mb-4 border border-white/30">
                 <Zap size={14} className="mr-2" />
                 {isTrial 
                   ? `${planTier.toUpperCase().replace('_', ' ')} TRIAL (${trialDaysLeft} days left)` 
@@ -335,14 +335,14 @@ export const Dashboard = () => {
               </p>
             </div>
 
-            <div className="flex flex-col items-center bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center min-w-[200px] relative group">
+            <div className="flex flex-col items-center bg-[#FCFAF8]/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center min-w-[200px] relative group">
               {isEditingDate ? (
                 <div className="flex flex-col items-center gap-2">
                   <input
                     type="date"
                     value={editDateValue}
                     onChange={(e) => setEditDateValue(e.target.value)}
-                    className="px-2 py-1 text-xs font-bold text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 rounded border border-white/30 outline-none w-full"
+                    className="px-2 py-1 text-xs font-bold text-[#3E352B] bg-[#FCFAF8] rounded border border-white/30 outline-none w-full"
                   />
                   <div className="flex gap-2">
                     <button
@@ -359,13 +359,13 @@ export const Dashboard = () => {
                         }
                         setIsEditingDate(false);
                       }}
-                      className="px-2 py-0.5 bg-yellow-300 hover:bg-yellow-400 text-slate-900 rounded font-black text-[10px] uppercase tracking-wider transition-all"
+                      className="px-2 py-0.5 bg-yellow-300 hover:bg-yellow-400 text-[#2C241B] rounded font-black text-[10px] uppercase tracking-wider transition-all"
                     >
                       Save
                     </button>
                     <button
                       onClick={() => setIsEditingDate(false)}
-                      className="px-2 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded font-bold text-[10px] uppercase transition-all"
+                      className="px-2 py-0.5 bg-[#FCFAF8]/20 hover:bg-[#FCFAF8]/30 text-white rounded font-bold text-[10px] uppercase transition-all"
                     >
                       Cancel
                     </button>
@@ -385,7 +385,7 @@ export const Dashboard = () => {
                       setEditDateValue(localStorage.getItem('clarity_exam_date') || '');
                       setIsEditingDate(true);
                     }}
-                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all"
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-[#FCFAF8]/10 hover:bg-[#FCFAF8]/20 text-white transition-all"
                     title="Change Exam Date"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
@@ -396,8 +396,8 @@ export const Dashboard = () => {
           </div>
 
           {/* Decorative shapes */}
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-black/10 rounded-full blur-2xl" />
+          <div className="absolute top-0 right-0 -transtone-y-1/2 transtone-x-1/2 w-96 h-96 bg-[#FCFAF8]/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 transtone-y-1/2 -transtone-x-1/2 w-64 h-64 bg-black/10 rounded-full blur-2xl" />
         </div>
 
         {/* Parent Note Message */}
@@ -406,12 +406,12 @@ export const Dashboard = () => {
           const showParentNote = activeParentNote && activeParentNote !== dismissedParentNote;
           if (!showParentNote) return null;
           return (
-            <Card className="p-6 mb-8 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-[#2a1b10] dark:to-[#1a120c] border-2 border-amber-200 dark:border-amber-900/40 rounded-[28px] flex items-center justify-between gap-4 shadow-md transition-all duration-300">
+            <Card className="p-6 mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-[28px] flex items-center justify-between gap-4 shadow-md transition-all duration-300">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">✉️</span>
                 <div>
-                  <p className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400">Message from parent</p>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">"{activeParentNote}"</p>
+                  <p className="text-xs font-black uppercase tracking-wider text-amber-600 ">Message from parent</p>
+                  <p className="text-sm font-bold text-[#3E352B] mt-0.5">"{activeParentNote}"</p>
                 </div>
               </div>
               <button 
@@ -421,7 +421,7 @@ export const Dashboard = () => {
                   setDismissedParentNote(activeParentNote);
                   toast.success('Message dismissed.');
                 }}
-                className="text-slate-400 hover:text-slate-650 text-xs font-black"
+                className="text-stone-400 hover:text-stone-650 text-xs font-black"
               >
                 Dismiss
               </button>
@@ -431,20 +431,20 @@ export const Dashboard = () => {
 
         {/* Missing Profile Info Callout */}
         {(!user.teacherPersonality || !hasFocus) && (
-          <Card className="p-8 mb-12 bg-rose-50 dark:bg-rose-900/10 border-2 border-rose-200 dark:border-rose-800 rounded-[32px] flex flex-col md:flex-row items-center justify-between gap-6">
+          <Card className="p-8 mb-12 bg-rose-50 border-2 border-rose-200 rounded-[32px] flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-rose-100 dark:bg-rose-900/30 rounded-2xl flex items-center justify-center text-rose-600">
+              <div className="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600">
                 <Sparkles size={32} />
               </div>
               <div>
-                <h3 className="text-xl font-black text-slate-900 dark:text-white">Complete Your Study OS Setup</h3>
-                <p className="text-sm text-slate-500 font-medium">You haven't set your {!user.teacherPersonality ? 'Teacher Personality' : 'School Focus'} yet. This is required for AI personalization.</p>
+                <h3 className="text-xl font-black text-[#2C241B] ">Complete Your Study OS Setup</h3>
+                <p className="text-sm text-stone-500 font-medium">You haven't set your {!user.teacherPersonality ? 'Teacher Personality' : 'School Focus'} yet. This is required for AI personalization.</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button
                 variant="outline"
-                className="border-slate-300 dark:border-slate-700 text-slate-650 dark:text-slate-300 font-black px-6 py-4 rounded-xl text-sm"
+                className="border-stone-300 text-stone-650 font-black px-6 py-4 rounded-xl text-sm"
                 onClick={() => navigate('/textbook-hub')}
               >
                 Upload Textbook PDFs
@@ -461,19 +461,19 @@ export const Dashboard = () => {
 
         {/* Active School Focus Week Callout */}
         {user.teacherPersonality && hasFocus && (
-          <Card className="p-8 mb-12 bg-gradient-to-r from-emerald-50/50 to-teal-50/50 dark:from-emerald-950/10 dark:to-teal-950/10 border-2 border-emerald-100 dark:border-emerald-800/40 rounded-[32px] flex flex-col lg:flex-row items-center justify-between gap-6">
+          <Card className="p-8 mb-12 bg-gradient-to-r from-amber-50/50 to-teal-50/50 border-2 border-amber-100 rounded-[32px] flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4 flex-1">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#1D9E75] to-emerald-600 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-emerald-500/20">
+              <div className="w-14 h-14 bg-gradient-to-br from-[#8C5A35] to-amber-600 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-amber-500/20">
                 <Target size={28} />
               </div>
               <div className="flex-1">
-                <h3 className="text-xl font-black text-slate-900 dark:text-white">Active School Focus Week</h3>
+                <h3 className="text-xl font-black text-[#2C241B] ">Active School Focus Week</h3>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {Object.entries(focusChaptersMap).map(([subj, chaps]) => {
                     if (!chaps || chaps.length === 0) return null;
                     return (
-                      <span key={subj} className="text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold px-3 py-1.5 rounded-xl shadow-sm">
-                        <strong className="text-[#1D9E75]">{subj}:</strong> {chaps.join(', ')}
+                      <span key={subj} className="text-xs bg-[#FCFAF8] border border-stone-200 text-stone-700 font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                        <strong className="text-[#8C5A35]">{subj}:</strong> {chaps.join(', ')}
                       </span>
                     );
                   })}
@@ -483,13 +483,13 @@ export const Dashboard = () => {
             <div className="flex flex-wrap gap-3">
               <Button
                 variant="outline"
-                className="border-[#1D9E75]/30 hover:bg-[#1D9E75]/5 text-[#1D9E75] font-black px-6 py-4 rounded-xl text-sm"
+                className="border-[#8C5A35]/30 hover:bg-[#8C5A35]/5 text-[#8C5A35] font-black px-6 py-4 rounded-xl text-sm"
                 onClick={() => navigate('/textbook-hub')}
               >
                 Upload Textbook PDFs
               </Button>
               <Button
-                className="bg-[#1D9E75] hover:bg-[#16805d] text-white font-black px-6 py-4 rounded-xl text-sm flex items-center gap-2 transition-all transform hover:scale-[1.02]"
+                className="bg-[#8C5A35] hover:bg-[#70482B] text-white font-black px-6 py-4 rounded-xl text-sm flex items-center gap-2 transition-all transform hover:scale-[1.02]"
                 onClick={handleUpdateFocus}
               >
                 <Zap size={16} />
@@ -506,39 +506,39 @@ export const Dashboard = () => {
               label: 'Streak',
               value: (stats?.streak_days || 1) + ' Days',
               icon: <Flame className="text-orange-500" />,
-              iconBg: 'bg-orange-50 dark:bg-orange-900/20',
+              iconBg: 'bg-orange-50 ',
               bubble: 'bg-orange-500/5',
             },
             {
               label: 'Q&A Solved',
               value: stats?.total_questions || 0,
               icon: <Brain className="text-pink-500" />,
-              iconBg: 'bg-pink-50 dark:bg-pink-900/20',
+              iconBg: 'bg-pink-50 ',
               bubble: 'bg-pink-500/5',
             },
             {
               label: 'Accuracy',
               value: `${stats?.accuracy_rate ?? 0}%`,
-              icon: <Target className="text-emerald-500" />,
-              iconBg: 'bg-emerald-50 dark:bg-emerald-900/20',
-              bubble: 'bg-emerald-500/5',
+              icon: <Target className="text-amber-500" />,
+              iconBg: 'bg-amber-50 ',
+              bubble: 'bg-amber-500/5',
             },
             {
               label: 'Time Spent',
               value: `${(((stats?.estimated_study_minutes || 0) / 60) || 0).toFixed(1)} Hrs`,
               icon: <Clock className="text-blue-500" />,
-              iconBg: 'bg-blue-50 dark:bg-blue-900/20',
+              iconBg: 'bg-blue-50 ',
               bubble: 'bg-blue-500/5',
             },
           ].map((stat, i) => (
-            <Card key={i} className="group p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl shadow-slate-200/50 dark:shadow-none hover:scale-[1.02] transition-all rounded-[32px] overflow-hidden relative">
+            <Card key={i} className="group p-8 bg-[#FCFAF8] border-none shadow-xl shadow-stone-200/50 hover:scale-[1.02] transition-all rounded-[32px] overflow-hidden relative">
               <div className="relative z-10 flex items-center gap-5">
                 <div className={`p-5 rounded-2xl ${stat.iconBg}`}>
                   {stat.icon}
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{stat.label}</p>
-                  <p className="text-3xl font-black text-slate-900 dark:text-white mt-1">{stat.value}</p>
+                  <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">{stat.label}</p>
+                  <p className="text-3xl font-black text-[#2C241B] mt-1">{stat.value}</p>
                 </div>
               </div>
               <div className={`absolute -right-4 -bottom-4 w-24 h-24 rounded-full group-hover:scale-150 transition-transform ${stat.bubble}`} />
@@ -550,26 +550,26 @@ export const Dashboard = () => {
           {/* Upcoming Key Dates Section */}
           <section className="mb-12 animate-in fade-in duration-300">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
-                <Calendar className="text-[#1D9E75] mr-3" size={24} />
+              <h2 className="text-2xl font-bold text-[#2C241B] flex items-center">
+                <Calendar className="text-[#8C5A35] mr-3" size={24} />
                 Upcoming Deadlines & Milestones
               </h2>
-              <Button onClick={() => navigate('/plan')} variant="ghost" className="text-[#1D9E75] font-black text-sm">
+              <Button onClick={() => navigate('/plan')} variant="ghost" className="text-[#8C5A35] font-black text-sm">
                 Manage Key Dates →
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {/* Main Exam Date Card */}
-              <Card className="p-6 bg-gradient-to-br from-emerald-50/50 to-teal-55/50 dark:from-emerald-950/20 dark:to-teal-950/20 border-2 border-emerald-100 dark:border-emerald-800/40 rounded-3xl">
-                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+              <Card className="p-6 bg-gradient-to-br from-amber-50/50 to-teal-55/50 border-2 border-amber-100 rounded-3xl">
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 ">
                   {(user.class === 10 || user.class === 12) ? "Board Examination" : "Final Examination"}
                 </span>
-                <h3 className="font-black text-lg text-slate-900 dark:text-white mt-1">
+                <h3 className="font-black text-lg text-[#2C241B] mt-1">
                   {localStorage.getItem('clarity_exam_date')
                     ? new Date(localStorage.getItem('clarity_exam_date')!).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })
                     : 'Feb 15, 2026'}
                 </h3>
-                <p className="text-xs text-slate-500 font-medium mt-2">
+                <p className="text-xs text-stone-500 font-medium mt-2">
                   {daysToExam > 0 ? `${daysToExam} days remaining` : 'Exam day! Good luck!'}
                 </p>
               </Card>
@@ -584,13 +584,13 @@ export const Dashboard = () => {
                 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
                 return (
-                  <Card key={item.id} className="p-6 bg-white dark:bg-[#0f172a] border border-slate-100 dark:border-slate-800 rounded-3xl">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">Custom Milestone</span>
-                    <h3 className="font-bold text-base text-slate-900 dark:text-white mt-1 truncate">{item.label}</h3>
-                    <p className="text-sm font-black text-[#1D9E75] mt-1">
+                  <Card key={item.id} className="p-6 bg-[#FCFAF8] border border-stone-100 rounded-3xl">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-stone-400">Custom Milestone</span>
+                    <h3 className="font-bold text-base text-[#2C241B] mt-1 truncate">{item.label}</h3>
+                    <p className="text-sm font-black text-[#8C5A35] mt-1">
                       {new Date(item.date).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                     </p>
-                    <p className="text-xs text-slate-500 font-medium mt-2">
+                    <p className="text-xs text-stone-500 font-medium mt-2">
                       {days > 0 ? `${days} days left` : days === 0 ? 'Today!' : 'Passed'}
                     </p>
                   </Card>
@@ -598,8 +598,8 @@ export const Dashboard = () => {
               })}
 
               {otherDates.length === 0 && (
-                <div className="lg:col-span-3 p-6 flex items-center justify-center bg-slate-50 dark:bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
-                  <p className="text-xs text-slate-400 font-bold">No custom monthly test or quiz deadlines added yet. Go to Plan to add key dates!</p>
+                <div className="lg:col-span-3 p-6 flex items-center justify-center bg-[#FCFAF8] rounded-3xl border-2 border-dashed border-stone-200 ">
+                  <p className="text-xs text-stone-400 font-bold">No custom monthly test or quiz deadlines added yet. Go to Plan to add key dates!</p>
                 </div>
               )}
             </div>
@@ -608,30 +608,30 @@ export const Dashboard = () => {
           {/* Subjects Section */}
           <section>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
-                <BookOpen className="text-[#1D9E75] mr-3" size={24} />
+              <h2 className="text-2xl font-bold text-[#2C241B] flex items-center">
+                <BookOpen className="text-[#8C5A35] mr-3" size={24} />
                 My Subjects
               </h2>
-              <Button onClick={() => navigate('/profile')} variant="ghost" className="text-slate-500 font-bold">Edit Subjects</Button>
+              <Button onClick={() => navigate('/profile')} variant="ghost" className="text-stone-500 font-bold">Edit Subjects</Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {user.subjects.map((subject: string) => (
                 <Card
                   key={subject}
-                  className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-lg hover:shadow-2xl hover:shadow-[#1D9E75]/20 cursor-pointer transition-all rounded-3xl group border-l-4 border-[#1D9E75]"
+                  className="p-6 bg-[#FCFAF8] border-none shadow-lg hover:shadow-2xl hover:shadow-[#8C5A35]/20 cursor-pointer transition-all rounded-3xl group border-l-4 border-[#8C5A35]"
                   onClick={() => navigate('/ask', { state: { subject } })}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-5">
-                      <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-2xl font-black text-[#1D9E75]">
+                      <div className="w-14 h-14 bg-[#FCFAF8] rounded-2xl flex items-center justify-center text-2xl font-black text-[#8C5A35]">
                         {subject[0]}
                       </div>
                       <div>
-                        <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-[#1D9E75] transition-colors">{subject}</h3>
-                        <p className="text-xs text-slate-500 font-medium">Class {user.class} • NCERT</p>
+                        <h3 className="font-bold text-lg text-[#2C241B] group-hover:text-[#8C5A35] transition-colors">{subject}</h3>
+                        <p className="text-xs text-stone-500 font-medium">Class {user.class} • NCERT</p>
                       </div>
                     </div>
-                    <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 group-hover:bg-[#1D9E75] group-hover:text-white transition-all">
+                    <div className="w-10 h-10 bg-[#FCFAF8] rounded-full flex items-center justify-center text-stone-400 group-hover:bg-[#8C5A35] group-hover:text-white transition-all">
                       <ArrowRight size={20} />
                     </div>
                   </div>
@@ -643,46 +643,46 @@ export const Dashboard = () => {
           {/* Autonomous Recommendations */}
           <section>
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center">
+              <h2 className="text-2xl font-bold text-[#2C241B] flex items-center">
                 <Sparkles className="text-yellow-500 mr-3" size={24} />
                 AI Study Strategy
               </h2>
               <div className="flex items-center gap-4">
                 <Button
                   variant="ghost"
-                  className="text-[#1D9E75] hover:text-[#16805d] font-black text-sm p-0 flex items-center gap-1"
+                  className="text-[#8C5A35] hover:text-[#70482B] font-black text-sm p-0 flex items-center gap-1"
                   onClick={() => navigate('/ai-tutor')}
                 >
                   Ask AI Tutor Coach →
                 </Button>
-                <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black rounded-full uppercase tracking-tighter">Updated Live</span>
+                <span className="px-3 py-1 bg-[#F2EFE9] text-stone-500 text-[10px] font-black rounded-full uppercase tracking-tighter">Updated Live</span>
               </div>
             </div>
             <div className="space-y-8">
-              <Card className="p-10 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-[40px] relative overflow-hidden group">
+              <Card className="p-10 bg-[#FCFAF8] border-none shadow-xl rounded-[40px] relative overflow-hidden group">
                 <div className="relative z-10 flex flex-col md:flex-row gap-10">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-8">
-                      <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl text-[#1D9E75]">
+                      <div className="p-4 bg-amber-50 rounded-2xl text-[#8C5A35]">
                         <Calendar size={32} />
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                        <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-1">
                           {(user.class === 10 || user.class === 12) ? "Next Board Milestone" : "Next Exam Milestone"}
                         </p>
-                        <p className="text-lg font-bold text-slate-900 dark:text-white">
+                        <p className="text-lg font-bold text-[#2C241B] ">
                           {mockSchedule ? `Mock Exam • ${mockSchedule.next_mock_date}` : `${localStorage.getItem('clarity_exam_date') ? new Date(localStorage.getItem('clarity_exam_date')!).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : 'Feb 15, 2026'} • ${(user.class === 10 || user.class === 12) ? 'CBSE Finals' : 'Final Exams'}`}
                         </p>
                       </div>
                     </div>
-                    <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-4">Autonomous Study Plan</h3>
-                    <p className="text-lg text-slate-500 mb-8 leading-relaxed max-w-2xl">
+                    <h3 className="text-3xl font-black text-[#2C241B] mb-4">Autonomous Study Plan</h3>
+                    <p className="text-lg text-stone-500 mb-8 leading-relaxed max-w-2xl">
                       {dailyMission?.tasks?.[0]
                         ? `Focusing on ${dailyMission.tasks[0].subject} today. We've optimized your path for ${dailyMission.tasks[0].chapter}.`
                         : 'No mission data yet. Complete a diagnostic or practice session to activate your custom strategy.'}
                     </p>
                     <Button
-                      className="bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-slate-800 rounded-2xl font-black px-12 py-8 text-xl"
+                      className="bg-stone-900 hover:bg-stone-800 rounded-2xl font-black px-12 py-8 text-xl"
                       onClick={() => navigate('/practice')}
                     >
                       Execute Strategy
@@ -690,29 +690,29 @@ export const Dashboard = () => {
                   </div>
                   <div className="flex-1 space-y-4">
                     {(dailyMission?.tasks || []).slice(0, 3).map((task) => (
-                      <div key={task.id} className="flex items-center gap-4 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 hover:border-[#1D9E75] transition-colors">
-                        <div className="w-8 h-8 rounded-full border-2 border-[#1D9E75] flex items-center justify-center bg-white dark:bg-slate-900">
-                          <input type="checkbox" className="w-5 h-5 accent-[#1D9E75] cursor-pointer" readOnly />
+                      <div key={task.id} className="flex items-center gap-4 p-5 bg-[#FCFAF8] rounded-2xl border border-stone-100 hover:border-[#8C5A35] transition-colors">
+                        <div className="w-8 h-8 rounded-full border-2 border-[#8C5A35] flex items-center justify-center bg-[#FCFAF8] ">
+                          <input type="checkbox" className="w-5 h-5 accent-[#8C5A35] cursor-pointer" readOnly />
                         </div>
                         <div>
-                          <span className="text-base font-bold text-slate-700 dark:text-slate-200">{task.title}</span>
-                          <p className="text-xs text-slate-500 font-medium">{task.subject} • 30 mins</p>
+                          <span className="text-base font-bold text-stone-700 ">{task.title}</span>
+                          <p className="text-xs text-stone-500 font-medium">{task.subject} • 30 mins</p>
                         </div>
                       </div>
                     ))}
                     {!dailyMission?.tasks?.length && (
-                      <div className="h-full flex flex-col items-center justify-center p-10 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
-                         <p className="text-sm text-slate-400 font-bold">Tasks will appear after your first activity.</p>
+                      <div className="h-full flex flex-col items-center justify-center p-10 bg-[#FCFAF8] rounded-3xl border-2 border-dashed border-stone-200 ">
+                         <p className="text-sm text-stone-400 font-bold">Tasks will appear after your first activity.</p>
                       </div>
                     )}
                   </div>
                 </div>
               </Card>
 
-              <Card className="p-10 bg-[#1D9E75] text-black border-none shadow-xl rounded-[40px] relative overflow-hidden flex flex-col md:flex-row items-center gap-10">
+              <Card className="p-10 bg-[#8C5A35] text-black border-none shadow-xl rounded-[40px] relative overflow-hidden flex flex-col md:flex-row items-center gap-10">
                 <div className="relative z-10 flex-1">
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="p-4 bg-white/60 backdrop-blur-md rounded-2xl">
+                    <div className="p-4 bg-[#FCFAF8]/60 backdrop-blur-md rounded-2xl">
                       <Target size={32} />
                     </div>
                     <h3 className="text-3xl font-black">Mastery Analytics</h3>
@@ -739,7 +739,7 @@ export const Dashboard = () => {
                   </div>
                 </div>
                 <div className="relative z-10 flex-1 w-full">
-                  <div className="p-8 bg-white/40 backdrop-blur-md rounded-[32px] border border-black/5">
+                  <div className="p-8 bg-[#FCFAF8]/40 backdrop-blur-md rounded-[32px] border border-black/5">
                     <p className="text-lg font-bold leading-relaxed italic text-black/90">
                       {chapterReadiness
                         ? `The algorithm identifies ${chapterReadiness.chapter} as your highest-ROI study focus for this week.`
@@ -755,39 +755,39 @@ export const Dashboard = () => {
                     {reportLoading ? 'Sending Report...' : 'Share Progress with Parents'}
                   </Button>
                 </div>
-                <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-[#FCFAF8]/10 rounded-full blur-3xl -transtone-y-1/2 transtone-x-1/2" />
               </Card>
             </div>
           </section>
 
           {/* Activity Feed */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-              <History className="text-[#1D9E75] mr-3" size={24} />
+            <h2 className="text-2xl font-bold text-[#2C241B] mb-6 flex items-center">
+              <History className="text-[#8C5A35] mr-3" size={24} />
               Recent Learning
             </h2>
-            <Card className="bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-[32px] overflow-hidden">
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            <Card className="bg-[#FCFAF8] border-none shadow-xl rounded-[32px] overflow-hidden">
+              <div className="divide-y divide-stone-100 ">
                 {recentActivity.length > 0 ? (
                   [...recentActivity].reverse().slice(0, 8).map((activity: any, index: number) => (
-                    <div key={index} className="p-8 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-center justify-between">
+                    <div key={index} className="p-8 hover:bg-[#FCFAF8] :bg-stone-800/50 transition-colors flex items-center justify-between">
                       <div className="flex items-center gap-6">
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${activity.action === 'question' ? 'bg-purple-100 text-purple-600' : 'bg-emerald-100 text-emerald-600'
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${activity.action === 'question' ? 'bg-purple-100 text-purple-600' : 'bg-amber-100 text-amber-600'
                           }`}>
                           {activity.action === 'question' ? <Brain size={28} /> : <Target size={28} />}
                         </div>
                         <div>
-                          <p className="font-bold text-lg text-slate-900 dark:text-white">
+                          <p className="font-bold text-lg text-[#2C241B] ">
                             {activity.action === 'question' ? 'AI Consultation' : 'Practice Drill'} in {activity.subject}
                           </p>
-                          <p className="text-sm text-slate-500 font-medium">{activity.chapter}</p>
+                          <p className="text-sm text-stone-500 font-medium">{activity.chapter}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs font-black text-slate-400 mb-1 uppercase tracking-widest">
+                        <p className="text-xs font-black text-stone-400 mb-1 uppercase tracking-widest">
                           {new Date(activity.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                         </p>
-                        <p className="text-xs text-slate-400 font-medium">
+                        <p className="text-xs text-stone-400 font-medium">
                           {new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
@@ -795,11 +795,11 @@ export const Dashboard = () => {
                   ))
                 ) : (
                   <div className="p-20 text-center">
-                    <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <History size={40} className="text-slate-300" />
+                    <div className="w-24 h-24 bg-[#FCFAF8] rounded-full flex items-center justify-center mx-auto mb-6">
+                      <History size={40} className="text-stone-300" />
                     </div>
-                    <p className="text-slate-500 font-bold text-lg">Your study journey starts here.</p>
-                    <Button className="mt-8 bg-[#1D9E75] hover:bg-[#16805d] px-8 py-6 rounded-2xl" onClick={() => navigate('/ask')}>Ask your first question</Button>
+                    <p className="text-stone-500 font-bold text-lg">Your study journey starts here.</p>
+                    <Button className="mt-8 bg-[#8C5A35] hover:bg-[#70482B] px-8 py-6 rounded-2xl" onClick={() => navigate('/ask')}>Ask your first question</Button>
                   </div>
                 )}
               </div>

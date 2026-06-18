@@ -8,11 +8,11 @@
     }
 
     body {
-        @apply bg-slate-50 text-slate-900 antialiased dark:bg-[#020617] dark:text-slate-100;
+        @apply bg-[#FCFAF8] text-[#2C241B] antialiased ;
     }
 
     ::selection {
-        background: rgba(29, 158, 117, 0.22);
+        background: rgba(140, 90, 53, 0.22);
         color: inherit;
     }
 

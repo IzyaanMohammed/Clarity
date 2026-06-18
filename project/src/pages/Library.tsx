@@ -102,7 +102,7 @@ export const Library = () => {
   }, [pastPapers, searchTerm]);
 
   const difficultyStyles: Record<string, string> = {
-    Easy: 'bg-emerald-100 text-emerald-700',
+    Easy: 'bg-amber-100 text-amber-700',
     Medium: 'bg-amber-100 text-amber-700',
     Hard: 'bg-rose-100 text-rose-700',
   };
@@ -150,17 +150,17 @@ export const Library = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+    <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
           <div>
-            <h1 className="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">NCERT Worksheets & Past Papers</h1>
-            <p className="text-slate-500 font-medium">Access practice worksheets, mock sets, and authentic board papers for Class {classFilter}.</p>
+            <h1 className="text-4xl font-black text-[#2C241B] mb-2 tracking-tight">NCERT Worksheets & Past Papers</h1>
+            <p className="text-stone-500 font-medium">Access practice worksheets, mock sets, and authentic board papers for Class {classFilter}.</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex bg-white dark:bg-slate-800 p-1.5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+            <div className="flex bg-[#FCFAF8] p-1.5 rounded-2xl shadow-sm border border-stone-100 ">
               {['8', '9', '10', '11', '12'].map((c) => {
                 const isEnrolled = user?.class ? String(user.class).startsWith(c) : c === '10';
                 const targetClass = (user?.class && String(user.class).startsWith(c)) ? user.class : c;
@@ -176,10 +176,10 @@ export const Library = () => {
                     }}
                     className={`px-5 py-2 rounded-xl text-sm font-black transition-all ${
                       classFilter.startsWith(c)
-                        ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/20'
+                        ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20'
                         : isEnrolled
-                        ? 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700'
-                        : 'text-slate-300 dark:text-slate-600 cursor-not-allowed opacity-50'
+                        ? 'text-stone-500 hover:bg-[#FCFAF8] :bg-stone-700'
+                        : 'text-stone-300 cursor-not-allowed opacity-50'
                     }`}
                   >
                     Class {c}
@@ -191,13 +191,13 @@ export const Library = () => {
             </div>
 
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1D9E75] transition-colors" size={20} />
+              <Search className="absolute left-4 top-1/2 -transtone-y-1/2 text-stone-400 group-focus-within:text-[#8C5A35] transition-colors" size={20} />
               <input
                 type="text"
                 placeholder="Search worksheets or papers..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 pr-6 py-3.5 w-full md:w-72 rounded-2xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-4 focus:ring-[#1D9E75]/10 outline-none transition-all font-bold"
+                className="pl-12 pr-6 py-3.5 w-full md:w-72 rounded-2xl border border-stone-100 bg-[#FCFAF8] text-[#2C241B] focus:ring-4 focus:ring-[#8C5A35]/10 outline-none transition-all font-bold"
               />
             </div>
           </div>
@@ -209,8 +209,8 @@ export const Library = () => {
               key={subject}
               onClick={() => setSubjectFilter(subject)}
               className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${resources.subject === subject
-                ? 'bg-[#1D9E75] text-white'
-                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700'
+                ? 'bg-[#8C5A35] text-white'
+                : 'bg-[#FCFAF8] text-stone-600 border border-stone-100 '
                 }`}
             >
               {subject}
@@ -218,21 +218,21 @@ export const Library = () => {
           ))}
         </div>
 
-        <Card className="p-5 mb-8 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-slate-800 dark:to-slate-900 border border-sky-100 dark:border-slate-700 rounded-3xl">
-          <p className="text-sm font-bold text-slate-700 dark:text-slate-200 text-center">
+        <Card className="p-5 mb-8 bg-gradient-to-r from-sky-50 to-amber-50 border border-sky-100 rounded-3xl">
+          <p className="text-sm font-bold text-stone-700 text-center">
             Select Class, then Subject, then generate practice worksheets or solve authentic CBSE past papers.
           </p>
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
-          <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
-            <h3 className="text-lg font-black text-slate-900 dark:text-white mb-4">Auto-Loaded Chapters</h3>
+          <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
+            <h3 className="text-lg font-black text-[#2C241B] mb-4">Auto-Loaded Chapters</h3>
             <input
               type="text"
               placeholder="Search chapter name..."
               value={chapterSearch}
               onChange={(e) => setChapterSearch(e.target.value)}
-              className="w-full mb-4 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700"
+              className="w-full mb-4 px-4 py-2 rounded-xl bg-[#FCFAF8] text-sm text-[#2C241B] border border-stone-200 "
             />
             <div className="flex flex-wrap gap-2">
               {filteredChapters.map((chapter) => (
@@ -242,20 +242,20 @@ export const Library = () => {
                     setSelectedChapter(chapter);
                     navigate('/ask', { state: { subject: resources.subject, chapter } });
                   }}
-                  className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-[#1D9E75] hover:text-white transition-all"
+                  className="px-3 py-2 rounded-xl bg-[#FCFAF8] text-xs font-bold text-stone-700 hover:bg-[#8C5A35] hover:text-white transition-all"
                 >
                   {chapter}
                 </button>
               ))}
               {filteredChapters.length === 0 && (
-                <p className="text-sm text-slate-500">No chapter matched your search.</p>
+                <p className="text-sm text-stone-500">No chapter matched your search.</p>
               )}
             </div>
           </Card>
 
-          <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
+          <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
             <div className="flex items-center justify-between mb-4 gap-3">
-              <h3 className="text-lg font-black text-slate-900 dark:text-white">Worksheet Sets</h3>
+              <h3 className="text-lg font-black text-[#2C241B] ">Worksheet Sets</h3>
               <Button
                 variant="outline"
                 className="h-9 px-3 rounded-xl text-xs"
@@ -268,17 +268,17 @@ export const Library = () => {
             </div>
             <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
               {loadingWorksheets && (
-                <p className="text-sm text-slate-500">Loading internet worksheets...</p>
+                <p className="text-sm text-stone-500">Loading internet worksheets...</p>
               )}
               {filteredWorksheets.length === 0 ? (
-                <p className="text-sm text-slate-500">No worksheet dataset found for this class and subject.</p>
+                <p className="text-sm text-stone-500">No worksheet dataset found for this class and subject.</p>
               ) : filteredWorksheets.map((worksheet) => (
                 <div
                   key={worksheet.id}
-                  className="p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50"
+                  className="p-4 rounded-2xl border border-stone-100 bg-[#FCFAF8] "
                 >
-                  <p className="text-sm font-black text-slate-900 dark:text-white">{worksheet.title}</p>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-sm font-black text-[#2C241B] ">{worksheet.title}</p>
+                  <p className="text-xs text-stone-500 mt-1">
                     {worksheet.year > 0 ? `Board ${worksheet.year}` : 'Clarity Generated'} • {worksheet.chapter}
                   </p>
                   <div className="mt-2 flex items-center gap-2">
@@ -288,7 +288,7 @@ export const Library = () => {
                     <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-indigo-100 text-indigo-700">
                       {worksheet.question_type}
                     </span>
-                    <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-200 text-slate-700">
+                    <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-[#E8E4DB] text-stone-700">
                       {worksheet.board}
                     </span>
                   </div>
@@ -322,36 +322,36 @@ export const Library = () => {
           </Card>
         </div>
 
-        <Card className="p-6 mt-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
+        <Card className="p-6 mt-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
           <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
-            <h3 className="text-lg font-black text-slate-900 dark:text-white">Actual Past Papers</h3>
-            <span className="text-xs font-black uppercase tracking-wider text-slate-500">
+            <h3 className="text-lg font-black text-[#2C241B] ">Actual Past Papers</h3>
+            <span className="text-xs font-black uppercase tracking-wider text-stone-500">
               Class {classFilter} • {resources.subject}
             </span>
           </div>
 
           {loadingPapers ? (
-            <p className="text-sm text-slate-500">Loading past papers...</p>
+            <p className="text-sm text-stone-500">Loading past papers...</p>
           ) : filteredPastPapers.length === 0 ? (
-            <p className="text-sm text-slate-500">No dataset papers found for this class and subject yet.</p>
+            <p className="text-sm text-stone-500">No dataset papers found for this class and subject yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredPastPapers.map((paper) => (
                 <div
                   key={paper.id}
-                  className="p-4 rounded-2xl border border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50"
+                  className="p-4 rounded-2xl border border-stone-100 bg-[#FCFAF8] "
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="text-sm font-black text-slate-900 dark:text-white">{paper.chapter}</p>
-                      <p className="text-xs text-slate-500 mt-1">{paper.board} {paper.year}</p>
+                      <p className="text-sm font-black text-[#2C241B] ">{paper.chapter}</p>
+                      <p className="text-xs text-stone-500 mt-1">{paper.board} {paper.year}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${difficultyStyles[paper.difficulty] || 'bg-slate-200 text-slate-700'}`}>
+                    <span className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${difficultyStyles[paper.difficulty] || 'bg-[#E8E4DB] text-stone-700'}`}>
                       {paper.difficulty}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-500 mt-3">{paper.questions.length} questions in dataset</p>
+                  <p className="text-xs text-stone-500 mt-3">{paper.questions.length} questions in dataset</p>
 
                   <Button
                     className="mt-3 h-9 px-3 rounded-xl text-xs"

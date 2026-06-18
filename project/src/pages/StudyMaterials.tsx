@@ -102,12 +102,12 @@ export const StudyMaterials = () => {
         if (!table) return null;
 
         return (
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
                 <table className="min-w-full text-left text-sm">
-                    <thead className="bg-slate-100 dark:bg-slate-800">
+                    <thead className="bg-[#F2EFE9] ">
                         <tr>
                             {table.headers.map((header) => (
-                                <th key={header} className="px-4 py-3 font-black text-slate-700 dark:text-slate-200 whitespace-nowrap">
+                                <th key={header} className="px-4 py-3 font-black text-stone-700 whitespace-nowrap">
                                     {header}
                                 </th>
                             ))}
@@ -115,9 +115,9 @@ export const StudyMaterials = () => {
                     </thead>
                     <tbody>
                         {table.rows.map((row, rowIndex) => (
-                            <tr key={rowIndex} className="border-t border-slate-100 dark:border-slate-800">
+                            <tr key={rowIndex} className="border-t border-stone-100 ">
                                 {row.map((cell, cellIndex) => (
-                                    <td key={`${rowIndex}-${cellIndex}`} className="px-4 py-3 text-slate-700 dark:text-slate-200 align-top">
+                                    <td key={`${rowIndex}-${cellIndex}`} className="px-4 py-3 text-stone-700 align-top">
                                         {cell}
                                     </td>
                                 ))}
@@ -144,52 +144,52 @@ export const StudyMaterials = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+        <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
             <Navbar />
             <main className="max-w-7xl mx-auto px-6 py-10">
                 <div className="mb-8">
-                    <h1 className="text-4xl font-black text-slate-900 dark:text-white">Total Study Materials</h1>
-                    <p className="text-slate-500 font-medium mt-2">All OCR notes, saved outputs, and revision materials in one place.</p>
+                    <h1 className="text-4xl font-black text-[#2C241B] ">Total Study Materials</h1>
+                    <p className="text-stone-500 font-medium mt-2">All OCR notes, saved outputs, and revision materials in one place.</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
-                        <div className="mb-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                            <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-3">Save Online Resource</p>
+                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
+                        <div className="mb-4 p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                            <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-3">Save Online Resource</p>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                 <input
                                     value={linkTitle}
                                     onChange={(e) => setLinkTitle(e.target.value)}
                                     placeholder="Resource title"
-                                    className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm"
+                                    className="px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm"
                                 />
                                 <input
                                     value={linkUrl}
                                     onChange={(e) => setLinkUrl(e.target.value)}
                                     placeholder="https://..."
-                                    className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm md:col-span-2"
+                                    className="px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm md:col-span-2"
                                 />
                             </div>
                             <Button className="rounded-xl mt-3" onClick={saveResourceLink}>Save Link</Button>
                         </div>
 
-                        <div className="mb-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                            <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-3">Search Materials</p>
+                        <div className="mb-4 p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                            <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-3">Search Materials</p>
                             <input
                                 value={materialQuery}
                                 onChange={(e) => setMaterialQuery(e.target.value)}
                                 placeholder="Search title, subject, chapter, or text"
-                                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm"
+                                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm"
                             />
                         </div>
 
-                        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                            <BookOpen size={20} className="text-[#1D9E75]" />
+                        <h2 className="text-xl font-black text-[#2C241B] mb-4 flex items-center gap-2">
+                            <BookOpen size={20} className="text-[#8C5A35]" />
                             Video Library
                         </h2>
                         <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1 mb-6">
                             {videoLibraryItems.length === 0 && (
-                                <p className="text-sm text-slate-500">No video cards yet. Use Studio auto-fetch to build your Video Library.</p>
+                                <p className="text-sm text-stone-500">No video cards yet. Use Studio auto-fetch to build your Video Library.</p>
                             )}
                             {videoLibraryItems.map((item) => {
                                 const payload = parseVideoLibraryPayload(item.content);
@@ -197,18 +197,18 @@ export const StudyMaterials = () => {
                                 const quizzes = payload?.quiz || [];
                                 const topTip = moments[0]?.coach_note || 'Play, pause, and write one board-style answer from the first key moment.';
                                 return (
-                                    <div key={item.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                                    <div key={item.id} className="p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
                                         <div className="flex items-center justify-between gap-2">
                                             <div>
-                                                <p className="text-sm font-black text-slate-900 dark:text-white">{item.title}</p>
-                                                <p className="text-xs text-slate-500 mt-1">{item.subject} • {item.chapter}</p>
+                                                <p className="text-sm font-black text-[#2C241B] ">{item.title}</p>
+                                                <p className="text-xs text-stone-500 mt-1">{item.subject} • {item.chapter}</p>
                                             </div>
                                             <Button variant="ghost" className="rounded-xl" onClick={() => removeItem(item.id)}>
                                                 <Trash2 size={14} />
                                             </Button>
                                         </div>
                                         {item.url && (
-                                            <div className="mt-3 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-black">
+                                            <div className="mt-3 rounded-xl overflow-hidden border border-stone-200 bg-black">
                                                 <iframe
                                                     src={item.url}
                                                     title={item.title}
@@ -219,29 +219,29 @@ export const StudyMaterials = () => {
                                             </div>
                                         )}
                                         <div className="mt-3 flex flex-wrap gap-2">
-                                            <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-emerald-100 text-emerald-700">{moments.length} tips/hints</span>
+                                            <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-amber-100 text-amber-700">{moments.length} tips/hints</span>
                                             <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-indigo-100 text-indigo-700">{quizzes.length} quiz questions</span>
                                         </div>
-                                        <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">Tip: {topTip}</p>
+                                        <p className="mt-2 text-xs text-stone-600 ">Tip: {topTip}</p>
                                     </div>
                                 );
                             })}
                         </div>
 
-                        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                            <FileText size={20} className="text-[#1D9E75]" />
+                        <h2 className="text-xl font-black text-[#2C241B] mb-4 flex items-center gap-2">
+                            <FileText size={20} className="text-[#8C5A35]" />
                             OCR and Saved Materials
                         </h2>
                         <div className="space-y-3 max-h-[560px] overflow-y-auto pr-1">
                             {standardMaterials.length === 0 && (
-                                <p className="text-sm text-slate-500">{materialQuery ? 'No matching materials found.' : 'No materials saved yet. Use OCR page or Studio (YouTube AI + Mindmap) to store outputs.'}</p>
+                                <p className="text-sm text-stone-500">{materialQuery ? 'No matching materials found.' : 'No materials saved yet. Use OCR page or Studio (YouTube AI + Mindmap) to store outputs.'}</p>
                             )}
                             {standardMaterials.map((item) => (
-                                <div key={item.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                                <div key={item.id} className="p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
                                     <div className="flex items-center justify-between gap-2">
                                         <div>
-                                            <p className="text-sm font-black text-slate-900 dark:text-white">{item.title}</p>
-                                            <p className="text-xs text-slate-500 mt-1">{new Date(item.createdAt).toLocaleString()}</p>
+                                            <p className="text-sm font-black text-[#2C241B] ">{item.title}</p>
+                                            <p className="text-xs text-stone-500 mt-1">{new Date(item.createdAt).toLocaleString()}</p>
                                         </div>
                                         <Button variant="ghost" className="rounded-xl" onClick={() => removeItem(item.id)}>
                                             <Trash2 size={14} />
@@ -249,12 +249,12 @@ export const StudyMaterials = () => {
                                     </div>
                                     {item.content && (
                                         <div className="mt-3">
-                                            <p className={`text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap ${expandedMaterialId === item.id ? '' : 'line-clamp-6'}`}>
+                                            <p className={`text-xs text-stone-600 whitespace-pre-wrap ${expandedMaterialId === item.id ? '' : 'line-clamp-6'}`}>
                                                 {item.content}
                                             </p>
                                             <Button
                                                 variant="ghost"
-                                                className="mt-2 h-auto px-0 text-xs font-black text-[#1D9E75]"
+                                                className="mt-2 h-auto px-0 text-xs font-black text-[#8C5A35]"
                                                 onClick={() => setExpandedMaterialId((current) => current === item.id ? null : item.id)}
                                             >
                                                 {expandedMaterialId === item.id ? 'Show Less' : 'View Full Content'}
@@ -265,7 +265,7 @@ export const StudyMaterials = () => {
                                         <img
                                             src={item.imageDataUrl}
                                             alt={item.title}
-                                            className="mt-3 w-full max-h-44 object-cover rounded-xl border border-slate-200 dark:border-slate-700"
+                                            className="mt-3 w-full max-h-44 object-cover rounded-xl border border-stone-200 "
                                         />
                                     )}
                                     {item.url && (
@@ -287,37 +287,37 @@ export const StudyMaterials = () => {
                         </div>
                     </Card>
 
-                    <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
-                        <div className="mb-4 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                            <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-3">Search Saved Items</p>
+                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
+                        <div className="mb-4 p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                            <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-3">Search Saved Items</p>
                             <input
                                 value={bookmarkQuery}
                                 onChange={(e) => setBookmarkQuery(e.target.value)}
                                 placeholder="Search subject, chapter, question, or answer"
-                                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm"
+                                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm"
                             />
                         </div>
 
-                        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                            <BookOpen size={20} className="text-[#1D9E75]" />
+                        <h2 className="text-xl font-black text-[#2C241B] mb-4 flex items-center gap-2">
+                            <BookOpen size={20} className="text-[#8C5A35]" />
                             Flashcards and Saved Answers
                         </h2>
                         <div className="space-y-3 max-h-[560px] overflow-y-auto pr-1">
                             {filteredBookmarks.length === 0 && (
-                                <p className="text-sm text-slate-500">{bookmarkQuery ? 'No matching saved items found.' : 'No saved flashcards/answers yet. Save from Ask AI or Flashcards.'}</p>
+                                <p className="text-sm text-stone-500">{bookmarkQuery ? 'No matching saved items found.' : 'No saved flashcards/answers yet. Save from Ask AI or Flashcards.'}</p>
                             )}
                             {filteredBookmarks.map((item) => (
-                                <div key={item.id} className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                                    <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">{item.type}</p>
-                                    <p className="text-sm font-black text-slate-900 dark:text-white mt-1">{item.subject} • {item.chapter}</p>
-                                    {item.question && <p className="text-xs text-slate-600 dark:text-slate-300 mt-2">Q: {item.question}</p>}
+                                <div key={item.id} className="p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                                    <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35]">{item.type}</p>
+                                    <p className="text-sm font-black text-[#2C241B] mt-1">{item.subject} • {item.chapter}</p>
+                                    {item.question && <p className="text-xs text-stone-600 mt-2">Q: {item.question}</p>}
                                     <div className="mt-2">
-                                        <p className={`text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap ${expandedBookmarkId === item.id ? '' : 'line-clamp-5'}`}>
+                                        <p className={`text-xs text-stone-600 whitespace-pre-wrap ${expandedBookmarkId === item.id ? '' : 'line-clamp-5'}`}>
                                             {item.answer}
                                         </p>
                                         <Button
                                             variant="ghost"
-                                            className="mt-2 h-auto px-0 text-xs font-black text-[#1D9E75]"
+                                            className="mt-2 h-auto px-0 text-xs font-black text-[#8C5A35]"
                                             onClick={() => setExpandedBookmarkId((current) => current === item.id ? null : item.id)}
                                         >
                                             {expandedBookmarkId === item.id ? 'Show Less' : 'View Full Content'}
@@ -362,103 +362,103 @@ export const StudyMaterials = () => {
                             <img
                                 src={activeMaterial.imageDataUrl}
                                 alt={activeMaterial.title}
-                                className="w-full max-h-[320px] object-contain rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900"
+                                className="w-full max-h-[320px] object-contain rounded-2xl border border-stone-200 bg-[#FCFAF8] "
                             />
                         )}
-                        <div className="max-h-[60vh] overflow-y-auto space-y-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
+                        <div className="max-h-[60vh] overflow-y-auto space-y-5 rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
                             {activeMaterial.type === 'summary' && activeMaterial.content ? (
                                 <div className="space-y-5">
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Core Ideas</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Core Ideas</h4>
                                         {renderTableBlock(activeMaterial.content, 'Core Ideas', ['Key Terms', 'Board Focus', 'Quick Recall', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Core Ideas', ['Key Terms', 'Board Focus', 'Quick Recall', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Key Terms</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Key Terms</h4>
                                         {renderTableBlock(activeMaterial.content, 'Key Terms', ['Board Focus', 'Quick Recall', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Key Terms', ['Board Focus', 'Quick Recall', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Board Focus</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Board Focus</h4>
                                         {renderTableBlock(activeMaterial.content, 'Board Focus', ['Quick Recall', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Board Focus', ['Quick Recall', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Quick Recall</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Quick Recall</h4>
                                         <MarkdownContent content={formatQuickRecallBlock(extractMarkdownSection(activeMaterial.content, 'Quick Recall', ['Exam Tip']))} />
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Exam Tip</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Exam Tip</h4>
                                         <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])} />
                                     </section>
                                 </div>
                             ) : activeMaterial.type === 'formula' && activeMaterial.content ? (
                                 <div className="space-y-5">
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Formulas</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Formulas</h4>
                                         {renderTableBlock(activeMaterial.content, 'Formulas', ['Definitions', 'Units', 'Common Mistakes', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Formulas', ['Definitions', 'Units', 'Common Mistakes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Definitions</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Definitions</h4>
                                         {renderTableBlock(activeMaterial.content, 'Definitions', ['Units', 'Common Mistakes', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Definitions', ['Units', 'Common Mistakes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Units</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Units</h4>
                                         {renderTableBlock(activeMaterial.content, 'Units', ['Common Mistakes', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Units', ['Common Mistakes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Common Mistakes</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Common Mistakes</h4>
                                         {renderTableBlock(activeMaterial.content, 'Common Mistakes', ['Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Common Mistakes', ['Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Exam Tip</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Exam Tip</h4>
                                         <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])} />
                                     </section>
                                 </div>
                             ) : activeMaterial.type === 'plan' && activeMaterial.content ? (
                                 <div className="space-y-5">
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Morning Sprint</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Morning Sprint</h4>
                                         {renderTableBlock(activeMaterial.content, 'Morning Sprint', ['Afternoon Deep Work', 'Evening Review', 'Priority Fixes', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Morning Sprint', ['Afternoon Deep Work', 'Evening Review', 'Priority Fixes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Afternoon Deep Work</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Afternoon Deep Work</h4>
                                         {renderTableBlock(activeMaterial.content, 'Afternoon Deep Work', ['Evening Review', 'Priority Fixes', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Afternoon Deep Work', ['Evening Review', 'Priority Fixes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Evening Review</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Evening Review</h4>
                                         {renderTableBlock(activeMaterial.content, 'Evening Review', ['Priority Fixes', 'Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Evening Review', ['Priority Fixes', 'Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Priority Fixes</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Priority Fixes</h4>
                                         {renderTableBlock(activeMaterial.content, 'Priority Fixes', ['Exam Tip']) || (
                                             <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Priority Fixes', ['Exam Tip'])} />
                                         )}
                                     </section>
                                     <section className="space-y-3">
-                                        <h4 className="text-base font-black text-slate-900 dark:text-white">Exam Tip</h4>
+                                        <h4 className="text-base font-black text-[#2C241B] ">Exam Tip</h4>
                                         <MarkdownContent content={extractMarkdownSection(activeMaterial.content, 'Exam Tip', [])} />
                                     </section>
                                 </div>
                             ) : (
-                                <div className="prose prose-slate dark:prose-invert max-w-none">
+                                <div className="prose prose-slate max-w-none">
                                     <MarkdownContent content={activeMaterial.content || 'No text content available.'} />
                                 </div>
                             )}
@@ -487,9 +487,9 @@ export const StudyMaterials = () => {
                                 Download .md
                             </Button>
                         </div>
-                        <div className="max-h-[55vh] overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4">
-                            <div className="prose prose-slate dark:prose-invert max-w-none">
-                                <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">{activeBookmark.type}</p>
+                        <div className="max-h-[55vh] overflow-y-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                            <div className="prose prose-slate max-w-none">
+                                <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35]">{activeBookmark.type}</p>
                                 <h4>{activeBookmark.subject} • {activeBookmark.chapter}</h4>
                                 {activeBookmark.question && <p><strong>Question:</strong> {activeBookmark.question}</p>}
                                 <MarkdownContent content={activeBookmark.answer || 'No answer text available.'} />

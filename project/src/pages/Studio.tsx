@@ -764,24 +764,24 @@ export const Studio = () => {
     void selfConfidence;
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(29,158,117,0.08),_transparent_32%),linear-gradient(180deg,_#f8fafc_0%,_#f6f8fb_48%,_#eef2f7_100%)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(29,158,117,0.10),_transparent_28%),linear-gradient(180deg,_#020617_0%,_#07111f_100%)] transition-colors duration-300">
+        <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(29,158,117,0.08),_transparent_32%),linear-gradient(180deg,_#f8fafc_0%,_#f6f8fb_48%,_#eef2f7_100%)] (circle_at_top_left,_rgba(29,158,117,0.10),_transparent_28%),linear-gradient(180deg,_#2C241B_0%,_#07111f_100%)] transition-colors duration-300">
             <Navbar />
             <main className="max-w-[1600px] mx-auto px-4 md:px-6 py-6 md:py-8">
                 <div className="mb-4 flex items-center justify-between gap-4 flex-wrap">
                     <div>
-                        <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#1D9E75] mb-1">Workspace / Class {classNum}</p>
-                        <h1 className="text-4xl font-black text-slate-900 dark:text-white">Studio</h1>
+                        <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#8C5A35] mb-1">Workspace / Class {classNum}</p>
+                        <h1 className="text-4xl font-black text-[#2C241B] ">Studio</h1>
                     </div>
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-sm font-black border border-emerald-200 dark:border-emerald-800 shadow-sm">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-700 text-sm font-black border border-amber-200 shadow-sm">
                         <Sparkles size={16} />
                         Notebook Tutor Mode
                     </div>
                 </div>
 
-                <Card className="mb-6 p-4 md:p-5 bg-white/92 dark:bg-[#0f172a] border-none shadow-xl rounded-[28px] backdrop-blur-sm">
+                <Card className="mb-6 p-4 md:p-5 bg-[#FCFAF8]/92 border-none shadow-xl rounded-[28px] backdrop-blur-sm">
                     <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1.1fr_1fr_auto] gap-3 items-end">
                         <label className="block">
-                            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2 block">Subject</span>
+                            <span className="text-[11px] font-black uppercase tracking-wider text-stone-400 mb-2 block">Subject</span>
                             <select
                                 value={subject}
                                 onChange={(e) => {
@@ -790,7 +790,7 @@ export const Studio = () => {
                                     setChapter(nextChapters[0] || '');
                                     resetVideoWorkspace();
                                 }}
-                                className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-bold"
+                                className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold"
                             >
                                 {subjects.map((entry) => (
                                     <option key={entry} value={entry}>{entry}</option>
@@ -798,14 +798,14 @@ export const Studio = () => {
                             </select>
                         </label>
                         <label className="block">
-                            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2 block">Chapter</span>
+                            <span className="text-[11px] font-black uppercase tracking-wider text-stone-400 mb-2 block">Chapter</span>
                             <select
                                 value={chapter}
                                 onChange={(e) => {
                                     setChapter(e.target.value);
                                     resetVideoWorkspace();
                                 }}
-                                className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-bold"
+                                className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold"
                             >
                                 {chapters.map((entry) => (
                                     <option key={entry} value={entry}>{entry}</option>
@@ -813,61 +813,61 @@ export const Studio = () => {
                             </select>
                         </label>
                         <div>
-                            <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2 block">Topic Focus</span>
-                            <div className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold text-slate-700 dark:text-slate-200">
+                            <span className="text-[11px] font-black uppercase tracking-wider text-stone-400 mb-2 block">Topic Focus</span>
+                            <div className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-semibold text-stone-700 ">
                                 Auto from selected chapter
                             </div>
                         </div>
-                        <div className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 font-black text-sm">
+                        <div className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-50 text-amber-700 font-black text-sm">
                             <Layers3 size={16} />
                             Create Workspace
                         </div>
                     </div>
 
                     <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
-                        <div className="inline-flex rounded-full border border-slate-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/80 backdrop-blur-sm p-1 shadow-sm">
+                        <div className="inline-flex rounded-full border border-stone-200 bg-[#FCFAF8]/85 backdrop-blur-sm p-1 shadow-sm">
                             <button
                                 onClick={() => setActiveStudioTab('video')}
-                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'video' ? 'bg-[#1D9E75] text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'video' ? 'bg-[#8C5A35] text-white shadow-md' : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800'}`}
                             >
                                 Video Assistant
                             </button>
                             <button
                                 onClick={() => setActiveStudioTab('mindmap')}
-                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'mindmap' ? 'bg-[#1D9E75] text-white shadow-md' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'mindmap' ? 'bg-[#8C5A35] text-white shadow-md' : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800'}`}
                             >
                                 Mindmap
                             </button>
                         </div>
-                        <p className="text-xs font-black text-slate-500">Saved this session: {savedVideoCount} video card(s)</p>
+                        <p className="text-xs font-black text-stone-500">Saved this session: {savedVideoCount} video card(s)</p>
                     </div>
                 </Card>
 
                 <section className="space-y-8">
                     {activeStudioTab === 'video' ? (
-                        <Card className="p-5 md:p-6 bg-white/92 dark:bg-[#0f172a] border-none shadow-xl rounded-[34px] backdrop-blur-sm">
+                        <Card className="p-5 md:p-6 bg-[#FCFAF8]/92 border-none shadow-xl rounded-[34px] backdrop-blur-sm">
                             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
                                 <div>
-                                    <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                                        <Youtube size={20} className="text-[#1D9E75]" />
+                                    <h2 className="text-xl font-black text-[#2C241B] flex items-center gap-2">
+                                        <Youtube size={20} className="text-[#8C5A35]" />
                                         YouTube AI Assistant
                                     </h2>
-                                    <p className="text-sm text-slate-500 mt-1">Pro Max only. Fetch by click and save into Video Library.</p>
+                                    <p className="text-sm text-stone-500 mt-1">Pro Max only. Fetch by click and save into Video Library.</p>
                                 </div>
                             </div>
 
                             {!videoStack && !loadingVideoStack && (
-                                <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-4 mb-4">
-                                    <p className="text-sm text-slate-600 dark:text-slate-300">No video loaded yet. Click <span className="font-black">Fetch Current Chapter Video</span> to start.</p>
+                                <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4 mb-4">
+                                    <p className="text-sm text-stone-600 ">No video loaded yet. Click <span className="font-black">Fetch Current Chapter Video</span> to start.</p>
                                 </div>
                             )}
 
                             {loadingVideoStack ? (
-                                <p className="text-sm text-slate-500">Finding best videos and preparing learning assist...</p>
+                                <p className="text-sm text-stone-500">Finding best videos and preparing learning assist...</p>
                             ) : !videoStack ? (
                                 <div>
-                                    <p className="text-sm text-slate-500 mb-4">No video stack available for this chapter right now.</p>
-                                    <button onClick={runFetchCurrentChapterVideo} disabled={manualFetchLoading} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#1D9E75] text-white font-black hover:bg-[#16805d] transition-colors disabled:opacity-60">
+                                    <p className="text-sm text-stone-500 mb-4">No video stack available for this chapter right now.</p>
+                                    <button onClick={runFetchCurrentChapterVideo} disabled={manualFetchLoading} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#8C5A35] text-white font-black hover:bg-[#70482B] transition-colors disabled:opacity-60">
                                         <Youtube size={20} />
                                         {manualFetchLoading ? 'Fetching video...' : 'Fetch Current Chapter Video'}
                                     </button>
@@ -876,7 +876,7 @@ export const Studio = () => {
                                 <div className="space-y-8">
                                     {/* Top: Massive Full-Width Video Player */}
                                     <div className="w-full">
-                                        <div className="rounded-[42px] overflow-hidden border border-slate-200 dark:border-slate-700 bg-black shadow-[0_40px_120px_rgba(15,23,42,0.25)]">
+                                        <div className="rounded-[42px] overflow-hidden border border-stone-200 bg-black shadow-[0_40px_120px_rgba(15,23,42,0.25)]">
                                             <div ref={playerHostRef} className="w-full aspect-video min-h-[600px]" />
                                         </div>
                                         
@@ -885,10 +885,10 @@ export const Studio = () => {
                                             <div className="flex-1 space-y-6">
                                                 <div className="px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                                     <div>
-                                                        <h2 className="text-3xl font-black text-slate-900 dark:text-white">
+                                                        <h2 className="text-3xl font-black text-[#2C241B] ">
                                                             {playableVideos[activeVideoIndex]?.title || 'Loading video...'}
                                                         </h2>
-                                                        <p className="text-sm text-slate-500 mt-2 flex items-center gap-2">
+                                                        <p className="text-sm text-stone-500 mt-2 flex items-center gap-2">
                                                             <Youtube size={16} className="text-rose-500" />
                                                             {playableVideos[activeVideoIndex]?.channel || 'YouTube'}
                                                         </p>
@@ -896,7 +896,7 @@ export const Studio = () => {
                                                     <Button 
                                                         onClick={saveCurrentVideoToLibrary}
                                                         variant="primary"
-                                                        className="rounded-2xl px-6 py-3 font-black flex items-center gap-2 shadow-lg shadow-[#1D9E75]/20 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap self-start sm:self-auto"
+                                                        className="rounded-2xl px-6 py-3 font-black flex items-center gap-2 shadow-lg shadow-[#8C5A35]/20 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap self-start sm:self-auto"
                                                     >
                                                         <Bookmark size={18} />
                                                         Save Video
@@ -904,37 +904,37 @@ export const Studio = () => {
                                                 </div>
 
                                                 {/* Live Clarity Coach (Full Width below video) */}
-                                                <div className={`rounded-[32px] border p-8 transition-all ${tutorPulse ? 'border-emerald-400 bg-emerald-100/85 dark:bg-emerald-900/30 shadow-lg shadow-emerald-500/10' : 'border-slate-200 dark:border-slate-800 bg-white/92 dark:bg-[#0f172a] shadow-xl rounded-[34px] backdrop-blur-sm'}`}>
+                                                <div className={`rounded-[32px] border p-8 transition-all ${tutorPulse ? 'border-amber-400 bg-amber-100/85 shadow-lg shadow-amber-500/10' : 'border-stone-200 bg-[#FCFAF8]/92 shadow-xl rounded-[34px] backdrop-blur-sm'}`}>
                                                     <div className="flex items-center justify-between gap-4 mb-6">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="w-10 h-10 rounded-2xl bg-[#1D9E75] text-white flex items-center justify-center shadow-md">
+                                                            <div className="w-10 h-10 rounded-2xl bg-[#8C5A35] text-white flex items-center justify-center shadow-md">
                                                                 <Brain size={20} />
                                                             </div>
                                                             <div>
-                                                                <p className="text-[10px] font-black uppercase tracking-widest text-[#1D9E75]">Live Clarity Coach</p>
-                                                                <h3 className="text-xl font-black text-slate-900 dark:text-white">Unexpected Tricky Points & Board Exam Traps</h3>
+                                                                <p className="text-[10px] font-black uppercase tracking-widest text-[#8C5A35]">Live Clarity Coach</p>
+                                                                <h3 className="text-xl font-black text-[#2C241B] ">Unexpected Tricky Points & Board Exam Traps</h3>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-2">
-                                                            <div className={`w-3.5 h-3.5 rounded-full ${tutorPulse ? 'bg-emerald-500 animate-pulse' : 'bg-slate-350 dark:bg-slate-600'}`} />
-                                                            <span className="text-xs font-black uppercase tracking-wider text-slate-500">Live Sync</span>
+                                                            <div className={`w-3.5 h-3.5 rounded-full ${tutorPulse ? 'bg-amber-500 animate-pulse' : 'bg-stone-350 '}`} />
+                                                            <span className="text-xs font-black uppercase tracking-wider text-stone-500">Live Sync</span>
                                                         </div>
                                                     </div>
 
                                                     {loadingVideoAssist ? (
                                                         <div className="py-12 text-center flex flex-col items-center justify-center">
-                                                            <div className="w-10 h-10 rounded-full border-4 border-[#1D9E75] border-t-transparent animate-spin mb-4" />
-                                                            <p className="text-xs font-black uppercase tracking-widest text-slate-500 animate-pulse">Syncing Board Insights & Hints...</p>
+                                                            <div className="w-10 h-10 rounded-full border-4 border-[#8C5A35] border-t-transparent animate-spin mb-4" />
+                                                            <p className="text-xs font-black uppercase tracking-widest text-stone-500 animate-pulse">Syncing Board Insights & Hints...</p>
                                                         </div>
                                                     ) : videoAssist?.key_moments?.[activeMomentIndex] ? (
                                                         <div className="space-y-6">
                                                             {/* Subtopic header */}
-                                                            <div className="border-b border-slate-100 dark:border-slate-800/80 pb-3 flex items-center justify-between gap-3 flex-wrap">
-                                                                <h4 className="text-lg font-black text-slate-950 dark:text-white">
+                                                            <div className="border-b border-stone-100 pb-3 flex items-center justify-between gap-3 flex-wrap">
+                                                                <h4 className="text-lg font-black text-stone-950 ">
                                                                     {videoAssist.key_moments[activeMomentIndex].subtopic}
                                                                 </h4>
                                                                 {videoAssist.key_moments[activeMomentIndex].timestamp_label && (
-                                                                    <span className="px-3 py-1 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-wider border border-indigo-200/20 dark:border-indigo-800/20">
+                                                                    <span className="px-3 py-1 rounded-xl bg-indigo-50 text-indigo-600 text-xs font-black uppercase tracking-wider border border-indigo-200/20 ">
                                                                         Timestamp: {videoAssist.key_moments[activeMomentIndex].timestamp_label}
                                                                     </span>
                                                                 )}
@@ -944,30 +944,30 @@ export const Studio = () => {
                                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                                 {/* Left Panel: Hint and Explanation */}
                                                                 <div className="space-y-4">
-                                                                    <div className="p-5 rounded-2xl bg-[#1D9E75]/10 dark:bg-[#1D9E75]/5 border border-[#1D9E75]/35">
-                                                                        <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75] mb-2 flex items-center gap-1.5">
+                                                                    <div className="p-5 rounded-2xl bg-[#8C5A35]/10 border border-[#8C5A35]/35">
+                                                                        <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-2 flex items-center gap-1.5">
                                                                             <Sparkles size={14} className="animate-pulse" />
                                                                             Live Coach Action Tip
                                                                         </p>
-                                                                        <p className="text-base font-bold text-slate-800 dark:text-slate-200 leading-relaxed italic">
+                                                                        <p className="text-base font-bold text-[#3E352B] leading-relaxed italic">
                                                                             "{videoAssist.key_moments[activeMomentIndex].coach_note}"
                                                                         </p>
                                                                     </div>
 
-                                                                    <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                                                                        <p className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
+                                                                    <div className="p-5 rounded-2xl bg-[#FCFAF8] border border-stone-200 ">
+                                                                        <p className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2">
                                                                             Core Concept Explanation
                                                                         </p>
-                                                                        <p className="text-sm font-bold text-slate-700 dark:text-slate-350 leading-relaxed">
+                                                                        <p className="text-sm font-bold text-stone-700 leading-relaxed">
                                                                             {videoAssist.key_moments[activeMomentIndex].important_point}
                                                                         </p>
                                                                         
                                                                         {/* Keywords */}
                                                                         {videoAssist.key_moments[activeMomentIndex].keywords && videoAssist.key_moments[activeMomentIndex].keywords.length > 0 && (
                                                                             <div className="mt-4 flex flex-wrap gap-1.5 items-center">
-                                                                                <span className="text-[10px] font-black uppercase text-slate-400 mr-1">Keywords:</span>
+                                                                                <span className="text-[10px] font-black uppercase text-stone-400 mr-1">Keywords:</span>
                                                                                 {videoAssist.key_moments[activeMomentIndex].keywords.map((kw: string, idx: number) => (
-                                                                                    <span key={idx} className="px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase tracking-wider border border-emerald-250 dark:border-emerald-800/50">
+                                                                                    <span key={idx} className="px-2 py-0.5 rounded bg-amber-50 text-amber-700 text-[10px] font-black uppercase tracking-wider border border-amber-250 ">
                                                                                         {kw}
                                                                                     </span>
                                                                                 ))}
@@ -976,11 +976,11 @@ export const Studio = () => {
                                                                     </div>
 
                                                                     {videoAssist.key_moments[activeMomentIndex].exam_answer_frame && (
-                                                                        <div className="p-5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100/50 dark:border-indigo-900/50">
-                                                                            <p className="text-xs font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 mb-2">
+                                                                        <div className="p-5 rounded-2xl bg-indigo-50/50 border border-indigo-100/50 ">
+                                                                            <p className="text-xs font-black uppercase tracking-wider text-indigo-600 mb-2">
                                                                                 CBSE Board Answer Frame
                                                                             </p>
-                                                                            <p className="text-sm font-bold text-slate-700 dark:text-slate-350 leading-relaxed">
+                                                                            <p className="text-sm font-bold text-stone-700 leading-relaxed">
                                                                                 {videoAssist.key_moments[activeMomentIndex].exam_answer_frame}
                                                                             </p>
                                                                         </div>
@@ -990,28 +990,28 @@ export const Studio = () => {
                                                                 {/* Right Panel: Trap and Mnemonic */}
                                                                 <div className="space-y-4">
                                                                     {videoAssist.key_moments[activeMomentIndex].common_trap && (
-                                                                        <div className="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-250 dark:border-amber-800">
-                                                                            <p className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-2 flex items-center gap-1.5">
+                                                                        <div className="p-5 rounded-2xl bg-amber-50 border border-amber-250 ">
+                                                                            <p className="text-xs font-black uppercase tracking-wider text-amber-600 mb-2 flex items-center gap-1.5">
                                                                                 ⚠️ Common Board Exam Trap
                                                                             </p>
-                                                                            <p className="text-sm font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
+                                                                            <p className="text-sm font-bold text-[#3E352B] leading-relaxed">
                                                                                 {videoAssist.key_moments[activeMomentIndex].common_trap}
                                                                             </p>
                                                                         </div>
                                                                     )}
 
                                                                     {videoAssist.key_moments[activeMomentIndex].memory_hook && (
-                                                                        <div className="p-5 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-250/50 dark:border-rose-800/50">
-                                                                            <p className="text-xs font-black uppercase tracking-wider text-rose-600 dark:text-rose-400 mb-2 flex items-center gap-1.5">
+                                                                        <div className="p-5 rounded-2xl bg-rose-50/50 border border-rose-250/50 ">
+                                                                            <p className="text-xs font-black uppercase tracking-wider text-rose-600 mb-2 flex items-center gap-1.5">
                                                                                 🧠 Memory Hook & Recall Cue
                                                                             </p>
-                                                                            <p className="text-sm font-bold text-slate-800 dark:text-slate-200 leading-relaxed italic">
+                                                                            <p className="text-sm font-bold text-[#3E352B] leading-relaxed italic">
                                                                                 "{videoAssist.key_moments[activeMomentIndex].memory_hook}"
                                                                             </p>
                                                                         </div>
                                                                     )}
 
-                                                                    <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 text-xs text-slate-500 font-semibold flex items-center justify-between gap-3 flex-wrap">
+                                                                    <div className="p-4 rounded-xl bg-[#FCFAF8] border border-stone-200/60 text-xs text-stone-500 font-semibold flex items-center justify-between gap-3 flex-wrap">
                                                                         <span>Live moments sync with your playback automatically.</span>
                                                                         <div className="flex gap-2">
                                                                             <button 
@@ -1020,7 +1020,7 @@ export const Studio = () => {
                                                                                     const prevMoment = videoAssist.key_moments[activeMomentIndex - 1];
                                                                                     if (prevMoment) jumpToMoment(prevMoment.timestamp_seconds);
                                                                                 }}
-                                                                                className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-slate-50 dark:hover:bg-slate-700"
+                                                                                className="px-3 py-1.5 rounded-xl bg-[#FCFAF8] border border-stone-200 disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-[#FCFAF8] :bg-stone-700"
                                                                             >
                                                                                 Prev
                                                                             </button>
@@ -1030,7 +1030,7 @@ export const Studio = () => {
                                                                                     const nextMoment = videoAssist.key_moments[activeMomentIndex + 1];
                                                                                     if (nextMoment) jumpToMoment(nextMoment.timestamp_seconds);
                                                                                 }}
-                                                                                className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-slate-50 dark:hover:bg-slate-700"
+                                                                                className="px-3 py-1.5 rounded-xl bg-[#FCFAF8] border border-stone-200 disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-[#FCFAF8] :bg-stone-700"
                                                                             >
                                                                                 Next
                                                                             </button>
@@ -1041,8 +1041,8 @@ export const Studio = () => {
                                                         </div>
                                                     ) : (
                                                         <div className="py-12 text-center flex flex-col items-center justify-center">
-                                                            <Sparkles className="mx-auto text-slate-350 dark:text-slate-600 mb-4 animate-spin-slow" size={40} />
-                                                            <p className="text-xs font-black uppercase tracking-widest text-slate-500">Generating smart hints...</p>
+                                                            <Sparkles className="mx-auto text-stone-350 mb-4 animate-spin-slow" size={40} />
+                                                            <p className="text-xs font-black uppercase tracking-widest text-stone-500">Generating smart hints...</p>
                                                         </div>
                                                     )}
                                                 </div>
@@ -1050,8 +1050,8 @@ export const Studio = () => {
 
                                             {/* Right: Mastery Timeline (Side of Coach) */}
                                             {videoAssist?.key_moments && videoAssist.key_moments.length > 0 && (
-                                                <div className="w-full lg:w-[400px] rounded-[32px] border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/20 p-7">
-                                                    <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-5">Points to Remember</p>
+                                                <div className="w-full lg:w-[400px] rounded-[32px] border border-stone-200 bg-[#FCFAF8]/50 p-7">
+                                                    <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-5">Points to Remember</p>
                                                     <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                                                         {videoAssist.key_moments.map((moment, idx) => (
                                                             <button
@@ -1063,14 +1063,14 @@ export const Studio = () => {
                                                                     }
                                                                 }}
                                                                 className={`w-full text-left p-4 rounded-2xl border transition-all ${activeMomentIndex === idx
-                                                                    ? 'bg-white dark:bg-slate-800 border-indigo-200 dark:border-indigo-700 shadow-md ring-2 ring-indigo-500/10'
-                                                                    : 'bg-transparent border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                                                                    ? 'bg-[#FCFAF8] border-indigo-200 shadow-md ring-2 ring-indigo-500/10'
+                                                                    : 'bg-transparent border-transparent hover:bg-[#FCFAF8] :bg-stone-800/50'
                                                                     }`}
                                                             >
-                                                                <p className={`text-[10px] font-black uppercase ${activeMomentIndex === idx ? 'text-indigo-600' : 'text-slate-400'}`}>
+                                                                <p className={`text-[10px] font-black uppercase ${activeMomentIndex === idx ? 'text-indigo-600' : 'text-stone-400'}`}>
                                                                     Point to Remember {idx + 1}{moment.timestamp_label ? ` • ${moment.timestamp_label}` : ''} • {moment.subtopic}
                                                                 </p>
-                                                                <p className="text-sm font-bold text-slate-900 dark:text-white mt-1 leading-tight">{moment.important_point}</p>
+                                                                <p className="text-sm font-bold text-[#2C241B] mt-1 leading-tight">{moment.important_point}</p>
                                                             </button>
                                                         ))}
                                                     </div>
@@ -1081,22 +1081,22 @@ export const Studio = () => {
 
                                     {/* Interactive Concept Check Quiz Section */}
                                     {videoAssist?.quiz && videoAssist.quiz.length > 0 && (
-                                        <div className="pt-10 mt-10 border-t border-slate-250 dark:border-slate-800/80">
-                                            <div className="rounded-[36px] bg-slate-950 text-white p-8 md:p-10 shadow-2xl relative overflow-hidden border border-slate-800">
-                                                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-emerald-500/10 to-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+                                        <div className="pt-10 mt-10 border-t border-stone-250 ">
+                                            <div className="rounded-[36px] bg-stone-950 text-white p-8 md:p-10 shadow-2xl relative overflow-hidden border border-stone-800">
+                                                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-amber-500/10 to-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
                                                 
                                                 <div className="relative flex items-center justify-between gap-4 mb-8 flex-wrap">
                                                     <div>
-                                                        <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-black uppercase tracking-wider border border-emerald-500/30">
+                                                        <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-black uppercase tracking-wider border border-amber-500/30">
                                                             Concept Check
                                                         </span>
                                                         <h3 className="text-2xl font-black mt-2">Active Learning Checkpoint</h3>
-                                                        <p className="text-slate-400 text-sm mt-1">Answer these board-aligned questions based on the video lesson.</p>
+                                                        <p className="text-stone-400 text-sm mt-1">Answer these board-aligned questions based on the video lesson.</p>
                                                     </div>
                                                     
                                                     {quizSubmitted && (
-                                                        <div className="px-5 py-2.5 rounded-2xl bg-white/10 border border-white/20 text-white font-black text-sm flex items-center gap-2">
-                                                            <Brain size={18} className="text-emerald-400" />
+                                                        <div className="px-5 py-2.5 rounded-2xl bg-[#FCFAF8]/10 border border-white/20 text-white font-black text-sm flex items-center gap-2">
+                                                            <Brain size={18} className="text-amber-400" />
                                                             Score: {
                                                                 Object.keys(quizChoices).reduce((acc, qIdxStr) => {
                                                                     const qIdx = parseInt(qIdxStr);
@@ -1114,9 +1114,9 @@ export const Studio = () => {
                                                         const correctIndex = q.answer_index;
                                                         
                                                         return (
-                                                            <div key={qIdx} className="p-6 rounded-3xl bg-white/5 border border-white/10 space-y-4">
-                                                                <h4 className="text-base font-bold text-slate-100 flex items-start gap-2.5">
-                                                                    <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-black shrink-0">
+                                                            <div key={qIdx} className="p-6 rounded-3xl bg-[#FCFAF8]/5 border border-white/10 space-y-4">
+                                                                <h4 className="text-base font-bold text-stone-100 flex items-start gap-2.5">
+                                                                    <span className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-black shrink-0">
                                                                         {qIdx + 1}
                                                                     </span>
                                                                     {q.question}
@@ -1127,18 +1127,18 @@ export const Studio = () => {
                                                                         const isSelected = selectedOpt === optIdx;
                                                                         const isCorrect = correctIndex === optIdx;
                                                                         
-                                                                        let btnStyle = "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10";
+                                                                        let btnStyle = "bg-[#FCFAF8]/5 border-white/10 text-stone-300 hover:bg-[#FCFAF8]/10";
                                                                         
                                                                         if (quizSubmitted) {
                                                                             if (isCorrect) {
-                                                                                btnStyle = "bg-emerald-500/20 border-emerald-500 text-emerald-300 pointer-events-none";
+                                                                                btnStyle = "bg-amber-500/20 border-amber-500 text-amber-300 pointer-events-none";
                                                                             } else if (isSelected) {
                                                                                 btnStyle = "bg-rose-500/20 border-rose-500 text-rose-300 pointer-events-none";
                                                                             } else {
-                                                                                btnStyle = "bg-white/5 border-white/10 text-slate-500 opacity-60 pointer-events-none";
+                                                                                btnStyle = "bg-[#FCFAF8]/5 border-white/10 text-stone-500 opacity-60 pointer-events-none";
                                                                             }
                                                                         } else if (isSelected) {
-                                                                            btnStyle = "bg-emerald-500/20 border-emerald-500 text-white font-bold ring-2 ring-emerald-500/20";
+                                                                            btnStyle = "bg-amber-500/20 border-amber-500 text-white font-bold ring-2 ring-amber-500/20";
                                                                         }
                                                                         
                                                                         return (
@@ -1155,7 +1155,7 @@ export const Studio = () => {
                                                                             >
                                                                                 <span>{opt}</span>
                                                                                 {quizSubmitted && isCorrect && (
-                                                                                    <span className="text-emerald-400 font-bold">✓ Correct</span>
+                                                                                    <span className="text-amber-400 font-bold">✓ Correct</span>
                                                                                 )}
                                                                                 {quizSubmitted && isSelected && !isCorrect && (
                                                                                     <span className="text-rose-400 font-bold">✗ Incorrect</span>
@@ -1167,7 +1167,7 @@ export const Studio = () => {
                                                                 
                                                                 {quizSubmitted && q.explanation && (
                                                                     <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 font-medium leading-relaxed">
-                                                                        <span className="font-black block mb-1 text-slate-200">Explanation:</span>
+                                                                        <span className="font-black block mb-1 text-stone-200">Explanation:</span>
                                                                         {q.explanation}
                                                                     </div>
                                                                 )}
@@ -1183,7 +1183,7 @@ export const Studio = () => {
                                                                 setQuizChoices({});
                                                                 setQuizSubmitted(false);
                                                             }}
-                                                            className="px-6 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-black text-sm transition-all border border-white/20"
+                                                            className="px-6 py-3 rounded-2xl bg-[#FCFAF8]/10 hover:bg-[#FCFAF8]/20 text-white font-black text-sm transition-all border border-white/20"
                                                         >
                                                             Reset Quiz
                                                         </button>
@@ -1191,7 +1191,7 @@ export const Studio = () => {
                                                         <button
                                                             disabled={Object.keys(quizChoices).length < videoAssist.quiz.length}
                                                             onClick={() => setQuizSubmitted(true)}
-                                                            className="px-6 py-3 rounded-2xl bg-[#1D9E75] hover:bg-[#16805d] text-white font-black text-sm transition-all disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-emerald-500/20"
+                                                            className="px-6 py-3 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] text-white font-black text-sm transition-all disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-amber-500/20"
                                                         >
                                                             Submit Answers
                                                         </button>
@@ -1202,13 +1202,13 @@ export const Studio = () => {
                                     )}
 
                                     {/* Bottom: Massive Video Library Grid */}
-                                    <div className="pt-12 border-t border-slate-200 dark:border-slate-800">
+                                    <div className="pt-12 border-t border-stone-200 ">
                                         <div className="flex items-end justify-between gap-4 mb-8">
                                             <div>
-                                                <p className="text-xs font-black uppercase tracking-[0.2em] text-[#1D9E75] mb-2">Video Library</p>
-                                                <h2 className="text-3xl font-black text-slate-900 dark:text-white">Recommended Resources</h2>
+                                                <p className="text-xs font-black uppercase tracking-[0.2em] text-[#8C5A35] mb-2">Video Library</p>
+                                                <h2 className="text-3xl font-black text-[#2C241B] ">Recommended Resources</h2>
                                             </div>
-                                            <button onClick={runFetchCurrentChapterVideo} disabled={manualFetchLoading} className="px-6 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-black text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors disabled:opacity-50">
+                                            <button onClick={runFetchCurrentChapterVideo} disabled={manualFetchLoading} className="px-6 py-3 rounded-2xl bg-[#F2EFE9] text-stone-600 font-black text-xs uppercase tracking-widest hover:bg-[#E8E4DB] :bg-stone-700 transition-colors disabled:opacity-50">
                                                 {manualFetchLoading ? 'Refreshing...' : 'Refresh Stack'}
                                             </button>
                                         </div>
@@ -1219,11 +1219,11 @@ export const Studio = () => {
                                                     key={video.video_id}
                                                     onClick={() => setActiveVideoIndex(idx)}
                                                     className={`group text-left rounded-[32px] border-2 transition-all overflow-hidden ${idx === activeVideoIndex
-                                                        ? 'border-[#1D9E75] bg-emerald-50/50 dark:bg-emerald-900/10 shadow-xl shadow-emerald-500/10'
-                                                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 hover:border-slate-300'
+                                                        ? 'border-[#8C5A35] bg-amber-50/50 shadow-xl shadow-amber-500/10'
+                                                        : 'border-stone-200 bg-[#FCFAF8] hover:border-stone-300'
                                                         }`}
                                                 >
-                                                    <div className="aspect-video bg-slate-100 dark:bg-slate-800 relative">
+                                                    <div className="aspect-video bg-[#F2EFE9] relative">
                                                         <img
                                                             src={`https://img.youtube.com/vi/${video.video_id}/maxresdefault.jpg`}
                                                             alt={video.title}
@@ -1233,23 +1233,23 @@ export const Studio = () => {
                                                             }}
                                                         />
                                                         {idx === activeVideoIndex && (
-                                                            <div className="absolute inset-0 bg-emerald-500/10 flex items-center justify-center backdrop-blur-[2px]">
-                                                                <div className="w-12 h-12 rounded-full bg-white text-[#1D9E75] flex items-center justify-center shadow-lg">
+                                                            <div className="absolute inset-0 bg-amber-500/10 flex items-center justify-center backdrop-blur-[2px]">
+                                                                <div className="w-12 h-12 rounded-full bg-[#FCFAF8] text-[#8C5A35] flex items-center justify-center shadow-lg">
                                                                     <Play fill="currentColor" size={24} />
                                                                 </div>
                                                             </div>
                                                         )}
                                                     </div>
                                                     <div className="p-6">
-                                                        <h3 className="text-base font-black text-slate-900 dark:text-white line-clamp-2 leading-tight group-hover:text-[#1D9E75] transition-colors">
+                                                        <h3 className="text-base font-black text-[#2C241B] line-clamp-2 leading-tight group-hover:text-[#8C5A35] transition-colors">
                                                             {video.title}
                                                         </h3>
                                                         <div className="mt-4 flex items-center justify-between">
                                                             <div className="flex items-center gap-2">
                                                                 <Youtube size={16} className="text-rose-500" />
-                                                                <span className="text-xs font-bold text-slate-500">{video.channel || 'YouTube'}</span>
+                                                                <span className="text-xs font-bold text-stone-500">{video.channel || 'YouTube'}</span>
                                                             </div>
-                                                            <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                                                            <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-[#F2EFE9] text-stone-500">
                                                                 {video.duration || 'Video'}
                                                             </span>
                                                         </div>
@@ -1263,57 +1263,57 @@ export const Studio = () => {
                             )}
                         </Card>
                     ) : (
-                        <Card className="p-6 bg-white/92 dark:bg-[#0f172a] border-none shadow-xl rounded-[34px] backdrop-blur-sm">
+                        <Card className="p-6 bg-[#FCFAF8]/92 border-none shadow-xl rounded-[34px] backdrop-blur-sm">
                             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
                                 <div>
-                                    <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                                        <Network size={20} className="text-[#1D9E75]" />
+                                    <h2 className="text-xl font-black text-[#2C241B] flex items-center gap-2">
+                                        <Network size={20} className="text-[#8C5A35]" />
                                         Mindmap Maker
                                     </h2>
-                                    <p className="text-sm text-slate-500 mt-1">Generate a visual concept graph and notebook blocks for revision.</p>
+                                    <p className="text-sm text-stone-500 mt-1">Generate a visual concept graph and notebook blocks for revision.</p>
                                 </div>
                                 <Button className="rounded-xl" onClick={runMindmapImage} disabled={imageLoading || mindmapLoading}>
                                     <ImageIcon size={16} className="mr-1" />
                                     {imageLoading || mindmapLoading ? 'Generating...' : 'Generate Mindmap'}
                                 </Button>
                             </div>
-                            <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-6 min-h-[520px] flex items-center justify-center">
+                            <div className="rounded-3xl border border-stone-200 bg-[#FCFAF8] p-6 min-h-[520px] flex items-center justify-center">
                                 {mindmapLoading ? (
                                     <div className="w-full max-w-xl space-y-4">
-                                        <div className="h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                                            <div className="h-full w-1/2 bg-gradient-to-r from-[#1D9E75] to-emerald-500 animate-pulse" />
+                                        <div className="h-3 rounded-full bg-[#E8E4DB] overflow-hidden">
+                                            <div className="h-full w-1/2 bg-gradient-to-r from-[#8C5A35] to-amber-500 animate-pulse" />
                                         </div>
-                                        <p className="text-center text-sm font-bold text-slate-600 dark:text-slate-300">Generating visual mindmap...</p>
+                                        <p className="text-center text-sm font-bold text-stone-600 ">Generating visual mindmap...</p>
                                     </div>
                                 ) : mindmapImageUrl ? (
-                                    <img src={mindmapImageUrl} alt="Mindmap visual" className="w-full rounded-2xl border border-slate-200 dark:border-slate-700" />
+                                    <img src={mindmapImageUrl} alt="Mindmap visual" className="w-full rounded-2xl border border-stone-200 " />
                                 ) : (
-                                    <p className="text-sm text-slate-500 text-center max-w-md">Use this as a side visual after the video, not the main deliverable.</p>
+                                    <p className="text-sm text-stone-500 text-center max-w-md">Use this as a side visual after the video, not the main deliverable.</p>
                                 )}
                             </div>
 
                             {mindmapNotebookBlocks.length > 0 && (
-                                <div className="mt-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/40 p-4">
+                                <div className="mt-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
                                     <div className="mb-3 flex items-center justify-between gap-2">
-                                        <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Notebook Mindmap Mode</p>
-                                        <p className="text-xs font-semibold text-slate-400">Expandable concept boxes</p>
+                                        <p className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Notebook Mindmap Mode</p>
+                                        <p className="text-xs font-semibold text-stone-400">Expandable concept boxes</p>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {mindmapNotebookBlocks.map((block, index) => (
-                                            <details key={`${block.title}-${index}`} className="group rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/70 p-3" open={index === 0}>
+                                            <details key={`${block.title}-${index}`} className="group rounded-xl border border-stone-200 bg-[#FCFAF8] p-3" open={index === 0}>
                                                 <summary className="cursor-pointer list-none">
-                                                    <p className="text-sm font-black text-slate-900 dark:text-white">{block.title}</p>
-                                                    <p className="text-xs text-slate-500 mt-1">{block.summary}</p>
+                                                    <p className="text-sm font-black text-[#2C241B] ">{block.title}</p>
+                                                    <p className="text-xs text-stone-500 mt-1">{block.summary}</p>
                                                 </summary>
-                                                <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                                                <div className="mt-3 pt-3 border-t border-stone-200 ">
                                                     <div className="space-y-2">
                                                         {block.details.map((detail, i) => (
-                                                            <div key={i} className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50/70 dark:bg-emerald-900/20 px-2.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                                                            <div key={i} className="rounded-lg border border-amber-200 bg-amber-50/70 px-2.5 py-2 text-xs font-semibold text-stone-700 ">
                                                                 {detail}
                                                             </div>
                                                         ))}
                                                     </div>
-                                                    <div className="mt-3 rounded-lg border border-sky-200 dark:border-sky-800 bg-sky-50/70 dark:bg-sky-900/20 px-2.5 py-2 text-xs font-bold text-sky-700 dark:text-sky-300">
+                                                    <div className="mt-3 rounded-lg border border-sky-200 bg-sky-50/70 px-2.5 py-2 text-xs font-bold text-sky-700 ">
                                                         Exam Link: {block.exam_link}
                                                     </div>
                                                 </div>

@@ -30,8 +30,8 @@ export const PremiumModal = ({ isOpen, onClose, feature }: PremiumModalProps) =>
         </div>
 
         <div className="text-center">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#1D9E75] mb-2">Paid feature</p>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#8C5A35] mb-2">Paid feature</p>
+          <p className="text-gray-600 ">
             {feature} is available on paid plans. Connect billing in Settings to unlock it when your account is ready.
           </p>
         </div>
@@ -39,19 +39,19 @@ export const PremiumModal = ({ isOpen, onClose, feature }: PremiumModalProps) =>
         <div className="space-y-3">
           {features.map((feat, index) => (
             <div key={index} className="flex items-center space-x-3">
-              <div className="w-5 h-5 bg-[#1D9E75] rounded-full flex items-center justify-center flex-shrink-0">
+              <div className="w-5 h-5 bg-[#8C5A35] rounded-full flex items-center justify-center flex-shrink-0">
                 <Check className="w-3 h-3 text-white" />
               </div>
-              <span className="text-sm text-gray-700 dark:text-gray-300">{feat}</span>
+              <span className="text-sm text-gray-700 ">{feat}</span>
             </div>
           ))}
         </div>
 
-        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl p-4 text-center">
-          <div className="text-3xl font-black text-gray-900 dark:text-white mb-1">
+        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 text-center">
+          <div className="text-3xl font-black text-gray-900 mb-1">
             50 AED<span className="text-lg font-normal text-gray-500">/month</span>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Pro Max: 350 AED/month</p>
+          <p className="text-sm text-gray-600 ">Pro Max: 350 AED/month</p>
         </div>
 
         <div className="space-y-2">

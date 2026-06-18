@@ -84,9 +84,9 @@ export const Settings = () => {
             description: 'The plan for getting started now',
             planId: undefined,
             color: 'from-blue-500 to-cyan-500',
-            textColor: 'text-blue-600 dark:text-blue-400',
-            bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-            borderColor: 'border-blue-200 dark:border-blue-800',
+            textColor: 'text-blue-600 ',
+            bgColor: 'bg-blue-50 ',
+            borderColor: 'border-blue-200 ',
             features: [
                 { name: 'Core study workspace', included: true },
                 { name: 'Parent-linked progress view', included: true },
@@ -104,9 +104,9 @@ export const Settings = () => {
             description: 'For serious board prep',
             planId: 'pro' as const,
             color: 'from-orange-500 to-red-500',
-            textColor: 'text-orange-600 dark:text-orange-400',
-            bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-            borderColor: 'border-orange-200 dark:border-orange-800',
+            textColor: 'text-orange-600 ',
+            bgColor: 'bg-orange-50 ',
+            borderColor: 'border-orange-200 ',
             features: [
                 { name: 'Unlimited questions and practice', included: true },
                 { name: 'Full progress analytics', included: true },
@@ -125,9 +125,9 @@ export const Settings = () => {
             description: 'The full board-prep workspace',
             planId: 'pro_max' as const,
             color: 'from-amber-500 to-yellow-500',
-            textColor: 'text-amber-600 dark:text-amber-400',
-            bgColor: 'bg-amber-50 dark:bg-amber-900/20',
-            borderColor: 'border-amber-200 dark:border-amber-800',
+            textColor: 'text-amber-600 ',
+            bgColor: 'bg-amber-50 ',
+            borderColor: 'border-amber-200 ',
             features: [
                 { name: 'Everything in Pro', included: true },
                 { name: 'Board-style exam simulator', included: true },
@@ -140,44 +140,44 @@ export const Settings = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-[#020617] dark:to-slate-900">
+        <div className="min-h-screen bg-gradient-to-br from-stone-50 to-blue-50 ">
             <Navbar />
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
                 {/* Header */}
                 <div className="mb-16">
                     <button
                         onClick={() => navigate(-1)}
-                        className="mb-8 flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[#1D9E75] transition-colors"
+                        className="mb-8 flex items-center gap-2 text-stone-600 hover:text-[#8C5A35] transition-colors"
                     >
                         <ArrowLeft size={20} />
                         <span className="font-bold">Back</span>
                     </button>
                     <div>
-                        <h1 className="text-5xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-4">
+                        <h1 className="text-5xl font-black text-[#2C241B] mb-4 flex items-center gap-4">
                             <div className="p-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl">
                                 <Crown className="text-white" size={40} />
                             </div>
                             Upgrade Your Study Game
                         </h1>
-                        <p className="text-xl text-slate-600 dark:text-slate-400 font-medium max-w-2xl">
+                        <p className="text-xl text-stone-600 font-medium max-w-2xl">
                             Choose the plan that matches your board exam ambitions. All plans include access to our complete NCERT curriculum.
                         </p>
                     </div>
                 </div>
 
-                <Card className="mb-10 p-6 rounded-[32px] bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700">
+                <Card className="mb-10 p-6 rounded-[32px] bg-[#FCFAF8] border-2 border-stone-100 ">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-wider text-[#1D9E75]">Parent access</p>
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white">Resend parent portal credentials</h2>
-                            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                            <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35]">Parent access</p>
+                            <h2 className="text-2xl font-black text-[#2C241B] ">Resend parent portal credentials</h2>
+                            <p className="mt-2 text-sm text-stone-600 ">
                                 Use this only when the parent loses access. It sends a fresh password once without changing your profile.
                             </p>
                         </div>
                         <Button
                             onClick={handleParentResend}
                             disabled={loadingParentResend}
-                            className="px-5 py-3 rounded-2xl bg-slate-900 text-white font-black"
+                            className="px-5 py-3 rounded-2xl bg-stone-900 text-white font-black"
                         >
                             {loadingParentResend ? 'Sending...' : 'Resend Parent Credentials'}
                         </Button>
@@ -186,33 +186,33 @@ export const Settings = () => {
 
                 {/* Billing Cycle Toggle */}
                 <div className="mb-12 flex items-center justify-center gap-6">
-                    <span className={`text-lg font-bold ${billingCycle === 'monthly' ? 'text-slate-900 dark:text-white' : 'text-slate-500'}`}>
+                    <span className={`text-lg font-bold ${billingCycle === 'monthly' ? 'text-[#2C241B] ' : 'text-stone-500'}`}>
                         Monthly
                     </span>
                     <button
                         onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                        className="relative inline-flex h-10 w-20 items-center rounded-full bg-slate-300 dark:bg-slate-700 transition-colors"
+                        className="relative inline-flex h-10 w-20 items-center rounded-full bg-stone-300 transition-colors"
                         style={{
-                            backgroundColor: billingCycle === 'yearly' ? '#1D9E75' : '#cbd5e1',
+                            backgroundColor: billingCycle === 'yearly' ? '#8C5A35' : '#cbd5e1',
                         }}
                     >
                         <span
-                            className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-lg transition-transform ${billingCycle === 'yearly' ? 'translate-x-10' : 'translate-x-1'
+                            className={`inline-block h-8 w-8 transform rounded-full bg-[#FCFAF8] shadow-lg transition-transform ${billingCycle === 'yearly' ? 'transtone-x-10' : 'transtone-x-1'
                                 }`}
                         />
                     </button>
-                    <span className={`text-lg font-bold ${billingCycle === 'yearly' ? 'text-slate-900 dark:text-white' : 'text-slate-500'}`}>
+                    <span className={`text-lg font-bold ${billingCycle === 'yearly' ? 'text-[#2C241B] ' : 'text-stone-500'}`}>
                         Yearly
-                        <span className="ml-2 inline-block px-3 py-1 bg-[#1D9E75]/20 text-[#1D9E75] text-sm font-bold rounded-full">
+                        <span className="ml-2 inline-block px-3 py-1 bg-[#8C5A35]/20 text-[#8C5A35] text-sm font-bold rounded-full">
                             Save 17%
                         </span>
                     </span>
                 </div>
 
                 {!billingConfig?.enabled && (
-                    <div className="mb-8 rounded-3xl border border-amber-200 bg-amber-50/80 p-5 text-amber-900 dark:border-amber-800 dark:bg-amber-900/15 dark:text-amber-100">
+                    <div className="mb-8 rounded-3xl border border-amber-200 bg-amber-50/80 p-5 text-amber-900 ">
                         <p className="text-sm font-black uppercase tracking-[0.18em]">Billing not connected</p>
-                        <p className="mt-2 text-sm text-amber-800 dark:text-amber-200">
+                        <p className="mt-2 text-sm text-amber-800 ">
                             Stripe checkout is wired in, but you still need a Stripe secret key and price IDs before subscriptions can charge cards.
                         </p>
                     </div>
@@ -226,17 +226,17 @@ export const Settings = () => {
                         return (
                             <div key={plan.name} className="relative group">
                                 {plan.popular && (
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10">
-                                        <div className="px-6 py-2 bg-gradient-to-r from-[#1D9E75] to-emerald-500 text-white font-black text-sm rounded-full shadow-lg flex items-center gap-2">
+                                    <div className="absolute -top-5 left-1/2 -transtone-x-1/2 z-10">
+                                        <div className="px-6 py-2 bg-gradient-to-r from-[#8C5A35] to-amber-500 text-white font-black text-sm rounded-full shadow-lg flex items-center gap-2">
                                             <TrendingUp size={16} />
                                             MOST POPULAR
                                         </div>
                                     </div>
                                 )}
                                 <Card
-                                    className={`relative h-full flex flex-col rounded-[40px] border-2 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${plan.popular
-                                        ? `border-[#1D9E75] bg-gradient-to-br from-white/95 to-emerald-50/50 dark:from-slate-900 dark:to-emerald-900/20`
-                                        : `border-slate-200 dark:border-slate-700 ${plan.bgColor}`
+                                    className={`relative h-full flex flex-col rounded-[40px] border-2 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-transtone-y-2 ${plan.popular
+                                        ? `border-[#8C5A35] bg-gradient-to-br from-white/95 to-amber-50/50 `
+                                        : `border-stone-200 ${plan.bgColor}`
                                         }`}
                                 >
                                     {/* Background glow */}
@@ -253,18 +253,18 @@ export const Settings = () => {
                                             >
                                                 <Icon className={`${plan.textColor}`} size={32} />
                                             </div>
-                                            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                                            <h3 className="text-2xl font-black text-[#2C241B] mb-2 flex items-center gap-2">
                                                 {plan.name}
-                                                {plan.popular && <Sparkles size={20} className="text-[#1D9E75]" />}
+                                                {plan.popular && <Sparkles size={20} className="text-[#8C5A35]" />}
                                             </h3>
-                                            <p className="text-slate-600 dark:text-slate-400 font-medium">{plan.description}</p>
+                                            <p className="text-stone-600 font-medium">{plan.description}</p>
                                         </div>
 
                                         {/* Price */}
-                                        <div className="mb-8 py-6 border-y border-slate-100 dark:border-slate-800">
+                                        <div className="mb-8 py-6 border-y border-stone-100 ">
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-5xl font-black text-slate-900 dark:text-white">{plan.price}</span>
-                                                <span className="text-slate-600 dark:text-slate-400 font-bold">{plan.period}</span>
+                                                <span className="text-5xl font-black text-[#2C241B] ">{plan.price}</span>
+                                                <span className="text-stone-600 font-bold">{plan.period}</span>
                                             </div>
                                         </div>
 
@@ -273,18 +273,18 @@ export const Settings = () => {
                                             {plan.features.map((feature, idx) => (
                                                 <div key={idx} className="flex items-start gap-3 group/feature">
                                                     {feature.included ? (
-                                                        <div className="mt-1 p-1 bg-[#1D9E75]/20 rounded-full flex-shrink-0">
-                                                            <Check size={16} className="text-[#1D9E75]" />
+                                                        <div className="mt-1 p-1 bg-[#8C5A35]/20 rounded-full flex-shrink-0">
+                                                            <Check size={16} className="text-[#8C5A35]" />
                                                         </div>
                                                     ) : (
-                                                        <div className="mt-1 p-1 bg-slate-200 dark:bg-slate-700 rounded-full flex-shrink-0">
-                                                            <X size={16} className="text-slate-400" />
+                                                        <div className="mt-1 p-1 bg-[#E8E4DB] rounded-full flex-shrink-0">
+                                                            <X size={16} className="text-stone-400" />
                                                         </div>
                                                     )}
                                                     <span
                                                         className={`text-sm font-medium leading-relaxed ${feature.included
-                                                            ? 'text-slate-700 dark:text-slate-300'
-                                                            : 'text-slate-500 dark:text-slate-500 line-through'
+                                                            ? 'text-stone-700 '
+                                                            : 'text-stone-500 line-through'
                                                             }`}
                                                     >
                                                         {feature.name}
@@ -302,8 +302,8 @@ export const Settings = () => {
                                                 }
                                             }}
                                             className={`w-full py-4 font-bold text-lg rounded-2xl transition-all ${plan.popular || !plan.disabled
-                                                ? 'bg-[#1D9E75] hover:bg-[#16805d] text-white shadow-lg shadow-[#1D9E75]/30'
-                                                : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-default'
+                                                ? 'bg-[#8C5A35] hover:bg-[#70482B] text-white shadow-lg shadow-[#8C5A35]/30'
+                                                : 'bg-[#E8E4DB] text-stone-700 cursor-default'
                                                 }`}
                                         >
                                             {loadingCheckout === planId ? 'Preparing checkout...' : plan.cta}
@@ -316,8 +316,8 @@ export const Settings = () => {
                 </div>
 
                 {/* FAQ Section */}
-                <Card className="p-12 bg-white dark:bg-slate-800 rounded-[40px] border-2 border-slate-100 dark:border-slate-700">
-                    <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-8">Frequently Asked Questions</h2>
+                <Card className="p-12 bg-[#FCFAF8] rounded-[40px] border-2 border-stone-100 ">
+                    <h2 className="text-3xl font-black text-[#2C241B] mb-8">Frequently Asked Questions</h2>
                     <div className="grid md:grid-cols-2 gap-8">
                         {[
                             {
@@ -346,23 +346,23 @@ export const Settings = () => {
                             },
                         ].map((faq, idx) => (
                             <div key={idx} className="space-y-2">
-                                <h4 className="font-black text-slate-900 dark:text-white text-lg flex items-center gap-2">
-                                    <Zap size={20} className="text-[#1D9E75]" />
+                                <h4 className="font-black text-[#2C241B] text-lg flex items-center gap-2">
+                                    <Zap size={20} className="text-[#8C5A35]" />
                                     {faq.q}
                                 </h4>
-                                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{faq.a}</p>
+                                <p className="text-stone-600 leading-relaxed">{faq.a}</p>
                             </div>
                         ))}
                     </div>
                 </Card>
 
                 {/* Bottom CTA */}
-                <div className="mt-16 text-center py-12 px-8 bg-gradient-to-r from-[#1D9E75]/10 to-emerald-500/10 dark:from-[#1D9E75]/20 dark:to-emerald-500/20 rounded-[40px] border-2 border-[#1D9E75]/20">
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-3">Ready to ace your boards?</h3>
-                    <p className="text-slate-600 dark:text-slate-400 font-medium mb-6 max-w-2xl mx-auto">
+                <div className="mt-16 text-center py-12 px-8 bg-gradient-to-r from-[#8C5A35]/10 to-amber-500/10 rounded-[40px] border-2 border-[#8C5A35]/20">
+                    <h3 className="text-2xl font-black text-[#2C241B] mb-3">Ready to ace your boards?</h3>
+                    <p className="text-stone-600 font-medium mb-6 max-w-2xl mx-auto">
                         Join 50,000+ students who are using NCERT AI to score higher. Your first 7 days are completely free!
                     </p>
-                    <Button className="px-8 py-4 bg-[#1D9E75] hover:bg-[#16805d] text-white font-bold text-lg rounded-2xl shadow-lg" onClick={() => navigate('/onboarding')}>
+                    <Button className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-bold text-lg rounded-2xl shadow-lg" onClick={() => navigate('/onboarding')}>
                         Start Free Trial
                     </Button>
                 </div>

@@ -83,12 +83,12 @@ export const StudyPlan = () => {
         if (!table) return null;
 
         return (
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
                 <table className="min-w-full text-left text-sm">
-                    <thead className="bg-slate-100 dark:bg-slate-800">
+                    <thead className="bg-[#F2EFE9] ">
                         <tr>
                             {table.headers.map((header) => (
-                                <th key={header} className="px-4 py-3 font-black text-slate-700 dark:text-slate-200 whitespace-nowrap">
+                                <th key={header} className="px-4 py-3 font-black text-stone-700 whitespace-nowrap">
                                     {header}
                                 </th>
                             ))}
@@ -96,9 +96,9 @@ export const StudyPlan = () => {
                     </thead>
                     <tbody>
                         {table.rows.map((row, rowIndex) => (
-                            <tr key={rowIndex} className="border-t border-slate-100 dark:border-slate-800">
+                            <tr key={rowIndex} className="border-t border-stone-100 ">
                                 {row.map((cell, cellIndex) => (
-                                    <td key={`${rowIndex}-${cellIndex}`} className="px-4 py-3 text-slate-700 dark:text-slate-200 align-top">
+                                    <td key={`${rowIndex}-${cellIndex}`} className="px-4 py-3 text-stone-700 align-top">
                                         {cell}
                                     </td>
                                 ))}
@@ -198,72 +198,72 @@ export const StudyPlan = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+        <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
             <Navbar />
             <main className="max-w-7xl mx-auto px-6 py-10">
                 <div className="mb-8">
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+                    <h1 className="text-3xl md:text-4xl font-black text-[#2C241B] ">
                         Adaptive Study Planner
                     </h1>
-                    <p className="text-slate-500 mt-2 font-medium">
+                    <p className="text-stone-500 mt-2 font-medium">
                         Build a realistic, exam-ready day with streaming AI guidance.
                     </p>
                 </div>
 
-                <Card className="p-5 mb-8 bg-gradient-to-r from-cyan-50 to-emerald-50 dark:from-slate-800 dark:to-slate-900 border border-cyan-100 dark:border-slate-700 rounded-3xl">
+                <Card className="p-5 mb-8 bg-gradient-to-r from-cyan-50 to-amber-50 border border-cyan-100 rounded-3xl">
                     <div className="flex items-start gap-3">
                         <Info className="text-cyan-600 mt-0.5" size={18} />
-                        <div className="text-sm text-slate-700 dark:text-slate-200">
+                        <div className="text-sm text-stone-700 ">
                             <p className="font-bold">Planner tips:</p>
                             <p className="mt-1">Choose your task count and intensity. Add weak topics to force targeted fixes. Plan streams live so you can read while it generates.</p>
                         </div>
                     </div>
                 </Card>
 
-                <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
+                <Card className="p-6 md:p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl mb-8">
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div>
-                            <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Exam Date</label>
+                            <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Exam Date</label>
                             <input
                                 type="date"
                                 value={examDate}
                                 onChange={(e) => handleExamDateChange(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700"
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Weak Topics</label>
+                            <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Weak Topics</label>
                             <input
                                 type="text"
                                 value={weakTopicsInput}
                                 onChange={(e) => setWeakTopicsInput(e.target.value)}
                                 placeholder="Light, Trigonometry, Electricity"
-                                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700"
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Task Count</label>
-                            <div className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                            <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Task Count</label>
+                            <div className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] border border-stone-200 ">
                                 <input
                                     type="range"
                                     min={4}
                                     max={10}
                                     value={taskCount}
                                     onChange={(e) => setTaskCount(Number(e.target.value))}
-                                    className="w-full accent-[#1D9E75]"
+                                    className="w-full accent-[#8C5A35]"
                                 />
-                                <p className="text-xs font-bold text-slate-500 mt-1">{taskCount} tasks</p>
+                                <p className="text-xs font-bold text-stone-500 mt-1">{taskCount} tasks</p>
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-2">Intensity</label>
+                            <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Intensity</label>
                             <select
                                 value={planDepth}
                                 onChange={(e) => setPlanDepth(e.target.value as 'lite' | 'balanced' | 'intensive')}
-                                className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700"
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
                             >
                                 <option value="lite">Lite</option>
                                 <option value="balanced">Balanced</option>
@@ -274,7 +274,7 @@ export const StudyPlan = () => {
                         <Button
                             onClick={handleGenerate}
                             disabled={isLoading}
-                            className="w-full bg-[#1D9E75] hover:bg-[#16805d] rounded-xl font-bold"
+                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold"
                         >
                             {isLoading ? 'Streaming Plan...' : 'Generate Plan'}
                         </Button>
@@ -282,46 +282,46 @@ export const StudyPlan = () => {
                 </Card>
 
                 {/* Upcoming Exams & Deadlines Planner */}
-                <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
+                <Card className="p-6 md:p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl mb-8">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl text-emerald-600">
+                        <div className="p-2.5 bg-amber-50 rounded-xl text-amber-600">
                             <Calendar size={20} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Upcoming Exams & Deadlines</h2>
-                            <p className="text-xs text-slate-500 font-medium">Keep track of key dates (monthly tests, chapter quizzes, practicals)</p>
+                            <h2 className="text-xl font-bold text-[#2C241B] ">Upcoming Exams & Deadlines</h2>
+                            <p className="text-xs text-stone-500 font-medium">Keep track of key dates (monthly tests, chapter quizzes, practicals)</p>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Add milestone form */}
-                        <div className="space-y-4 lg:col-span-1 p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
-                            <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Add New Milestone</h3>
+                        <div className="space-y-4 lg:col-span-1 p-5 rounded-2xl bg-[#FCFAF8] border border-stone-100 ">
+                            <h3 className="text-sm font-black uppercase tracking-wider text-stone-400">Add New Milestone</h3>
                             
                             <div>
-                                <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1.5">Label</label>
+                                <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-1.5">Label</label>
                                 <input
                                     type="text"
                                     value={newDateLabel}
                                     onChange={(e) => setNewDateLabel(e.target.value)}
                                     placeholder="e.g. Physics Chapter 3 Test"
-                                    className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 text-sm focus:ring-1 focus:ring-[#1D9E75] outline-none"
+                                    className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs font-black uppercase tracking-wider text-slate-500 mb-1.5">Date</label>
+                                <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-1.5">Date</label>
                                 <input
                                     type="date"
                                     value={newDateValue}
                                     onChange={(e) => setNewDateValue(e.target.value)}
-                                    className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-slate-700 text-sm focus:ring-1 focus:ring-[#1D9E75] outline-none"
+                                    className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
                                 />
                             </div>
 
                             <Button
                                 onClick={handleAddOtherDate}
-                                className="w-full bg-[#1D9E75] hover:bg-[#16805d] rounded-xl font-bold text-sm h-11 flex items-center justify-center gap-2"
+                                className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold text-sm h-11 flex items-center justify-center gap-2"
                             >
                                 <Plus size={16} /> Add Milestone
                             </Button>
@@ -329,10 +329,10 @@ export const StudyPlan = () => {
 
                         {/* List of milestones */}
                         <div className="lg:col-span-2 space-y-3">
-                            <h3 className="text-sm font-black uppercase tracking-wider text-slate-400 mb-3">Planned Milestones</h3>
+                            <h3 className="text-sm font-black uppercase tracking-wider text-stone-400 mb-3">Planned Milestones</h3>
                             
                             {otherDates.length === 0 ? (
-                                <div className="h-[180px] flex flex-col items-center justify-center border border-dashed border-slate-200 dark:border-slate-700 rounded-2xl text-slate-400 dark:text-slate-500">
+                                <div className="h-[180px] flex flex-col items-center justify-center border border-dashed border-stone-200 rounded-2xl text-stone-400 ">
                                     <Calendar size={32} className="mb-2 opacity-50" />
                                     <p className="text-sm font-bold">No custom milestones added yet</p>
                                     <p className="text-xs">Add exams, quizzes, or homework deadlines to see them here.</p>
@@ -342,18 +342,18 @@ export const StudyPlan = () => {
                                     {otherDates.map((milestone) => (
                                         <div
                                             key={milestone.id}
-                                            className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800 rounded-2xl hover:border-slate-200 dark:hover:border-slate-700 transition-colors"
+                                            className="flex items-center justify-between p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl hover:border-stone-200 :border-stone-700 transition-colors"
                                         >
                                             <div className="min-w-0 pr-2">
-                                                <p className="font-bold text-sm text-slate-900 dark:text-white truncate">{milestone.label}</p>
-                                                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5 mt-1">
+                                                <p className="font-bold text-sm text-[#2C241B] truncate">{milestone.label}</p>
+                                                <p className="text-xs text-amber-600 font-semibold flex items-center gap-1.5 mt-1">
                                                     <Calendar size={12} />
                                                     {new Date(milestone.date).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
                                                 </p>
                                             </div>
                                             <Button
                                                 variant="outline"
-                                                className="h-9 w-9 p-0 rounded-xl border-red-100 hover:bg-red-50 text-red-500 dark:border-red-950/20 dark:hover:bg-red-950/20 flex-shrink-0"
+                                                className="h-9 w-9 p-0 rounded-xl border-red-100 hover:bg-red-50 text-red-500 :bg-red-950/20 flex-shrink-0"
                                                 onClick={() => handleRemoveOtherDate(milestone.id)}
                                             >
                                                 <Trash2 size={15} />
@@ -366,7 +366,7 @@ export const StudyPlan = () => {
                     </div>
                 </Card>
 
-                <Card className="p-6 md:p-10 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl min-h-[420px]">
+                <Card className="p-6 md:p-10 bg-[#FCFAF8] border-none shadow-xl rounded-3xl min-h-[420px]">
                     {plan ? (
                         <div className="space-y-6">
                             <div className="flex justify-end gap-2">
@@ -374,48 +374,48 @@ export const StudyPlan = () => {
                                 <Button variant="outline" className="rounded-xl" onClick={downloadPlan}>Download .md</Button>
                             </div>
                             <div className="space-y-5">
-                                <Card className="p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800">
-                                    <p className="text-xs font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300 mb-2 flex items-center gap-2">
+                                <Card className="p-5 rounded-2xl bg-amber-50 border border-amber-100 ">
+                                    <p className="text-xs font-black uppercase tracking-wider text-amber-700 mb-2 flex items-center gap-2">
                                         <Clock3 size={14} /> Morning Sprint
                                     </p>
                                     {renderTableSection('Morning Sprint', ['Afternoon Deep Work', 'Evening Review', 'Priority Fixes', 'Exam Tip'])}
                                 </Card>
-                                <Card className="p-5 rounded-2xl bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-800">
-                                    <p className="text-xs font-black uppercase tracking-wider text-cyan-700 dark:text-cyan-300 mb-2 flex items-center gap-2">
+                                <Card className="p-5 rounded-2xl bg-cyan-50 border border-cyan-100 ">
+                                    <p className="text-xs font-black uppercase tracking-wider text-cyan-700 mb-2 flex items-center gap-2">
                                         <ListChecks size={14} /> Afternoon Deep Work
                                     </p>
                                     {renderTableSection('Afternoon Deep Work', ['Evening Review', 'Priority Fixes', 'Exam Tip'])}
                                 </Card>
-                                <Card className="p-5 rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800">
-                                    <p className="text-xs font-black uppercase tracking-wider text-amber-700 dark:text-amber-300 mb-2 flex items-center gap-2">
+                                <Card className="p-5 rounded-2xl bg-amber-50 border border-amber-100 ">
+                                    <p className="text-xs font-black uppercase tracking-wider text-amber-700 mb-2 flex items-center gap-2">
                                         <Target size={14} /> Evening Review
                                     </p>
                                     {renderTableSection('Evening Review', ['Priority Fixes', 'Exam Tip'])}
                                 </Card>
-                                <Card className="p-5 rounded-2xl bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800">
-                                    <p className="text-xs font-black uppercase tracking-wider text-rose-700 dark:text-rose-300 mb-2">Priority Fixes</p>
+                                <Card className="p-5 rounded-2xl bg-rose-50 border border-rose-100 ">
+                                    <p className="text-xs font-black uppercase tracking-wider text-rose-700 mb-2">Priority Fixes</p>
                                     {renderTableSection('Priority Fixes', ['Exam Tip'])}
                                 </Card>
-                                <Card className="p-5 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800">
-                                    <p className="text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300 mb-2 flex items-center gap-2">
+                                <Card className="p-5 rounded-2xl bg-indigo-50 border border-indigo-100 ">
+                                    <p className="text-xs font-black uppercase tracking-wider text-indigo-700 mb-2 flex items-center gap-2">
                                         <Sparkles size={14} /> Exam Tip
                                     </p>
-                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 text-slate-700 dark:text-slate-200">
+                                    <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4 text-stone-700 ">
                                         <MarkdownContent content={extractMarkdownSection(plan, 'Exam Tip', [])} className="leading-6" />
                                     </div>
                                 </Card>
                             </div>
 
-                            <details className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                                <summary className="cursor-pointer text-xs font-black uppercase tracking-wider text-slate-500">View Raw Markdown</summary>
+                            <details className="rounded-2xl border border-stone-200 p-4">
+                                <summary className="cursor-pointer text-xs font-black uppercase tracking-wider text-stone-500">View Raw Markdown</summary>
                                 <div className="max-w-none mt-3">
                                     <MarkdownContent content={plan} />
                                 </div>
                             </details>
                         </div>
                     ) : (
-                        <div className="h-full flex flex-col items-center justify-center text-center text-slate-500">
-                            <Target size={34} className="mb-3 text-[#1D9E75]" />
+                        <div className="h-full flex flex-col items-center justify-center text-center text-stone-500">
+                            <Target size={34} className="mb-3 text-[#8C5A35]" />
                             <p className="font-semibold">No plan generated yet.</p>
                             <p className="text-sm mt-1 max-w-md">Set exam date and weak topics, then click Generate Plan. You will receive a morning, afternoon, and evening action plan with revision and test tasks.</p>
                         </div>

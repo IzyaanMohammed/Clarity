@@ -343,7 +343,7 @@ export const AskAI = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617]">
+    <div className="min-h-screen bg-[#f8fafc] ">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
         {/* New Prominent Autonomous Header */}
@@ -353,55 +353,55 @@ export const AskAI = () => {
               variant="outline"
               size="md"
               onClick={() => navigate(-1)}
-              className="rounded-2xl w-12 h-12 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm hover:scale-105 transition-transform"
+              className="rounded-2xl w-12 h-12 bg-[#FCFAF8] border-stone-200 shadow-sm hover:scale-105 transition-transform"
             >
-              <ArrowLeft size={20} className="text-slate-600 dark:text-slate-300" />
+              <ArrowLeft size={20} className="text-stone-600 " />
             </Button>
             <div>
-              <h1 className="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-                <Sparkles className="text-[#1D9E75] animate-pulse" />
+              <h1 className="text-3xl font-black text-[#2C241B] flex items-center gap-3">
+                <Sparkles className="text-[#8C5A35] animate-pulse" />
                 AI Tutor Room
               </h1>
-              <p className="text-sm text-slate-500 font-bold uppercase tracking-widest mt-1 flex items-center gap-2">
-                <span className="w-2 h-2 bg-[#1D9E75] rounded-full" />
+              <p className="text-sm text-stone-500 font-bold uppercase tracking-widest mt-1 flex items-center gap-2">
+                <span className="w-2 h-2 bg-[#8C5A35] rounded-full" />
                 Class {user?.class} • Boards Edition
               </p>
             </div>
           </div>
 
           {/* Prominent Context Selectors */}
-          <div className="flex flex-wrap items-center gap-3 bg-white dark:bg-slate-800 p-3 rounded-[24px] shadow-lg border border-slate-100 dark:border-slate-700">
-            <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
-              <BookOpen size={16} className="text-[#1D9E75]" />
+          <div className="flex flex-wrap items-center gap-3 bg-[#FCFAF8] p-3 rounded-[24px] shadow-lg border border-stone-100 ">
+            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border border-stone-100 ">
+              <BookOpen size={16} className="text-[#8C5A35]" />
               <select
                 value={selectedSubject}
                 onChange={(e) => {
                   setSelectedSubject(e.target.value);
                   setSelectedChapter('');
                 }}
-                className="bg-transparent border-none text-sm font-black text-slate-800 dark:text-slate-100 focus:ring-0 outline-none cursor-pointer min-w-[100px]"
+                className="bg-transparent border-none text-sm font-black text-[#3E352B] focus:ring-0 outline-none cursor-pointer min-w-[100px]"
               >
                 {(user?.subjects || subjectsForClass).map((sub: string) => <option key={sub} value={sub}>{sub}</option>)}
               </select>
             </div>
 
-            <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Chapter</span>
+            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border border-stone-100 ">
+              <span className="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Chapter</span>
               <select
                 value={selectedChapter}
                 onChange={(e) => setSelectedChapter(e.target.value)}
-                className="bg-transparent border-none text-sm font-black text-[#1D9E75] focus:ring-0 outline-none cursor-pointer max-w-[220px]"
+                className="bg-transparent border-none text-sm font-black text-[#8C5A35] focus:ring-0 outline-none cursor-pointer max-w-[220px]"
               >
                 {availableChapters.map((ch: string) => <option key={ch} value={ch}>{ch}</option>)}
               </select>
             </div>
 
-            <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Answer Mode</span>
+            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border border-stone-100 ">
+              <span className="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Answer Mode</span>
               <select
                 value={markMode}
                 onChange={(e) => setMarkMode(e.target.value as '1-mark' | '3-mark' | '5-mark')}
-                className="bg-transparent border-none text-sm font-black text-[#1D9E75] focus:ring-0 outline-none cursor-pointer"
+                className="bg-transparent border-none text-sm font-black text-[#8C5A35] focus:ring-0 outline-none cursor-pointer"
               >
                 <option value="1-mark">1 Mark</option>
                 <option value="3-mark">3 Marks</option>
@@ -412,29 +412,29 @@ export const AskAI = () => {
         </div>
 
         {/* Context Guidance Card */}
-        <Card className="mb-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-2 border-emerald-200 dark:border-emerald-800 rounded-[32px]">
+        <Card className="mb-8 p-6 bg-gradient-to-r from-amber-50 to-teal-50 border-2 border-amber-200 rounded-[32px]">
           <div className="flex gap-4 items-start">
-            <div className="p-3 bg-emerald-200 dark:bg-emerald-900/50 rounded-2xl flex-shrink-0">
-              <Info className="text-emerald-700 dark:text-emerald-400" size={24} />
+            <div className="p-3 bg-amber-200 rounded-2xl flex-shrink-0">
+              <Info className="text-amber-700 " size={24} />
             </div>
             <div className="flex-1">
-              <h4 className="font-black text-emerald-900 dark:text-emerald-300 mb-3 text-lg">Mark Mode Guide</h4>
+              <h4 className="font-black text-amber-900 mb-3 text-lg">Mark Mode Guide</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <p className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-2">📝 1-Mark Answers</p>
-                  <p className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                  <p className="text-sm font-bold text-amber-800 mb-2">📝 1-Mark Answers</p>
+                  <p className="text-xs text-amber-700 leading-relaxed">
                     <strong>Crisp definition:</strong> "Photosynthesis is the process of converting light into chemical energy" (1-2 sentences max)
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-2">📋 3-Mark Answers</p>
-                  <p className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                  <p className="text-sm font-bold text-amber-800 mb-2">📋 3-Mark Answers</p>
+                  <p className="text-xs text-amber-700 leading-relaxed">
                     <strong>3 Key points:</strong> Introduction + 2 main points with examples + conclusion (3-5 sentences)
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-2">📚 5-Mark Answers</p>
-                  <p className="text-xs text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                  <p className="text-sm font-bold text-amber-800 mb-2">📚 5-Mark Answers</p>
+                  <p className="text-xs text-amber-700 leading-relaxed">
                     <strong>Full explanation:</strong> Intro + diagram/steps + 4+ points + real-world example + conclusion
                   </p>
                 </div>
@@ -445,23 +445,23 @@ export const AskAI = () => {
 
         <div className="flex flex-col gap-4 h-[calc(100vh-220px)]">
           <div className="flex-1 flex flex-col gap-4">
-            <Card className="flex-1 flex flex-col bg-white dark:bg-[#0f172a] border-none shadow-2xl rounded-[40px] overflow-hidden border border-white/50">
+            <Card className="flex-1 flex flex-col bg-[#FCFAF8] border-none shadow-2xl rounded-[40px] overflow-hidden border border-white/50">
               <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-10 scrollbar-hide">
                 {messages.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-8 animate-in fade-in zoom-in duration-500">
                     <div className="relative">
-                      <div className="w-24 h-24 bg-[#1D9E75]/10 rounded-[32px] flex items-center justify-center animate-bounce">
-                        <Bot className="text-[#1D9E75]" size={48} />
+                      <div className="w-24 h-24 bg-[#8C5A35]/10 rounded-[32px] flex items-center justify-center animate-bounce">
+                        <Bot className="text-[#8C5A35]" size={48} />
                       </div>
-                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-[#0f172a]">
+                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg border-4 border-white ">
                         <Zap size={14} className="text-white fill-current" />
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-3xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">
-                        I'm ready for <span className="text-[#1D9E75]">{selectedChapter}</span>
+                      <h3 className="text-3xl font-black text-[#2C241B] mb-3 tracking-tight">
+                        I'm ready for <span className="text-[#8C5A35]">{selectedChapter}</span>
                       </h3>
-                      <p className="text-slate-500 font-medium leading-relaxed">
+                      <p className="text-stone-500 font-medium leading-relaxed">
                         I've loaded the NCERT curriculum. What should we tackle first?
                       </p>
                     </div>
@@ -477,8 +477,8 @@ export const AskAI = () => {
                       <div
                         className={`w-14 h-14 rounded-[22px] flex items-center justify-center flex-shrink-0 shadow-lg ${
                           m.role === 'user'
-                            ? 'bg-slate-900 text-white dark:bg-slate-800'
-                            : 'bg-gradient-to-tr from-[#1D9E75] to-[#2cd6a0] text-white'
+                            ? 'bg-stone-900 text-white '
+                            : 'bg-gradient-to-tr from-[#8C5A35] to-[#2cd6a0] text-white'
                         }`}
                       >
                         {m.role === 'user' ? <User size={24} /> : <Bot size={24} />}
@@ -486,11 +486,11 @@ export const AskAI = () => {
                       <div
                         className={`p-8 rounded-[32px] leading-relaxed font-bold text-[15px] border ${
                           m.role === 'user'
-                            ? 'bg-slate-50 border-slate-100 text-slate-800 rounded-tr-none dark:bg-slate-800 dark:border-slate-700 dark:text-white'
-                            : 'bg-[#1D9E75]/5 border-[#1D9E75]/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
+                            ? 'bg-[#FCFAF8] border-stone-100 text-[#3E352B] rounded-tr-none '
+                            : 'bg-[#8C5A35]/5 border-[#8C5A35]/10 text-[#3E352B] rounded-tl-none'
                         }`}
                       >
-                        <MarkdownContent content={m.content} className="prose prose-sm dark:prose-invert" />
+                        <MarkdownContent content={m.content} className="prose prose-sm " />
                       </div>
                     </div>
                   ))
@@ -498,11 +498,11 @@ export const AskAI = () => {
 
                 {isLoading && (
                   <div className="flex gap-6 max-w-4xl mr-auto">
-                    <div className="w-14 h-14 rounded-[22px] bg-gradient-to-tr from-[#1D9E75] to-[#2cd6a0] text-white flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-14 h-14 rounded-[22px] bg-gradient-to-tr from-[#8C5A35] to-[#2cd6a0] text-white flex items-center justify-center flex-shrink-0 shadow-lg">
                       <Bot size={24} className="animate-pulse" />
                     </div>
-                    <div className="p-8 rounded-[32px] rounded-tl-none bg-[#1D9E75]/5 border border-[#1D9E75]/10 text-slate-800 dark:text-slate-200 flex items-center gap-3 font-bold text-sm">
-                      <div className="animate-spin h-5 w-5 border-3 border-[#1D9E75] border-t-transparent rounded-full" />
+                    <div className="p-8 rounded-[32px] rounded-tl-none bg-[#8C5A35]/5 border border-[#8C5A35]/10 text-[#3E352B] flex items-center gap-3 font-bold text-sm">
+                      <div className="animate-spin h-5 w-5 border-3 border-[#8C5A35] border-t-transparent rounded-full" />
                       Clarity AI is researching and formulating response...
                     </div>
                   </div>
@@ -511,11 +511,11 @@ export const AskAI = () => {
               </div>
 
               {/* Redesigned Input Bar */}
-              <div className="p-8 bg-slate-50/50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800 backdrop-blur-xl">
+              <div className="p-8 bg-[#FCFAF8]/50 border-t border-stone-100 backdrop-blur-xl">
                 <div className="relative max-w-4xl mx-auto group">
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-slate-400 hover:text-[#1D9E75] transition-all bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:scale-110 active:scale-90 border border-slate-100 dark:border-slate-700"
+                    className="absolute left-4 top-1/2 -transtone-y-1/2 p-3 text-stone-400 hover:text-[#8C5A35] transition-all bg-[#FCFAF8] rounded-2xl shadow-sm hover:scale-110 active:scale-90 border border-stone-100 "
                   >
                     <Paperclip size={22} />
                   </button>
@@ -532,12 +532,12 @@ export const AskAI = () => {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
                     placeholder="Ask boards, solve problems, or upload notes..."
-                    className="w-full pl-20 pr-20 py-6 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-[32px] shadow-2xl border border-slate-200 dark:border-slate-700 focus:ring-8 focus:ring-[#1D9E75]/10 outline-none transition-all font-bold text-lg placeholder:text-slate-400"
+                    className="w-full pl-20 pr-20 py-6 bg-[#FCFAF8] text-[#2C241B] rounded-[32px] shadow-2xl border border-stone-200 focus:ring-8 focus:ring-[#8C5A35]/10 outline-none transition-all font-bold text-lg placeholder:text-stone-400"
                   />
                   <button
                     onClick={() => handleSendMessage()}
                     disabled={!input.trim() || isLoading}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-[#1D9E75] text-white rounded-[24px] hover:bg-[#16805d] disabled:opacity-50 disabled:grayscale transition-all active:scale-90 shadow-lg shadow-[#1D9E75]/30 group-hover:rotate-3"
+                    className="absolute right-4 top-1/2 -transtone-y-1/2 p-4 bg-[#8C5A35] text-white rounded-[24px] hover:bg-[#70482B] disabled:opacity-50 disabled:grayscale transition-all active:scale-90 shadow-lg shadow-[#8C5A35]/30 group-hover:rotate-3"
                   >
                     <Send size={24} />
                   </button>
@@ -554,14 +554,14 @@ export const AskAI = () => {
       />
 
       {showPersonalityModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-2xl w-full shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-[#FCFAF8] border border-stone-200 rounded-3xl p-8 max-w-2xl w-full shadow-2xl space-y-6">
             <div className="text-center space-y-2">
-              <div className="w-16 h-16 bg-[#1D9E75]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Bot className="w-8 h-8 text-[#1D9E75]" />
+              <div className="w-16 h-16 bg-[#8C5A35]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Bot className="w-8 h-8 text-[#8C5A35]" />
               </div>
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Choose my teaching style</h2>
-              <p className="text-sm font-semibold text-slate-500">How do you want me to explain concepts to you?</p>
+              <h2 className="text-2xl font-black text-[#2C241B] ">Choose my teaching style</h2>
+              <p className="text-sm font-semibold text-stone-500">How do you want me to explain concepts to you?</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -575,10 +575,10 @@ export const AskAI = () => {
                 <button
                   key={idx}
                   onClick={() => handleSelectPersonality(style.name)}
-                  className="p-5 border-2 border-slate-100 dark:border-slate-800 rounded-2xl hover:border-[#1D9E75] hover:bg-[#1D9E75]/5 transition-all text-left group"
+                  className="p-5 border-2 border-stone-100 rounded-2xl hover:border-[#8C5A35] hover:bg-[#8C5A35]/5 transition-all text-left group"
                 >
-                  <p className="text-sm font-black text-slate-800 dark:text-slate-200 group-hover:text-[#1D9E75]">{style.name}</p>
-                  <p className="text-xs font-medium text-slate-500 mt-1">{style.desc}</p>
+                  <p className="text-sm font-black text-[#3E352B] group-hover:text-[#8C5A35]">{style.name}</p>
+                  <p className="text-xs font-medium text-stone-500 mt-1">{style.desc}</p>
                 </button>
               ))}
             </div>

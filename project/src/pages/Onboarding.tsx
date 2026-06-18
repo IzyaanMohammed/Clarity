@@ -453,64 +453,64 @@ export const Onboarding = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#1D9E75]/5 via-slate-50 to-emerald-50/30 dark:from-[#020617] dark:via-slate-950 dark:to-emerald-950/20 flex items-center justify-center p-4 md:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#8C5A35]/5 via-stone-50 to-amber-50/30 flex items-center justify-center p-4 md:p-8">
             <div className="w-full max-w-3xl">
                 <div className="mb-8">
                     <div className="flex items-end justify-between gap-4 mb-3">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white">{steps[step].title}</h1>
-                            <p className="text-slate-600 dark:text-slate-400 font-semibold mt-1">{steps[step].subtitle}</p>
+                            <h1 className="text-3xl md:text-4xl font-black text-[#2C241B] ">{steps[step].title}</h1>
+                            <p className="text-stone-600 font-semibold mt-1">{steps[step].subtitle}</p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                            <p className="text-3xl font-black text-[#1D9E75]">{step + 1}</p>
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-wide">of {steps.length}</p>
+                            <p className="text-3xl font-black text-[#8C5A35]">{step + 1}</p>
+                            <p className="text-xs font-bold text-stone-500 uppercase tracking-wide">of {steps.length}</p>
                         </div>
                     </div>
-                    <div className="h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-2 bg-[#E8E4DB] rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-gradient-to-r from-[#1D9E75] to-emerald-500 transition-all duration-300"
+                            className="h-full bg-gradient-to-r from-[#8C5A35] to-amber-500 transition-all duration-300"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
                 </div>
 
-                <Card className="p-6 md:p-10 bg-white dark:bg-slate-900 border-none shadow-2xl rounded-[32px]">
+                <Card className="p-6 md:p-10 bg-[#FCFAF8] border-none shadow-2xl rounded-[32px]">
                     {step === 0 && (
                         <div className="text-center py-6">
-                            <div className="inline-flex items-center justify-center w-24 h-24 rounded-[28px] bg-gradient-to-br from-[#1D9E75]/20 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-800/30 mb-6">
-                                <BookOpen className="text-[#1D9E75]" size={44} />
+                            <div className="inline-flex items-center justify-center w-24 h-24 rounded-[28px] bg-gradient-to-br from-[#8C5A35]/20 to-amber-100 mb-6">
+                                <BookOpen className="text-[#8C5A35]" size={44} />
                             </div>
-                            <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-3">Welcome to Clarity</h2>
-                            <p className="text-slate-600 dark:text-slate-400 font-semibold max-w-xl mx-auto leading-relaxed">
+                            <h2 className="text-4xl font-black text-[#2C241B] mb-3">Welcome to Clarity</h2>
+                            <p className="text-stone-600 font-semibold max-w-xl mx-auto leading-relaxed">
                                 This setup asks 12+ personalization inputs through guided choices so every answer, plan, and practice set feels tutor-level personalized.
                             </p>
                             <div className="mt-8 grid grid-cols-3 gap-3 max-w-md mx-auto text-sm font-bold">
-                                <div className="rounded-xl bg-slate-100 dark:bg-slate-800 py-3">AI Tutor</div>
-                                <div className="rounded-xl bg-slate-100 dark:bg-slate-800 py-3">Board Focus</div>
-                                <div className="rounded-xl bg-slate-100 dark:bg-slate-800 py-3">Action Plan</div>
+                                <div className="rounded-xl bg-[#F2EFE9] py-3">AI Tutor</div>
+                                <div className="rounded-xl bg-[#F2EFE9] py-3">Board Focus</div>
+                                <div className="rounded-xl bg-[#F2EFE9] py-3">Action Plan</div>
                             </div>
 
                             {!isEditing && (
-                                <div className="mt-8 max-w-md mx-auto text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60">
-                                    <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-3">Already have an account? <Link to="/login" className="text-[#1D9E75] hover:underline">Login here</Link></p>
+                                <div className="mt-8 max-w-md mx-auto text-left p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                                    <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-3">Already have an account? <Link to="/login" className="text-[#8C5A35] hover:underline">Login here</Link></p>
                                     <div className="space-y-3">
                                         <input
                                             type="text"
                                             value={loginName}
                                             onChange={(e) => setLoginName(e.target.value)}
                                             placeholder="Name"
-                                            className="w-full px-3 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold"
+                                            className="w-full px-3 py-2 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-sm font-semibold"
                                         />
                                         <input
                                             type="password"
                                             value={loginPassword}
                                             onChange={(e) => setLoginPassword(e.target.value)}
                                             placeholder="Password"
-                                            className="w-full px-3 py-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold"
+                                            className="w-full px-3 py-2 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-sm font-semibold"
                                         />
                                         <button
                                             onClick={handleLogin}
-                                            className="w-full py-2 rounded-xl bg-slate-900 dark:bg-white dark:text-slate-900 text-white text-xs font-black uppercase tracking-wider"
+                                            className="w-full py-2 rounded-xl bg-stone-900 text-white text-xs font-black uppercase tracking-wider"
                                         >
                                             Login
                                         </button>
@@ -523,69 +523,69 @@ export const Onboarding = () => {
                     {step === 1 && (
                         <div className="space-y-5">
                             <div>
-                                <label className="flex items-center gap-2 text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wide mb-2">
-                                    <User size={16} className="text-[#1D9E75]" />
+                                <label className="flex items-center gap-2 text-sm font-black text-stone-700 uppercase tracking-wide mb-2">
+                                    <User size={16} className="text-[#8C5A35]" />
                                     Full Name
                                 </label>
                                 <input
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                     placeholder="e.g. Rohan Gupta"
                                     autoFocus
                                 />
                             </div>
                             <div>
-                                <label className="flex items-center gap-2 text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wide mb-2">
-                                    <School size={16} className="text-[#1D9E75]" />
+                                <label className="flex items-center gap-2 text-sm font-black text-stone-700 uppercase tracking-wide mb-2">
+                                    <School size={16} className="text-[#8C5A35]" />
                                     School Name
                                 </label>
                                 <input
                                     type="text"
                                     value={school}
                                     onChange={(e) => setSchool(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                     placeholder="e.g. DPS Noida"
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
                                 <div>
-                                    <label className="block text-xs font-black text-slate-500 uppercase tracking-wide mb-2">Country</label>
+                                    <label className="block text-xs font-black text-stone-500 uppercase tracking-wide mb-2">Country</label>
                                     <input
                                         type="text"
                                         value={country}
                                         onChange={(e) => setCountry(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="Country"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-black text-slate-500 uppercase tracking-wide mb-2">State / Region</label>
+                                    <label className="block text-xs font-black text-stone-500 uppercase tracking-wide mb-2">State / Region</label>
                                     <input
                                         type="text"
                                         value={state}
                                         onChange={(e) => setState(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="State"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-black text-slate-500 uppercase tracking-wide mb-2">City</label>
+                                    <label className="block text-xs font-black text-stone-500 uppercase tracking-wide mb-2">City</label>
                                     <input
                                         type="text"
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="City"
                                     />
                                 </div>
                             </div>
 
-                            <div className="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 relative overflow-hidden h-36 flex items-center justify-center">
+                            <div className="p-4 rounded-2xl border-2 border-stone-200 bg-[#F2EFE9] relative overflow-hidden h-36 flex items-center justify-center">
                                 <div className="absolute inset-0 opacity-20 pointer-events-none">
-                                    <svg width="100%" height="100%" className="text-slate-600 dark:text-slate-400">
+                                    <svg width="100%" height="100%" className="text-stone-600 ">
                                         <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
                                             <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="1"/>
                                         </pattern>
@@ -595,10 +595,10 @@ export const Onboarding = () => {
                                     </svg>
                                 </div>
                                 <div className="text-center z-10 space-y-1">
-                                    <div className="inline-flex p-2 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-[#1D9E75] animate-bounce">
+                                    <div className="inline-flex p-2 rounded-full bg-amber-100 text-[#8C5A35] animate-bounce">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-map-pin"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                                     </div>
-                                    <p className="text-xs font-bold text-slate-600 dark:text-slate-400">
+                                    <p className="text-xs font-bold text-stone-600 ">
                                         Map Marker: {city || 'Chennai'}, {state || 'Tamil Nadu'}, {country || 'India'}
                                     </p>
                                 </div>
@@ -616,7 +616,7 @@ export const Onboarding = () => {
                                                 setState(loc.state);
                                                 setCountry(loc.country);
                                             }}
-                                            className="px-2 py-1 bg-white dark:bg-slate-800 text-[10px] font-bold rounded-md border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm text-slate-700 dark:text-slate-300"
+                                            className="px-2 py-1 bg-[#FCFAF8] text-[10px] font-bold rounded-md border border-stone-200 hover:bg-[#FCFAF8] :bg-stone-700 transition-colors shadow-sm text-stone-700 "
                                         >
                                             📍 {loc.city}
                                         </button>
@@ -624,15 +624,15 @@ export const Onboarding = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="flex items-center gap-2 text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wide mb-2">
-                                    <Sparkles size={16} className="text-[#1D9E75]" />
+                                <label className="flex items-center gap-2 text-sm font-black text-stone-700 uppercase tracking-wide mb-2">
+                                    <Sparkles size={16} className="text-[#8C5A35]" />
                                     Password
                                 </label>
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold outline-none focus:ring-4 focus:ring-[#1D9E75]/20 focus:border-[#1D9E75]"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                     placeholder={isEditing ? 'Keep unchanged unless re-registering' : 'At least 6 characters'}
                                 />
                             </div>
@@ -642,7 +642,7 @@ export const Onboarding = () => {
                     {step === 2 && (
                         <div className="space-y-4">
                             {examBoard === 'Tamil Nadu State Board' && (
-                                <div className="p-3 rounded-xl bg-[#1D9E75]/10 text-[#1D9E75] text-xs font-bold border border-[#1D9E75]/20">
+                                <div className="p-3 rounded-xl bg-[#8C5A35]/10 text-[#8C5A35] text-xs font-bold border border-[#8C5A35]/20">
                                     ℹ️ Tamil Nadu State Board textbooks are supported for Grades 8, 9, 10, 11, and 12.
                                 </div>
                             )}
@@ -655,10 +655,10 @@ export const Onboarding = () => {
                                             disabled={disabled}
                                             onClick={() => setSelectedClass(entry)}
                                             className={`py-6 rounded-2xl font-black text-2xl transition-all ${disabled
-                                                ? 'bg-slate-50 dark:bg-slate-900/10 text-slate-300 dark:text-slate-700 cursor-not-allowed opacity-50'
+                                                ? 'bg-[#FCFAF8] text-stone-300 cursor-not-allowed opacity-50'
                                                 : selectedClass === entry
-                                                    ? 'bg-[#1D9E75] text-white shadow-lg shadow-[#1D9E75]/30'
-                                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                                    ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/30'
+                                                    : 'bg-[#F2EFE9] text-stone-700 hover:bg-[#E8E4DB] :bg-stone-700'
                                                 }`}
                                         >
                                             {entry}
@@ -678,12 +678,12 @@ export const Onboarding = () => {
                                         key={subject}
                                         onClick={() => toggleSubject(subject)}
                                         className={`p-4 rounded-2xl border-2 transition-all text-sm font-bold min-h-[92px] flex flex-col justify-between ${selected
-                                            ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                            : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                            ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                            : 'border-stone-200 text-stone-700 '
                                             }`}
                                     >
                                         <span className="leading-tight break-words">{subject}</span>
-                                        <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? 'bg-[#1D9E75] border-[#1D9E75]' : 'border-slate-300 dark:border-slate-600'}`}>
+                                        <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? 'bg-[#8C5A35] border-[#8C5A35]' : 'border-stone-300 '}`}>
                                             {selected && <Check size={13} className="text-white" />}
                                         </span>
                                     </button>
@@ -699,14 +699,14 @@ export const Onboarding = () => {
                                     key={label}
                                     onClick={() => setLearningStyle(label)}
                                     className={`w-full rounded-2xl border-2 p-4 text-left flex items-center gap-4 ${learningStyle === label
-                                        ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20'
-                                        : 'border-slate-200 dark:border-slate-700'
+                                        ? 'border-[#8C5A35] bg-amber-50 '
+                                        : 'border-stone-200 '
                                         }`}
                                 >
-                                    <Icon size={26} className={learningStyle === label ? 'text-[#1D9E75]' : 'text-slate-400'} />
+                                    <Icon size={26} className={learningStyle === label ? 'text-[#8C5A35]' : 'text-stone-400'} />
                                     <div>
-                                        <p className="font-black text-slate-900 dark:text-white">{label}</p>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">{desc}</p>
+                                        <p className="font-black text-[#2C241B] ">{label}</p>
+                                        <p className="text-sm text-stone-500 ">{desc}</p>
                                     </div>
                                 </button>
                             ))}
@@ -720,8 +720,8 @@ export const Onboarding = () => {
                                     key={entry}
                                     onClick={() => setGoal(entry)}
                                     className={`w-full p-4 rounded-2xl border-2 text-left font-bold ${goal === entry
-                                        ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                        : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                        ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                        : 'border-stone-200 text-stone-700 '
                                         }`}
                                 >
                                     {entry}
@@ -737,8 +737,8 @@ export const Onboarding = () => {
                                     key={entry}
                                     onClick={() => setStudyHours(entry)}
                                     className={`w-full p-4 rounded-2xl border-2 text-left font-bold flex items-center gap-3 ${studyHours === entry
-                                        ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                        : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                        ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                        : 'border-stone-200 text-stone-700 '
                                         }`}
                                 >
                                     <Clock size={18} />
@@ -755,8 +755,8 @@ export const Onboarding = () => {
                                     key={entry}
                                     onClick={() => setMainChallenge(entry)}
                                     className={`w-full p-4 rounded-2xl border-2 text-left font-bold ${mainChallenge === entry
-                                        ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                        : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                        ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                        : 'border-stone-200 text-stone-700 '
                                         }`}
                                 >
                                     {entry}
@@ -768,7 +768,7 @@ export const Onboarding = () => {
                     {step === 8 && (
                         <div className="space-y-6">
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Exam Board</p>
+                                <p className="text-xs font-black uppercase tracking-wide text-stone-500 mb-2">Exam Board</p>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                     {EXAM_BOARDS.map((entry) => (
                                         <button
@@ -784,15 +784,15 @@ export const Onboarding = () => {
                                                 }
                                             }}
                                             className={`p-3 rounded-xl border-2 text-sm font-bold transition-all text-left flex justify-between items-center ${entry.disabled
-                                                ? 'border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                                                ? 'border-stone-100 bg-[#FCFAF8] text-stone-400 cursor-not-allowed'
                                                 : examBoard === entry.value
-                                                    ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75] shadow-sm shadow-[#1D9E75]/10'
-                                                    : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-350 dark:hover:border-slate-600'
+                                                    ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35] shadow-sm shadow-[#8C5A35]/10'
+                                                    : 'border-stone-200 text-stone-700 hover:border-stone-350 :border-stone-600'
                                                 }`}
                                         >
                                             <span>{entry.label}</span>
                                             {examBoard === entry.value && !entry.disabled && (
-                                                <span className="w-2 h-2 rounded-full bg-[#1D9E75]" />
+                                                <span className="w-2 h-2 rounded-full bg-[#8C5A35]" />
                                             )}
                                         </button>
                                     ))}
@@ -800,12 +800,12 @@ export const Onboarding = () => {
                             </div>
 
                             {examBoard === 'Tamil Nadu State Board' && (
-                                <div className="p-4 rounded-2xl border-2 border-emerald-500/20 bg-emerald-50/30 dark:bg-emerald-950/10 space-y-3">
-                                    <p className="text-xs font-black uppercase tracking-wide text-[#1D9E75] flex items-center gap-1">
+                                <div className="p-4 rounded-2xl border-2 border-amber-500/20 bg-amber-50/30 space-y-3">
+                                    <p className="text-xs font-black uppercase tracking-wide text-[#8C5A35] flex items-center gap-1">
                                         <Sparkles size={14} /> Tamil Nadu Board Settings
                                     </p>
                                     <div>
-                                        <p className="text-xs font-bold text-slate-600 dark:text-slate-400 mb-2">Select Instruction Medium</p>
+                                        <p className="text-xs font-bold text-stone-600 mb-2">Select Instruction Medium</p>
                                         <div className="grid grid-cols-2 gap-2">
                                             {['English', 'Tamil'].map((med) => (
                                                 <button
@@ -813,15 +813,15 @@ export const Onboarding = () => {
                                                     type="button"
                                                     onClick={() => setTnMedium(med as 'English' | 'Tamil')}
                                                     className={`p-2.5 rounded-xl border-2 text-xs font-black transition-all ${tnMedium === med
-                                                        ? 'border-[#1D9E75] bg-[#1D9E75] text-white shadow-sm'
-                                                        : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
+                                                        ? 'border-[#8C5A35] bg-[#8C5A35] text-white shadow-sm'
+                                                        : 'border-stone-200 text-stone-700 bg-transparent hover:bg-[#F2EFE9] :bg-stone-800'
                                                         }`}
                                                 >
                                                     {med} Medium
                                                 </button>
                                             ))}
                                         </div>
-                                        <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-2">
+                                        <p className="text-[10px] text-stone-500 mt-2">
                                             * Selecting Tamil Medium will set your preferred language to Tamil and instruct the AI tutor to communicate with you and generate materials in Tamil script.
                                         </p>
                                     </div>
@@ -830,11 +830,11 @@ export const Onboarding = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Preferred Language</p>
+                                    <p className="text-xs font-black uppercase tracking-wide text-stone-500 mb-2">Preferred Language</p>
                                     <select
                                         value={preferredLanguage}
                                         onChange={(e) => setPreferredLanguage(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
                                     >
                                         {LANGUAGES.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -842,11 +842,11 @@ export const Onboarding = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Response Pace</p>
+                                    <p className="text-xs font-black uppercase tracking-wide text-stone-500 mb-2">Response Pace</p>
                                     <select
                                         value={preferredPace}
                                         onChange={(e) => setPreferredPace(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
                                     >
                                         {PACES.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -854,11 +854,11 @@ export const Onboarding = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Confidence Level</p>
+                                    <p className="text-xs font-black uppercase tracking-wide text-stone-500 mb-2">Confidence Level</p>
                                     <select
                                         value={confidenceLevel}
                                         onChange={(e) => setConfidenceLevel(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
                                     >
                                         {CONFIDENCE_LEVELS.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -866,11 +866,11 @@ export const Onboarding = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Revision Frequency</p>
+                                    <p className="text-xs font-black uppercase tracking-wide text-stone-500 mb-2">Revision Frequency</p>
                                     <select
                                         value={revisionFrequency}
                                         onChange={(e) => setRevisionFrequency(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
                                     >
                                         {REVISION_FREQUENCY.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -880,35 +880,35 @@ export const Onboarding = () => {
                             </div>
 
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Parent Email <span className="normal-case font-semibold text-slate-400">(optional — for progress reports)</span></p>
+                                <p className="text-xs font-black uppercase tracking-wide text-stone-500 mb-2">Parent Email <span className="normal-case font-semibold text-stone-400">(optional — for progress reports)</span></p>
                                 <input
                                     type="email"
                                     value={parentEmail}
                                     onChange={(e) => setParentEmail(e.target.value)}
                                     placeholder="parent@example.com (optional)"
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold"
+                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
                                 />
-                                <p className="mt-1 text-[11px] text-slate-400">If provided, your parent gets login credentials to view your progress dashboard.</p>
+                                <p className="mt-1 text-[11px] text-stone-400">If provided, your parent gets login credentials to view your progress dashboard.</p>
                             </div>
 
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wide text-slate-500 mb-2">Plan preference</p>
+                                <p className="text-xs font-black uppercase tracking-wide text-stone-500 mb-2">Plan preference</p>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                     {SUBSCRIPTION_TIERS.map((tier) => (
                                         <button
                                             key={tier.value}
                                             onClick={() => setSubscriptionTier(tier.value)}
                                             className={`rounded-xl border-2 p-3 text-left ${subscriptionTier === tier.value
-                                                ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20'
-                                                : 'border-slate-200 dark:border-slate-700'
+                                                ? 'border-[#8C5A35] bg-amber-50 '
+                                                : 'border-stone-200 '
                                                 }`}
                                         >
-                                            <p className="text-sm font-black text-slate-900 dark:text-white">{tier.label}</p>
-                                            <p className="text-[11px] text-slate-500 mt-1">{tier.desc}</p>
+                                            <p className="text-sm font-black text-[#2C241B] ">{tier.label}</p>
+                                            <p className="text-[11px] text-stone-500 mt-1">{tier.desc}</p>
                                         </button>
                                     ))}
                                 </div>
-                                <p className="mt-3 text-[11px] text-slate-500">
+                                <p className="mt-3 text-[11px] text-stone-500">
                                     This choice is saved as a billing preference. Real paid access is activated later from Settings.
                                 </p>
                             </div>
@@ -922,16 +922,16 @@ export const Onboarding = () => {
                                     key={p.value}
                                     onClick={() => setTeacherPersonality(p.value as any)}
                                     className={`w-full rounded-2xl border-2 p-6 text-left flex items-center gap-4 transition-all ${teacherPersonality === p.value
-                                        ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20'
-                                        : 'border-slate-200 dark:border-slate-700 hover:border-[#1D9E75]/50'
+                                        ? 'border-[#8C5A35] bg-amber-50 '
+                                        : 'border-stone-200 hover:border-[#8C5A35]/50'
                                         }`}
                                 >
-                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${teacherPersonality === p.value ? 'bg-[#1D9E75] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${teacherPersonality === p.value ? 'bg-[#8C5A35] text-white' : 'bg-[#F2EFE9] text-stone-500'}`}>
                                         <Sparkles size={24} />
                                     </div>
                                     <div>
-                                        <p className="font-black text-slate-900 dark:text-white">{p.label}</p>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{p.desc}</p>
+                                        <p className="font-black text-[#2C241B] ">{p.label}</p>
+                                        <p className="text-sm text-stone-500 font-medium">{p.desc}</p>
                                     </div>
                                 </button>
                             ))}
@@ -940,15 +940,15 @@ export const Onboarding = () => {
 
                     {step === 10 && (
                         <div className="space-y-6">
-                            <div className="rounded-2xl border border-[#1D9E75]/30 bg-emerald-50 dark:bg-emerald-900/10 p-4">
-                                <p className="text-sm font-bold text-slate-900 dark:text-white">What are you studying in school this week?</p>
-                                <p className="text-xs text-slate-500 mt-1">This helps the AI prioritize your daily missions and practice sets.</p>
+                            <div className="rounded-2xl border border-[#8C5A35]/30 bg-amber-50 p-4">
+                                <p className="text-sm font-bold text-[#2C241B] ">What are you studying in school this week?</p>
+                                <p className="text-xs text-stone-500 mt-1">This helps the AI prioritize your daily missions and practice sets.</p>
                             </div>
                             <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2">
                                 {selectedSubjects.map((subject) => (
                                     <div key={subject} className="space-y-3">
-                                        <div className="flex items-center justify-between border-b border-slate-150 dark:border-slate-800 pb-1.5 mb-2">
-                                            <h3 className="text-sm font-black text-[#1D9E75] uppercase tracking-wider">{subject}</h3>
+                                        <div className="flex items-center justify-between border-b border-stone-150 pb-1.5 mb-2">
+                                            <h3 className="text-sm font-black text-[#8C5A35] uppercase tracking-wider">{subject}</h3>
                                             <button
                                                 type="button"
                                                 onClick={() => {
@@ -960,7 +960,7 @@ export const Onboarding = () => {
                                                         [subject]: isAllSelected ? [] : allChapters
                                                     }));
                                                 }}
-                                                className="text-xs font-black text-[#1D9E75] hover:text-[#16805d] dark:hover:text-emerald-400 hover:underline transition-colors cursor-pointer"
+                                                className="text-xs font-black text-[#8C5A35] hover:text-[#70482B] :text-amber-400 hover:underline transition-colors cursor-pointer"
                                             >
                                                 {(() => {
                                                     const allChapters = chaptersForSubject(subject);
@@ -986,8 +986,8 @@ export const Onboarding = () => {
                                                             });
                                                         }}
                                                         className={`p-3 rounded-xl border-2 text-left text-sm font-bold transition-all ${isFocused
-                                                            ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-[#1D9E75]/30'
+                                                            ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                                            : 'border-stone-200 text-stone-600 hover:border-[#8C5A35]/30'
                                                             }`}
                                                     >
                                                         <div className="flex items-center justify-between">
@@ -1007,40 +1007,40 @@ export const Onboarding = () => {
                     {step === 11 && (
                         <div className="space-y-5">
                             {isEditing ? (
-                                <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4">
-                                    <p className="text-sm font-black text-slate-900 dark:text-white">Diagnostic is first-time only</p>
-                                    <p className="text-xs text-slate-500 mt-1">
+                                <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                                    <p className="text-sm font-black text-[#2C241B] ">Diagnostic is first-time only</p>
+                                    <p className="text-xs text-stone-500 mt-1">
                                         You are updating an existing account, so the signup diagnostic is skipped.
                                     </p>
                                 </div>
                             ) : (
                                 <>
-                                    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4">
-                                        <p className="text-sm font-black text-slate-900 dark:text-white">Baseline diagnostic quiz</p>
-                                        <p className="text-xs text-slate-500 mt-1">
+                                    <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                                        <p className="text-sm font-black text-[#2C241B] ">Baseline diagnostic quiz</p>
+                                        <p className="text-xs text-stone-500 mt-1">
                                             These questions are from one grade lower to test fundamentals.
                                             {diagnosticMeta ? ` Class ${diagnosticMeta.diagnosticClass} • ${diagnosticMeta.diagnosticSubject}` : ''}
                                         </p>
                                     </div>
                                     {diagnosticLoading && (
-                                        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4">
-                                            <p className="text-sm text-slate-600 dark:text-slate-300">Loading diagnostic questions...</p>
+                                        <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                                            <p className="text-sm text-stone-600 ">Loading diagnostic questions...</p>
                                         </div>
                                     )}
                                     <div className="space-y-4">
                                         {diagnosticQuestions.map((question, index) => (
-                                            <div key={question.id} className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                                                <p className="text-xs font-black uppercase tracking-wide text-[#1D9E75] mb-2">Question {index + 1}</p>
-                                                <p className="text-[11px] font-bold text-slate-500 mb-2">{question.chapter}</p>
-                                                <p className="text-sm font-bold text-slate-900 dark:text-white mb-3">{question.prompt}</p>
+                                            <div key={question.id} className="rounded-2xl border border-stone-200 p-4">
+                                                <p className="text-xs font-black uppercase tracking-wide text-[#8C5A35] mb-2">Question {index + 1}</p>
+                                                <p className="text-[11px] font-bold text-stone-500 mb-2">{question.chapter}</p>
+                                                <p className="text-sm font-bold text-[#2C241B] mb-3">{question.prompt}</p>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                                     {question.options.map((option) => (
                                                         <button
                                                             key={option.key}
                                                             onClick={() => setDiagnosticAnswers((prev) => ({ ...prev, [question.id]: option.key }))}
                                                             className={`rounded-xl border-2 p-3 text-left text-sm font-semibold transition-all ${diagnosticAnswers[question.id] === option.key
-                                                                ? 'border-[#1D9E75] bg-emerald-50 dark:bg-emerald-900/20 text-[#1D9E75]'
-                                                                : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                                                                ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]'
+                                                                : 'border-stone-200 text-stone-700 '
                                                                 }`}
                                                         >
                                                             <span className="font-black mr-2">{option.key}.</span>{option.text}
@@ -1051,8 +1051,8 @@ export const Onboarding = () => {
                                         ))}
                                     </div>
                                     {diagnosticScore !== null && (
-                                        <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 p-4">
-                                            <p className="text-sm font-black text-emerald-700 dark:text-emerald-300">Diagnostic score: {diagnosticScore}%</p>
+                                        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4">
+                                            <p className="text-sm font-black text-amber-700 ">Diagnostic score: {diagnosticScore}%</p>
                                         </div>
                                     )}
                                 </>
@@ -1063,34 +1063,34 @@ export const Onboarding = () => {
                     {step === 12 && (
                         <div className="text-center py-6 space-y-5">
                             <div className="text-5xl">🎯</div>
-                            <h2 className="text-3xl font-black text-slate-900 dark:text-white">Ready to Start</h2>
-                            <p className="text-slate-600 dark:text-slate-400 font-semibold max-w-lg mx-auto">
+                            <h2 className="text-3xl font-black text-[#2C241B] ">Ready to Start</h2>
+                            <p className="text-stone-600 font-semibold max-w-lg mx-auto">
                                 {name || 'Student'}, your tutor is now tuned for Class {selectedClass}, {selectedSubjects.length} subjects, {learningStyle || 'your'} style, and a {goal || 'custom'} goal.
                             </p>
                             <div className="grid grid-cols-2 gap-3 text-left max-w-xl mx-auto">
-                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3">
-                                    <p className="text-xs uppercase font-bold text-slate-500">Daily Time</p>
-                                    <p className="font-black text-slate-900 dark:text-white">{studyHours}</p>
+                                <div className="bg-[#F2EFE9] rounded-xl p-3">
+                                    <p className="text-xs uppercase font-bold text-stone-500">Daily Time</p>
+                                    <p className="font-black text-[#2C241B] ">{studyHours}</p>
                                 </div>
-                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3">
-                                    <p className="text-xs uppercase font-bold text-slate-500">Main Challenge</p>
-                                    <p className="font-black text-slate-900 dark:text-white">{mainChallenge}</p>
+                                <div className="bg-[#F2EFE9] rounded-xl p-3">
+                                    <p className="text-xs uppercase font-bold text-stone-500">Main Challenge</p>
+                                    <p className="font-black text-[#2C241B] ">{mainChallenge}</p>
                                 </div>
-                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3">
-                                    <p className="text-xs uppercase font-bold text-slate-500">Language & Pace</p>
-                                    <p className="font-black text-slate-900 dark:text-white">{preferredLanguage} • {preferredPace}</p>
+                                <div className="bg-[#F2EFE9] rounded-xl p-3">
+                                    <p className="text-xs uppercase font-bold text-stone-500">Language & Pace</p>
+                                    <p className="font-black text-[#2C241B] ">{preferredLanguage} • {preferredPace}</p>
                                 </div>
-                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3">
-                                    <p className="text-xs uppercase font-bold text-slate-500">Board & Revision</p>
-                                    <p className="font-black text-slate-900 dark:text-white">{examBoard} • {revisionFrequency}</p>
+                                <div className="bg-[#F2EFE9] rounded-xl p-3">
+                                    <p className="text-xs uppercase font-bold text-stone-500">Board & Revision</p>
+                                    <p className="font-black text-[#2C241B] ">{examBoard} • {revisionFrequency}</p>
                                 </div>
-                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3 col-span-2">
-                                    <p className="text-xs uppercase font-bold text-slate-500">AI Personality</p>
-                                    <p className="font-black text-slate-900 dark:text-white">{teacherPersonality}</p>
+                                <div className="bg-[#F2EFE9] rounded-xl p-3 col-span-2">
+                                    <p className="text-xs uppercase font-bold text-stone-500">AI Personality</p>
+                                    <p className="font-black text-[#2C241B] ">{teacherPersonality}</p>
                                 </div>
-                                <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-3 col-span-2">
-                                    <p className="text-xs uppercase font-bold text-slate-500">Plan preference</p>
-                                    <p className="font-black text-slate-900 dark:text-white">{subscriptionTier.replace('_', ' ').toUpperCase()}</p>
+                                <div className="bg-[#F2EFE9] rounded-xl p-3 col-span-2">
+                                    <p className="text-xs uppercase font-bold text-stone-500">Plan preference</p>
+                                    <p className="font-black text-[#2C241B] ">{subscriptionTier.replace('_', ' ').toUpperCase()}</p>
                                 </div>
                             </div>
                         </div>
@@ -1101,7 +1101,7 @@ export const Onboarding = () => {
                     {step > 0 && (
                         <button
                             onClick={() => setStep((prev) => Math.max(0, prev - 1))}
-                            className="px-5 py-3 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2"
+                            className="px-5 py-3 rounded-xl font-bold text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800 flex items-center gap-2"
                         >
                             <ArrowLeft size={18} />
                             Back
@@ -1111,7 +1111,7 @@ export const Onboarding = () => {
                     {step < steps.length - 1 && !(location.state?.editFocus && step === 10) ? (
                         <button
                             onClick={handleNext}
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#1D9E75] to-emerald-600 text-white font-black hover:from-[#178764] hover:to-emerald-700 flex items-center gap-2 shadow-lg"
+                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 shadow-lg"
                         >
                             Next
                             <ArrowRight size={18} />
@@ -1120,7 +1120,7 @@ export const Onboarding = () => {
                         <button
                             onClick={step === 10 && location.state?.editFocus ? handleComplete : handleComplete}
                             disabled={isSubmitting}
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#1D9E75] to-emerald-600 text-white font-black hover:from-[#178764] hover:to-emerald-700 flex items-center gap-2 shadow-lg"
+                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 shadow-lg"
                         >
                             {isSubmitting ? 'Saving...' : (location.state?.editFocus && step === 10 ? 'Save Focus' : 'Enter Dashboard')}
                             {location.state?.editFocus && step === 10 ? <Check size={18} /> : <Sparkles size={18} />}
@@ -1131,7 +1131,7 @@ export const Onboarding = () => {
                 {existingUser && (
                     <button
                         onClick={handleReset}
-                        className="mx-auto mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-red-500"
+                        className="mx-auto mt-6 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-stone-400 hover:text-red-500"
                     >
                         <Trash2 size={14} />
                         Clear All Data

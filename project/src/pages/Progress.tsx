@@ -27,9 +27,9 @@ export const Progress = () => {
     }, []);
 
     const getTrendColor = (trend: string) => {
-        if (trend === 'improving') return 'text-green-600 bg-green-50 dark:bg-green-900/20';
-        if (trend === 'declining') return 'text-red-600 bg-red-50 dark:bg-red-900/20';
-        return 'text-blue-600 bg-blue-50 dark:bg-blue-900/20';
+        if (trend === 'improving') return 'text-green-600 bg-green-50 ';
+        if (trend === 'declining') return 'text-red-600 bg-red-50 ';
+        return 'text-blue-600 bg-blue-50 ';
     };
 
     const handleExport = () => {
@@ -60,21 +60,21 @@ export const Progress = () => {
     const hasActivity = analytics?.has_activity || false;
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] transition-colors duration-300">
+        <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
             <Navbar />
             <main className="max-w-7xl mx-auto px-6 py-10">
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
+                        <h1 className="text-3xl md:text-4xl font-black text-[#2C241B] ">
                             Learning Progress
                         </h1>
-                        <p className="text-slate-500 mt-2 font-medium">
+                        <p className="text-stone-500 mt-2 font-medium">
                             Track your performance, identify weak areas, and optimize your study routine.
                         </p>
                     </div>
                     <Button
                         onClick={handleExport}
-                        className="rounded-xl bg-slate-700 hover:bg-slate-800"
+                        className="rounded-xl bg-stone-700 hover:bg-stone-800"
                     >
                         <Download size={16} className="mr-2" />
                         Export Data
@@ -82,18 +82,18 @@ export const Progress = () => {
                 </div>
 
                 {loading && (
-                    <Card className="p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
-                        <p className="text-sm text-slate-500">Loading real analytics...</p>
+                    <Card className="p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl mb-8">
+                        <p className="text-sm text-stone-500">Loading real analytics...</p>
                     </Card>
                 )}
 
                 {/* Learning Insights */}
                 {!loading && insights.length > 0 && (
-                    <Card className="p-6 md:p-8 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-slate-800 dark:to-slate-900 border border-amber-100 dark:border-slate-700 rounded-3xl mb-8">
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">💡 Learning Insights</h2>
+                    <Card className="p-6 md:p-8 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-3xl mb-8">
+                        <h2 className="text-lg font-bold text-[#2C241B] mb-4">💡 Learning Insights</h2>
                         <div className="space-y-2">
                             {insights.map((insight, idx) => (
-                                <p key={idx} className="text-sm text-slate-700 dark:text-slate-200">
+                                <p key={idx} className="text-sm text-stone-700 ">
                                     {insight}
                                 </p>
                             ))}
@@ -103,27 +103,27 @@ export const Progress = () => {
 
                 {/* Key Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                    <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-1">
+                                <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
                                     Average Score
                                 </p>
-                                <p className="text-4xl font-black text-slate-900 dark:text-white">
+                                <p className="text-4xl font-black text-[#2C241B] ">
                                     {overall?.average_score ?? 0}%
                                 </p>
                             </div>
-                            <BarChart3 className="text-[#1D9E75] opacity-20" size={32} />
+                            <BarChart3 className="text-[#8C5A35] opacity-20" size={32} />
                         </div>
                     </Card>
 
-                    <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-1">
+                                <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
                                     Study Streak
                                 </p>
-                                <p className="text-4xl font-black text-slate-900 dark:text-white">
+                                <p className="text-4xl font-black text-[#2C241B] ">
                                     {overall?.study_streak_days ?? 0}d
                                 </p>
                             </div>
@@ -131,13 +131,13 @@ export const Progress = () => {
                         </div>
                     </Card>
 
-                    <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-1">
+                                <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
                                     Hours Studied
                                 </p>
-                                <p className="text-4xl font-black text-slate-900 dark:text-white">
+                                <p className="text-4xl font-black text-[#2C241B] ">
                                     {overall?.hours_studied ?? 0}h
                                 </p>
                             </div>
@@ -145,13 +145,13 @@ export const Progress = () => {
                         </div>
                     </Card>
 
-                    <Card className="p-6 bg-white dark:bg-[#0f172a] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-xs font-black uppercase tracking-wider text-slate-500 mb-1">
+                                <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
                                     Questions/Day
                                 </p>
-                                <p className="text-4xl font-black text-slate-900 dark:text-white">
+                                <p className="text-4xl font-black text-[#2C241B] ">
                                     {overall?.questions_per_day ?? 0}
                                 </p>
                             </div>
@@ -161,30 +161,30 @@ export const Progress = () => {
                 </div>
 
                 {/* Activity Breakdown */}
-                <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
-                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Activity Breakdown</h2>
+                <Card className="p-6 md:p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl mb-8">
+                    <h2 className="text-xl font-bold text-[#2C241B] mb-6">Activity Breakdown</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-violet-50 dark:bg-violet-900/20 p-4 rounded-xl border border-violet-100 dark:border-violet-800">
+                        <div className="bg-violet-50 p-4 rounded-xl border border-violet-100 ">
                             <p className="text-xs font-black uppercase text-violet-600 mb-2">Questions Asked</p>
-                            <p className="text-3xl font-bold text-violet-700 dark:text-violet-400">
+                            <p className="text-3xl font-bold text-violet-700 ">
                                 {overall?.total_questions ?? 0}
                             </p>
                         </div>
-                        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-800">
+                        <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 ">
                             <p className="text-xs font-black uppercase text-blue-600 mb-2">Practice Sets</p>
-                            <p className="text-3xl font-bold text-blue-700 dark:text-blue-400">
+                            <p className="text-3xl font-bold text-blue-700 ">
                                 {overall?.total_practice_attempts ?? 0}
                             </p>
                         </div>
-                        <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-xl border border-emerald-100 dark:border-emerald-800">
-                            <p className="text-xs font-black uppercase text-emerald-600 mb-2">Flashcard Reviews</p>
-                            <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-400">
+                        <div className="bg-amber-50 p-4 rounded-xl border border-amber-100 ">
+                            <p className="text-xs font-black uppercase text-amber-600 mb-2">Flashcard Reviews</p>
+                            <p className="text-3xl font-bold text-amber-700 ">
                                 {overall?.total_flashcard_reviews ?? 0}
                             </p>
                         </div>
-                        <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-xl border border-orange-100 dark:border-orange-800">
+                        <div className="bg-orange-50 p-4 rounded-xl border border-orange-100 ">
                             <p className="text-xs font-black uppercase text-orange-600 mb-2">Files Uploaded</p>
-                            <p className="text-3xl font-bold text-orange-700 dark:text-orange-400">
+                            <p className="text-3xl font-bold text-orange-700 ">
                                 {overall?.total_uploads ?? 0}
                             </p>
                         </div>
@@ -193,8 +193,8 @@ export const Progress = () => {
 
                 {/* Weak Topics */}
                 {weakTopics.length > 0 && (
-                    <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                    <Card className="p-6 md:p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl mb-8">
+                        <h2 className="text-xl font-bold text-[#2C241B] mb-6 flex items-center gap-2">
                             <AlertCircle size={20} className="text-red-600" />
                             Topics Needing Attention
                         </h2>
@@ -202,20 +202,20 @@ export const Progress = () => {
                             {weakTopics.slice(0, 5).map((topic, idx) => (
                                 <div
                                     key={idx}
-                                    className="p-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"
+                                    className="p-4 rounded-xl border border-red-200 bg-red-50 "
                                 >
                                     <div className="flex items-start justify-between mb-3">
                                         <div>
-                                            <p className="font-bold text-slate-900 dark:text-white">
+                                            <p className="font-bold text-[#2C241B] ">
                                                 {topic.chapter}
                                             </p>
-                                            <p className="text-xs text-slate-500 mt-1">{topic.subject}</p>
+                                            <p className="text-xs text-stone-500 mt-1">{topic.subject}</p>
                                         </div>
-                                        <span className="px-3 py-1 rounded-lg bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 font-bold text-sm">
+                                        <span className="px-3 py-1 rounded-lg bg-red-200 text-red-800 font-bold text-sm">
                                             {topic.average_score}%
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-4 text-sm text-slate-700 dark:text-slate-300">
+                                    <div className="flex items-center gap-4 text-sm text-stone-700 ">
                                         <span>Attempts: {topic.total_attempts}</span>
                                         <span className={`font-bold ${getTrendColor(topic.trend)}`}>
                                             {topic.trend === 'improving' && '📈 Improving'}
@@ -231,8 +231,8 @@ export const Progress = () => {
 
                 {/* Recommendations */}
                 {recommendations.length > 0 && (
-                    <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl mb-8">
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                    <Card className="p-6 md:p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl mb-8">
+                        <h2 className="text-xl font-bold text-[#2C241B] mb-6 flex items-center gap-2">
                             <Star size={20} className="text-amber-600" />
                             Recommended Topics to Study
                         </h2>
@@ -240,15 +240,15 @@ export const Progress = () => {
                             {recommendations.slice(0, 6).map((topic, idx) => (
                                 <div
                                     key={idx}
-                                    className="p-4 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20"
+                                    className="p-4 rounded-xl border border-amber-200 bg-amber-50 "
                                 >
-                                    <p className="font-bold text-slate-900 dark:text-white">{topic.chapter}</p>
-                                    <p className="text-xs text-slate-500 mt-1">{topic.subject}</p>
+                                    <p className="font-bold text-[#2C241B] ">{topic.chapter}</p>
+                                    <p className="text-xs text-stone-500 mt-1">{topic.subject}</p>
                                     <div className="mt-3 flex items-center gap-3 text-sm">
-                                        <span className="font-bold text-amber-700 dark:text-amber-300">
+                                        <span className="font-bold text-amber-700 ">
                                             Score: {topic.average_score}%
                                         </span>
-                                        <span className="text-slate-600 dark:text-slate-400">
+                                        <span className="text-stone-600 ">
                                             {topic.total_attempts} attempts
                                         </span>
                                     </div>
@@ -260,9 +260,9 @@ export const Progress = () => {
 
                 {/* Subject Breakdown */}
                 {subjectBreakdown.length > 0 && (
-                    <Card className="p-6 md:p-8 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl">
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                            <BookOpen size={20} className="text-[#1D9E75]" />
+                    <Card className="p-6 md:p-8 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
+                        <h2 className="text-xl font-bold text-[#2C241B] mb-6 flex items-center gap-2">
+                            <BookOpen size={20} className="text-[#8C5A35]" />
                             Performance by Subject
                         </h2>
                         <div className="space-y-6">
@@ -271,20 +271,20 @@ export const Progress = () => {
 
                                 return (
                                     <div key={subjectMetric.subject}>
-                                        <p className="font-bold text-slate-900 dark:text-white mb-3">
+                                        <p className="font-bold text-[#2C241B] mb-3">
                                             {subjectMetric.subject} ({subjectMetric.topic_count} topics)
                                         </p>
                                         <div
-                                            className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden"
+                                            className="w-full bg-[#E8E4DB] rounded-full h-3 overflow-hidden"
                                         >
                                             <div
-                                                className="h-full bg-gradient-to-r from-[#1D9E75] to-[#16805d] rounded-full transition-all"
+                                                className="h-full bg-gradient-to-r from-[#8C5A35] to-[#70482B] rounded-full transition-all"
                                                 style={{
                                                     width: `${Math.min(avgScore, 100)}%`,
                                                 }}
                                             />
                                         </div>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                                        <p className="text-sm text-stone-600 mt-2">
                                             Average: {Math.round(avgScore)}%
                                         </p>
                                     </div>
@@ -296,10 +296,10 @@ export const Progress = () => {
 
                 {/* Empty State */}
                 {!loading && !hasActivity && (
-                    <Card className="p-12 bg-white dark:bg-[#0f172a] border-none shadow-xl rounded-3xl text-center">
-                        <BarChart3 size={48} className="mx-auto text-slate-300 dark:text-slate-700 mb-4" />
-                        <p className="text-lg font-bold text-slate-900 dark:text-white">No activity yet</p>
-                        <p className="text-slate-500 mt-2 max-w-md mx-auto">
+                    <Card className="p-12 bg-[#FCFAF8] border-none shadow-xl rounded-3xl text-center">
+                        <BarChart3 size={48} className="mx-auto text-stone-300 mb-4" />
+                        <p className="text-lg font-bold text-[#2C241B] ">No activity yet</p>
+                        <p className="text-stone-500 mt-2 max-w-md mx-auto">
                             Start studying to see your progress, trends, and personalized recommendations here.
                         </p>
                     </Card>
