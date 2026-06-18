@@ -17,7 +17,7 @@ export const Login = () => {
         try {
             await loginWithGoogle();
             toast.success('Logged in with Google');
-            navigate('/onboarding');
+            navigate('/dump');
         } catch {
             toast.error('Failed to login with Google');
         } finally {
@@ -36,7 +36,7 @@ export const Login = () => {
         try {
             await loginWithEmail(email.trim());
             toast.success('Logged in with Email');
-            navigate('/onboarding');
+            navigate('/dump');
         } catch {
             toast.error('Invalid email or account not found.');
         } finally {

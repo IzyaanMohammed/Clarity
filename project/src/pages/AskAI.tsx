@@ -11,7 +11,7 @@ import { addBookmark, getUser, incrementDailyQuestion, checkDailyLimits, increme
 import { askQuestionStream, uploadFile, logProgress, saveMaterialToDatabase } from '../api';
 import { Message } from '../types';
 import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
-import { buildAryaSystemPrompt } from '../lib/ai';
+import { buildClarifiSystemPrompt } from '../lib/ai';
 
 export const AskAI = () => {
   const location = useLocation();
@@ -180,7 +180,7 @@ export const AskAI = () => {
           confidence_level: user?.confidenceLevel || 'Average confidence',
           revision_frequency: user?.revisionFrequency || 'Alternate days',
         },
-        teacher_personality: buildAryaSystemPrompt(
+        teacher_personality: buildClarifiSystemPrompt(
           (() => {
             try {
               const dump = JSON.parse(localStorage.getItem(`clarity_dump_${user?.id}`) || '[]');

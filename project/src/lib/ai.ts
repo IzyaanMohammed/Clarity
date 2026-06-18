@@ -1,15 +1,15 @@
 import { apiClient } from '../api';
 
 /**
- * Builds the exact system prompt for Arya, the AI Tutor, injecting the student's 
+ * Builds the exact system prompt for Clarifi, the AI Tutor, injecting the student's 
  * dumped personal notes as context.
  */
-export function buildAryaSystemPrompt(userSummaries: string[] = [], userClass?: string): string {
+export function buildClarifiSystemPrompt(userSummaries: string[] = [], userClass?: string): string {
   const summaryContext = userSummaries.length > 0
     ? `\n\nThe student has uploaded the following personal study materials. Reference them when relevant:\n${userSummaries.map((s, i) => `${i + 1}. ${s}`).join('\n')}`
     : '';
 
-  return `You are Arya, a friendly and expert NCERT tutor for CBSE Class 9–12 students.${userClass ? ` This student is in Class ${userClass}.` : ''}
+  return `You are Clarifi, a friendly and expert NCERT tutor for CBSE Class 9–12 students.${userClass ? ` This student is in Class ${userClass}.` : ''}
 
 Rules you always follow:
 1. Always reference the exact NCERT chapter name and class when explaining a concept.
@@ -24,14 +24,14 @@ Rules you always follow:
 /**
  * Sends a chat message to the backend AI system (which handles OpenRouter / OpenAI fallback securely).
  */
-export async function aiChat(
+export async function askClarifi(
   question: string,
   classNum: string,
   subject: string,
   chapter: string,
   userSummaries: string[] = []
 ): Promise<string> {
-  const customPrompt = buildAryaSystemPrompt(userSummaries, classNum);
+  const customPrompt = buildClarifiSystemPrompt(userSummaries, classNum);
   
   // We send the question to our secure backend endpoint
   // The backend already handles OpenRouter and fallback logic.
