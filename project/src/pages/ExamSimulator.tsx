@@ -845,14 +845,14 @@ export const ExamSimulator = () => {
                   
                   {/* Toggles Calculator */}
                   <button
-                    onClick={() => setCalcOpen(!calcOpen)}
+                    onClick={() => setShowCalculator(!showCalculator)}
                     className="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-left text-xs font-black text-slate-700 dark:text-slate-350 hover:bg-[#1D9E75]/10 hover:border-[#1D9E75]/40 transition-all flex items-center justify-between"
                   >
                     <span className="flex items-center gap-2">
                       <Calculator size={14} className="text-[#1D9E75]" />
                       Scientific Calculator
                     </span>
-                    <span>{calcOpen ? '✕' : '▼'}</span>
+                    <span>{showCalculator ? '✕' : '▼'}</span>
                   </button>
 
                   {/* Formula sheet lookup removed */}
@@ -949,7 +949,7 @@ export const ExamSimulator = () => {
       </main>
 
       {/* FLOAT TOOLKIT 1: Scientific Calculator Dialog */}
-      {calcOpen && (
+      {showCalculator && (
         <div className="fixed bottom-10 right-10 z-[120] w-72 rounded-3xl border border-slate-200 dark:border-slate-800 bg-[#fafafa] dark:bg-[#1a1f2c] shadow-2xl p-4 animate-scaleIn">
           <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-3">
             <span className="text-xs font-black uppercase text-slate-400 flex items-center gap-1.5">
