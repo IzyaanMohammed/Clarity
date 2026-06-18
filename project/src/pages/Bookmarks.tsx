@@ -70,7 +70,7 @@ export const Bookmarks = () => {
                             Your saved answers, flashcards, and key revision notes.
                         </p>
                     </div>
-                    <div className="flex gap-2 bg-[#FCFAF8] p-1.5 rounded-2xl border border-stone-100 ">
+                    <div className="flex gap-2 bg-[#FCFAF8] p-1.5 rounded-2xl border-3 border-[#2C241B] shadow-neo ">
                         {filterOptions.map((t) => (
                             <button
                                 key={t}
@@ -92,7 +92,7 @@ export const Bookmarks = () => {
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search subject, chapter, answer, or keyword"
-                        className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm"
+                        className="w-full px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm"
                     />
                 </Card>
 
@@ -183,7 +183,7 @@ export const Bookmarks = () => {
                                 Download .md
                             </Button>
                         </div>
-                        <div className="max-h-[60vh] overflow-y-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                        <div className="max-h-[60vh] overflow-y-auto rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                             {activeBookmark.type === 'flashcard' ? (
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
@@ -196,7 +196,7 @@ export const Bookmarks = () => {
                                             Flip
                                         </Button>
                                     </div>
-                                    <div className="rounded-3xl border border-stone-200 bg-[#FCFAF8] p-6 min-h-[240px] flex items-center justify-center text-center">
+                                    <div className="rounded-3xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-6 min-h-[240px] flex items-center justify-center text-center">
                                         <div>
                                             <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-3">
                                                 {showFlashcardAnswer ? 'Answer' : 'Question'}

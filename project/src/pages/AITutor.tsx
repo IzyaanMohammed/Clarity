@@ -102,7 +102,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
       if (!table) return null;
 
       return (
-          <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+          <div className="overflow-x-auto rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
               <table className="min-w-full text-left text-sm">
                   <thead className="bg-[#F2EFE9] ">
                       <tr>
@@ -361,7 +361,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
           </button>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="p-4 bg-gradient-to-br from-[#8C5A35] to-amber-600 rounded-3xl text-white shadow-lg">
+              <div className="p-4 bg-gradient-to-br from-[#8C5A35] to-amber-600 rounded-3xl text-white ">
                 <Bot size={36} />
               </div>
               <div>
@@ -375,7 +375,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
               </div>
             </div>
             {/* Real-time streak box */}
-            <div className="flex items-center gap-3 bg-[#FCFAF8] p-3 px-5 rounded-2xl border-2 border-stone-100 shadow-sm max-w-fit">
+            <div className="flex items-center gap-3 bg-[#FCFAF8] p-3 px-5 rounded-2xl border-2 border-stone-100  max-w-fit">
               <Flame className="text-orange-500 fill-orange-500" size={24} />
               <div>
                 <p className="text-[10px] uppercase font-black text-stone-400 tracking-wider">Streak</p>
@@ -388,12 +388,12 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
         </div>
 
         {/* Tab Toggle Bar */}
-        <div className="flex bg-[#FCFAF8] p-1.5 rounded-2xl border-2 border-stone-100 shadow-sm max-w-md mb-8">
+        <div className="flex bg-[#FCFAF8] p-1.5 rounded-2xl border-2 border-stone-100  max-w-md mb-8">
           <button
             onClick={() => setActiveTab('chat')}
             className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${
               activeTab === 'chat'
-                ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20'
+                ? 'bg-[#8C5A35] text-white  /20'
                 : 'text-stone-500 hover:bg-[#FCFAF8] :bg-stone-700'
             }`}
           >
@@ -403,7 +403,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
             onClick={() => setActiveTab('planner')}
             className={`flex-1 py-3 rounded-xl text-sm font-black transition-all ${
               activeTab === 'planner'
-                ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20'
+                ? 'bg-[#8C5A35] text-white  /20'
                 : 'text-stone-500 hover:bg-[#FCFAF8] :bg-stone-700'
             }`}
           >
@@ -416,7 +416,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
           {/* Left Column: Analytics Sidebar */}
           <div className="space-y-6 lg:col-span-1">
             {/* Quick Stats Card */}
-            <Card className="p-6 bg-[#FCFAF8] border-2 border-stone-100 rounded-3xl shadow-sm space-y-5">
+            <Card className="p-6 bg-[#FCFAF8] border-2 border-stone-100 rounded-3xl  space-y-5">
               <h3 className="text-base font-black text-[#2C241B] uppercase tracking-wider border-b-2 pb-2">
                 Your Prep Summary
               </h3>
@@ -461,7 +461,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
             </Card>
 
             {/* Weak Topics Card */}
-            <Card className="p-6 bg-[#FCFAF8] border-2 border-stone-100 rounded-3xl shadow-sm">
+            <Card className="p-6 bg-[#FCFAF8] border-2 border-stone-100 rounded-3xl ">
               <h3 className="text-base font-black text-[#2C241B] uppercase tracking-wider border-b-2 pb-2 mb-4">
                 Weak Topics Focus
               </h3>
@@ -504,7 +504,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                   <button
                     key={i}
                     onClick={() => handleQuickQuestion(prompt)}
-                    className="w-full text-left p-3 bg-[#FCFAF8] hover:bg-amber-50 :bg-stone-700 border border-stone-100 text-xs font-bold rounded-xl text-stone-700 transition-all truncate hover:transtone-x-1"
+                    className="w-full text-left p-3 bg-[#FCFAF8] hover:bg-amber-50 :bg-stone-700 border-3 border-[#2C241B] shadow-neo text-xs font-bold rounded-xl text-stone-700 transition-all truncate hover:transtone-x-1"
                   >
                     💡 "{prompt}"
                   </button>
@@ -514,7 +514,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
           </div>
 
           {/* Right Column: Conversational Chat OS */}
-          <div className="lg:col-span-2 flex flex-col h-[92vh] bg-[#FCFAF8] border-2 border-stone-100 rounded-3xl shadow-lg overflow-hidden">
+          <div className="lg:col-span-2 flex flex-col h-[92vh] bg-[#FCFAF8] border-2 border-stone-100 rounded-3xl  overflow-hidden">
             {/* Conversational Screen Title */}
             <div className="p-4 bg-[#FCFAF8] border-b border-stone-100 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -551,7 +551,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                     className={`p-5 rounded-3xl font-medium leading-relaxed text-sm ${
                       msg.role === 'user'
                         ? 'bg-stone-900 text-white rounded-tr-none'
-                        : 'bg-[#FCFAF8] text-[#3E352B] border border-stone-100 rounded-tl-none'
+                        : 'bg-[#FCFAF8] text-[#3E352B] border-3 border-[#2C241B] shadow-neo rounded-tl-none'
                     }`}
                   >
                     <MarkdownContent content={msg.content} className="prose prose-sm " />
@@ -565,7 +565,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                   <div className="w-10 h-10 rounded-full bg-[#8C5A35] text-white flex items-center justify-center flex-shrink-0">
                     <Bot size={18} />
                   </div>
-                  <div className="p-5 rounded-3xl rounded-tl-none bg-[#FCFAF8] text-[#3E352B] border border-stone-100 font-medium leading-relaxed text-sm">
+                  <div className="p-5 rounded-3xl rounded-tl-none bg-[#FCFAF8] text-[#3E352B] border-3 border-[#2C241B] shadow-neo font-medium leading-relaxed text-sm">
                     <MarkdownContent content={streamingResponse} className="prose prose-sm " />
                   </div>
                 </div>
@@ -577,7 +577,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                   <div className="w-10 h-10 rounded-full bg-[#8C5A35] text-white flex items-center justify-center flex-shrink-0">
                     <Bot size={18} />
                   </div>
-                  <div className="p-5 rounded-3xl rounded-tl-none bg-[#FCFAF8] text-[#3E352B] border border-stone-100 flex items-center gap-2 text-sm font-semibold">
+                  <div className="p-5 rounded-3xl rounded-tl-none bg-[#FCFAF8] text-[#3E352B] border-3 border-[#2C241B] shadow-neo flex items-center gap-2 text-sm font-semibold">
                     <div className="animate-spin h-4 w-4 border-2 border-[#8C5A35] border-t-transparent rounded-full" />
                     Analyzing metrics & drafting recommendations...
                   </div>
@@ -597,12 +597,12 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 placeholder="Ask your tutor coach anything... (e.g., 'What chapters should I review next?')"
-                className="flex-1 px-5 py-3 rounded-2xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] outline-none font-bold text-sm focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all"
+                className="flex-1 px-5 py-3 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-[#2C241B] outline-none font-bold text-sm focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all"
                 disabled={isSending}
               />
               <Button
                 type="submit"
-                className="p-3 bg-[#8C5A35] hover:bg-[#70482B] text-white rounded-2xl flex items-center justify-center shadow-md w-12 h-12 flex-shrink-0"
+                className="p-3 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white rounded-2xl flex items-center justify-center  w-12 h-12 flex-shrink-0"
                 disabled={isSending || !inputMessage.trim()}
               >
                 <Send size={18} />
@@ -635,7 +635,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                        type="date"
                        value={examDate}
                        onChange={(e) => handleExamDateChange(e.target.value)}
-                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 outline-none focus:ring-1 focus:ring-[#8C5A35]"
+                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo outline-none focus:ring-1 focus:ring-[#8C5A35]"
                      />
                    </div>
 
@@ -646,13 +646,13 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                        value={weakTopicsInput}
                        onChange={(e) => setWeakTopicsInput(e.target.value)}
                        placeholder="Light, Trigonometry, Electricity"
-                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 outline-none focus:ring-1 focus:ring-[#8C5A35]"
+                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo outline-none focus:ring-1 focus:ring-[#8C5A35]"
                      />
                    </div>
 
                    <div>
                      <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Task Count</label>
-                     <div className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] border border-stone-200 ">
+                     <div className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo ">
                        <input
                          type="range"
                          min={4}
@@ -670,7 +670,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                      <select
                        value={planDepth}
                        onChange={(e) => setPlanDepth(e.target.value as 'lite' | 'balanced' | 'intensive')}
-                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 outline-none focus:ring-1 focus:ring-[#8C5A35]"
+                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo outline-none focus:ring-1 focus:ring-[#8C5A35]"
                      >
                        <option value="lite">Lite</option>
                        <option value="balanced">Balanced</option>
@@ -687,7 +687,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                        value={taskTypesInput}
                        onChange={(e) => setTaskTypesInput(e.target.value)}
                        placeholder="Revision, Mock Tests, Formulas, Diagrams"
-                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 outline-none focus:ring-1 focus:ring-[#8C5A35]"
+                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo outline-none focus:ring-1 focus:ring-[#8C5A35]"
                      />
                    </div>
 
@@ -698,7 +698,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                        value={customTasksInput}
                        onChange={(e) => setCustomTasksInput(e.target.value)}
                        placeholder="e.g. Draw circuit diagram, solve 5 integration equations"
-                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 outline-none focus:ring-1 focus:ring-[#8C5A35]"
+                       className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo outline-none focus:ring-1 focus:ring-[#8C5A35]"
                      />
                    </div>
 
@@ -706,7 +706,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                      <Button
                        onClick={handleGeneratePlan}
                        disabled={isPlannerLoading}
-                       className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold h-[48px]"
+                       className="w-full bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all rounded-xl font-bold h-[48px]"
                      >
                        {isPlannerLoading ? 'Streaming...' : 'Generate Plan'}
                      </Button>
@@ -729,7 +729,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Add milestone form */}
-                <div className="space-y-4 lg:col-span-1 p-5 rounded-2xl bg-[#FCFAF8] border border-stone-100 ">
+                <div className="space-y-4 lg:col-span-1 p-5 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo ">
                   <h3 className="text-sm font-black uppercase tracking-wider text-stone-400">Add New Milestone</h3>
                   
                   <div>
@@ -739,7 +739,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                       value={newDateLabel}
                       onChange={(e) => setNewDateLabel(e.target.value)}
                       placeholder="e.g. Physics Chapter 3 Test"
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] border border-stone-200 text-[#2C241B] font-semibold text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-[#2C241B] font-semibold text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
                     />
                   </div>
 
@@ -749,13 +749,13 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                       type="date"
                       value={newDateValue}
                       onChange={(e) => setNewDateValue(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] border border-stone-200 text-[#2C241B] font-semibold text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-[#2C241B] font-semibold text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
                     />
                   </div>
 
                   <Button
                     onClick={handleAddOtherDate}
-                    className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold text-sm h-11 flex items-center justify-center gap-2"
+                    className="w-full bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all rounded-xl font-bold text-sm h-11 flex items-center justify-center gap-2"
                   >
                     <Plus size={16} /> Add Milestone
                   </Button>
@@ -776,7 +776,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                       {otherDates.map((milestone) => (
                         <div
                           key={milestone.id}
-                          className="flex items-center justify-between p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl hover:border-stone-200 :border-stone-700 transition-colors"
+                          className="flex items-center justify-between p-4 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl hover:border-stone-200 :border-stone-700 transition-colors"
                         >
                           <div className="min-w-0 pr-2">
                             <p className="font-bold text-sm text-[#2C241B] truncate">{milestone.label}</p>
@@ -839,13 +839,13 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                       <p className="text-xs font-black uppercase tracking-wider text-indigo-700 mb-2 flex items-center gap-2">
                         <Sparkles size={14} /> Exam Tip
                       </p>
-                      <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4 text-stone-700 ">
+                      <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4 text-stone-700 ">
                         <MarkdownContent content={extractMarkdownSection(plan, 'Exam Tip', [])} className="leading-6" />
                       </div>
                     </Card>
                   </div>
 
-                  <details className="rounded-2xl border border-stone-200 p-4">
+                  <details className="rounded-2xl border-3 border-[#2C241B] shadow-neo p-4">
                     <summary className="cursor-pointer text-xs font-black uppercase tracking-wider text-stone-500">View Raw Markdown</summary>
                     <div className="max-w-none mt-3">
                       <MarkdownContent content={plan} />

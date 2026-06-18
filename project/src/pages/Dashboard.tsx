@@ -312,11 +312,15 @@ export const Dashboard = () => {
   void launchResourceStack;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] transition-colors duration-300">
+    <div className="min-h-screen bg-[#F2EFE9] transition-colors duration-300 relative overflow-hidden">
+      {/* Nanobana Doodles */}
+      <img src="/doodle_sticky.png" className="absolute top-10 left-10 w-24 h-24 opacity-80 animate-float z-0 pointer-events-none" alt="sticky" />
+      <img src="/doodle_pen.png" className="absolute bottom-20 right-10 w-32 h-32 opacity-80 animate-wobble z-0 pointer-events-none" alt="pen" />
+      
       <Navbar />
-      <main className="max-w-[1600px] mx-auto px-6 py-10">
+      <main className="max-w-[1600px] mx-auto px-6 py-10 relative z-10">
         {/* Hero Section with Glassmorphism */}
-        <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#8C5A35] to-[#059669] p-10 mb-12 shadow-2xl shadow-[#8C5A35]/30">
+        <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#8C5A35] to-[#059669] p-10 mb-12 shadow-2xl /30">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="max-w-xl">
               <div className="inline-flex items-center px-3 py-1 bg-[#FCFAF8]/20 backdrop-blur-md rounded-full text-white text-xs font-bold mb-4 border border-white/30">
@@ -406,7 +410,7 @@ export const Dashboard = () => {
           const showParentNote = activeParentNote && activeParentNote !== dismissedParentNote;
           if (!showParentNote) return null;
           return (
-            <Card className="p-6 mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-[28px] flex items-center justify-between gap-4 shadow-md transition-all duration-300">
+            <Card className="p-6 mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-[28px] flex items-center justify-between gap-4  transition-all duration-300">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">✉️</span>
                 <div>
@@ -463,7 +467,7 @@ export const Dashboard = () => {
         {user.teacherPersonality && hasFocus && (
           <Card className="p-8 mb-12 bg-gradient-to-r from-amber-50/50 to-teal-50/50 border-2 border-amber-100 rounded-[32px] flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4 flex-1">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#8C5A35] to-amber-600 rounded-2xl flex items-center justify-center text-white flex-shrink-0 shadow-lg shadow-amber-500/20">
+              <div className="w-14 h-14 bg-gradient-to-br from-[#8C5A35] to-amber-600 rounded-2xl flex items-center justify-center text-white flex-shrink-0  shadow-amber-500/20">
                 <Target size={28} />
               </div>
               <div className="flex-1">
@@ -472,7 +476,7 @@ export const Dashboard = () => {
                   {Object.entries(focusChaptersMap).map(([subj, chaps]) => {
                     if (!chaps || chaps.length === 0) return null;
                     return (
-                      <span key={subj} className="text-xs bg-[#FCFAF8] border border-stone-200 text-stone-700 font-bold px-3 py-1.5 rounded-xl shadow-sm">
+                      <span key={subj} className="text-xs bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-stone-700 font-bold px-3 py-1.5 rounded-xl ">
                         <strong className="text-[#8C5A35]">{subj}:</strong> {chaps.join(', ')}
                       </span>
                     );
@@ -489,7 +493,7 @@ export const Dashboard = () => {
                 Upload Textbook PDFs
               </Button>
               <Button
-                className="bg-[#8C5A35] hover:bg-[#70482B] text-white font-black px-6 py-4 rounded-xl text-sm flex items-center gap-2 transition-all transform hover:scale-[1.02]"
+                className="bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white font-black px-6 py-4 rounded-xl text-sm flex items-center gap-2 transition-all transform hover:scale-[1.02]"
                 onClick={handleUpdateFocus}
               >
                 <Zap size={16} />
@@ -584,7 +588,7 @@ export const Dashboard = () => {
                 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
                 return (
-                  <Card key={item.id} className="p-6 bg-[#FCFAF8] border border-stone-100 rounded-3xl">
+                  <Card key={item.id} className="p-6 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-3xl">
                     <span className="text-[10px] font-black uppercase tracking-wider text-stone-400">Custom Milestone</span>
                     <h3 className="font-bold text-base text-[#2C241B] mt-1 truncate">{item.label}</h3>
                     <p className="text-sm font-black text-[#8C5A35] mt-1">
@@ -618,7 +622,7 @@ export const Dashboard = () => {
               {user.subjects.map((subject: string) => (
                 <Card
                   key={subject}
-                  className="p-6 bg-[#FCFAF8] border-none shadow-lg hover:shadow-2xl hover:shadow-[#8C5A35]/20 cursor-pointer transition-all rounded-3xl group border-l-4 border-[#8C5A35]"
+                  className="p-6 bg-[#FCFAF8] border-none  hover:shadow-2xl hover:/20 cursor-pointer transition-all rounded-3xl group border-l-4 border-[#8C5A35]"
                   onClick={() => navigate('/ask', { state: { subject } })}
                 >
                   <div className="flex items-center justify-between">
@@ -690,7 +694,7 @@ export const Dashboard = () => {
                   </div>
                   <div className="flex-1 space-y-4">
                     {(dailyMission?.tasks || []).slice(0, 3).map((task) => (
-                      <div key={task.id} className="flex items-center gap-4 p-5 bg-[#FCFAF8] rounded-2xl border border-stone-100 hover:border-[#8C5A35] transition-colors">
+                      <div key={task.id} className="flex items-center gap-4 p-5 bg-[#FCFAF8] rounded-2xl border-3 border-[#2C241B] shadow-neo hover:border-[#8C5A35] transition-colors">
                         <div className="w-8 h-8 rounded-full border-2 border-[#8C5A35] flex items-center justify-center bg-[#FCFAF8] ">
                           <input type="checkbox" className="w-5 h-5 accent-[#8C5A35] cursor-pointer" readOnly />
                         </div>
@@ -799,7 +803,7 @@ export const Dashboard = () => {
                       <History size={40} className="text-stone-300" />
                     </div>
                     <p className="text-stone-500 font-bold text-lg">Your study journey starts here.</p>
-                    <Button className="mt-8 bg-[#8C5A35] hover:bg-[#70482B] px-8 py-6 rounded-2xl" onClick={() => navigate('/ask')}>Ask your first question</Button>
+                    <Button className="mt-8 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all px-8 py-6 rounded-2xl" onClick={() => navigate('/ask')}>Ask your first question</Button>
                   </div>
                 )}
               </div>

@@ -57,7 +57,7 @@ export function AnswerChecker() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Form Section */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="bg-[#FCFAF8] border border-stone-200 rounded-2xl p-6 shadow-sm space-y-5">
+              <div className="bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl p-6  space-y-5">
                 <div>
                   <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Class</label>
                   <select 
@@ -114,7 +114,7 @@ export function AnswerChecker() {
 
             {/* Input & Output Section */}
             <div className="lg:col-span-7 flex flex-col gap-6">
-              <div className="flex-1 flex flex-col bg-[#FCFAF8] border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+              <div className="flex-1 flex flex-col bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl  overflow-hidden">
                 <div className="p-4 border-b border-stone-100 bg-[#FCFAF8] ">
                   <h3 className="text-sm font-black text-[#3E352B] flex items-center gap-2">
                     <BookOpen size={16} />
@@ -144,7 +144,7 @@ export function AnswerChecker() {
 
               {/* Result Section */}
               {result && (
-                <div className="bg-[#FCFAF8] border border-stone-200 rounded-2xl shadow-sm p-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl  p-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-xs font-black uppercase tracking-widest text-stone-400 mb-1">CBSE Score</h3>

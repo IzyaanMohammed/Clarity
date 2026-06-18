@@ -815,7 +815,7 @@ export const Practice = () => {
             <p className="text-stone-600 text-lg leading-relaxed max-w-xl mx-auto font-medium">
               Tamil Nadu State Board support is coming in a very, very soon update! Currently, CBSE / NCERT is fully supported.
             </p>
-            <div className="p-6 bg-[#FCFAF8] rounded-2xl border border-stone-100 text-left space-y-3">
+            <div className="p-6 bg-[#FCFAF8] rounded-2xl border-3 border-[#2C241B] shadow-neo text-left space-y-3">
               <h4 className="font-bold text-[#3E352B] ">How to get started right now:</h4>
               <ol className="list-decimal list-inside space-y-2 text-sm text-stone-600 font-medium">
                 <li>Go to your <span className="text-[#8C5A35] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
@@ -826,7 +826,7 @@ export const Practice = () => {
             <Button 
               variant="primary" 
               size="lg" 
-              className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#8C5A35]/25"
+              className="px-8 py-4 rounded-2xl font-black  /25"
               onClick={() => navigate('/profile')}
             >
               Go to Profile Settings
@@ -901,7 +901,7 @@ export const Practice = () => {
                       setSelectedSubject(e.target.value);
                       setSelectedChapter('');
                     }}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all"
                   >
                     <option value="">Select Subject</option>
                     {user?.subjects.map((subject: string) => (
@@ -919,7 +919,7 @@ export const Practice = () => {
                   <select
                     value={selectedChapter}
                     onChange={(e) => setSelectedChapter(e.target.value)}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all disabled:opacity-50"
+                    className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent transition-all disabled:opacity-50"
                     disabled={!selectedSubject}
                   >
                     <option value="">Select Chapter</option>
@@ -1023,7 +1023,7 @@ export const Practice = () => {
 
               {/* Start Button */}
               <Button
-                className="w-full py-5 text-lg font-black bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white rounded-2xl shadow-2xl shadow-[#8C5A35]/30 transition-all transform hover:scale-105 active:scale-95"
+                className="w-full py-5 text-lg font-black bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white rounded-2xl shadow-2xl /30 transition-all transform hover:scale-105 active:scale-95"
                 onClick={handleStartSession}
                 disabled={isLoading || !selectedSubject || !selectedChapter}
               >
@@ -1041,7 +1041,7 @@ export const Practice = () => {
               </Button>
 
               {isLoading && generationPreview && (
-                <div className="mt-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                <div className="mt-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                   <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-2">Streaming Question Builder</p>
                   <MarkdownContent content={generationPreview} className="text-sm text-stone-700 " />
                 </div>
@@ -1099,7 +1099,7 @@ export const Practice = () => {
                 Back to Home
               </Button>
               <Button
-                className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-black rounded-2xl shadow-lg"
+                className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white font-black rounded-2xl "
                 onClick={() => {
                   setQuestions([]);
                   setSessionFinished(false);
@@ -1286,7 +1286,7 @@ export const Practice = () => {
                               value={userAnswer}
                               onChange={(e) => setUserAnswer(e.target.value)}
                               placeholder="Type your answer here..."
-                              className="w-full px-6 py-4 bg-[#FCFAF8] text-[#2C241B] rounded-2xl border-2 border-stone-200 focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent outline-none transition-all font-bold text-lg"
+                              className="w-full px-6 py-4 bg-[#FCFAF8] text-[#2C241B] rounded-2xl border-3 border-[#2C241B] shadow-neo focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent outline-none transition-all font-bold text-lg"
                             />
                           </div>
                         );
@@ -1330,12 +1330,12 @@ export const Practice = () => {
                                   const selectedVal = currentSelections[key] || '';
 
                                   return (
-                                    <div key={key} className="flex items-center gap-4 justify-between bg-[#FCFAF8] p-4 rounded-xl border border-stone-100 ">
+                                    <div key={key} className="flex items-center gap-4 justify-between bg-[#FCFAF8] p-4 rounded-xl border-3 border-[#2C241B] shadow-neo ">
                                       <span className="font-bold text-[#3E352B] ">{key}. {text}</span>
                                       <select
                                         value={selectedVal}
                                         onChange={(e) => handleSelectMatch(key, e.target.value)}
-                                        className="px-3 py-2 rounded-lg border border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]"
+                                        className="px-3 py-2 rounded-lg border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]"
                                       >
                                         <option value="">Select...</option>
                                         {parsedMatch.columnB.map((bItem) => {
@@ -1356,7 +1356,7 @@ export const Practice = () => {
 
                               <div className="space-y-4">
                                 <h4 className="font-black text-[#2C241B] border-b-2 pb-2">Column B</h4>
-                                <div className="space-y-2 bg-[#FCFAF8] p-4 rounded-xl border border-stone-100 ">
+                                <div className="space-y-2 bg-[#FCFAF8] p-4 rounded-xl border-3 border-[#2C241B] shadow-neo ">
                                   {parsedMatch.columnB.map((item, idx) => (
                                     <div key={idx} className="p-2 font-medium text-sm text-stone-700 ">
                                       {item}
@@ -1374,7 +1374,7 @@ export const Practice = () => {
                           value={userAnswer}
                           onChange={(e) => setUserAnswer(e.target.value)}
                           placeholder="Write your answer here. Think carefully and provide a complete, well-structured response..."
-                          className="w-full h-40 p-6 bg-[#FCFAF8] text-[#2C241B] rounded-2xl border-2 border-stone-200 focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent outline-none transition-all resize-none text-base font-medium"
+                          className="w-full h-40 p-6 bg-[#FCFAF8] text-[#2C241B] rounded-2xl border-3 border-[#2C241B] shadow-neo focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent outline-none transition-all resize-none text-base font-medium"
                         />
                       );
                     })()}
@@ -1390,7 +1390,7 @@ export const Practice = () => {
                         {isExplaining ? 'Explaining...' : 'Explain This Question'}
                       </Button>
                       <Button
-                        className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-105 active:scale-95"
+                        className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white font-black rounded-2xl  transition-all transform hover:scale-105 active:scale-95"
                         onClick={handleSubmitAndNext}
                         disabled={isGrading || !userAnswer.trim()}
                       >
@@ -1415,14 +1415,14 @@ export const Practice = () => {
                   )}
 
                   {isGrading && gradingPreview && (
-                    <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                    <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                       <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-2">Streaming Evaluation</p>
                       <MarkdownContent content={gradingPreview} className="text-sm text-stone-700 " />
                     </div>
                   )}
 
                   {explainResult && (
-                    <Card className="p-6 bg-[#FCFAF8] border-2 border-stone-200 rounded-[24px]">
+                    <Card className="p-6 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-[24px]">
                       <p className="text-xs font-black uppercase tracking-widest text-[#8C5A35] mb-3">Explain Mode</p>
                       <MarkdownContent content={explainResult} className="text-sm text-stone-700 leading-relaxed" />
                     </Card>
@@ -1556,7 +1556,7 @@ export const Practice = () => {
                   {/* Next Button */}
                   <div className="flex justify-end pt-4">
                     <Button
-                      className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2"
+                      className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white font-black rounded-2xl  transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2"
                       onClick={handleNextQuestion}
                     >
                       {currentQuestionIndex < questions.length - 1 ? (

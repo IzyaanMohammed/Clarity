@@ -145,7 +145,7 @@ export const Profile = () => {
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Your name"
-                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
+                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                     />
                                 </div>
 
@@ -158,7 +158,7 @@ export const Profile = () => {
                                         value={school}
                                         onChange={(e) => setSchool(e.target.value)}
                                         placeholder="Your school"
-                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
+                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                     />
                                 </div>
 
@@ -171,7 +171,7 @@ export const Profile = () => {
                                         value={parentEmail}
                                         onChange={(e) => setParentEmail(e.target.value)}
                                         placeholder="parent@example.com"
-                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
+                                        className="w-full px-5 py-4 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-[#2C241B] font-bold text-lg outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                     />
                                 </div>
                             </div>
@@ -195,7 +195,7 @@ export const Profile = () => {
                                                 key={c}
                                                 onClick={() => setSelectedClass(c)}
                                                 className={`py-4 rounded-2xl font-black text-lg transition-all transform hover:scale-105 ${selectedClass === c
-                                                    ? 'bg-[#8C5A35] text-white shadow-lg'
+                                                    ? 'bg-[#8C5A35] text-white '
                                                     : 'bg-[#F2EFE9] text-stone-600 hover:bg-[#E8E4DB]'
                                                     }`}
                                             >
@@ -383,7 +383,7 @@ export const Profile = () => {
                                         {Object.entries(user.focusChapters).map(([subj, chaps]) => {
                                             if (!chaps || chaps.length === 0) return null;
                                             return (
-                                                <div key={subj} className="p-4 bg-[#FCFAF8] rounded-2xl border border-stone-100 ">
+                                                <div key={subj} className="p-4 bg-[#FCFAF8] rounded-2xl border-3 border-[#2C241B] shadow-neo ">
                                                     <p className="text-xs font-black uppercase text-stone-400 mb-1">{subj}</p>
                                                     <p className="text-sm font-bold text-[#3E352B] ">{chaps.join(', ')}</p>
                                                 </div>
@@ -412,11 +412,11 @@ export const Profile = () => {
                                         onChange={(e) => setFocusInput(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && addFocusArea()}
                                         placeholder="e.g. Organic Chemistry, Trigonometry..."
-                                        className="flex-1 px-4 py-3 rounded-xl bg-[#FCFAF8] border-2 border-stone-200 text-[#2C241B] font-medium outline-none focus:ring-2 focus:ring-[#8C5A35]"
+                                        className="flex-1 px-4 py-3 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-[#2C241B] font-medium outline-none focus:ring-2 focus:ring-[#8C5A35]"
                                     />
                                     <button
                                         onClick={addFocusArea}
-                                        className="px-4 py-3 bg-[#8C5A35] text-white rounded-xl font-bold hover:bg-[#70482B] transition-all"
+                                        className="px-4 py-3 bg-[#8C5A35] text-white rounded-xl font-bold hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all transition-all"
                                     >
                                         Add
                                     </button>
@@ -425,7 +425,7 @@ export const Profile = () => {
                                     {focusAreas.map((area, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full border border-amber-200 font-medium text-sm"
+                                            className="flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full border-3 border-[#2C241B] shadow-neo font-medium text-sm"
                                         >
                                             {area}
                                             <button
@@ -478,7 +478,7 @@ export const Profile = () => {
                         {/* Action Buttons */}
                         <Button
                             onClick={handleSave}
-                            className="w-full py-4 bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white font-black rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white font-black rounded-xl  transition-all flex items-center justify-center gap-2"
                         >
                             <Save size={20} />
                             Save Changes

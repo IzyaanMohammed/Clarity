@@ -160,7 +160,7 @@ export const Library = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex bg-[#FCFAF8] p-1.5 rounded-2xl shadow-sm border border-stone-100 ">
+            <div className="flex bg-[#FCFAF8] p-1.5 rounded-2xl  border-3 border-[#2C241B] shadow-neo ">
               {['8', '9', '10', '11', '12'].map((c) => {
                 const isEnrolled = user?.class ? String(user.class).startsWith(c) : c === '10';
                 const targetClass = (user?.class && String(user.class).startsWith(c)) ? user.class : c;
@@ -176,7 +176,7 @@ export const Library = () => {
                     }}
                     className={`px-5 py-2 rounded-xl text-sm font-black transition-all ${
                       classFilter.startsWith(c)
-                        ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20'
+                        ? 'bg-[#8C5A35] text-white  /20'
                         : isEnrolled
                         ? 'text-stone-500 hover:bg-[#FCFAF8] :bg-stone-700'
                         : 'text-stone-300 cursor-not-allowed opacity-50'
@@ -197,7 +197,7 @@ export const Library = () => {
                 placeholder="Search worksheets or papers..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 pr-6 py-3.5 w-full md:w-72 rounded-2xl border border-stone-100 bg-[#FCFAF8] text-[#2C241B] focus:ring-4 focus:ring-[#8C5A35]/10 outline-none transition-all font-bold"
+                className="pl-12 pr-6 py-3.5 w-full md:w-72 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] focus:ring-4 focus:ring-[#8C5A35]/10 outline-none transition-all font-bold"
               />
             </div>
           </div>
@@ -210,7 +210,7 @@ export const Library = () => {
               onClick={() => setSubjectFilter(subject)}
               className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${resources.subject === subject
                 ? 'bg-[#8C5A35] text-white'
-                : 'bg-[#FCFAF8] text-stone-600 border border-stone-100 '
+                : 'bg-[#FCFAF8] text-stone-600 border-3 border-[#2C241B] shadow-neo '
                 }`}
             >
               {subject}
@@ -232,7 +232,7 @@ export const Library = () => {
               placeholder="Search chapter name..."
               value={chapterSearch}
               onChange={(e) => setChapterSearch(e.target.value)}
-              className="w-full mb-4 px-4 py-2 rounded-xl bg-[#FCFAF8] text-sm text-[#2C241B] border border-stone-200 "
+              className="w-full mb-4 px-4 py-2 rounded-xl bg-[#FCFAF8] text-sm text-[#2C241B] border-3 border-[#2C241B] shadow-neo "
             />
             <div className="flex flex-wrap gap-2">
               {filteredChapters.map((chapter) => (
@@ -275,7 +275,7 @@ export const Library = () => {
               ) : filteredWorksheets.map((worksheet) => (
                 <div
                   key={worksheet.id}
-                  className="p-4 rounded-2xl border border-stone-100 bg-[#FCFAF8] "
+                  className="p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] "
                 >
                   <p className="text-sm font-black text-[#2C241B] ">{worksheet.title}</p>
                   <p className="text-xs text-stone-500 mt-1">
@@ -339,7 +339,7 @@ export const Library = () => {
               {filteredPastPapers.map((paper) => (
                 <div
                   key={paper.id}
-                  className="p-4 rounded-2xl border border-stone-100 bg-[#FCFAF8] "
+                  className="p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] "
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>

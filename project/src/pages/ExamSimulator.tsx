@@ -376,7 +376,7 @@ export const ExamSimulator = () => {
             <p className="text-stone-600 text-lg leading-relaxed max-w-xl mx-auto font-medium">
               Tamil Nadu State Board support is coming in a very, very soon update! Currently, CBSE / NCERT is fully supported.
             </p>
-            <div className="p-6 bg-[#FCFAF8] rounded-2xl border border-stone-100 text-left space-y-3">
+            <div className="p-6 bg-[#FCFAF8] rounded-2xl border-3 border-[#2C241B] shadow-neo text-left space-y-3">
               <h4 className="font-bold text-[#3E352B] ">How to get started right now:</h4>
               <ol className="list-decimal list-inside space-y-2 text-sm text-stone-600 font-medium">
                 <li>Go to your <span className="text-[#8C5A35] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
@@ -387,7 +387,7 @@ export const ExamSimulator = () => {
             <Button 
               variant="primary" 
               size="lg" 
-              className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#8C5A35]/25"
+              className="px-8 py-4 rounded-2xl font-black  /25"
               onClick={() => navigate('/profile')}
             >
               Go to Profile Settings
@@ -435,14 +435,14 @@ export const ExamSimulator = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="block">
                   <span className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2 block">Subject</span>
-                  <select value={subject} onChange={(e) => setSubject(e.target.value)} className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]">
+                  <select value={subject} onChange={(e) => setSubject(e.target.value)} className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]">
                     {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </label>
 
                 <label className="block">
                   <span className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2 block">Mock Paper Scope</span>
-                  <select value={scope} onChange={(e) => setScope(e.target.value as any)} className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]">
+                  <select value={scope} onChange={(e) => setScope(e.target.value as any)} className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]">
                     <option value="single-chapter">Single Chapter Paper</option>
                     <option value="multi-chapter">Multi-Chapter Paper</option>
                     <option value="full-subject">Full Subject Mock</option>
@@ -452,18 +452,18 @@ export const ExamSimulator = () => {
                 {scope === 'single-chapter' ? (
                   <label className="block md:col-span-2">
                     <span className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2 block">Select Chapter</span>
-                    <select value={chapter} onChange={(e) => setChapter(e.target.value)} className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]">
+                    <select value={chapter} onChange={(e) => setChapter(e.target.value)} className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]">
                       {chapters.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </label>
                 ) : scope === 'multi-chapter' ? (
-                  <div className="md:col-span-2 p-5 rounded-2xl border border-stone-100 bg-[#FCFAF8] ">
+                  <div className="md:col-span-2 p-5 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                     <p className="text-xs font-black uppercase tracking-wider text-stone-400 mb-3">Select Chapters included in Paper</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                       {chapters.map((ch) => {
                         const checked = selectedChapters.includes(ch);
                         return (
-                          <label key={ch} className="flex items-center gap-3 p-2 rounded-xl bg-[#FCFAF8] border border-stone-100 text-xs font-bold text-stone-700 cursor-pointer hover:border-amber-300">
+                          <label key={ch} className="flex items-center gap-3 p-2 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo text-xs font-bold text-stone-700 cursor-pointer hover:border-amber-300">
                             <input
                               type="checkbox"
                               checked={checked}
@@ -494,7 +494,7 @@ export const ExamSimulator = () => {
                   <select 
                     value={stickToTextbook ? 'textbook' : 'creative'} 
                     onChange={(e) => setStickToTextbook(e.target.value === 'textbook')} 
-                    className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]"
+                    className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]"
                   >
                     <option value="textbook">📖 NCERT Textbook Exercises (Direct questions/numbers)</option>
                     <option value="creative">🎨 Creative & Unique HOTS/Competency questions (CBSE Board Style)</option>
@@ -507,7 +507,7 @@ export const ExamSimulator = () => {
                     type="number" 
                     value={durationMinutes} 
                     onChange={(e) => setDurationMinutes(Math.max(20, Number(e.target.value || 20)))} 
-                    className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]" 
+                    className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]" 
                   />
                 </label>
 
@@ -523,7 +523,7 @@ export const ExamSimulator = () => {
                       setTotalMarks(marks);
                       setQuestionCount(Math.max(3, Math.round(marks / 3)));
                     }} 
-                    className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]" 
+                    className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-2 focus:ring-[#8C5A35]" 
                   />
                 </label>
               </div>
@@ -532,7 +532,7 @@ export const ExamSimulator = () => {
                 <Button 
                   onClick={handleStart} 
                   disabled={loading}
-                  className="bg-[#8C5A35] hover:bg-[#70482B] px-8 py-4 rounded-2xl font-black text-md flex items-center gap-2 shadow-lg shadow-[#8C5A35]/25"
+                  className="bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all px-8 py-4 rounded-2xl font-black text-md flex items-center gap-2  /25"
                 >
                   <Play size={18} />
                   <span>{loading ? 'Generating Board Paper...' : 'Start Mock Exam'}</span>
@@ -557,7 +557,7 @@ export const ExamSimulator = () => {
                   Normally, users on the <strong>Free Tier</strong> get up to <strong>3 mock exam papers</strong>, after which generating mock exams requires upgrading to <strong>Pro</strong>.
                 </p>
 
-                <div className="my-5 p-4 rounded-2xl bg-[#FCFAF8] border border-stone-100 flex items-center justify-between">
+                <div className="my-5 p-4 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo flex items-center justify-between">
                   <div>
                     <p className="text-[10px] font-black uppercase text-stone-400">Mock papers generated</p>
                     <p className="text-2xl font-black text-[#2C241B] mt-0.5">{completedExamsCount} attempted</p>
@@ -613,7 +613,7 @@ export const ExamSimulator = () => {
               />
 
               {/* Paper Board Cover Details */}
-              <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-200 rounded-[32px] relative overflow-hidden">
+              <Card className="p-8 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-[32px] relative overflow-hidden">
                 
                 {/* Board Sheet Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-dashed border-stone-200 gap-4">
@@ -622,7 +622,7 @@ export const ExamSimulator = () => {
                     <h2 className="text-xl font-black text-[#2C241B] uppercase tracking-tight">ALL INDIA SECONDARY SCHOOL EXAMINATION</h2>
                     <p className="text-xs text-stone-400 font-bold uppercase">Subject Code: {started.subject.substring(0, 3).toUpperCase()}99 • Subject: {started.subject}</p>
                   </div>
-                  <div className="p-3 bg-[#FCFAF8] border border-stone-200 rounded-2xl flex flex-col items-center justify-center min-w-[140px]">
+                  <div className="p-3 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl flex flex-col items-center justify-center min-w-[140px]">
                     <span className="text-[9px] font-black uppercase tracking-wider text-stone-400">Class Grade</span>
                     <span className="text-lg font-black text-[#2C241B] ">Class {classNum}</span>
                   </div>
@@ -647,12 +647,12 @@ export const ExamSimulator = () => {
               </Card>
 
               {/* SECTION NAVIGATION TABS */}
-              <div className="flex bg-[#F2EFE9] p-1.5 rounded-2xl border border-stone-200/50 ">
+              <div className="flex bg-[#F2EFE9] p-1.5 rounded-2xl border-3 border-[#2C241B] shadow-neo/50 ">
                 <button
                   onClick={() => setActiveSection('A')}
                   className={`flex-1 py-3 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
                     activeSection === 'A' 
-                      ? 'bg-[#8C5A35] text-white shadow-md' 
+                      ? 'bg-[#8C5A35] text-white ' 
                       : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-800'
                   }`}
                 >
@@ -662,7 +662,7 @@ export const ExamSimulator = () => {
                   onClick={() => setActiveSection('B')}
                   className={`flex-1 py-3 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
                     activeSection === 'B' 
-                      ? 'bg-[#8C5A35] text-white shadow-md' 
+                      ? 'bg-[#8C5A35] text-white ' 
                       : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-800'
                   }`}
                 >
@@ -672,7 +672,7 @@ export const ExamSimulator = () => {
                   onClick={() => setActiveSection('C')}
                   className={`flex-1 py-3 text-xs font-black uppercase tracking-wider rounded-xl transition-all ${
                     activeSection === 'C' 
-                      ? 'bg-[#8C5A35] text-white shadow-md' 
+                      ? 'bg-[#8C5A35] text-white ' 
                       : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-800'
                   }`}
                 >
@@ -681,7 +681,7 @@ export const ExamSimulator = () => {
               </div>
 
               {/* QUESTIONS LIST PANE (Section Filtered) */}
-              <Card className="p-8 bg-[#FCFAF8] border-2 border-stone-200 rounded-[32px] relative overflow-hidden min-h-[450px]">
+              <Card className="p-8 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-[32px] relative overflow-hidden min-h-[450px]">
                 
                 {/* Diagonal Watermark for Official Exam feel */}
                 <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center opacity-[0.03] ">
@@ -703,7 +703,7 @@ export const ExamSimulator = () => {
                       const { questionText, options, isMatchTheFollowing } = parseOptionsFromQuestion(question.question);
                       
                       return (
-                        <div key={idx} className="p-6 rounded-2xl border border-stone-200 bg-[#FCFAF8] space-y-4">
+                        <div key={idx} className="p-6 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] space-y-4">
                           
                           {/* Card Question Header */}
                           <div className="flex items-start justify-between gap-4">
@@ -755,7 +755,7 @@ export const ExamSimulator = () => {
                                 type="text"
                                 value={answers[idx] || ''}
                                 onChange={(e) => setAnswers(prev => ({ ...prev, [idx]: e.target.value }))}
-                                className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-[#FCFAF8] font-semibold text-xs outline-none focus:ring-1 focus:ring-[#8C5A35]"
+                                className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold text-xs outline-none focus:ring-1 focus:ring-[#8C5A35]"
                                 placeholder="Type short answer or single word here..."
                               />
                             </div>
@@ -766,7 +766,7 @@ export const ExamSimulator = () => {
                                 <textarea
                                   value={answers[idx] || ''}
                                   onChange={(e) => setAnswers((prev) => ({ ...prev, [idx]: e.target.value }))}
-                                  className="w-full h-36 px-4 py-3.5 rounded-xl border border-stone-200 bg-[#FCFAF8] text-xs font-medium leading-relaxed outline-none focus:ring-1 focus:ring-[#8C5A35]"
+                                  className="w-full h-36 px-4 py-3.5 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-xs font-medium leading-relaxed outline-none focus:ring-1 focus:ring-[#8C5A35]"
                                   placeholder="Write your step-by-step board answer here..."
                                 />
                                 
@@ -774,7 +774,7 @@ export const ExamSimulator = () => {
                                 <button
                                   type="button"
                                   onClick={() => triggerHandwritingScan(idx)}
-                                  className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F2EFE9] hover:bg-[#E8E4DB] :bg-stone-800 text-stone-500 text-[10px] font-black uppercase tracking-wider border border-stone-200/50 transition-colors"
+                                  className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F2EFE9] hover:bg-[#E8E4DB] :bg-stone-800 text-stone-500 text-[10px] font-black uppercase tracking-wider border-3 border-[#2C241B] shadow-neo/50 transition-colors"
                                   title="Scan Written Paper Sheet"
                                 >
                                   <Upload size={12} />
@@ -808,7 +808,7 @@ export const ExamSimulator = () => {
                   <Button 
                     onClick={handleSubmit} 
                     disabled={loading}
-                    className="bg-[#8C5A35] hover:bg-[#70482B] px-6 py-3 rounded-xl font-black text-sm shadow-md"
+                    className="bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all px-6 py-3 rounded-xl font-black text-sm "
                   >
                     {loading ? 'Submitting Simulation...' : 'Submit Exam Simulation'}
                   </Button>
@@ -842,7 +842,7 @@ export const ExamSimulator = () => {
                   {/* Toggles Calculator */}
                   <button
                     onClick={() => setShowCalculator(!showCalculator)}
-                    className="w-full p-3.5 rounded-xl border border-stone-200 bg-[#FCFAF8] text-left text-xs font-black text-stone-700 hover:bg-[#8C5A35]/10 hover:border-[#8C5A35]/40 transition-all flex items-center justify-between"
+                    className="w-full p-3.5 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-left text-xs font-black text-stone-700 hover:bg-[#8C5A35]/10 hover:border-[#8C5A35]/40 transition-all flex items-center justify-between"
                   >
                     <span className="flex items-center gap-2">
                       <Calculator size={14} className="text-[#8C5A35]" />
@@ -876,7 +876,7 @@ export const ExamSimulator = () => {
             </div>
 
             {/* Big dials summary metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#FCFAF8] p-6 rounded-3xl border border-stone-100 ">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#FCFAF8] p-6 rounded-3xl border-3 border-[#2C241B] shadow-neo ">
               <div className="text-center py-4 space-y-1">
                 <p className="text-[10px] font-black uppercase text-stone-400">Total Marks Awarded</p>
                 <p className="text-4xl font-black text-[#2C241B] ">
@@ -899,13 +899,13 @@ export const ExamSimulator = () => {
             <div className="space-y-4">
               <h3 className="text-sm font-black uppercase tracking-wider text-stone-500">Examiner Step-Marking Losses</h3>
               {result.step_mark_losses.length === 0 ? (
-                <p className="text-sm text-stone-500 italic p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl">
+                <p className="text-sm text-stone-500 italic p-4 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl">
                   Excellent paper! No step marks were lost in this attempt.
                 </p>
               ) : (
                 <div className="space-y-3">
                   {result.step_mark_losses.map((loss, idx) => (
-                    <div key={idx} className="p-5 rounded-2xl border border-rose-200 bg-rose-50/20 space-y-2">
+                    <div key={idx} className="p-5 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-rose-50/20 space-y-2">
                       <p className="text-xs font-black text-rose-700 uppercase">Question Breakdown</p>
                       <h4 className="text-sm font-black text-[#2C241B] leading-tight">{loss.question}</h4>
                       <div className="pt-2 border-t border-rose-100/50 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs leading-relaxed font-semibold">
@@ -946,7 +946,7 @@ export const ExamSimulator = () => {
 
       {/* FLOAT TOOLKIT 1: Scientific Calculator Dialog */}
       {showCalculator && (
-        <div className="fixed bottom-10 right-10 z-[120] w-72 rounded-3xl border border-stone-200 bg-[#fafafa] shadow-2xl p-4 animate-scaleIn">
+        <div className="fixed bottom-10 right-10 z-[120] w-72 rounded-3xl border-3 border-[#2C241B] shadow-neo bg-[#fafafa] shadow-2xl p-4 animate-scaleIn">
           <div className="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
             <span className="text-xs font-black uppercase text-stone-400 flex items-center gap-1.5">
               <Calculator size={13} className="text-[#8C5A35]" />
@@ -957,7 +957,7 @@ export const ExamSimulator = () => {
             </button>
           </div>
           <div className="space-y-3">
-            <div className="bg-[#FCFAF8] p-3 rounded-2xl border border-stone-100 text-right space-y-1 min-h-[70px]">
+            <div className="bg-[#FCFAF8] p-3 rounded-2xl border-3 border-[#2C241B] shadow-neo text-right space-y-1 min-h-[70px]">
               <p className="text-xs font-semibold text-stone-400 tracking-wider truncate">{calcExpr || '0'}</p>
               <p className="text-lg font-black text-[#2C241B] truncate">{calcResult}</p>
             </div>
@@ -968,10 +968,10 @@ export const ExamSimulator = () => {
                   onClick={() => handleCalcBtn(btn)}
                   className={`py-2 rounded-xl text-xs font-black transition-colors ${
                     btn === '=' 
-                      ? 'col-span-1 bg-[#8C5A35] text-white hover:bg-[#70482B]' 
+                      ? 'col-span-1 bg-[#8C5A35] text-white hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all' 
                       : btn === 'C'
                       ? 'bg-rose-100 text-rose-500 hover:bg-rose-200'
-                      : 'bg-[#FCFAF8] hover:bg-[#F2EFE9] :bg-stone-850 text-stone-700 border border-stone-100 '
+                      : 'bg-[#FCFAF8] hover:bg-[#F2EFE9] :bg-stone-850 text-stone-700 border-3 border-[#2C241B] shadow-neo '
                   }`}
                 >
                   {btn.replace('Math.', '').replace('(', '')}
@@ -989,7 +989,7 @@ export const ExamSimulator = () => {
         <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fadeIn">
           <div className="bg-[#FCFAF8] w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl p-6 text-center space-y-6 relative border border-stone-150 animate-scaleIn">
             
-            <div className="relative w-24 h-24 mx-auto bg-[#FCFAF8] border border-stone-200 rounded-2xl flex items-center justify-center overflow-hidden">
+            <div className="relative w-24 h-24 mx-auto bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl flex items-center justify-center overflow-hidden">
               <Upload size={36} className="text-stone-400" />
               {/* Pulsing Scan Laser Animation */}
               <div className="absolute left-0 right-0 h-1 bg-amber-500 top-0 animate-[bounce_2s_infinite]" />

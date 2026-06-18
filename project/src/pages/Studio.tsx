@@ -772,7 +772,7 @@ export const Studio = () => {
                         <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#8C5A35] mb-1">Workspace / Class {classNum}</p>
                         <h1 className="text-4xl font-black text-[#2C241B] ">Studio</h1>
                     </div>
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-700 text-sm font-black border border-amber-200 shadow-sm">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 text-amber-700 text-sm font-black border-3 border-[#2C241B] shadow-neo ">
                         <Sparkles size={16} />
                         Notebook Tutor Mode
                     </div>
@@ -790,7 +790,7 @@ export const Studio = () => {
                                     setChapter(nextChapters[0] || '');
                                     resetVideoWorkspace();
                                 }}
-                                className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold"
+                                className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold"
                             >
                                 {subjects.map((entry) => (
                                     <option key={entry} value={entry}>{entry}</option>
@@ -805,7 +805,7 @@ export const Studio = () => {
                                     setChapter(e.target.value);
                                     resetVideoWorkspace();
                                 }}
-                                className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-bold"
+                                className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold"
                             >
                                 {chapters.map((entry) => (
                                     <option key={entry} value={entry}>{entry}</option>
@@ -814,7 +814,7 @@ export const Studio = () => {
                         </label>
                         <div>
                             <span className="text-[11px] font-black uppercase tracking-wider text-stone-400 mb-2 block">Topic Focus</span>
-                            <div className="w-full px-4 py-3 rounded-2xl border border-stone-200 bg-[#FCFAF8] font-semibold text-stone-700 ">
+                            <div className="w-full px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold text-stone-700 ">
                                 Auto from selected chapter
                             </div>
                         </div>
@@ -825,16 +825,16 @@ export const Studio = () => {
                     </div>
 
                     <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
-                        <div className="inline-flex rounded-full border border-stone-200 bg-[#FCFAF8]/85 backdrop-blur-sm p-1 shadow-sm">
+                        <div className="inline-flex rounded-full border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8]/85 backdrop-blur-sm p-1 ">
                             <button
                                 onClick={() => setActiveStudioTab('video')}
-                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'video' ? 'bg-[#8C5A35] text-white shadow-md' : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800'}`}
+                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'video' ? 'bg-[#8C5A35] text-white ' : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800'}`}
                             >
                                 Video Assistant
                             </button>
                             <button
                                 onClick={() => setActiveStudioTab('mindmap')}
-                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'mindmap' ? 'bg-[#8C5A35] text-white shadow-md' : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800'}`}
+                                className={`px-4 py-2 rounded-full text-sm font-black transition-all ${activeStudioTab === 'mindmap' ? 'bg-[#8C5A35] text-white ' : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800'}`}
                             >
                                 Mindmap
                             </button>
@@ -857,7 +857,7 @@ export const Studio = () => {
                             </div>
 
                             {!videoStack && !loadingVideoStack && (
-                                <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4 mb-4">
+                                <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4 mb-4">
                                     <p className="text-sm text-stone-600 ">No video loaded yet. Click <span className="font-black">Fetch Current Chapter Video</span> to start.</p>
                                 </div>
                             )}
@@ -867,7 +867,7 @@ export const Studio = () => {
                             ) : !videoStack ? (
                                 <div>
                                     <p className="text-sm text-stone-500 mb-4">No video stack available for this chapter right now.</p>
-                                    <button onClick={runFetchCurrentChapterVideo} disabled={manualFetchLoading} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#8C5A35] text-white font-black hover:bg-[#70482B] transition-colors disabled:opacity-60">
+                                    <button onClick={runFetchCurrentChapterVideo} disabled={manualFetchLoading} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#8C5A35] text-white font-black hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all transition-colors disabled:opacity-60">
                                         <Youtube size={20} />
                                         {manualFetchLoading ? 'Fetching video...' : 'Fetch Current Chapter Video'}
                                     </button>
@@ -876,7 +876,7 @@ export const Studio = () => {
                                 <div className="space-y-8">
                                     {/* Top: Massive Full-Width Video Player */}
                                     <div className="w-full">
-                                        <div className="rounded-[42px] overflow-hidden border border-stone-200 bg-black shadow-[0_40px_120px_rgba(15,23,42,0.25)]">
+                                        <div className="rounded-[42px] overflow-hidden border-3 border-[#2C241B] shadow-neo bg-black ">
                                             <div ref={playerHostRef} className="w-full aspect-video min-h-[600px]" />
                                         </div>
                                         
@@ -896,7 +896,7 @@ export const Studio = () => {
                                                     <Button 
                                                         onClick={saveCurrentVideoToLibrary}
                                                         variant="primary"
-                                                        className="rounded-2xl px-6 py-3 font-black flex items-center gap-2 shadow-lg shadow-[#8C5A35]/20 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap self-start sm:self-auto"
+                                                        className="rounded-2xl px-6 py-3 font-black flex items-center gap-2  /20 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap self-start sm:self-auto"
                                                     >
                                                         <Bookmark size={18} />
                                                         Save Video
@@ -904,10 +904,10 @@ export const Studio = () => {
                                                 </div>
 
                                                 {/* Live Clarity Coach (Full Width below video) */}
-                                                <div className={`rounded-[32px] border p-8 transition-all ${tutorPulse ? 'border-amber-400 bg-amber-100/85 shadow-lg shadow-amber-500/10' : 'border-stone-200 bg-[#FCFAF8]/92 shadow-xl rounded-[34px] backdrop-blur-sm'}`}>
+                                                <div className={`rounded-[32px] border p-8 transition-all ${tutorPulse ? 'border-amber-400 bg-amber-100/85  shadow-amber-500/10' : 'border-stone-200 bg-[#FCFAF8]/92 shadow-xl rounded-[34px] backdrop-blur-sm'}`}>
                                                     <div className="flex items-center justify-between gap-4 mb-6">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="w-10 h-10 rounded-2xl bg-[#8C5A35] text-white flex items-center justify-center shadow-md">
+                                                            <div className="w-10 h-10 rounded-2xl bg-[#8C5A35] text-white flex items-center justify-center ">
                                                                 <Brain size={20} />
                                                             </div>
                                                             <div>
@@ -954,7 +954,7 @@ export const Studio = () => {
                                                                         </p>
                                                                     </div>
 
-                                                                    <div className="p-5 rounded-2xl bg-[#FCFAF8] border border-stone-200 ">
+                                                                    <div className="p-5 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo ">
                                                                         <p className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2">
                                                                             Core Concept Explanation
                                                                         </p>
@@ -1011,7 +1011,7 @@ export const Studio = () => {
                                                                         </div>
                                                                     )}
 
-                                                                    <div className="p-4 rounded-xl bg-[#FCFAF8] border border-stone-200/60 text-xs text-stone-500 font-semibold flex items-center justify-between gap-3 flex-wrap">
+                                                                    <div className="p-4 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo/60 text-xs text-stone-500 font-semibold flex items-center justify-between gap-3 flex-wrap">
                                                                         <span>Live moments sync with your playback automatically.</span>
                                                                         <div className="flex gap-2">
                                                                             <button 
@@ -1020,7 +1020,7 @@ export const Studio = () => {
                                                                                     const prevMoment = videoAssist.key_moments[activeMomentIndex - 1];
                                                                                     if (prevMoment) jumpToMoment(prevMoment.timestamp_seconds);
                                                                                 }}
-                                                                                className="px-3 py-1.5 rounded-xl bg-[#FCFAF8] border border-stone-200 disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-[#FCFAF8] :bg-stone-700"
+                                                                                className="px-3 py-1.5 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-[#FCFAF8] :bg-stone-700"
                                                                             >
                                                                                 Prev
                                                                             </button>
@@ -1030,7 +1030,7 @@ export const Studio = () => {
                                                                                     const nextMoment = videoAssist.key_moments[activeMomentIndex + 1];
                                                                                     if (nextMoment) jumpToMoment(nextMoment.timestamp_seconds);
                                                                                 }}
-                                                                                className="px-3 py-1.5 rounded-xl bg-[#FCFAF8] border border-stone-200 disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-[#FCFAF8] :bg-stone-700"
+                                                                                className="px-3 py-1.5 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo disabled:opacity-50 font-black text-[11px] uppercase tracking-wider hover:bg-[#FCFAF8] :bg-stone-700"
                                                                             >
                                                                                 Next
                                                                             </button>
@@ -1050,7 +1050,7 @@ export const Studio = () => {
 
                                             {/* Right: Mastery Timeline (Side of Coach) */}
                                             {videoAssist?.key_moments && videoAssist.key_moments.length > 0 && (
-                                                <div className="w-full lg:w-[400px] rounded-[32px] border border-stone-200 bg-[#FCFAF8]/50 p-7">
+                                                <div className="w-full lg:w-[400px] rounded-[32px] border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8]/50 p-7">
                                                     <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-5">Points to Remember</p>
                                                     <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                                                         {videoAssist.key_moments.map((moment, idx) => (
@@ -1063,7 +1063,7 @@ export const Studio = () => {
                                                                     }
                                                                 }}
                                                                 className={`w-full text-left p-4 rounded-2xl border transition-all ${activeMomentIndex === idx
-                                                                    ? 'bg-[#FCFAF8] border-indigo-200 shadow-md ring-2 ring-indigo-500/10'
+                                                                    ? 'bg-[#FCFAF8] border-indigo-200  ring-2 ring-indigo-500/10'
                                                                     : 'bg-transparent border-transparent hover:bg-[#FCFAF8] :bg-stone-800/50'
                                                                     }`}
                                                             >
@@ -1191,7 +1191,7 @@ export const Studio = () => {
                                                         <button
                                                             disabled={Object.keys(quizChoices).length < videoAssist.quiz.length}
                                                             onClick={() => setQuizSubmitted(true)}
-                                                            className="px-6 py-3 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] text-white font-black text-sm transition-all disabled:opacity-50 disabled:pointer-events-none shadow-lg shadow-amber-500/20"
+                                                            className="px-6 py-3 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white font-black text-sm transition-all disabled:opacity-50 disabled:pointer-events-none  shadow-amber-500/20"
                                                         >
                                                             Submit Answers
                                                         </button>
@@ -1234,7 +1234,7 @@ export const Studio = () => {
                                                         />
                                                         {idx === activeVideoIndex && (
                                                             <div className="absolute inset-0 bg-amber-500/10 flex items-center justify-center backdrop-blur-[2px]">
-                                                                <div className="w-12 h-12 rounded-full bg-[#FCFAF8] text-[#8C5A35] flex items-center justify-center shadow-lg">
+                                                                <div className="w-12 h-12 rounded-full bg-[#FCFAF8] text-[#8C5A35] flex items-center justify-center ">
                                                                     <Play fill="currentColor" size={24} />
                                                                 </div>
                                                             </div>
@@ -1277,7 +1277,7 @@ export const Studio = () => {
                                     {imageLoading || mindmapLoading ? 'Generating...' : 'Generate Mindmap'}
                                 </Button>
                             </div>
-                            <div className="rounded-3xl border border-stone-200 bg-[#FCFAF8] p-6 min-h-[520px] flex items-center justify-center">
+                            <div className="rounded-3xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-6 min-h-[520px] flex items-center justify-center">
                                 {mindmapLoading ? (
                                     <div className="w-full max-w-xl space-y-4">
                                         <div className="h-3 rounded-full bg-[#E8E4DB] overflow-hidden">
@@ -1286,21 +1286,21 @@ export const Studio = () => {
                                         <p className="text-center text-sm font-bold text-stone-600 ">Generating visual mindmap...</p>
                                     </div>
                                 ) : mindmapImageUrl ? (
-                                    <img src={mindmapImageUrl} alt="Mindmap visual" className="w-full rounded-2xl border border-stone-200 " />
+                                    <img src={mindmapImageUrl} alt="Mindmap visual" className="w-full rounded-2xl border-3 border-[#2C241B] shadow-neo " />
                                 ) : (
                                     <p className="text-sm text-stone-500 text-center max-w-md">Use this as a side visual after the video, not the main deliverable.</p>
                                 )}
                             </div>
 
                             {mindmapNotebookBlocks.length > 0 && (
-                                <div className="mt-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                                <div className="mt-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                                     <div className="mb-3 flex items-center justify-between gap-2">
                                         <p className="text-xs font-black uppercase tracking-[0.2em] text-stone-500">Notebook Mindmap Mode</p>
                                         <p className="text-xs font-semibold text-stone-400">Expandable concept boxes</p>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {mindmapNotebookBlocks.map((block, index) => (
-                                            <details key={`${block.title}-${index}`} className="group rounded-xl border border-stone-200 bg-[#FCFAF8] p-3" open={index === 0}>
+                                            <details key={`${block.title}-${index}`} className="group rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-3" open={index === 0}>
                                                 <summary className="cursor-pointer list-none">
                                                     <p className="text-sm font-black text-[#2C241B] ">{block.title}</p>
                                                     <p className="text-xs text-stone-500 mt-1">{block.summary}</p>
@@ -1308,7 +1308,7 @@ export const Studio = () => {
                                                 <div className="mt-3 pt-3 border-t border-stone-200 ">
                                                     <div className="space-y-2">
                                                         {block.details.map((detail, i) => (
-                                                            <div key={i} className="rounded-lg border border-amber-200 bg-amber-50/70 px-2.5 py-2 text-xs font-semibold text-stone-700 ">
+                                                            <div key={i} className="rounded-lg border-3 border-[#2C241B] shadow-neo bg-amber-50/70 px-2.5 py-2 text-xs font-semibold text-stone-700 ">
                                                                 {detail}
                                                             </div>
                                                         ))}

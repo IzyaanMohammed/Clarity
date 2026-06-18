@@ -84,7 +84,7 @@ export const Navbar = () => {
         to={link.to}
         title={collapsed ? link.label : undefined}
         className={`group flex items-center gap-3 rounded-2xl py-3 transition-all ${collapsed ? 'justify-center px-3' : 'px-4'} ${active
-          ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20'
+          ? 'bg-[#8C5A35] text-white  /20'
           : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/80'
           }`}
       >
@@ -102,13 +102,13 @@ export const Navbar = () => {
         <div className={`relative flex h-full w-full flex-col ${collapsed ? 'p-3' : 'p-4'}`}>
           <button
             onClick={() => setCollapsed((prev) => !prev)}
-            className="absolute -right-3 top-10 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-stone-200 bg-[#FCFAF8] text-stone-500 shadow-md hover:text-[#8C5A35]"
+            className="absolute -right-3 top-10 z-10 flex h-7 w-7 items-center justify-center rounded-full border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-stone-500  hover:text-[#8C5A35]"
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
 
-          <Link to="/dashboard" className={`flex items-center gap-3 rounded-3xl bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20 ${collapsed ? 'justify-center px-3 py-4' : 'px-4 py-4'}`}>
+          <Link to="/dashboard" className={`flex items-center gap-3 rounded-3xl bg-[#8C5A35] text-white  /20 ${collapsed ? 'justify-center px-3 py-4' : 'px-4 py-4'}`}>
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FCFAF8]/15 shrink-0">
               <BookOpen className="h-6 w-6" />
             </div>
@@ -162,7 +162,7 @@ export const Navbar = () => {
               <button
                 onClick={() => navigate('/profile')}
                 title={collapsed ? 'Profile' : undefined}
-                className={`flex w-full items-center gap-3 rounded-3xl border border-stone-200 bg-[#FCFAF8] py-3 text-left transition-all hover:border-[#8C5A35]/30 hover:bg-[#8C5A35]/5 ${collapsed ? 'justify-center px-3' : 'px-4'}`}
+                className={`flex w-full items-center gap-3 rounded-3xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] py-3 text-left transition-all hover:border-[#8C5A35]/30 hover:bg-[#8C5A35]/5 ${collapsed ? 'justify-center px-3' : 'px-4'}`}
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#8C5A35] flex-shrink-0">
                   <User className="h-4 w-4 text-white" />

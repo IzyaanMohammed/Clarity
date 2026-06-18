@@ -55,7 +55,7 @@ export const Login = () => {
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                 placeholder="Enter your name"
                                 autoFocus
                             />
@@ -70,7 +70,7 @@ export const Login = () => {
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -78,7 +78,7 @@ export const Login = () => {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full py-4 rounded-2xl bg-[#8C5A35] text-white font-black uppercase tracking-widest text-sm shadow-lg shadow-amber-500/20 hover:bg-[#70482B] transition-all flex items-center justify-center gap-2"
+                            className="w-full py-4 rounded-2xl bg-[#8C5A35] text-white font-black uppercase tracking-widest text-sm  shadow-amber-500/20 hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all transition-all flex items-center justify-center gap-2"
                         >
                             {isSubmitting ? 'Verifying...' : 'Login to Clarity'}
                             {!isSubmitting && <ArrowRight size={18} />}

@@ -95,7 +95,7 @@ export const OCR = () => {
                             OCR Extractor
                         </h2>
                         <div className="flex gap-2">
-                            <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8C5A35] text-white font-black cursor-pointer hover:bg-[#70482B] transition-colors">
+                            <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8C5A35] text-white font-black cursor-pointer hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all transition-colors">
                                 <Upload size={16} />
                                 Upload for OCR
                                 <input
@@ -114,7 +114,7 @@ export const OCR = () => {
                     <textarea
                         value={ocrLoading ? 'Extracting text...' : ocrText}
                         onChange={(e) => setOcrText(e.target.value)}
-                        className="w-full min-h-[320px] rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4 text-sm font-medium"
+                        className="w-full min-h-[320px] rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4 text-sm font-medium"
                         placeholder="Upload an image or PDF to extract text."
                     />
                 </Card>

@@ -36,7 +36,7 @@ export const Summary = () => {
         if (!table) return null;
 
         return (
-            <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+            <div className="overflow-x-auto rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                 <table className="min-w-full text-left text-sm">
                     <thead className="bg-[#F2EFE9] ">
                         <tr>
@@ -200,7 +200,7 @@ export const Summary = () => {
                                     const nextChapters = chaptersForSubject(nextSubject);
                                     setSelectedChapter(nextChapters[0] || '');
                                 }}
-                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                             >
                                 {(subjects.length ? subjects : subjectsForClass).map((subject) => (
                                     <option key={subject} value={subject}>
@@ -215,7 +215,7 @@ export const Summary = () => {
                             <select
                                 value={selectedChapter}
                                 onChange={(e) => setSelectedChapter(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                             >
                                 {chapters.map((chapter) => (
                                     <option key={chapter} value={chapter}>
@@ -231,7 +231,7 @@ export const Summary = () => {
                                 <select
                                     value={summaryDetail}
                                     onChange={(e) => setSummaryDetail(e.target.value as 'short' | 'standard' | 'deep')}
-                                    className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                    className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                                 >
                                     <option value="short">Short</option>
                                     <option value="standard">Standard</option>
@@ -247,7 +247,7 @@ export const Summary = () => {
                                     max={30}
                                     value={formulaCount}
                                     onChange={(e) => setFormulaCount(Math.max(4, Math.min(30, Number(e.target.value) || 4)))}
-                                    className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                    className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                                 />
                             </div>
                         )}
@@ -255,7 +255,7 @@ export const Summary = () => {
                         <Button
                             onClick={handleGenerate}
                             disabled={isLoading}
-                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold"
+                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all rounded-xl font-bold"
                         >
                             {isLoading ? 'Streaming...' : 'Generate'}
                         </Button>
@@ -280,7 +280,7 @@ export const Summary = () => {
                         </Button>
 
                         {mode === 'summary' ? (
-                            <div className="ml-auto min-w-[260px] px-4 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] ">
+                            <div className="ml-auto min-w-[260px] px-4 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                                 <p className="text-[10px] font-black uppercase tracking-wider text-stone-500 mb-1 flex items-center gap-1">
                                     <SlidersHorizontal size={12} /> Core Idea Count
                                 </p>
@@ -332,7 +332,7 @@ export const Summary = () => {
                                         </section>
                                         <section className="space-y-3">
                                             <h3 className="text-lg font-black text-[#2C241B] ">Quick Recall</h3>
-                                            <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-5 text-stone-700 ">
+                                            <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-5 text-stone-700 ">
                                                 <MarkdownContent
                                                     content={formatQuickRecallBlock(extractMarkdownSection(content, 'Quick Recall', ['Exam Tip']))}
                                                     className="prose-p:my-2 prose-ul:my-2 prose-li:my-1"
@@ -341,7 +341,7 @@ export const Summary = () => {
                                         </section>
                                         <section className="space-y-3">
                                             <h3 className="text-lg font-black text-[#2C241B] ">Exam Tip</h3>
-                                            <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-5 text-stone-700 ">
+                                            <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-5 text-stone-700 ">
                                                 <MarkdownContent content={extractMarkdownSection(content, 'Exam Tip', [])} className="leading-7" />
                                             </div>
                                         </section>
@@ -366,13 +366,13 @@ export const Summary = () => {
                                         </section>
                                         <section className="space-y-3">
                                             <h3 className="text-lg font-black text-[#2C241B] ">Exam Tip</h3>
-                                            <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-5 text-stone-700 ">
+                                            <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-5 text-stone-700 ">
                                                 <MarkdownContent content={extractMarkdownSection(content, 'Exam Tip', [])} className="leading-7" />
                                             </div>
                                         </section>
                                     </>
                                 )}
-                                <details className="rounded-2xl border border-stone-200 p-4">
+                                <details className="rounded-2xl border-3 border-[#2C241B] shadow-neo p-4">
                                     <summary className="cursor-pointer text-xs font-black uppercase tracking-wider text-stone-500">View Raw Markdown</summary>
                                     <div className="mt-3">
                                         <MarkdownContent content={content} />

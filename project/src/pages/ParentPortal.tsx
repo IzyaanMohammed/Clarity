@@ -305,7 +305,7 @@ export const ParentPortal = () => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3.5 rounded-2xl border-2 border-stone-200 bg-[#FCFAF8] font-bold text-[#2C241B] outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
+                                className="w-full px-4 py-3.5 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold text-[#2C241B] outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                 placeholder="parent@example.com"
                             />
                         </div>
@@ -316,7 +316,7 @@ export const ParentPortal = () => {
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3.5 rounded-2xl border-2 border-stone-200 bg-[#FCFAF8] font-bold text-[#2C241B] outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
+                                className="w-full px-4 py-3.5 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold text-[#2C241B] outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent"
                                 placeholder="Enter credentials sent to your email"
                             />
                         </div>
@@ -324,7 +324,7 @@ export const ParentPortal = () => {
                         <button
                             onClick={handleParentLogin}
                             disabled={loading}
-                            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white font-black shadow-lg shadow-[#8C5A35]/25 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+                            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#8C5A35] to-amber-600 hover:from-[#70482B] hover:to-amber-700 text-white font-black  /25 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                         >
                             {loading ? 'Authenticating credentials...' : 'Access Parent Portal'}
                             <ArrowRight size={16} />
@@ -378,7 +378,7 @@ export const ParentPortal = () => {
                     </div>
                     <button
                         onClick={handleParentLogout}
-                        className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border-2 border-stone-200 font-black text-xs uppercase tracking-wider text-stone-600 hover:bg-[#FCFAF8] :bg-stone-850 hover:text-rose-500 :text-rose-400 transition-colors"
+                        className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo font-black text-xs uppercase tracking-wider text-stone-600 hover:bg-[#FCFAF8] :bg-stone-850 hover:text-rose-500 :text-rose-400 transition-colors"
                     >
                         <LogOut size={14} />
                         Disconnect Session
@@ -389,7 +389,7 @@ export const ParentPortal = () => {
                     <>
                         {/* Student Selector Tabs Bar */}
                         {summary.students && summary.students.length > 1 && (
-                            <div className="flex gap-2 p-1 bg-[#E8E4DB]/50 rounded-2xl border border-stone-200/60 mb-2 max-w-fit animate-fade-in">
+                            <div className="flex gap-2 p-1 bg-[#E8E4DB]/50 rounded-2xl border-3 border-[#2C241B] shadow-neo/60 mb-2 max-w-fit animate-fade-in">
                                 {summary.students.map((stdUsername) => {
                                     const isActive = stdUsername === summary.student;
                                     return (
@@ -398,7 +398,7 @@ export const ParentPortal = () => {
                                             onClick={() => handleSwitchStudent(stdUsername)}
                                             className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
                                                 isActive
-                                                    ? 'bg-[#8C5A35] text-white shadow-md'
+                                                    ? 'bg-[#8C5A35] text-white '
                                                     : 'text-stone-650 hover:bg-[#FCFAF8] :bg-stone-800 hover:text-[#2C241B] :text-white'
                                             }`}
                                         >
@@ -492,12 +492,12 @@ export const ParentPortal = () => {
                         </div>
 
                         {/* Interactive Section Switcher Tabs */}
-                        <div className="flex bg-[#E8E4DB]/60 p-1.5 rounded-2xl border border-stone-200 overflow-x-auto scrollbar-none">
+                        <div className="flex bg-[#E8E4DB]/60 p-1.5 rounded-2xl border-3 border-[#2C241B] shadow-neo overflow-x-auto scrollbar-none">
                             <button
                                 onClick={() => setActiveTab('dashboard')}
                                 className={`flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all whitespace-nowrap ${
                                     activeTab === 'dashboard' 
-                                        ? 'bg-[#8C5A35] text-white shadow-md' 
+                                        ? 'bg-[#8C5A35] text-white ' 
                                         : 'text-stone-600 hover:bg-[#FCFAF8] :bg-stone-850'
                                     }`}
                             >
@@ -510,7 +510,7 @@ export const ParentPortal = () => {
                                 onClick={() => setActiveTab('alerts')}
                                 className={`flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all whitespace-nowrap ${
                                     activeTab === 'alerts' 
-                                        ? 'bg-[#8C5A35] text-white shadow-md' 
+                                        ? 'bg-[#8C5A35] text-white ' 
                                         : 'text-stone-600 hover:bg-[#FCFAF8] :bg-stone-850'
                                     }`}
                             >
@@ -523,7 +523,7 @@ export const ParentPortal = () => {
                                 onClick={() => setActiveTab('encourage')}
                                 className={`flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all whitespace-nowrap ${
                                     activeTab === 'encourage' 
-                                        ? 'bg-[#8C5A35] text-white shadow-md' 
+                                        ? 'bg-[#8C5A35] text-white ' 
                                         : 'text-stone-600 hover:bg-[#FCFAF8] :bg-stone-850'
                                     }`}
                             >
@@ -536,7 +536,7 @@ export const ParentPortal = () => {
                                 onClick={() => setActiveTab('advisor')}
                                 className={`flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all whitespace-nowrap ${
                                     activeTab === 'advisor' 
-                                        ? 'bg-[#8C5A35] text-white shadow-md' 
+                                        ? 'bg-[#8C5A35] text-white ' 
                                         : 'text-stone-600 hover:bg-[#FCFAF8] :bg-stone-850'
                                     }`}
                             >
@@ -549,7 +549,7 @@ export const ParentPortal = () => {
                                 onClick={() => setActiveTab('logs')}
                                 className={`flex-1 py-3 px-4 text-xs font-black uppercase tracking-wider rounded-xl transition-all whitespace-nowrap ${
                                     activeTab === 'logs' 
-                                        ? 'bg-[#8C5A35] text-white shadow-md' 
+                                        ? 'bg-[#8C5A35] text-white ' 
                                         : 'text-stone-600 hover:bg-[#FCFAF8] :bg-stone-850'
                                     }`}
                             >
@@ -582,7 +582,7 @@ export const ParentPortal = () => {
                                                         <span className="text-stone-700 ">{item.subject}</span>
                                                         <span className="text-[#8C5A35]">{item.confidence}%</span>
                                                     </div>
-                                                    <div className="h-3 rounded-full bg-[#F2EFE9] overflow-hidden border border-stone-200/40 ">
+                                                    <div className="h-3 rounded-full bg-[#F2EFE9] overflow-hidden border-3 border-[#2C241B] shadow-neo/40 ">
                                                         <div 
                                                             className="h-full bg-gradient-to-r from-[#8C5A35] to-amber-500 rounded-full transition-all duration-500" 
                                                             style={{ width: `${item.confidence}%` }} 
@@ -788,7 +788,7 @@ export const ParentPortal = () => {
 
                                         <button 
                                             onClick={() => setActiveTab('advisor')}
-                                            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-[#8C5A35] hover:opacity-90 text-white text-xs font-black shadow-md flex items-center justify-center gap-1.5"
+                                            className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-[#8C5A35] hover:opacity-90 text-white text-xs font-black  flex items-center justify-center gap-1.5"
                                         >
                                             <span>Ask Parent AI Advisor</span>
                                             <ArrowRight size={12} />
@@ -820,7 +820,7 @@ export const ParentPortal = () => {
                                             value={encouragementNote}
                                             onChange={(e) => setEncouragementNote(e.target.value)}
                                             placeholder="Write message here..."
-                                            className="w-full h-32 px-4 py-3 rounded-2xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold text-xs leading-relaxed outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent text-[#3E352B] "
+                                            className="w-full h-32 px-4 py-3 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold text-xs leading-relaxed outline-none focus:ring-2 focus:ring-[#8C5A35] focus:border-transparent text-[#3E352B] "
                                             maxLength={120}
                                         />
                                         <div className="flex justify-between items-center text-[10px] text-stone-400 font-bold px-1">
@@ -830,7 +830,7 @@ export const ParentPortal = () => {
 
                                         <button
                                             onClick={() => handleSaveParentSettings(goals, encouragementNote)}
-                                            className="w-full py-4 rounded-xl bg-[#8C5A35] hover:bg-[#70482B] text-white font-black shadow-md flex items-center justify-center gap-2"
+                                            className="w-full py-4 rounded-xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white font-black  flex items-center justify-center gap-2"
                                         >
                                             <Send size={16} />
                                             <span>Save & Send Note</span>
@@ -909,7 +909,7 @@ export const ParentPortal = () => {
                                     </div>
 
                                     {/* Interactive Chat Console */}
-                                    <div className="lg:col-span-2 border border-stone-100 rounded-[24px] bg-[#FCFAF8]/50 p-5 flex flex-col h-[420px]">
+                                    <div className="lg:col-span-2 border-3 border-[#2C241B] shadow-neo rounded-[24px] bg-[#FCFAF8]/50 p-5 flex flex-col h-[420px]">
                                         <div className="flex-1 overflow-y-auto space-y-4 pr-1 scrollbar-thin">
                                             {chatHistory.map((msg, i) => (
                                                 <div 
@@ -917,14 +917,14 @@ export const ParentPortal = () => {
                                                     className={`max-w-[85%] p-3.5 rounded-2xl text-xs font-semibold leading-relaxed ${
                                                         msg.sender === 'parent'
                                                             ? 'bg-[#8C5A35] text-white ml-auto'
-                                                            : 'bg-[#FCFAF8] border border-stone-200/50 text-stone-850 '
+                                                            : 'bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo/50 text-stone-850 '
                                                     }`}
                                                 >
                                                     <p className="whitespace-pre-line">{msg.text}</p>
                                                 </div>
                                             ))}
                                             {advisorLoading && (
-                                                <div className="bg-[#FCFAF8] border border-stone-100 p-3.5 rounded-2xl text-xs font-bold text-stone-450 max-w-[140px] flex items-center gap-2">
+                                                <div className="bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo p-3.5 rounded-2xl text-xs font-bold text-stone-450 max-w-[140px] flex items-center gap-2">
                                                     <Clock size={12} className="animate-spin text-[#8C5A35]" />
                                                     <span>Advisor thinking...</span>
                                                 </div>
@@ -939,11 +939,11 @@ export const ParentPortal = () => {
                                                 onChange={(e) => setCustomAdvisorQuery(e.target.value)}
                                                 onKeyDown={(e) => e.key === 'Enter' && handleAskAdvisorCustom()}
                                                 placeholder="Type custom question for parent advisor..."
-                                                className="flex-1 px-4 py-2.5 rounded-xl border border-stone-200 bg-[#FCFAF8] font-semibold text-xs outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#3E352B] "
+                                                className="flex-1 px-4 py-2.5 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold text-xs outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#3E352B] "
                                             />
                                             <button
                                                 onClick={handleAskAdvisorCustom}
-                                                className="px-4 py-2.5 bg-[#8C5A35] hover:bg-[#70482B] text-white rounded-xl font-bold flex items-center justify-center transition-colors"
+                                                className="px-4 py-2.5 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white rounded-xl font-bold flex items-center justify-center transition-colors"
                                                 title="Send Question"
                                             >
                                                 <Send size={14} />
@@ -981,7 +981,7 @@ export const ParentPortal = () => {
                                                         item.action === 'practice' ? 'bg-[#8C5A35]' : 'bg-sky-500'
                                                     }`} />
                                                     
-                                                    <div className="p-4 rounded-2xl bg-[#FCFAF8] border border-stone-200/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                                    <div className="p-4 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                                         <div>
                                                             <div className="flex items-center gap-2">
                                                                 <span className="text-xs font-black uppercase text-stone-400">
@@ -1052,7 +1052,7 @@ export const ParentPortal = () => {
                                     min={1} 
                                     max={40} 
                                     defaultValue={goals.target_study_hours}
-                                    className="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#2C241B] "
+                                    className="w-full px-4 py-2.5 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#2C241B] "
                                 />
                             </div>
 
@@ -1064,7 +1064,7 @@ export const ParentPortal = () => {
                                     min={1} 
                                     max={50} 
                                     defaultValue={goals.target_practice_sessions}
-                                    className="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#2C241B] "
+                                    className="w-full px-4 py-2.5 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#2C241B] "
                                 />
                             </div>
 
@@ -1076,7 +1076,7 @@ export const ParentPortal = () => {
                                     min={0} 
                                     max={10} 
                                     defaultValue={goals.target_mock_exams}
-                                    className="w-full px-4 py-2.5 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-bold outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#2C241B] "
+                                    className="w-full px-4 py-2.5 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-bold outline-none focus:ring-1 focus:ring-[#8C5A35] text-[#2C241B] "
                                 />
                             </div>
 
@@ -1084,13 +1084,13 @@ export const ParentPortal = () => {
                                 <button 
                                     type="button" 
                                     onClick={() => setIsGoalsModalOpen(false)}
-                                    className="flex-1 py-3 border border-stone-200 hover:bg-[#FCFAF8] :bg-stone-850 rounded-xl text-xs font-bold text-stone-500 transition-colors"
+                                    className="flex-1 py-3 border-3 border-[#2C241B] shadow-neo hover:bg-[#FCFAF8] :bg-stone-850 rounded-xl text-xs font-bold text-stone-500 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     type="submit"
-                                    className="flex-1 py-3 bg-[#8C5A35] hover:bg-[#70482B] text-white rounded-xl text-xs font-black shadow-md transition-colors"
+                                    className="flex-1 py-3 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white rounded-xl text-xs font-black  transition-colors"
                                 >
                                     Save Goals
                                 </button>

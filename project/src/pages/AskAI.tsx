@@ -353,7 +353,7 @@ export const AskAI = () => {
               variant="outline"
               size="md"
               onClick={() => navigate(-1)}
-              className="rounded-2xl w-12 h-12 bg-[#FCFAF8] border-stone-200 shadow-sm hover:scale-105 transition-transform"
+              className="rounded-2xl w-12 h-12 bg-[#FCFAF8] border-stone-200  hover:scale-105 transition-transform"
             >
               <ArrowLeft size={20} className="text-stone-600 " />
             </Button>
@@ -370,8 +370,8 @@ export const AskAI = () => {
           </div>
 
           {/* Prominent Context Selectors */}
-          <div className="flex flex-wrap items-center gap-3 bg-[#FCFAF8] p-3 rounded-[24px] shadow-lg border border-stone-100 ">
-            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border border-stone-100 ">
+          <div className="flex flex-wrap items-center gap-3 bg-[#FCFAF8] p-3 rounded-[24px]  border-3 border-[#2C241B] shadow-neo ">
+            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border-3 border-[#2C241B] shadow-neo ">
               <BookOpen size={16} className="text-[#8C5A35]" />
               <select
                 value={selectedSubject}
@@ -385,7 +385,7 @@ export const AskAI = () => {
               </select>
             </div>
 
-            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border border-stone-100 ">
+            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border-3 border-[#2C241B] shadow-neo ">
               <span className="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Chapter</span>
               <select
                 value={selectedChapter}
@@ -396,7 +396,7 @@ export const AskAI = () => {
               </select>
             </div>
 
-            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border border-stone-100 ">
+            <div className="flex items-center gap-3 px-4 py-2 bg-[#FCFAF8] rounded-xl border-3 border-[#2C241B] shadow-neo ">
               <span className="text-[10px] font-black text-stone-400 uppercase tracking-tighter">Answer Mode</span>
               <select
                 value={markMode}
@@ -453,7 +453,7 @@ export const AskAI = () => {
                       <div className="w-24 h-24 bg-[#8C5A35]/10 rounded-[32px] flex items-center justify-center animate-bounce">
                         <Bot className="text-[#8C5A35]" size={48} />
                       </div>
-                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg border-4 border-white ">
+                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center  border-4 border-white ">
                         <Zap size={14} className="text-white fill-current" />
                       </div>
                     </div>
@@ -475,7 +475,7 @@ export const AskAI = () => {
                       }`}
                     >
                       <div
-                        className={`w-14 h-14 rounded-[22px] flex items-center justify-center flex-shrink-0 shadow-lg ${
+                        className={`w-14 h-14 rounded-[22px] flex items-center justify-center flex-shrink-0  ${
                           m.role === 'user'
                             ? 'bg-stone-900 text-white '
                             : 'bg-gradient-to-tr from-[#8C5A35] to-[#2cd6a0] text-white'
@@ -498,7 +498,7 @@ export const AskAI = () => {
 
                 {isLoading && (
                   <div className="flex gap-6 max-w-4xl mr-auto">
-                    <div className="w-14 h-14 rounded-[22px] bg-gradient-to-tr from-[#8C5A35] to-[#2cd6a0] text-white flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-14 h-14 rounded-[22px] bg-gradient-to-tr from-[#8C5A35] to-[#2cd6a0] text-white flex items-center justify-center flex-shrink-0 ">
                       <Bot size={24} className="animate-pulse" />
                     </div>
                     <div className="p-8 rounded-[32px] rounded-tl-none bg-[#8C5A35]/5 border border-[#8C5A35]/10 text-[#3E352B] flex items-center gap-3 font-bold text-sm">
@@ -515,7 +515,7 @@ export const AskAI = () => {
                 <div className="relative max-w-4xl mx-auto group">
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="absolute left-4 top-1/2 -transtone-y-1/2 p-3 text-stone-400 hover:text-[#8C5A35] transition-all bg-[#FCFAF8] rounded-2xl shadow-sm hover:scale-110 active:scale-90 border border-stone-100 "
+                    className="absolute left-4 top-1/2 -transtone-y-1/2 p-3 text-stone-400 hover:text-[#8C5A35] transition-all bg-[#FCFAF8] rounded-2xl  hover:scale-110 active:scale-90 border-3 border-[#2C241B] shadow-neo "
                   >
                     <Paperclip size={22} />
                   </button>
@@ -532,12 +532,12 @@ export const AskAI = () => {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
                     placeholder="Ask boards, solve problems, or upload notes..."
-                    className="w-full pl-20 pr-20 py-6 bg-[#FCFAF8] text-[#2C241B] rounded-[32px] shadow-2xl border border-stone-200 focus:ring-8 focus:ring-[#8C5A35]/10 outline-none transition-all font-bold text-lg placeholder:text-stone-400"
+                    className="w-full pl-20 pr-20 py-6 bg-[#FCFAF8] text-[#2C241B] rounded-[32px] shadow-2xl border-3 border-[#2C241B] shadow-neo focus:ring-8 focus:ring-[#8C5A35]/10 outline-none transition-all font-bold text-lg placeholder:text-stone-400"
                   />
                   <button
                     onClick={() => handleSendMessage()}
                     disabled={!input.trim() || isLoading}
-                    className="absolute right-4 top-1/2 -transtone-y-1/2 p-4 bg-[#8C5A35] text-white rounded-[24px] hover:bg-[#70482B] disabled:opacity-50 disabled:grayscale transition-all active:scale-90 shadow-lg shadow-[#8C5A35]/30 group-hover:rotate-3"
+                    className="absolute right-4 top-1/2 -transtone-y-1/2 p-4 bg-[#8C5A35] text-white rounded-[24px] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all disabled:opacity-50 disabled:grayscale transition-all active:scale-90  /30 group-hover:rotate-3"
                   >
                     <Send size={24} />
                   </button>
@@ -555,7 +555,7 @@ export const AskAI = () => {
 
       {showPersonalityModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-[#FCFAF8] border border-stone-200 rounded-3xl p-8 max-w-2xl w-full shadow-2xl space-y-6">
+          <div className="bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-3xl p-8 max-w-2xl w-full shadow-2xl space-y-6">
             <div className="text-center space-y-2">
               <div className="w-16 h-16 bg-[#8C5A35]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Bot className="w-8 h-8 text-[#8C5A35]" />

@@ -94,7 +94,7 @@ export const MarkdownContent = memo(({ content, className = '' }: MarkdownConten
                     blockquote: ({ ...props }) => <blockquote className="pl-4 py-2 my-5 border-l-4 border-[#8C5A35] bg-[#FCFAF8]/50 rounded-r-xl italic text-stone-500 " {...props} />,
                     hr: ({ ...props }) => <hr className="my-6 border-t border-stone-200 " {...props} />,
                     table: ({ ...props }) => (
-                        <div className="my-6 rounded-2xl border border-stone-200 bg-[#FCFAF8] backdrop-blur-sm overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+                        <div className="my-6 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] backdrop-blur-sm overflow-hidden  hover: transition-all duration-300">
                             {/* Widget Header Bar */}
                             <div className="px-5 py-3.5 bg-gradient-to-r from-amber-500/10 to-teal-500/10 border-b border-stone-200 flex items-center justify-between">
                                 <div className="flex items-center gap-2">

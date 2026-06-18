@@ -226,7 +226,7 @@ export const Flashcards = () => {
                                     const nextChapters = chaptersForSubject(nextSubject);
                                     setSelectedChapter(nextChapters[0] || '');
                                 }}
-                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                             >
                                 {subjects.map((subject) => (
                                     <option key={subject} value={subject}>
@@ -239,7 +239,7 @@ export const Flashcards = () => {
                         <select
                             value={selectedChapter}
                             onChange={(e) => setSelectedChapter(e.target.value)}
-                            className="px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 md:col-span-2"
+                            className="px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo md:col-span-2"
                         >
                             {chapters.map((chapter) => (
                                 <option key={chapter} value={chapter}>
@@ -253,7 +253,7 @@ export const Flashcards = () => {
                             <select
                                 value={count}
                                 onChange={(e) => setCount(Number(e.target.value))}
-                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                             >
                                 {[6, 8, 10, 12].map((n) => (
                                     <option key={n} value={n}>
@@ -266,7 +266,7 @@ export const Flashcards = () => {
                         <Button
                             onClick={handleGenerate}
                             disabled={isLoading}
-                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold"
+                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all rounded-xl font-bold"
                         >
                             {isLoading ? 'Streaming...' : 'Generate'}
                         </Button>
@@ -329,7 +329,7 @@ export const Flashcards = () => {
                             </div>
 
                             <div
-                                className="rounded-3xl border border-stone-200 p-8 md:p-12 min-h-[250px] flex items-center justify-center text-center cursor-pointer bg-gradient-to-br from-violet-50 via-white to-rose-50 "
+                                className="rounded-3xl border-3 border-[#2C241B] shadow-neo p-8 md:p-12 min-h-[250px] flex items-center justify-center text-center cursor-pointer bg-gradient-to-br from-violet-50 via-white to-rose-50 "
                                 onClick={() => setShowAnswer((prev) => !prev)}
                             >
                                 <div>

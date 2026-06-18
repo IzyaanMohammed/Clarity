@@ -197,7 +197,7 @@ export const Settings = () => {
                         }}
                     >
                         <span
-                            className={`inline-block h-8 w-8 transform rounded-full bg-[#FCFAF8] shadow-lg transition-transform ${billingCycle === 'yearly' ? 'transtone-x-10' : 'transtone-x-1'
+                            className={`inline-block h-8 w-8 transform rounded-full bg-[#FCFAF8]  transition-transform ${billingCycle === 'yearly' ? 'transtone-x-10' : 'transtone-x-1'
                                 }`}
                         />
                     </button>
@@ -210,7 +210,7 @@ export const Settings = () => {
                 </div>
 
                 {!billingConfig?.enabled && (
-                    <div className="mb-8 rounded-3xl border border-amber-200 bg-amber-50/80 p-5 text-amber-900 ">
+                    <div className="mb-8 rounded-3xl border-3 border-[#2C241B] shadow-neo bg-amber-50/80 p-5 text-amber-900 ">
                         <p className="text-sm font-black uppercase tracking-[0.18em]">Billing not connected</p>
                         <p className="mt-2 text-sm text-amber-800 ">
                             Stripe checkout is wired in, but you still need a Stripe secret key and price IDs before subscriptions can charge cards.
@@ -227,7 +227,7 @@ export const Settings = () => {
                             <div key={plan.name} className="relative group">
                                 {plan.popular && (
                                     <div className="absolute -top-5 left-1/2 -transtone-x-1/2 z-10">
-                                        <div className="px-6 py-2 bg-gradient-to-r from-[#8C5A35] to-amber-500 text-white font-black text-sm rounded-full shadow-lg flex items-center gap-2">
+                                        <div className="px-6 py-2 bg-gradient-to-r from-[#8C5A35] to-amber-500 text-white font-black text-sm rounded-full  flex items-center gap-2">
                                             <TrendingUp size={16} />
                                             MOST POPULAR
                                         </div>
@@ -302,7 +302,7 @@ export const Settings = () => {
                                                 }
                                             }}
                                             className={`w-full py-4 font-bold text-lg rounded-2xl transition-all ${plan.popular || !plan.disabled
-                                                ? 'bg-[#8C5A35] hover:bg-[#70482B] text-white shadow-lg shadow-[#8C5A35]/30'
+                                                ? 'bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white  /30'
                                                 : 'bg-[#E8E4DB] text-stone-700 cursor-default'
                                                 }`}
                                         >
@@ -362,7 +362,7 @@ export const Settings = () => {
                     <p className="text-stone-600 font-medium mb-6 max-w-2xl mx-auto">
                         Join 50,000+ students who are using NCERT AI to score higher. Your first 7 days are completely free!
                     </p>
-                    <Button className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] text-white font-bold text-lg rounded-2xl shadow-lg" onClick={() => navigate('/onboarding')}>
+                    <Button className="px-8 py-4 bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white font-bold text-lg rounded-2xl " onClick={() => navigate('/onboarding')}>
                         Start Free Trial
                     </Button>
                 </div>

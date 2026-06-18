@@ -83,7 +83,7 @@ export const StudyPlan = () => {
         if (!table) return null;
 
         return (
-            <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+            <div className="overflow-x-auto rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                 <table className="min-w-full text-left text-sm">
                     <thead className="bg-[#F2EFE9] ">
                         <tr>
@@ -228,7 +228,7 @@ export const StudyPlan = () => {
                                 type="date"
                                 value={examDate}
                                 onChange={(e) => handleExamDateChange(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                             />
                         </div>
 
@@ -239,13 +239,13 @@ export const StudyPlan = () => {
                                 value={weakTopicsInput}
                                 onChange={(e) => setWeakTopicsInput(e.target.value)}
                                 placeholder="Light, Trigonometry, Electricity"
-                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                             />
                         </div>
 
                         <div>
                             <label className="block text-xs font-black uppercase tracking-wider text-stone-500 mb-2">Task Count</label>
-                            <div className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] border border-stone-200 ">
+                            <div className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo ">
                                 <input
                                     type="range"
                                     min={4}
@@ -263,7 +263,7 @@ export const StudyPlan = () => {
                             <select
                                 value={planDepth}
                                 onChange={(e) => setPlanDepth(e.target.value as 'lite' | 'balanced' | 'intensive')}
-                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 "
+                                className="w-full px-4 py-3 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo "
                             >
                                 <option value="lite">Lite</option>
                                 <option value="balanced">Balanced</option>
@@ -274,7 +274,7 @@ export const StudyPlan = () => {
                         <Button
                             onClick={handleGenerate}
                             disabled={isLoading}
-                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold"
+                            className="w-full bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all rounded-xl font-bold"
                         >
                             {isLoading ? 'Streaming Plan...' : 'Generate Plan'}
                         </Button>
@@ -295,7 +295,7 @@ export const StudyPlan = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Add milestone form */}
-                        <div className="space-y-4 lg:col-span-1 p-5 rounded-2xl bg-[#FCFAF8] border border-stone-100 ">
+                        <div className="space-y-4 lg:col-span-1 p-5 rounded-2xl bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo ">
                             <h3 className="text-sm font-black uppercase tracking-wider text-stone-400">Add New Milestone</h3>
                             
                             <div>
@@ -305,7 +305,7 @@ export const StudyPlan = () => {
                                     value={newDateLabel}
                                     onChange={(e) => setNewDateLabel(e.target.value)}
                                     placeholder="e.g. Physics Chapter 3 Test"
-                                    className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
+                                    className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
                                 />
                             </div>
 
@@ -315,13 +315,13 @@ export const StudyPlan = () => {
                                     type="date"
                                     value={newDateValue}
                                     onChange={(e) => setNewDateValue(e.target.value)}
-                                    className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border border-stone-200 text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
+                                    className="w-full px-4 py-2.5 rounded-xl bg-[#FCFAF8] text-[#2C241B] font-semibold border-3 border-[#2C241B] shadow-neo text-sm focus:ring-1 focus:ring-[#8C5A35] outline-none"
                                 />
                             </div>
 
                             <Button
                                 onClick={handleAddOtherDate}
-                                className="w-full bg-[#8C5A35] hover:bg-[#70482B] rounded-xl font-bold text-sm h-11 flex items-center justify-center gap-2"
+                                className="w-full bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all rounded-xl font-bold text-sm h-11 flex items-center justify-center gap-2"
                             >
                                 <Plus size={16} /> Add Milestone
                             </Button>
@@ -342,7 +342,7 @@ export const StudyPlan = () => {
                                     {otherDates.map((milestone) => (
                                         <div
                                             key={milestone.id}
-                                            className="flex items-center justify-between p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl hover:border-stone-200 :border-stone-700 transition-colors"
+                                            className="flex items-center justify-between p-4 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl hover:border-stone-200 :border-stone-700 transition-colors"
                                         >
                                             <div className="min-w-0 pr-2">
                                                 <p className="font-bold text-sm text-[#2C241B] truncate">{milestone.label}</p>
@@ -400,13 +400,13 @@ export const StudyPlan = () => {
                                     <p className="text-xs font-black uppercase tracking-wider text-indigo-700 mb-2 flex items-center gap-2">
                                         <Sparkles size={14} /> Exam Tip
                                     </p>
-                                    <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4 text-stone-700 ">
+                                    <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4 text-stone-700 ">
                                         <MarkdownContent content={extractMarkdownSection(plan, 'Exam Tip', [])} className="leading-6" />
                                     </div>
                                 </Card>
                             </div>
 
-                            <details className="rounded-2xl border border-stone-200 p-4">
+                            <details className="rounded-2xl border-3 border-[#2C241B] shadow-neo p-4">
                                 <summary className="cursor-pointer text-xs font-black uppercase tracking-wider text-stone-500">View Raw Markdown</summary>
                                 <div className="max-w-none mt-3">
                                     <MarkdownContent content={plan} />

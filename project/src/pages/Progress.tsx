@@ -103,7 +103,7 @@ export const Progress = () => {
 
                 {/* Key Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none  rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
@@ -117,7 +117,7 @@ export const Progress = () => {
                         </div>
                     </Card>
 
-                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none  rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
@@ -131,7 +131,7 @@ export const Progress = () => {
                         </div>
                     </Card>
 
-                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none  rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
@@ -145,7 +145,7 @@ export const Progress = () => {
                         </div>
                     </Card>
 
-                    <Card className="p-6 bg-[#FCFAF8] border-none shadow-lg rounded-3xl">
+                    <Card className="p-6 bg-[#FCFAF8] border-none  rounded-3xl">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-1">
@@ -240,7 +240,7 @@ export const Progress = () => {
                             {recommendations.slice(0, 6).map((topic, idx) => (
                                 <div
                                     key={idx}
-                                    className="p-4 rounded-xl border border-amber-200 bg-amber-50 "
+                                    className="p-4 rounded-xl border-3 border-[#2C241B] shadow-neo bg-amber-50 "
                                 >
                                     <p className="font-bold text-[#2C241B] ">{topic.chapter}</p>
                                     <p className="text-xs text-stone-500 mt-1">{topic.subject}</p>

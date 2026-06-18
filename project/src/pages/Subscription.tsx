@@ -159,10 +159,10 @@ export const Subscription = () => {
                 variant={plan.buttonVariant}
                 className={`w-full py-6 rounded-2xl font-black text-lg transition-all ${
                   plan.highlight
-                    ? 'bg-[#8C5A35] text-white hover:bg-[#70482B]'
+                    ? 'bg-[#8C5A35] text-white hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all'
                     : plan.id === currentTier
                     ? 'opacity-50 cursor-default'
-                    : 'bg-[#8C5A35] text-white hover:bg-[#70482B]'
+                    : 'bg-[#8C5A35] text-white hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all'
                 }`}
               >
                 {plan.id === currentTier ? 'Current Plan' : plan.buttonText}
@@ -185,7 +185,7 @@ export const Subscription = () => {
       {/* PayPal Checkout Modal */}
       {checkoutOpen && checkoutPlan && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn">
-          <div className="bg-[#fcfcfc] w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl border border-stone-200 flex flex-col relative animate-scaleIn">
+          <div className="bg-[#fcfcfc] w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl border-3 border-[#2C241B] shadow-neo flex flex-col relative animate-scaleIn">
             
             {/* PayPal Header */}
             <div className="px-6 py-4 bg-[#003087] text-white flex items-center justify-between">
@@ -216,7 +216,7 @@ export const Subscription = () => {
                 <div className="space-y-6 flex-grow flex flex-col justify-between">
                   <div className="space-y-4">
                     <h3 className="text-lg font-black text-[#2C241B] ">Review your subscription</h3>
-                    <div className="p-5 bg-[#FCFAF8] border border-stone-100 rounded-2xl">
+                    <div className="p-5 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl">
                       <p className="text-xs font-black uppercase text-stone-400">Order Summary</p>
                       <p className="font-black text-[#2C241B] text-md mt-1">Clarity {checkoutPlan.name} Plan</p>
                       <p className="text-xs text-[#8C5A35] font-bold mt-1">
@@ -232,14 +232,14 @@ export const Subscription = () => {
                   <div className="space-y-3">
                     <button
                       onClick={() => setPaypalStep('login')}
-                      className="w-full py-3.5 rounded-full bg-[#FFC439] hover:bg-[#F2B522] text-[#003087] font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
+                      className="w-full py-3.5 rounded-full bg-[#FFC439] hover:bg-[#F2B522] text-[#003087] font-bold text-sm transition-all flex items-center justify-center gap-2 "
                     >
                       <span className="font-serif italic font-bold">PayPal</span>
                       <span>Pay with PayPal</span>
                     </button>
                     <button
                       onClick={() => setPaypalStep('login')}
-                      className="w-full py-3.5 rounded-full bg-[#0079C1] hover:bg-[#005EA6] text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
+                      className="w-full py-3.5 rounded-full bg-[#0079C1] hover:bg-[#005EA6] text-white font-bold text-sm transition-all flex items-center justify-center gap-2 "
                     >
                       <CreditCard size={16} />
                       <span>Debit or Credit Card</span>
@@ -313,7 +313,7 @@ export const Subscription = () => {
                         </div>
                         <span className="text-xs font-bold text-[#0079C1]">Preferred</span>
                       </label>
-                      <label className="flex items-center justify-between p-4 bg-[#FCFAF8] border border-stone-200 rounded-xl cursor-pointer opacity-70">
+                      <label className="flex items-center justify-between p-4 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-xl cursor-pointer opacity-70">
                         <div className="flex items-center gap-3">
                           <input type="radio" disabled className="accent-[#0079C1]" />
                           <div>
@@ -374,7 +374,7 @@ export const Subscription = () => {
               {paypalStep === 'success' && (
                 <div className="flex-grow flex flex-col justify-between py-2 space-y-6">
                   <div className="text-center py-6 space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center mx-auto shadow-lg shadow-amber-500/25 animate-scaleIn">
+                    <div className="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center mx-auto  shadow-amber-500/25 animate-scaleIn">
                       <ShieldCheck size={36} />
                     </div>
                     <div>
@@ -392,7 +392,7 @@ export const Subscription = () => {
                       toast.success(`Success! Plan updated to ${checkoutPlan.name}`);
                       navigate('/dashboard');
                     }}
-                    className="w-full py-3.5 rounded-full bg-[#0079C1] hover:bg-[#005EA6] text-white font-bold text-sm transition-all shadow-md"
+                    className="w-full py-3.5 rounded-full bg-[#0079C1] hover:bg-[#005EA6] text-white font-bold text-sm transition-all "
                   >
                     Go to Dashboard
                   </button>

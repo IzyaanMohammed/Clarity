@@ -24,7 +24,7 @@ export const PremiumModal = ({ isOpen, onClose, feature }: PremiumModalProps) =>
     <Modal isOpen={isOpen} onClose={onClose} title="Upgrade to Premium">
       <div className="space-y-6">
         <div className="flex items-center justify-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-[1.25rem] flex items-center justify-center shadow-lg shadow-orange-500/20">
+          <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-[1.25rem] flex items-center justify-center  shadow-orange-500/20">
             <Crown className="w-8 h-8 text-white" />
           </div>
         </div>

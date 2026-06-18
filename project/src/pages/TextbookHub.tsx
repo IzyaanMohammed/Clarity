@@ -589,7 +589,7 @@ export const TextbookHub = () => {
                         <p className="text-stone-600 text-lg leading-relaxed max-w-xl mx-auto font-medium">
                             Tamil Nadu State Board support is coming in a very, very soon update! Currently, CBSE / NCERT is fully supported.
                         </p>
-                        <div className="p-6 bg-[#FCFAF8] rounded-2xl border border-stone-100 text-left space-y-3">
+                        <div className="p-6 bg-[#FCFAF8] rounded-2xl border-3 border-[#2C241B] shadow-neo text-left space-y-3">
                             <h4 className="font-bold text-[#3E352B] ">How to get started right now:</h4>
                             <ol className="list-decimal list-inside space-y-2 text-sm text-stone-600 font-medium">
                                 <li>Go to your <span className="text-[#8C5A35] cursor-pointer hover:underline font-bold" onClick={() => navigate('/profile')}>Profile Settings</span></li>
@@ -600,7 +600,7 @@ export const TextbookHub = () => {
                         <Button 
                             variant="primary" 
                             size="lg" 
-                            className="px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#8C5A35]/25"
+                            className="px-8 py-4 rounded-2xl font-black  /25"
                             onClick={() => navigate('/profile')}
                         >
                             Go to Profile Settings
@@ -622,7 +622,7 @@ export const TextbookHub = () => {
                     </p>
                 </div>
 
-                <div className="flex gap-2 bg-[#FCFAF8] p-2 rounded-2xl border border-stone-100 mb-8">
+                <div className="flex gap-2 bg-[#FCFAF8] p-2 rounded-2xl border-3 border-[#2C241B] shadow-neo mb-8">
                     {['8', '9', '10', '11', '12'].map((cls) => {
                         const isEnrolled = user?.class ? String(user.class).startsWith(cls) : cls === '10';
                         const targetClass = (user?.class && String(user.class).startsWith(cls)) ? user.class : cls;
@@ -639,7 +639,7 @@ export const TextbookHub = () => {
                                 }}
                                 className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all ${
                                     classFilter.startsWith(cls)
-                                        ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/20'
+                                        ? 'bg-[#8C5A35] text-white  /20'
                                         : isEnrolled
                                         ? 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-700'
                                         : 'text-stone-300 cursor-not-allowed opacity-50'
@@ -663,7 +663,7 @@ export const TextbookHub = () => {
                             }}
                             className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${resources.subject === subject
                                 ? 'bg-[#8C5A35] text-white'
-                                : 'bg-[#FCFAF8] text-stone-600 border border-stone-100 '
+                                : 'bg-[#FCFAF8] text-stone-600 border-3 border-[#2C241B] shadow-neo '
                                 }`}
                         >
                             {subject}
@@ -735,7 +735,7 @@ export const TextbookHub = () => {
                             {/* Action Buttons */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <Button
-                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] font-bold"
+                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all font-bold"
                                     onClick={openNcertViewer}
                                     disabled={!selectedChapter}
                                 >
@@ -743,14 +743,14 @@ export const TextbookHub = () => {
                                     Open Textbook Viewer
                                 </Button>
                                 <Button
-                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] font-bold"
+                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all font-bold"
                                     onClick={goAsk}
                                 >
                                     <Brain size={16} className="mr-2" aria-hidden="true" />
                                     Ask AI This Chapter
                                 </Button>
                                 <Button
-                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] font-bold"
+                                    className="h-12 rounded-2xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all font-bold"
                                     onClick={goPractice}
                                 >
                                     <ClipboardCheck size={16} className="mr-2" aria-hidden="true" />
@@ -778,7 +778,7 @@ export const TextbookHub = () => {
                                     Autonomous Coach
                                 </h3>
                                 <Button
-                                    className="h-10 px-4 rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold text-sm"
+                                    className="h-10 px-4 rounded-xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all font-bold text-sm"
                                     onClick={generateAutoCoach}
                                     disabled={coachLoading || !selectedChapter}
                                 >
@@ -787,7 +787,7 @@ export const TextbookHub = () => {
                             </div>
 
                             {coachCached && (
-                                <div className="mb-3 p-2 px-3 bg-amber-50 border border-amber-200 rounded-lg text-xs font-bold text-amber-700 flex items-center gap-2">
+                                <div className="mb-3 p-2 px-3 bg-amber-50 border-3 border-[#2C241B] shadow-neo rounded-lg text-xs font-bold text-amber-700 flex items-center gap-2">
                                     <Sparkles size={12} />
                                     Loaded from cache (30 min TTL)
                                 </div>
@@ -874,10 +874,10 @@ export const TextbookHub = () => {
 
                             {/* Files to Upload List */}
                             {uploadFiles.length > 0 && (
-                                <div className="mt-6 space-y-4 p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl">
+                                <div className="mt-6 space-y-4 p-4 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl">
                                     <p className="text-xs font-black uppercase tracking-wider text-stone-400 mb-2">Files Selected for Upload</p>
                                     {uploadFiles.map((file, idx) => (
-                                        <div key={file.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#FCFAF8] rounded-xl border border-stone-100 shadow-sm">
+                                        <div key={file.name} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#FCFAF8] rounded-xl border-3 border-[#2C241B] shadow-neo ">
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-bold text-[#2C241B] truncate">{file.name}</p>
                                                 <p className="text-[10px] text-stone-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
@@ -889,7 +889,7 @@ export const TextbookHub = () => {
                                                     value={fileTopics[file.name] || ''}
                                                     onChange={(e) => setFileTopics(prev => ({ ...prev, [file.name]: e.target.value }))}
                                                     placeholder="e.g. Life Processes"
-                                                    className="w-full px-3 py-1.5 bg-[#FCFAF8] border border-stone-200 rounded-lg text-xs font-bold focus:ring-1 focus:ring-[#8C5A35] outline-none text-[#2C241B] "
+                                                    className="w-full px-3 py-1.5 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-lg text-xs font-bold focus:ring-1 focus:ring-[#8C5A35] outline-none text-[#2C241B] "
                                                 />
                                             </div>
                                             <Button
@@ -910,7 +910,7 @@ export const TextbookHub = () => {
                                             Cancel
                                         </Button>
                                         <Button
-                                            className="bg-[#8C5A35] hover:bg-[#70482B] text-white rounded-xl text-xs font-bold h-9"
+                                            className="bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all text-white rounded-xl text-xs font-bold h-9"
                                             onClick={handleUploadAll}
                                             disabled={uploading}
                                         >
@@ -932,7 +932,7 @@ export const TextbookHub = () => {
                                         {customBooks.map((book) => (
                                             <div
                                                 key={book.id}
-                                                className="flex items-center justify-between p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl hover:border-amber-200 :border-amber-900/40 transition-colors"
+                                                className="flex items-center justify-between p-4 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl hover:border-amber-200 :border-amber-900/40 transition-colors"
                                             >
                                                 <div className="min-w-0 pr-2">
                                                     <p className="font-bold text-sm text-[#2C241B] truncate">{book.filename}</p>
@@ -973,13 +973,13 @@ export const TextbookHub = () => {
                                     <p className="text-sm text-stone-300">Jump straight into any mode with chapter context.</p>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold" onClick={goAsk}>
+                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all font-bold" onClick={goAsk}>
                                         Ask AI
                                     </Button>
-                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold" onClick={goPractice}>
+                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all font-bold" onClick={goPractice}>
                                         Practice
                                     </Button>
-                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] font-bold" onClick={goLibrary}>
+                                    <Button className="rounded-xl bg-[#8C5A35] hover:bg-[#70482B] border-3 border-[#2C241B] shadow-neo hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-neo-sm active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all font-bold" onClick={goLibrary}>
                                         <Library size={16} className="mr-2" />
                                         Library
                                     </Button>
@@ -1013,7 +1013,7 @@ export const TextbookHub = () => {
                                         type="number"
                                         min="1"
                                         placeholder="Page #"
-                                        className="w-12 bg-[#FCFAF8] border border-stone-200 outline-none rounded-lg text-xs font-bold text-center py-0.5 text-[#3E352B] "
+                                        className="w-12 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo outline-none rounded-lg text-xs font-bold text-center py-0.5 text-[#3E352B] "
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 const pageNum = e.currentTarget.value;
@@ -1038,7 +1038,7 @@ export const TextbookHub = () => {
                                         onClick={() => setLayoutMode('split')}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                                             layoutMode === 'split'
-                                                ? 'bg-[#8C5A35] text-white shadow-sm'
+                                                ? 'bg-[#8C5A35] text-white '
                                                 : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                                         }`}
                                     >
@@ -1048,7 +1048,7 @@ export const TextbookHub = () => {
                                         onClick={() => setLayoutMode('pdf')}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                                             layoutMode === 'pdf'
-                                                ? 'bg-[#8C5A35] text-white shadow-sm'
+                                                ? 'bg-[#8C5A35] text-white '
                                                 : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                                         }`}
                                     >
@@ -1058,7 +1058,7 @@ export const TextbookHub = () => {
                                         onClick={() => setLayoutMode('text')}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${
                                             layoutMode === 'text'
-                                                ? 'bg-[#8C5A35] text-white shadow-sm'
+                                                ? 'bg-[#8C5A35] text-white '
                                                 : 'text-stone-600 hover:bg-[#E8E4DB] :bg-stone-700'
                                         }`}
                                     >
@@ -1159,13 +1159,13 @@ export const TextbookHub = () => {
 
                                     {aiActionName ? (
                                         <div className="space-y-3 flex-1 flex flex-col">
-                                            <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl">
+                                            <div className="p-3 bg-amber-50 border-3 border-[#2C241B] shadow-neo rounded-2xl">
                                                 <p className="text-[10px] font-black uppercase text-[#8C5A35] mb-1">Selected Excerpt:</p>
                                                 <p className="text-xs text-stone-600 italic line-clamp-3">"{selectedText}"</p>
                                             </div>
                                             
-                                            <div className="p-4 bg-[#FCFAF8] border border-stone-100 rounded-2xl shadow-sm flex-1 overflow-y-auto min-h-[200px] space-y-4">
-                                                <div className="p-3 bg-amber-50 border border-amber-200/30 rounded-xl text-[10px] text-amber-700 flex items-start gap-2">
+                                            <div className="p-4 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl  flex-1 overflow-y-auto min-h-[200px] space-y-4">
+                                                <div className="p-3 bg-amber-50 border-3 border-[#2C241B] shadow-neo/30 rounded-xl text-[10px] text-amber-700 flex items-start gap-2">
                                                     <span className="text-amber-500">💡</span>
                                                     <span><strong>Tip:</strong> Highlight any text inside this explanation and right-click (or left-click) to ask the AI coach further questions!</span>
                                                 </div>
@@ -1200,7 +1200,7 @@ export const TextbookHub = () => {
                     {showContextMenu && (
                         <div
                             onMouseDown={(e) => e.preventDefault()}
-                            className="fixed bg-[#FCFAF8] border border-stone-200 rounded-2xl shadow-2xl z-[60] p-1.5 flex flex-col w-48 text-xs font-semibold animate-scaleIn"
+                            className="fixed bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-2xl shadow-2xl z-[60] p-1.5 flex flex-col w-48 text-xs font-semibold animate-scaleIn"
                             style={{
                                 top: `${menuPosition.y + 10}px`,
                                 left: `${menuPosition.x}px`,

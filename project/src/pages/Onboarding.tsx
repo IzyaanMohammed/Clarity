@@ -491,7 +491,7 @@ export const Onboarding = () => {
                             </div>
 
                             {!isEditing && (
-                                <div className="mt-8 max-w-md mx-auto text-left p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                                <div className="mt-8 max-w-md mx-auto text-left p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                                     <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-3">Already have an account? <Link to="/login" className="text-[#8C5A35] hover:underline">Login here</Link></p>
                                     <div className="space-y-3">
                                         <input
@@ -499,14 +499,14 @@ export const Onboarding = () => {
                                             value={loginName}
                                             onChange={(e) => setLoginName(e.target.value)}
                                             placeholder="Name"
-                                            className="w-full px-3 py-2 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-sm font-semibold"
+                                            className="w-full px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm font-semibold"
                                         />
                                         <input
                                             type="password"
                                             value={loginPassword}
                                             onChange={(e) => setLoginPassword(e.target.value)}
                                             placeholder="Password"
-                                            className="w-full px-3 py-2 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-sm font-semibold"
+                                            className="w-full px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm font-semibold"
                                         />
                                         <button
                                             onClick={handleLogin}
@@ -531,7 +531,7 @@ export const Onboarding = () => {
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                    className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                     placeholder="e.g. Rohan Gupta"
                                     autoFocus
                                 />
@@ -545,7 +545,7 @@ export const Onboarding = () => {
                                     type="text"
                                     value={school}
                                     onChange={(e) => setSchool(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                    className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                     placeholder="e.g. DPS Noida"
                                 />
                             </div>
@@ -557,7 +557,7 @@ export const Onboarding = () => {
                                         type="text"
                                         value={country}
                                         onChange={(e) => setCountry(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                        className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="Country"
                                     />
                                 </div>
@@ -567,7 +567,7 @@ export const Onboarding = () => {
                                         type="text"
                                         value={state}
                                         onChange={(e) => setState(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                        className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="State"
                                     />
                                 </div>
@@ -577,13 +577,13 @@ export const Onboarding = () => {
                                         type="text"
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                        className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="City"
                                     />
                                 </div>
                             </div>
 
-                            <div className="p-4 rounded-2xl border-2 border-stone-200 bg-[#F2EFE9] relative overflow-hidden h-36 flex items-center justify-center">
+                            <div className="p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#F2EFE9] relative overflow-hidden h-36 flex items-center justify-center">
                                 <div className="absolute inset-0 opacity-20 pointer-events-none">
                                     <svg width="100%" height="100%" className="text-stone-600 ">
                                         <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -616,7 +616,7 @@ export const Onboarding = () => {
                                                 setState(loc.state);
                                                 setCountry(loc.country);
                                             }}
-                                            className="px-2 py-1 bg-[#FCFAF8] text-[10px] font-bold rounded-md border border-stone-200 hover:bg-[#FCFAF8] :bg-stone-700 transition-colors shadow-sm text-stone-700 "
+                                            className="px-2 py-1 bg-[#FCFAF8] text-[10px] font-bold rounded-md border-3 border-[#2C241B] shadow-neo hover:bg-[#FCFAF8] :bg-stone-700 transition-colors  text-stone-700 "
                                         >
                                             📍 {loc.city}
                                         </button>
@@ -632,7 +632,7 @@ export const Onboarding = () => {
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                    className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                     placeholder={isEditing ? 'Keep unchanged unless re-registering' : 'At least 6 characters'}
                                 />
                             </div>
@@ -657,7 +657,7 @@ export const Onboarding = () => {
                                             className={`py-6 rounded-2xl font-black text-2xl transition-all ${disabled
                                                 ? 'bg-[#FCFAF8] text-stone-300 cursor-not-allowed opacity-50'
                                                 : selectedClass === entry
-                                                    ? 'bg-[#8C5A35] text-white shadow-lg shadow-[#8C5A35]/30'
+                                                    ? 'bg-[#8C5A35] text-white  /30'
                                                     : 'bg-[#F2EFE9] text-stone-700 hover:bg-[#E8E4DB] :bg-stone-700'
                                                 }`}
                                         >
@@ -786,7 +786,7 @@ export const Onboarding = () => {
                                             className={`p-3 rounded-xl border-2 text-sm font-bold transition-all text-left flex justify-between items-center ${entry.disabled
                                                 ? 'border-stone-100 bg-[#FCFAF8] text-stone-400 cursor-not-allowed'
                                                 : examBoard === entry.value
-                                                    ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35] shadow-sm shadow-[#8C5A35]/10'
+                                                    ? 'border-[#8C5A35] bg-amber-50 text-[#8C5A35]  /10'
                                                     : 'border-stone-200 text-stone-700 hover:border-stone-350 :border-stone-600'
                                                 }`}
                                         >
@@ -813,7 +813,7 @@ export const Onboarding = () => {
                                                     type="button"
                                                     onClick={() => setTnMedium(med as 'English' | 'Tamil')}
                                                     className={`p-2.5 rounded-xl border-2 text-xs font-black transition-all ${tnMedium === med
-                                                        ? 'border-[#8C5A35] bg-[#8C5A35] text-white shadow-sm'
+                                                        ? 'border-[#8C5A35] bg-[#8C5A35] text-white '
                                                         : 'border-stone-200 text-stone-700 bg-transparent hover:bg-[#F2EFE9] :bg-stone-800'
                                                         }`}
                                                 >
@@ -834,7 +834,7 @@ export const Onboarding = () => {
                                     <select
                                         value={preferredLanguage}
                                         onChange={(e) => setPreferredLanguage(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold"
                                     >
                                         {LANGUAGES.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -846,7 +846,7 @@ export const Onboarding = () => {
                                     <select
                                         value={preferredPace}
                                         onChange={(e) => setPreferredPace(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold"
                                     >
                                         {PACES.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -858,7 +858,7 @@ export const Onboarding = () => {
                                     <select
                                         value={confidenceLevel}
                                         onChange={(e) => setConfidenceLevel(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold"
                                     >
                                         {CONFIDENCE_LEVELS.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -870,7 +870,7 @@ export const Onboarding = () => {
                                     <select
                                         value={revisionFrequency}
                                         onChange={(e) => setRevisionFrequency(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
+                                        className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold"
                                     >
                                         {REVISION_FREQUENCY.map((entry) => (
                                             <option key={entry} value={entry}>{entry}</option>
@@ -886,7 +886,7 @@ export const Onboarding = () => {
                                     value={parentEmail}
                                     onChange={(e) => setParentEmail(e.target.value)}
                                     placeholder="parent@example.com (optional)"
-                                    className="w-full px-4 py-3 rounded-xl border-2 border-stone-200 bg-[#FCFAF8] font-semibold"
+                                    className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] font-semibold"
                                 />
                                 <p className="mt-1 text-[11px] text-stone-400">If provided, your parent gets login credentials to view your progress dashboard.</p>
                             </div>
@@ -1007,7 +1007,7 @@ export const Onboarding = () => {
                     {step === 11 && (
                         <div className="space-y-5">
                             {isEditing ? (
-                                <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                                <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                                     <p className="text-sm font-black text-[#2C241B] ">Diagnostic is first-time only</p>
                                     <p className="text-xs text-stone-500 mt-1">
                                         You are updating an existing account, so the signup diagnostic is skipped.
@@ -1015,7 +1015,7 @@ export const Onboarding = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                                    <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                                         <p className="text-sm font-black text-[#2C241B] ">Baseline diagnostic quiz</p>
                                         <p className="text-xs text-stone-500 mt-1">
                                             These questions are from one grade lower to test fundamentals.
@@ -1023,13 +1023,13 @@ export const Onboarding = () => {
                                         </p>
                                     </div>
                                     {diagnosticLoading && (
-                                        <div className="rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                                        <div className="rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                                             <p className="text-sm text-stone-600 ">Loading diagnostic questions...</p>
                                         </div>
                                     )}
                                     <div className="space-y-4">
                                         {diagnosticQuestions.map((question, index) => (
-                                            <div key={question.id} className="rounded-2xl border border-stone-200 p-4">
+                                            <div key={question.id} className="rounded-2xl border-3 border-[#2C241B] shadow-neo p-4">
                                                 <p className="text-xs font-black uppercase tracking-wide text-[#8C5A35] mb-2">Question {index + 1}</p>
                                                 <p className="text-[11px] font-bold text-stone-500 mb-2">{question.chapter}</p>
                                                 <p className="text-sm font-bold text-[#2C241B] mb-3">{question.prompt}</p>
@@ -1051,7 +1051,7 @@ export const Onboarding = () => {
                                         ))}
                                     </div>
                                     {diagnosticScore !== null && (
-                                        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4">
+                                        <div className="rounded-2xl bg-amber-50 border-3 border-[#2C241B] shadow-neo p-4">
                                             <p className="text-sm font-black text-amber-700 ">Diagnostic score: {diagnosticScore}%</p>
                                         </div>
                                     )}
@@ -1111,7 +1111,7 @@ export const Onboarding = () => {
                     {step < steps.length - 1 && !(location.state?.editFocus && step === 10) ? (
                         <button
                             onClick={handleNext}
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 shadow-lg"
+                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 "
                         >
                             Next
                             <ArrowRight size={18} />
@@ -1120,7 +1120,7 @@ export const Onboarding = () => {
                         <button
                             onClick={step === 10 && location.state?.editFocus ? handleComplete : handleComplete}
                             disabled={isSubmitting}
-                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 shadow-lg"
+                            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 "
                         >
                             {isSubmitting ? 'Saving...' : (location.state?.editFocus && step === 10 ? 'Save Focus' : 'Enter Dashboard')}
                             {location.state?.editFocus && step === 10 ? <Check size={18} /> : <Sparkles size={18} />}

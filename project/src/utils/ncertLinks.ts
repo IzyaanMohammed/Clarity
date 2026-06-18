@@ -119,7 +119,7 @@ export function generateResourceCard(resource: NCERTResourceLink): string {
     };
 
     return `
-    <div class="resource-card p-4 rounded-lg border border-stone-200 hover:bg-[#FCFAF8] :bg-stone-800/50 cursor-pointer transition">
+    <div class="resource-card p-4 rounded-lg border-3 border-[#2C241B] shadow-neo hover:bg-[#FCFAF8] :bg-stone-800/50 cursor-pointer transition">
       <div class="flex items-start gap-3">
         <span class="text-xl">${sourceEmoji[resource.source]}</span>
         <div class="flex-1">

@@ -71,11 +71,11 @@ export const Leaderboard = () => {
                 </div>
 
                 {/* Filters */}
-                <div className="flex flex-wrap gap-2 p-1.5 bg-[#E8E4DB]/60 backdrop-blur rounded-2xl border border-stone-200 ">
+                <div className="flex flex-wrap gap-2 p-1.5 bg-[#E8E4DB]/60 backdrop-blur rounded-2xl border-3 border-[#2C241B] shadow-neo ">
                     <button
                         onClick={() => setScope('worldwide')}
                         className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'worldwide'
-                            ? 'bg-[#8C5A35] text-white shadow-lg shadow-amber-500/20'
+                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
                             : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
                             }`}
                     >
@@ -84,7 +84,7 @@ export const Leaderboard = () => {
                     <button
                         onClick={() => setScope('class')}
                         className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'class'
-                            ? 'bg-[#8C5A35] text-white shadow-lg shadow-amber-500/20'
+                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
                             : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
                             }`}
                     >
@@ -93,7 +93,7 @@ export const Leaderboard = () => {
                     <button
                         onClick={() => setScope('country')}
                         className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'country'
-                            ? 'bg-[#8C5A35] text-white shadow-lg shadow-amber-500/20'
+                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
                             : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
                             }`}
                     >
@@ -102,7 +102,7 @@ export const Leaderboard = () => {
                     <button
                         onClick={() => setScope('state')}
                         className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'state'
-                            ? 'bg-[#8C5A35] text-white shadow-lg shadow-amber-500/20'
+                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
                             : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
                             }`}
                     >
@@ -111,7 +111,7 @@ export const Leaderboard = () => {
                     <button
                         onClick={() => setScope('city')}
                         className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'city'
-                            ? 'bg-[#8C5A35] text-white shadow-lg shadow-amber-500/20'
+                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
                             : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
                             }`}
                     >
@@ -124,7 +124,7 @@ export const Leaderboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
                         {/* 2nd Place */}
                         {leaderboard[1] && (
-                            <div className="order-2 md:order-1 bg-[#FCFAF8] border border-stone-200 rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden shadow-md">
+                            <div className="order-2 md:order-1 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden ">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#F2EFE9] rounded-full transtone-x-8 -transtone-y-8 flex items-end justify-start p-4 text-stone-300 font-black text-3xl">2</div>
                                 <div className="p-3 bg-[#F2EFE9] rounded-2xl text-stone-500 mb-4 ring-4 ring-stone-100 ">
                                     <Medal size={28} />
@@ -153,14 +153,14 @@ export const Leaderboard = () => {
                             <p className="text-xs text-stone-400 font-semibold mt-1">
                                 {leaderboard[0].city}, {leaderboard[0].state}
                             </p>
-                            <div className="mt-4 px-5 py-2 bg-gradient-to-r from-amber-500 to-indigo-500 text-white rounded-full font-black text-sm shadow-md shadow-amber-500/10">
+                            <div className="mt-4 px-5 py-2 bg-gradient-to-r from-amber-500 to-indigo-500 text-white rounded-full font-black text-sm  shadow-amber-500/10">
                                 {leaderboard[0].points} pts
                             </div>
                         </div>
 
                         {/* 3rd Place */}
                         {leaderboard[2] && (
-                            <div className="order-3 bg-[#FCFAF8] border border-stone-200 rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden shadow-md">
+                            <div className="order-3 bg-[#FCFAF8] border-3 border-[#2C241B] shadow-neo rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden ">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full transtone-x-8 -transtone-y-8 flex items-end justify-start p-4 text-amber-500/10 font-black text-3xl">3</div>
                                 <div className="p-3 bg-amber-100/50 rounded-2xl text-amber-600 mb-4 ring-4 ring-amber-100/20 ">
                                     <Medal size={28} />
@@ -283,7 +283,7 @@ export const Leaderboard = () => {
                             <div className="w-px h-10 bg-[#FCFAF8]/20" />
                             <Link
                                 to="/practice"
-                                className="px-4 py-2 bg-[#FCFAF8] text-[#2C241B] font-extrabold text-xs rounded-xl shadow-md hover:bg-[#FCFAF8] transition-colors"
+                                className="px-4 py-2 bg-[#FCFAF8] text-[#2C241B] font-extrabold text-xs rounded-xl  hover:bg-[#FCFAF8] transition-colors"
                             >
                                 Gain More Points
                             </Link>

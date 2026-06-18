@@ -177,7 +177,7 @@ export const Dump = () => {
                     {/* Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                         {filteredItems.map(item => (
-                            <Card key={item.id} className="p-6 bg-[#FCFAF8] rounded-[24px] border border-stone-100 hover:shadow-xl transition-all group">
+                            <Card key={item.id} className="p-6 bg-[#FCFAF8] rounded-[24px] border-3 border-[#2C241B] shadow-neo hover:shadow-xl transition-all group">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="w-12 h-12 rounded-xl bg-[#FCFAF8] flex items-center justify-center">
                                         {getIcon(item.type)}

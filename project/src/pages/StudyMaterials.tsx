@@ -102,7 +102,7 @@ export const StudyMaterials = () => {
         if (!table) return null;
 
         return (
-            <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+            <div className="overflow-x-auto rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                 <table className="min-w-full text-left text-sm">
                     <thead className="bg-[#F2EFE9] ">
                         <tr>
@@ -154,32 +154,32 @@ export const StudyMaterials = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
-                        <div className="mb-4 p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                        <div className="mb-4 p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                             <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-3">Save Online Resource</p>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                 <input
                                     value={linkTitle}
                                     onChange={(e) => setLinkTitle(e.target.value)}
                                     placeholder="Resource title"
-                                    className="px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm"
+                                    className="px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm"
                                 />
                                 <input
                                     value={linkUrl}
                                     onChange={(e) => setLinkUrl(e.target.value)}
                                     placeholder="https://..."
-                                    className="px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm md:col-span-2"
+                                    className="px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm md:col-span-2"
                                 />
                             </div>
                             <Button className="rounded-xl mt-3" onClick={saveResourceLink}>Save Link</Button>
                         </div>
 
-                        <div className="mb-4 p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                        <div className="mb-4 p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                             <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-3">Search Materials</p>
                             <input
                                 value={materialQuery}
                                 onChange={(e) => setMaterialQuery(e.target.value)}
                                 placeholder="Search title, subject, chapter, or text"
-                                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm"
+                                className="w-full px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm"
                             />
                         </div>
 
@@ -197,7 +197,7 @@ export const StudyMaterials = () => {
                                 const quizzes = payload?.quiz || [];
                                 const topTip = moments[0]?.coach_note || 'Play, pause, and write one board-style answer from the first key moment.';
                                 return (
-                                    <div key={item.id} className="p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                                    <div key={item.id} className="p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                                         <div className="flex items-center justify-between gap-2">
                                             <div>
                                                 <p className="text-sm font-black text-[#2C241B] ">{item.title}</p>
@@ -208,7 +208,7 @@ export const StudyMaterials = () => {
                                             </Button>
                                         </div>
                                         {item.url && (
-                                            <div className="mt-3 rounded-xl overflow-hidden border border-stone-200 bg-black">
+                                            <div className="mt-3 rounded-xl overflow-hidden border-3 border-[#2C241B] shadow-neo bg-black">
                                                 <iframe
                                                     src={item.url}
                                                     title={item.title}
@@ -237,7 +237,7 @@ export const StudyMaterials = () => {
                                 <p className="text-sm text-stone-500">{materialQuery ? 'No matching materials found.' : 'No materials saved yet. Use OCR page or Studio (YouTube AI + Mindmap) to store outputs.'}</p>
                             )}
                             {standardMaterials.map((item) => (
-                                <div key={item.id} className="p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                                <div key={item.id} className="p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                                     <div className="flex items-center justify-between gap-2">
                                         <div>
                                             <p className="text-sm font-black text-[#2C241B] ">{item.title}</p>
@@ -265,7 +265,7 @@ export const StudyMaterials = () => {
                                         <img
                                             src={item.imageDataUrl}
                                             alt={item.title}
-                                            className="mt-3 w-full max-h-44 object-cover rounded-xl border border-stone-200 "
+                                            className="mt-3 w-full max-h-44 object-cover rounded-xl border-3 border-[#2C241B] shadow-neo "
                                         />
                                     )}
                                     {item.url && (
@@ -288,13 +288,13 @@ export const StudyMaterials = () => {
                     </Card>
 
                     <Card className="p-6 bg-[#FCFAF8] border-none shadow-xl rounded-3xl">
-                        <div className="mb-4 p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                        <div className="mb-4 p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                             <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-3">Search Saved Items</p>
                             <input
                                 value={bookmarkQuery}
                                 onChange={(e) => setBookmarkQuery(e.target.value)}
                                 placeholder="Search subject, chapter, question, or answer"
-                                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-[#FCFAF8] text-sm"
+                                className="w-full px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm"
                             />
                         </div>
 
@@ -307,7 +307,7 @@ export const StudyMaterials = () => {
                                 <p className="text-sm text-stone-500">{bookmarkQuery ? 'No matching saved items found.' : 'No saved flashcards/answers yet. Save from Ask AI or Flashcards.'}</p>
                             )}
                             {filteredBookmarks.map((item) => (
-                                <div key={item.id} className="p-4 rounded-2xl border border-stone-200 bg-[#FCFAF8] ">
+                                <div key={item.id} className="p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
                                     <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35]">{item.type}</p>
                                     <p className="text-sm font-black text-[#2C241B] mt-1">{item.subject} • {item.chapter}</p>
                                     {item.question && <p className="text-xs text-stone-600 mt-2">Q: {item.question}</p>}
@@ -362,10 +362,10 @@ export const StudyMaterials = () => {
                             <img
                                 src={activeMaterial.imageDataUrl}
                                 alt={activeMaterial.title}
-                                className="w-full max-h-[320px] object-contain rounded-2xl border border-stone-200 bg-[#FCFAF8] "
+                                className="w-full max-h-[320px] object-contain rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] "
                             />
                         )}
-                        <div className="max-h-[60vh] overflow-y-auto space-y-5 rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                        <div className="max-h-[60vh] overflow-y-auto space-y-5 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                             {activeMaterial.type === 'summary' && activeMaterial.content ? (
                                 <div className="space-y-5">
                                     <section className="space-y-3">
@@ -487,7 +487,7 @@ export const StudyMaterials = () => {
                                 Download .md
                             </Button>
                         </div>
-                        <div className="max-h-[55vh] overflow-y-auto rounded-2xl border border-stone-200 bg-[#FCFAF8] p-4">
+                        <div className="max-h-[55vh] overflow-y-auto rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
                             <div className="prose prose-slate max-w-none">
                                 <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35]">{activeBookmark.type}</p>
                                 <h4>{activeBookmark.subject} • {activeBookmark.chapter}</h4>
