@@ -314,8 +314,8 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-[#F2EFE9] transition-colors duration-300 relative overflow-hidden">
       {/* Nanobana Doodles */}
-      <img src="/doodle_sticky.png" className="absolute top-10 left-10 w-48 h-48 opacity-90 animate-float z-0 pointer-events-none mix-blend-multiply" alt="sticky" />
-      <img src="/doodle_pen.png" className="absolute bottom-20 right-10 w-56 h-56 opacity-90 animate-wobble z-0 pointer-events-none mix-blend-multiply" alt="pen" />
+      <img src="/doodle_sticky.png" className="absolute top-10 left-10 w-48 h-48 opacity-90 animate-float z-0 pointer-events-none" alt="sticky" />
+      <img src="/doodle_pen.png" className="absolute bottom-20 right-10 w-56 h-56 opacity-90 animate-wobble z-0 pointer-events-none" alt="pen" />
       
       <Navbar />
       <main className="max-w-[1600px] mx-auto px-6 py-10 relative z-10">

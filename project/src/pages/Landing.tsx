@@ -695,8 +695,8 @@ export const Landing = () => {
                 style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
             >
                 {/* Nanobana Doodles */}
-                <img src="/doodle_sticky.png" className="absolute top-32 left-12 w-56 h-56 opacity-90 animate-float z-0 pointer-events-none hidden md:block mix-blend-multiply" alt="sticky" />
-                <img src="/doodle_pen.png" className="absolute top-[60vh] right-20 w-64 h-64 opacity-90 animate-wobble z-0 pointer-events-none hidden md:block mix-blend-multiply" alt="pen" />
+                <img src="/doodle_sticky.png" className="absolute top-32 left-12 w-56 h-56 opacity-90 animate-float z-0 pointer-events-none hidden md:block" alt="sticky" />
+                <img src="/doodle_pen.png" className="absolute top-[60vh] right-20 w-64 h-64 opacity-90 animate-wobble z-0 pointer-events-none hidden md:block" alt="pen" />
 
                 {/* Background Ruled Lines */}
                 <div className="ruled h" style={{ top: '25%' }} />
