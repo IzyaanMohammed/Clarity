@@ -11,7 +11,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
 import { getUser } from '../utils/storage';
-import { startExamSimulation, submitExamSimulation, type ExamSimStartResponse, type ExamSimSubmitResponse } from '../api';
+import { startExamSimulation, submitExamSimulation, apiClient, type ExamSimStartResponse, type ExamSimSubmitResponse } from '../api';
 
 export const ExamSimulator = () => {
   const navigate = useNavigate();
@@ -56,9 +56,12 @@ export const ExamSimulator = () => {
   const [activeSection, setActiveSection] = useState<'A' | 'B' | 'C'>('A');
 
   // Scientific Calculator Drawer
-  const [calcOpen, setCalcOpen] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
   const [calcExpr, setCalcExpr] = useState('');
   const [calcResult, setCalcResult] = useState('');
+  
+  // OCR Refs
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Formula Sheet Lookup Drawer
   const [formulaOpen, setFormulaOpen] = useState(false);
@@ -259,19 +262,26 @@ export const ExamSimulator = () => {
   };
 
   // Client-side MCQ option parser
-  const parseOptionsFromQuestion = (text: string): { questionText: string; options: string[] | null } => {
+  const parseOptionsFromQuestion = (text: string): { questionText: string; options: string[] | null; isMatchTheFollowing: boolean } => {
+    // Detect Match the following
+    const isMatchTheFollowing = text.toLowerCase().includes('match') && (text.toLowerCase().includes('column') || text.toLowerCase().includes('list'));
+    
+    if (isMatchTheFollowing) {
+      return { questionText: text, options: null, isMatchTheFollowing: true };
+    }
+
     // Look for (a) ... (b) ... or A) ... B) ... pattern
     const regex = /(?:\s|\()([A-Da-d])(?:[\)\.]\s+)(.*?)(?=(?:\s+\(?[A-D(a-d][\)\.])|$)/g;
     const matches = [...text.matchAll(regex)];
     
-    if (matches.length >= 2) {
+    if (matches.length >= 2 && matches.length <= 4) {
       const options = matches.map(m => m[2].trim());
       const firstMatchIndex = text.search(/(?:^|\s|\()([A-Da-d])(?:[\)\.]\s+)/);
       const questionText = firstMatchIndex > 0 ? text.substring(0, firstMatchIndex).trim() : text;
-      return { questionText, options };
+      return { questionText, options, isMatchTheFollowing: false };
     }
     
-    return { questionText: text, options: null };
+    return { questionText: text, options: null, isMatchTheFollowing: false };
   };
 
   // Divide questions into sections
@@ -315,24 +325,40 @@ export const ExamSimulator = () => {
     }
   };
 
-  // Mock handwriting upload scan trigger
+  // Real handwriting upload scan trigger
   const triggerHandwritingScan = (idx: number) => {
     setScanningIndex(idx);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || scanningIndex === null) return;
+    
     setScanningFile(true);
-    setTimeout(() => {
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+      const response = await apiClient.post('/upload/ocr', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      const extractedText = response.data.text;
+      
+      setAnswers(prev => ({ ...prev, [scanningIndex]: prev[scanningIndex] ? prev[scanningIndex] + '\n' + extractedText : extractedText }));
+      toast.success('📝 OCR scanned and answer text imported successfully!');
+    } catch (error: any) {
+      toast.error(error?.response?.data?.detail || 'Failed to scan handwritten answer.');
+    } finally {
       setScanningFile(false);
       setScanningIndex(null);
-      // Insert highly structured response content based on marks and topic
-      const question = started?.questions[idx];
-      const marks = question?.marks || 3;
-      let textAnswer = `1. Core Definition: This concept refers to the specific process where substances interact under CBSE board standards.\n2. Chemical/Physical Mechanism: It progresses sequentially through molecular alignment, formula activation, and key parameters.\n3. Formula Representation:\n   Let alignment be: A = R * T / P\n4. Conclusion: Thus, the value output equals the product of temperature and pressure components.`;
-      
-      if (marks <= 1) {
-        textAnswer = `The correct value/word answer for this board question is verified as: True/Correct.`;
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Reset
       }
-      setAnswers(prev => ({ ...prev, [idx]: textAnswer }));
-      toast.success('📝 OCR scanned and answer text imported successfully!');
-    }, 2500);
+    }
   };
 
   const isTamilNadu = user?.examBoard === 'Tamil Nadu State Board' || String(user?.class).includes('_TN_');
@@ -581,6 +607,15 @@ export const ExamSimulator = () => {
             {/* Left/Middle Column: Official Exam Sheet */}
             <div className="lg:col-span-3 space-y-6">
               
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept="image/*"
+                capture="environment"
+                onChange={handleFileUpload}
+              />
+
               {/* Paper Board Cover Details */}
               <Card className="p-8 bg-white dark:bg-[#0f172a] border-2 border-slate-200 dark:border-slate-800 rounded-[32px] relative overflow-hidden">
                 
@@ -669,7 +704,7 @@ export const ExamSimulator = () => {
                   ) : (
                     questionsBySection[activeSection].map((question) => {
                       const idx = question.originalIndex;
-                      const { questionText, options } = parseOptionsFromQuestion(question.question);
+                      const { questionText, options, isMatchTheFollowing } = parseOptionsFromQuestion(question.question);
                       
                       return (
                         <div key={idx} className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 space-y-4">
@@ -680,7 +715,7 @@ export const ExamSimulator = () => {
                               <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
                                 {question.chapter} • Question {idx + 1}
                               </p>
-                              <h4 className="text-md font-black text-slate-900 dark:text-white mt-1 leading-snug">
+                              <h4 className={`text-md font-black text-slate-900 dark:text-white mt-1 leading-snug ${isMatchTheFollowing ? 'whitespace-pre-wrap font-mono text-sm bg-slate-100 dark:bg-slate-800 p-3 rounded-xl' : ''}`}>
                                 {questionText}
                               </h4>
                             </div>

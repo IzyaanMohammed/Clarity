@@ -1175,38 +1175,57 @@ def _resolve_exam_scope_chapters(request: ExamSimStartRequest) -> tuple[str, lis
     return scope, chapters
 
 
-def _build_marks_distribution(total_marks: int, question_count: int) -> list[int]:
-    allowed = [1, 2, 3, 5]
-    count = max(3, min(int(question_count or 10), 30))
-    target = max(count, min(int(total_marks or 80), 200))
+def _build_marks_distribution(total_marks: int, question_count_ignored: int) -> list[int]:
+    target = max(10, min(int(total_marks or 80), 200))
+    
+    # Target proportions of total marks
+    # 1-mark: 25%, 2-mark: 25%, 3-mark: 18.75%, 5-mark: 31.25%
+    m1_target = int(target * 0.25)
+    m2_target = int(target * 0.25)
+    m3_target = int(target * 0.1875)
+    m5_target = target - (m1_target + m2_target + m3_target)
+    
+    # Calculate question counts
+    q1 = max(1, m1_target // 1)
+    q2 = max(1, m2_target // 2)
+    q3 = max(1, m3_target // 3)
+    q5 = max(1, m5_target // 5)
+    
+    distribution = [1]*q1 + [2]*q2 + [3]*q3 + [5]*q5
+    current_total = sum(distribution)
+    
+    # Adjust to exactly hit target
+    while current_total < target:
+        diff = target - current_total
+        if diff >= 5:
+            distribution.append(5)
+            current_total += 5
+        elif diff >= 3:
+            distribution.append(3)
+            current_total += 3
+        elif diff >= 2:
+            distribution.append(2)
+            current_total += 2
+        else:
+            distribution.append(1)
+            current_total += 1
+            
+    while current_total > target:
+        if 1 in distribution:
+            distribution.remove(1)
+            current_total -= 1
+        elif 2 in distribution:
+            distribution.remove(2)
+            current_total -= 2
+        elif 3 in distribution:
+            distribution.remove(3)
+            current_total -= 3
+        else:
+            distribution.remove(5)
+            current_total -= 5
 
-    distribution: list[int] = []
-    remaining_marks = target
-    remaining_questions = count
-
-    for _ in range(count):
-        remaining_questions = max(1, remaining_questions)
-        avg = remaining_marks / remaining_questions
-        candidates = sorted(allowed, key=lambda x: abs(x - avg))
-        chosen = candidates[0]
-
-        for marks in candidates:
-            rest_marks = remaining_marks - marks
-            rest_q = remaining_questions - 1
-            min_rest = rest_q * min(allowed)
-            max_rest = rest_q * max(allowed)
-            if rest_q == 0 or (min_rest <= rest_marks <= max_rest):
-                chosen = marks
-                break
-
-        distribution.append(chosen)
-        remaining_marks -= chosen
-        remaining_questions -= 1
-
-    if remaining_marks != 0 and distribution:
-        distribution[-1] = max(1, min(5, distribution[-1] + remaining_marks))
-
-    return distribution
+    # Sort so sections are ordered: 1 markers, then 2, then 3, then 5
+    return sorted(distribution)
 
 
 async def _generate_exam_questions(request: ExamSimStartRequest, chapters: list[str], marks_distribution: list[int]) -> list[dict]:
@@ -1231,16 +1250,22 @@ async def _generate_exam_questions(request: ExamSimStartRequest, chapters: list[
             "Do not directly copy textbook exercises."
         )
 
+    marks_breakdown_str = ", ".join(f"Q{i+1} ({m} mark{'s' if m>1 else ''})" for i, m in enumerate(marks_distribution))
+
     prompt = (
-        f"Create {count} CBSE board-style questions for Class {request.class_num} (Grade {request.class_num}) {request.subject}.\n\n"
+        f"Create exactly {count} CBSE board-style questions for Class {request.class_num} (Grade {request.class_num}) {request.subject}.\n\n"
+        f"CRITICAL MARKS ALLOCATION:\n"
+        f"You MUST generate questions that precisely match this sequence of marks:\n{marks_breakdown_str}\n"
+        f"- For 1-mark questions, randomly pick the format: Multiple Choice (with A,B,C,D options), Fill in the Blanks, Match the Following (format nicely with Column A and Column B), or Very Short Answer.\n"
+        f"- For 2-3 mark questions, generate Short Answer questions requiring explanation.\n"
+        f"- For 5-mark questions, generate Long Answer questions requiring multi-step derivation, detailed explanation, or multiple sub-parts.\n\n"
         f"CRITICAL COVERAGE REQUIREMENT:\n"
         f"- You MUST strictly and only generate questions from these specific chapter(s): {chapter_scope}.\n"
-        f"- DO NOT include any questions from other chapters of the {request.subject} syllabus. For example, if Science is requested and coverage is chemistry chapters, do not generate physics or biology questions.\n"
-        f"- NO DRAWING/DIAGRAM/LABEL QUESTIONS: Do NOT generate questions that ask the student to draw, diagram, label, sketch, plot, or construct charts/graphs/figures. All questions must be solvable purely via text answers or numerical calculations.\n\n"
+        f"- DO NOT include any questions from other chapters. For example, if Science is requested and coverage is chemistry chapters, do not generate physics or biology questions.\n"
+        f"- NO DRAWING/DIAGRAM/LABEL QUESTIONS.\n\n"
         f"Details:\n"
         f"- Mode: {request.mode}.\n"
         f"- Rigor & Syllabus: MUST match Class {request.class_num} standard exactly.\n"
-        f"- Style: Vary question command words (define/explain/derive/justify/compare/evaluate).\n"
         f"- {textbook_instruction}\n"
         "Return ONLY the numbered questions (1. 2. 3. ...), no heading, no explanation, no preamble."
     )
