@@ -689,18 +689,18 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
         start_page = -1
         if chapter:
             try:
-                import PyPDF2
-                with open(pdf_path, "rb") as f_pdf:
-                    reader = PyPDF2.PdfReader(f_pdf)
-                    num_pages = len(reader.pages)
-                    # Search page content
-                    for page_idx in range(10, num_pages):
-                        page_text = reader.pages[page_idx].extract_text() or ""
-                        if chapter.lower() in page_text.lower():
-                            start_page = page_idx
-                            break
+                import fitz
+                doc = fitz.open(pdf_path)
+                num_pages = len(doc)
+                # Search page content
+                for page_idx in range(10, num_pages):
+                    page_text = doc[page_idx].get_text() or ""
+                    if chapter.lower() in page_text.lower():
+                        start_page = page_idx
+                        break
+                doc.close()
             except Exception as e:
-                logger.warning(f"PyPDF2 search failed for start page: {e}")
+                logger.warning(f"PyMuPDF search failed for start page: {e}")
 
         # Fallback start page if title search failed
         if start_page == -1:
@@ -712,42 +712,40 @@ async def proxy_ncert_pdf(book_code: str, chapter_num: int):
         if chapter and chapter_num < len(chapters):
             next_chapter = chapters[chapter_num]
             try:
-                import PyPDF2
-                with open(pdf_path, "rb") as f_pdf:
-                    reader = PyPDF2.PdfReader(f_pdf)
-                    # Search starting from start_page + 1
-                    for page_idx in range(start_page + 1, len(reader.pages)):
-                        page_text = reader.pages[page_idx].extract_text() or ""
-                        if next_chapter.lower() in page_text.lower():
-                            end_page = page_idx
-                            break
+                import fitz
+                doc = fitz.open(pdf_path)
+                # Search starting from start_page + 1
+                for page_idx in range(start_page + 1, len(doc)):
+                    page_text = doc[page_idx].get_text() or ""
+                    if next_chapter.lower() in page_text.lower():
+                        end_page = page_idx
+                        break
+                doc.close()
             except Exception:
                 pass
 
         if end_page == -1 or end_page <= start_page:
             try:
-                import PyPDF2
-                with open(pdf_path, "rb") as f_pdf:
-                    reader = PyPDF2.PdfReader(f_pdf)
-                    end_page = min(start_page + 25, len(reader.pages))
+                import fitz
+                doc = fitz.open(pdf_path)
+                end_page = min(start_page + 25, len(doc))
+                doc.close()
             except Exception:
                 end_page = start_page + 25
 
         # Perform the actual page slicing and save to cache
         try:
-            import PyPDF2
-            writer = PyPDF2.PdfWriter()
-            with open(pdf_path, "rb") as f_pdf:
-                reader = PyPDF2.PdfReader(f_pdf)
-                total_p = len(reader.pages)
-                sp = max(0, min(start_page, total_p - 1))
-                ep = max(sp + 1, min(end_page, total_p))
-                
-                for p_idx in range(sp, ep):
-                    writer.add_page(reader.pages[p_idx])
-                    
-                with open(cache_path, "wb") as f_out:
-                    writer.write(f_out)
+            import fitz
+            doc = fitz.open(pdf_path)
+            total_p = len(doc)
+            sp = max(0, min(start_page, total_p - 1))
+            ep = max(sp + 1, min(end_page, total_p))
+            
+            new_doc = fitz.open()
+            new_doc.insert_pdf(doc, from_page=sp, to_page=ep - 1)
+            new_doc.save(cache_path)
+            new_doc.close()
+            doc.close()
                     
             logger.info(f"Sliced and cached TN Board PDF: {filename} (pages {sp} to {ep})")
             return FileResponse(cache_path, media_type="application/pdf", headers=response_headers, filename=filename)

@@ -250,42 +250,28 @@ def _download_ncert_pdf(book_code: str, chapter_num: int) -> Optional[bytes]:
 
 def _extract_text_from_pdf_bytes(pdf_bytes: bytes) -> tuple[str, list[int]]:
     """
-    Extract text from PDF bytes.
+    Extract text from PDF bytes using PyMuPDF (fitz).
     Returns (text, image_heavy_pages).
-    Tries pdfplumber first, falls back to PyPDF2.
     """
     image_heavy_pages: list[int] = []
     try:
-        import pdfplumber
+        import fitz  # PyMuPDF
+        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
         pages_text: list[str] = []
-        with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
-            for i, page in enumerate(pdf.pages):
-                page_text = page.extract_text() or ""
-                page_text = f"[Page {i + 1}](page://{i + 1})\n\n" + page_text
-                if bool(page.images) and len(page_text.strip()) < 120:
-                    image_heavy_pages.append(i)
-                pages_text.append(page_text)
-        full = "\n\n".join(t for t in pages_text if t.strip())
-        return full.strip(), image_heavy_pages
-    except ImportError:
-        logger.warning("pdfplumber not available, trying PyPDF2")
-    except Exception as e:
-        logger.warning(f"pdfplumber failed: {e}, trying PyPDF2")
-
-    try:
-        import PyPDF2
-        reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
-        pages_text: list[str] = []
-        for i, p in enumerate(reader.pages):
-            page_text = p.extract_text() or ""
+        for i, page in enumerate(doc):
+            page_text = page.get_text() or ""
             page_text = f"[Page {i + 1}](page://{i + 1})\n\n" + page_text
+            has_images = len(page.get_images()) > 0
+            if has_images and len(page_text.strip()) < 120:
+                image_heavy_pages.append(i)
             pages_text.append(page_text)
-        text = "\n\n".join(pages_text)
-        return text.strip(), []
+            
+        full = "\n\n".join(t for t in pages_text if t.strip())
+        doc.close()
+        return full.strip(), image_heavy_pages
     except Exception as e:
-        logger.error(f"PyPDF2 fallback also failed: {e}")
-
-    return "", []
+        logger.error(f"PyMuPDF text extraction failed: {e}")
+        return "", []
 
 
 async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str) -> str:
@@ -383,33 +369,33 @@ async def get_tamil_nadu_chapter_text(class_num: str, subject: str, chapter: str
     logger.info(f"Extracting TN Board chapter '{chapter}' from {pdf_path.name}")
     start_page = -1
     try:
-        import PyPDF2
-        with open(pdf_path, "rb") as f_pdf:
-            reader = PyPDF2.PdfReader(f_pdf)
-            for page_idx in range(10, len(reader.pages)):
-                page_text = reader.pages[page_idx].extract_text() or ""
-                if chapter.lower() in page_text.lower():
-                    start_page = page_idx
-                    break
+        import fitz
+        doc = fitz.open(pdf_path)
+        for page_idx in range(10, len(doc)):
+            page_text = doc[page_idx].get_text() or ""
+            if chapter.lower() in page_text.lower():
+                start_page = page_idx
+                break
 
-            if start_page == -1:
-                start_page = 30
-                logger.warning(f"Chapter title '{chapter}' not found in PDF pages. Defaulting start page to 30.")
+        if start_page == -1:
+            start_page = 30
+            logger.warning(f"Chapter title '{chapter}' not found in PDF pages. Defaulting start page to 30.")
 
-            end_page = min(start_page + 25, len(reader.pages))
-            extracted_pages = []
-            for p_idx in range(start_page, end_page):
-                page_text = reader.pages[p_idx].extract_text() or ""
-                relative_page = p_idx - start_page + 1
-                page_text = f"[Page {relative_page}](page://{relative_page})\n\n" + page_text
-                extracted_pages.append(page_text)
+        end_page = min(start_page + 25, len(doc))
+        extracted_pages = []
+        for p_idx in range(start_page, end_page):
+            page_text = doc[p_idx].get_text() or ""
+            relative_page = p_idx - start_page + 1
+            page_text = f"[Page {relative_page}](page://{relative_page})\n\n" + page_text
+            extracted_pages.append(page_text)
             
-            full_text = "\n\n".join(extracted_pages)
-            if len(full_text.strip()) > 200:
-                cache_path.write_text(full_text, encoding="utf-8")
-                return full_text
+        full_text = "\n\n".join(extracted_pages)
+        doc.close()
+        if len(full_text.strip()) > 200:
+            cache_path.write_text(full_text, encoding="utf-8")
+            return full_text
     except Exception as e:
-        logger.error(f"Error parsing Tamil Nadu Board PDF using PyPDF2: {e}")
+        logger.error(f"Error parsing Tamil Nadu Board PDF using PyMuPDF: {e}")
     
     return ""
 

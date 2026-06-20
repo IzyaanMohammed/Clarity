@@ -39,49 +39,34 @@ def _render_page_as_image_base64(pdf_bytes: bytes, page_num: int = 0, dpi: int =
 
 def extract_text_from_pdf(file_bytes: bytes) -> tuple[str, list[int]]:
     """
-    Extract text from PDF using pdfplumber (better layout handling than PyPDF2).
+    Extract text from PDF using PyMuPDF (fitz) for high performance and low memory footprint.
     Also returns a list of page indices that are image-heavy (low text / contain images).
-    Falls back to PyPDF2 if pdfplumber is unavailable.
 
     Returns:
         (text: str, image_heavy_pages: list[int])
     """
     image_heavy_pages: list[int] = []
 
-    # ── pdfplumber (preferred) ──────────────────────────────────────────────
     try:
-        import pdfplumber
+        import fitz  # PyMuPDF
 
+        doc = fitz.open(stream=file_bytes, filetype="pdf")
         pages_text: list[str] = []
-        with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
-            for i, page in enumerate(pdf.pages):
-                page_text = page.extract_text() or ""
-                # Detect image-heavy pages: very little text but has image objects
-                has_images = bool(page.images)
-                if has_images and len(page_text.strip()) < 120:
-                    image_heavy_pages.append(i)
-                pages_text.append(page_text)
+        
+        for i, page in enumerate(doc):
+            page_text = page.get_text() or ""
+            # Detect image-heavy pages: very little text but has image objects
+            has_images = len(page.get_images()) > 0
+            if has_images and len(page_text.strip()) < 120:
+                image_heavy_pages.append(i)
+            pages_text.append(page_text)
 
         full_text = "\n\n".join(t for t in pages_text if t.strip())
+        doc.close()
         return full_text.strip(), image_heavy_pages
 
-    except ImportError:
-        logger.warning("pdfplumber not available, falling back to PyPDF2")
     except Exception as e:
-        logger.warning("pdfplumber failed: %s — falling back to PyPDF2", e)
-
-    # ── PyPDF2 fallback ────────────────────────────────────────────────────
-    try:
-        import PyPDF2
-
-        reader = PyPDF2.PdfReader(io.BytesIO(file_bytes))
-        pages_text = []
-        for page in reader.pages:
-            pages_text.append(page.extract_text() or "")
-        full_text = "\n".join(pages_text)
-        return full_text.strip(), []
-    except Exception as e:
-        logger.error("PyPDF2 fallback also failed: %s", e)
+        logger.error("PyMuPDF text extraction failed: %s", e)
         return "", []
 
 
