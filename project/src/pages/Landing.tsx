@@ -695,7 +695,7 @@ export const Landing = () => {
                 style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
             >
                 {/* Stationery Border Background */}
-                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-80 mix-blend-multiply">
+                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-80">
                     <img 
                         src="/stationary_bg.png" 
                         alt="Stationery background" 
@@ -726,12 +726,6 @@ export const Landing = () => {
                                 letterSpacing: '-0.035em',
                                 transform: `rotateY(${tilt.y}deg) rotateX(${tilt.x}deg)`,
                                 transformStyle: 'preserve-3d',
-                                backgroundImage: 'linear-gradient(to right, #2C241B, #8C5A35, #B37D4A, #2C241B)',
-                                backgroundSize: '200% auto',
-                                color: 'transparent',
-                                WebkitBackgroundClip: 'text',
-                                backgroundClip: 'text',
-                                animation: 'gradientShift 5s ease infinite',
                             }}
                         >
                             {Array.from("Clarity").map((char, i) => {
@@ -762,6 +756,12 @@ export const Landing = () => {
                                                     ? `opacity 0.8s cubic-bezier(.16,1,.3,1) ${i * 90}ms, filter 0.9s cubic-bezier(.16,1,.3,1) ${i * 90}ms, transform 0.5s cubic-bezier(.16,1,.3,1)`
                                                     : 'none'),
                                             transformStyle: 'preserve-3d',
+                                            backgroundImage: 'linear-gradient(to right, #2C241B, #8C5A35, #B37D4A, #2C241B)',
+                                            backgroundSize: '200% auto',
+                                            color: 'transparent',
+                                            WebkitBackgroundClip: 'text',
+                                            backgroundClip: 'text',
+                                            animation: `gradientShift 5s ease infinite ${i * 0.1}s`,
                                         }}
                                     >
                                         {char}
