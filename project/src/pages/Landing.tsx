@@ -721,7 +721,7 @@ export const Landing = () => {
                                 position: 'relative',
                                 zIndex: 50,
                                 fontFamily: "'Syne', sans-serif",
-                                fontSize: 'clamp(60px, 18vw, 260px)',
+                                fontSize: 'clamp(50px, 14vw, 200px)',
                                 fontWeight: 900,
                                 letterSpacing: '-0.035em',
                                 transform: `rotateY(${tilt.y}deg) rotateX(${tilt.x}deg)`,
@@ -816,7 +816,7 @@ export const Landing = () => {
                         <div className="flex items-center gap-2 md:gap-3">
                             <Link 
                                 to="/login" 
-                                className="px-3 py-1.5 text-[#1a1a2e]/70 hover:text-[#1a1a2e] text-xs font-black transition-colors"
+                                className="px-4 py-2 text-[#1a1a2e]/70 hover:text-[#1a1a2e] text-sm font-black transition-colors"
                                 onMouseEnter={() => setIsHoveredWord(true)}
                                 onMouseLeave={() => setIsHoveredWord(false)}
                             >
@@ -824,16 +824,16 @@ export const Landing = () => {
                             </Link>
                             <Link 
                                 to="/parent-portal" 
-                                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 border border-[#1a1a2e]/20 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5 text-xs font-black rounded-lg transition-colors"
+                                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 border border-[#1a1a2e]/20 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5 text-sm font-black rounded-lg transition-colors"
                                 onMouseEnter={() => setIsHoveredWord(true)}
                                 onMouseLeave={() => setIsHoveredWord(false)}
                             >
-                                <Users size={12} />
+                                <Users size={14} />
                                 Parent Portal
                             </Link>
                             <Link 
                                 to="/onboarding" 
-                                className="px-4 py-2 bg-[#1a1a2e] text-[#f7f5f0] text-xs font-black rounded-lg hover:bg-[#1a1a2e]/90 "
+                                className="px-5 py-2.5 bg-[#1a1a2e] text-[#f7f5f0] text-sm font-black rounded-lg hover:bg-[#1a1a2e]/90 "
                                 onMouseEnter={() => setIsHoveredWord(true)}
                                 onMouseLeave={() => setIsHoveredWord(false)}
                             >
