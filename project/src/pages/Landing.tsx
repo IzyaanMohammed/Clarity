@@ -703,11 +703,11 @@ export const Landing = () => {
                 {/* Full-screen Hero Header */}
                 <section className="min-h-screen w-full relative flex items-center justify-center flex-col select-none overflow-hidden">
                     {/* Stationery Border Background */}
-                    <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-80">
+                    <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
                         <img 
                             src="/stationary_bg.png" 
                             alt="Stationery background" 
-                            className="w-[95vw] md:w-[1000px] aspect-[4/3] md:aspect-[16/9] object-fill opacity-90"
+                            className="w-full h-full object-cover md:object-fill opacity-90"
                         />
                     </div>
                     
@@ -755,12 +755,12 @@ export const Landing = () => {
                                                     ? `opacity 0.8s cubic-bezier(.16,1,.3,1) ${i * 90}ms, filter 0.9s cubic-bezier(.16,1,.3,1) ${i * 90}ms, transform 0.5s cubic-bezier(.16,1,.3,1)`
                                                     : 'none'),
                                             transformStyle: 'preserve-3d',
-                                            backgroundImage: 'linear-gradient(to right, #1a1a2e, #2C241B, #1a1a2e)',
+                                            backgroundImage: 'linear-gradient(110deg, #0a0a0a 40%, #3a3a3a 50%, #0a0a0a 60%)',
                                             backgroundSize: '200% auto',
                                             color: 'transparent',
                                             WebkitBackgroundClip: 'text',
                                             backgroundClip: 'text',
-                                            animation: `gradientShift 8s ease infinite ${i * 0.15}s`,
+                                            animation: `gradientShift 6s linear infinite ${i * 0.2}s`,
                                         }}
                                     >
                                         {char}
