@@ -6,7 +6,7 @@ import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { getActivities, getBookmarks, getChatHistory, getStudyMaterials, getSubjectStats, getUser } from '../utils/storage';
-import { getStats, sendParentReport, getDailyMission, getStudyNotifications, getMockSchedule, getResourceStack, getChapterReadiness, saveMaterialToDatabase, syncUserSnapshot, getRecommendations, type StatsResponse, type DailyMissionResponse, type StudyNotificationResponse, type MockScheduleResponse, type ResourceStackResponse, type ChapterReadinessResponse, type RecommendationItem } from '../api';
+import { getStats, sendParentReport, getDailyMission, getStudyNotifications, getMockSchedule, getResourceStack, getChapterReadiness, saveMaterialToDatabase, syncUserSnapshot, getRecommendations, getParentCredentials, sendParentCredentials, type StatsResponse, type DailyMissionResponse, type StudyNotificationResponse, type MockScheduleResponse, type ResourceStackResponse, type ChapterReadinessResponse, type RecommendationItem } from '../api';
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -23,6 +23,8 @@ export const Dashboard = () => {
   const [chapterReadiness, setChapterReadiness] = useState<ChapterReadinessResponse | null>(null);
   const [resourceLoading, setResourceLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<RecommendationItem[]>([]);
+  const [parentCreds, setParentCreds] = useState<{email: string, password: string}>({email: '', password: ''});
+  const [credsLoading, setCredsLoading] = useState(false);
   const [isEditingDate, setIsEditingDate] = useState(false);
   const [editDateValue, setEditDateValue] = useState(() => localStorage.getItem('clarity_exam_date') || '');
   const [otherDates, setOtherDates] = useState<Array<{ id: string; label: string; date: string }>>([]);
@@ -149,11 +151,20 @@ export const Dashboard = () => {
       }
     };
 
+    const fetchCreds = async () => {
+      if (!user?.name) return;
+      try {
+        const creds = await getParentCredentials();
+        setParentCreds(creds);
+      } catch (e) {}
+    };
+
     fetchStats();
     fetchDailyMission();
     fetchProactiveCoaching();
     fetchRecommendations();
     fetchResourceStack();
+    fetchCreds();
 
     const syncMaterials = async () => {
       if (!user?.name) return;
@@ -222,9 +233,14 @@ export const Dashboard = () => {
   }, [dailyMission?.mission_id, user?.name]);
 
   const handleParentReport = async () => {
+    const lastReport = localStorage.getItem('ncertai_last_report');
+    const threeDays = 3 * 24 * 60 * 60 * 1000;
+    if (lastReport && (Date.now() - parseInt(lastReport)) < threeDays) {
+      toast.error('You can only send a report every 3 days.');
+      return;
+    }
     setReportLoading(true);
     try {
-      // Include credentials in report if needed - though usually handled by backend with user context
       const data = await sendParentReport();
       toast.success(data.message || 'Weekly report sent to your parents.');
       localStorage.setItem('ncertai_last_report', Date.now().toString());
@@ -235,6 +251,25 @@ export const Dashboard = () => {
     }
   };
 
+  const handleSendCreds = async () => {
+    const lastCreds = localStorage.getItem('ncertai_last_creds');
+    const oneDay = 24 * 60 * 60 * 1000;
+    if (lastCreds && (Date.now() - parseInt(lastCreds)) < oneDay) {
+      toast.error('You can only send credentials once every 24 hours.');
+      return;
+    }
+    setCredsLoading(true);
+    try {
+      const data = await sendParentCredentials();
+      toast.success(data.message || 'Credentials sent to parent email!');
+      localStorage.setItem('ncertai_last_creds', Date.now().toString());
+    } catch {
+      toast.error('Failed to send credentials.');
+    } finally {
+      setCredsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!user?.name) return;
 
@@ -242,7 +277,9 @@ export const Dashboard = () => {
     const lastReport = localStorage.getItem('ncertai_last_report');
     const oneWeek = 7 * 24 * 60 * 60 * 1000;
     if (!lastReport || (Date.now() - parseInt(lastReport)) > oneWeek) {
-      handleParentReport();
+      sendParentReport().then(() => {
+        localStorage.setItem('ncertai_last_report', Date.now().toString());
+      }).catch(() => {});
     }
 
     // Weekly focus reminder
@@ -334,9 +371,15 @@ export const Dashboard = () => {
               <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight leading-tight">
                 Hey {user.name}, ready to <span className="text-yellow-300">{(user.class === 10 || user.class === 12) ? "Ace Boards?" : "Ace Exams?"}</span>
               </h1>
-              <p className="text-[#ecfdf5]/90 text-lg font-medium leading-relaxed">
+              <p className="text-[#ecfdf5]/90 text-lg font-medium leading-relaxed mb-4">
                 Class {user.class} • {user.school || 'CBSE Student'} • {user.parentEmail ? 'Parent-linked account active' : 'No parent email on file'}
               </p>
+              <Button 
+                onClick={() => window.open('/parent-portal', '_blank')} 
+                className="bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-bold py-2 px-6"
+              >
+                Access Parent Portal ↗
+              </Button>
             </div>
 
             <div className="flex flex-col items-center bg-[#FCFAF8]/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center min-w-[200px] relative group">
@@ -743,21 +786,42 @@ export const Dashboard = () => {
                   </div>
                 </div>
                 <div className="relative z-10 flex-1 w-full">
-                  <div className="p-8 bg-[#FCFAF8]/40 backdrop-blur-md rounded-[32px] border border-black/5">
+                  <div className="p-8 bg-[#FCFAF8]/40 backdrop-blur-md rounded-[32px] border border-black/5 mb-6">
                     <p className="text-lg font-bold leading-relaxed italic text-black/90">
                       {chapterReadiness
                         ? `The algorithm identifies ${chapterReadiness.chapter} as your highest-ROI study focus for this week.`
                         : `${(user.class === 10 || user.class === 12) ? 'Board readiness' : 'Exam readiness'} is being calculated. Finish more chapters to unlock insights.`}
                     </p>
                   </div>
-                  <Button
-                    variant="ghost"
-                    className="w-full mt-6 text-black hover:bg-black/10 font-black text-base border-2 border-black/20 rounded-2xl py-7"
-                    onClick={handleParentReport}
-                    disabled={reportLoading}
-                  >
-                    {reportLoading ? 'Sending Report...' : 'Share Progress with Parents'}
-                  </Button>
+                  
+                  {parentCreds.email && (
+                    <div className="p-6 bg-white/20 backdrop-blur-md rounded-[32px] border border-white/20 mb-6 text-black">
+                      <h4 className="font-black mb-3 text-lg">Parent Portal Credentials</h4>
+                      <p className="text-sm font-bold opacity-80 mb-1">Username / Email:</p>
+                      <p className="text-base font-black bg-white/40 px-4 py-2 rounded-xl mb-3">{parentCreds.email}</p>
+                      <p className="text-sm font-bold opacity-80 mb-1">Password:</p>
+                      <p className="text-base font-black bg-white/40 px-4 py-2 rounded-xl tracking-wider">{parentCreds.password || '********'}</p>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      variant="ghost"
+                      className="w-full text-black hover:bg-black/10 font-black text-base border-2 border-black/20 rounded-2xl py-6"
+                      onClick={handleSendCreds}
+                      disabled={credsLoading}
+                    >
+                      {credsLoading ? 'Sending...' : 'Send Credentials to Parent'}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full text-black hover:bg-black/10 font-black text-base border-2 border-black/20 rounded-2xl py-6"
+                      onClick={handleParentReport}
+                      disabled={reportLoading}
+                    >
+                      {reportLoading ? 'Sending...' : 'Send Report to Parent'}
+                    </Button>
+                  </div>
                 </div>
                 <div className="absolute top-0 right-0 w-96 h-96 bg-[#FCFAF8]/10 rounded-full blur-3xl -transtone-y-1/2 transtone-x-1/2" />
               </Card>

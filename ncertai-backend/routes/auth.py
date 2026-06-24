@@ -45,6 +45,80 @@ router = APIRouter()
 ALLOWED_SUBSCRIPTION_TIERS = {"free", "pro", "pro_max"}
 
 
+@router.get("/locations")
+async def get_locations():
+    from services.database import users_collection
+    if users_collection is None:
+        return {
+            "countries": ["India", "UAE", "USA", "UK"],
+            "states": ["Tamil Nadu", "Delhi", "Maharashtra", "Dubai", "Abu Dhabi"],
+            "cities": ["Chennai", "New Delhi", "Mumbai", "Dubai", "Abu Dhabi"]
+        }
+
+    pipeline = [
+        {"$group": {
+            "_id": None,
+            "countries": {"$addToSet": "$profile.country"},
+            "states": {"$addToSet": "$profile.state"},
+            "cities": {"$addToSet": "$profile.city"}
+        }}
+    ]
+    
+    try:
+        res = list(users_collection.aggregate(pipeline))
+        if res:
+            doc = res[0]
+            countries = [c for c in doc.get("countries", []) if c]
+            states = [s for s in doc.get("states", []) if s]
+            cities = [c for c in doc.get("cities", []) if c]
+            return {"countries": sorted(countries), "states": sorted(states), "cities": sorted(cities)}
+    except Exception as e:
+        print(f"Error fetching locations: {e}")
+
+    return {
+        "countries": ["India", "UAE", "USA", "UK"],
+        "states": ["Tamil Nadu", "Delhi", "Maharashtra", "Dubai", "Abu Dhabi"],
+        "cities": ["Chennai", "New Delhi", "Mumbai", "Dubai", "Abu Dhabi"]
+    }
+
+
+@router.get("/parent-credentials")
+async def get_parent_credentials(x_user_id: str = Header(...)):
+    from services.database import get_parent_account_by_student, reset_parent_credentials
+    import secrets
+    account = get_parent_account_by_student(x_user_id)
+    if account:
+        p_pass = account.get("plain_password")
+        if not p_pass or p_pass == "********":
+            p_pass = secrets.token_urlsafe(9)
+            reset_parent_credentials(x_user_id, p_pass)
+        return {
+            "email": account.get("parent_email", ""),
+            "password": p_pass
+        }
+    return {"email": "", "password": ""}
+
+
+@router.post("/send-parent-credentials")
+async def send_parent_credentials(x_user_id: str = Header(...)):
+    from services.database import get_parent_account_by_student, reset_parent_credentials
+    from services.report_generator import send_parent_welcome_credentials_email
+    import secrets
+    
+    account = get_parent_account_by_student(x_user_id)
+    if not account:
+        return {"sent": False, "message": "No parent account linked."}
+        
+    p_email = account.get("parent_email", "")
+    p_pass = account.get("plain_password")
+    if not p_pass or p_pass == "********":
+        p_pass = secrets.token_urlsafe(9)
+        reset_parent_credentials(x_user_id, p_pass)
+        
+    res = send_parent_welcome_credentials_email(x_user_id, p_email, p_pass)
+    return res
+
+
 def _normalize_subscription_tier(value: Optional[str]) -> str:
     tier = str(value or "free").strip().lower()
     if tier not in ALLOWED_SUBSCRIPTION_TIERS:

@@ -18,7 +18,7 @@ import {
 import toast from 'react-hot-toast';
 import { Card } from '../components/ui/Card';
 import { getAuthToken, getUser, saveAuthToken, saveUser } from '../utils/storage';
-import { getDiagnosticQuestions, loginUser, registerUser, submitDiagnostic, updateMyProfile, type DiagnosticQuestion } from '../api';
+import { getDiagnosticQuestions, loginUser, registerUser, submitDiagnostic, updateMyProfile, getLocations, type DiagnosticQuestion } from '../api';
 import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
 
 const CLASSES = ['8', '9', '10', '11', '12'];
@@ -95,6 +95,11 @@ export const Onboarding = () => {
     const [diagnosticQuerySubject, setDiagnosticQuerySubject] = useState<string>('mixed');
     const [diagnosticLoading, setDiagnosticLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [locationOptions, setLocationOptions] = useState<{countries: string[], states: string[], cities: string[]}>({countries: [], states: [], cities: []});
+
+    useEffect(() => {
+        getLocations().then(res => setLocationOptions(res));
+    }, []);
 
     const { subjectsForClass, chaptersForSubject } = useCurriculumCatalog(selectedClass);
     const availableSubjects = subjectsForClass.length ? subjectsForClass : [
@@ -341,6 +346,8 @@ export const Onboarding = () => {
             ? `${selectedClass}_TN_${tnMedium === 'Tamil' ? 'TM' : 'EN'}`
             : Number(selectedClass);
 
+        const formatLocation = (loc: string) => loc.trim().toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+
         const profile = {
             name: name.trim(),
             school: school.trim(),
@@ -359,9 +366,9 @@ export const Onboarding = () => {
             teacherPersonality,
             focusChapters,
             parentEmail: parentEmail.trim(),
-            country,
-            state,
-            city,
+            country: formatLocation(country),
+            state: formatLocation(state),
+            city: formatLocation(city),
         };
 
         const diagnosticPayload = {
@@ -453,8 +460,12 @@ export const Onboarding = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#8C5A35]/5 via-stone-50 to-amber-50/30 flex items-center justify-center p-4 md:p-8">
-            <div className="w-full max-w-3xl">
+        <div className="min-h-screen relative bg-gradient-to-br from-[#8C5A35]/5 via-stone-50 to-amber-50/30 flex items-center justify-center p-4 md:p-8">
+            <Link to="/" className="absolute top-6 left-6 md:top-8 md:left-8 flex items-center gap-2 text-stone-500 hover:text-[#8C5A35] font-bold text-sm transition-colors z-50">
+                <ArrowLeft size={16} />
+                Back to Home
+            </Link>
+            <div className="w-full max-w-3xl mt-10 md:mt-0">
                 <div className="mb-8">
                     <div className="flex items-end justify-between gap-4 mb-3">
                         <div>
@@ -555,31 +566,43 @@ export const Onboarding = () => {
                                     <label className="block text-xs font-black text-stone-500 uppercase tracking-wide mb-2">Country</label>
                                     <input
                                         type="text"
+                                        list="country-options"
                                         value={country}
                                         onChange={(e) => setCountry(e.target.value)}
                                         className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="Country"
                                     />
+                                    <datalist id="country-options">
+                                        {locationOptions.countries.map(c => <option key={c} value={c} />)}
+                                    </datalist>
                                 </div>
                                 <div>
                                     <label className="block text-xs font-black text-stone-500 uppercase tracking-wide mb-2">State / Region</label>
                                     <input
                                         type="text"
+                                        list="state-options"
                                         value={state}
                                         onChange={(e) => setState(e.target.value)}
                                         className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="State"
                                     />
+                                    <datalist id="state-options">
+                                        {locationOptions.states.map(s => <option key={s} value={s} />)}
+                                    </datalist>
                                 </div>
                                 <div>
                                     <label className="block text-xs font-black text-stone-500 uppercase tracking-wide mb-2">City</label>
                                     <input
                                         type="text"
+                                        list="city-options"
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
                                         className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                         placeholder="City"
                                     />
+                                    <datalist id="city-options">
+                                        {locationOptions.cities.map(c => <option key={c} value={c} />)}
+                                    </datalist>
                                 </div>
                             </div>
 

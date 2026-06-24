@@ -90,33 +90,39 @@ export const Leaderboard = () => {
                     >
                         <Award size={14} /> Grade {String(userClass).replace('_TN_EN', ' (TN Eng)').replace('_TN_TM', ' (TN Tamil)')}
                     </button>
-                    <button
-                        onClick={() => setScope('country')}
-                        className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'country'
-                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
-                            : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
-                            }`}
-                    >
-                        <Compass size={14} /> {userCountry}
-                    </button>
-                    <button
-                        onClick={() => setScope('state')}
-                        className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'state'
-                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
-                            : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
-                            }`}
-                    >
-                        <MapPin size={14} /> {userState}
-                    </button>
-                    <button
-                        onClick={() => setScope('city')}
-                        className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'city'
-                            ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
-                            : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
-                            }`}
-                    >
-                        <MapPin size={14} /> {userCity}
-                    </button>
+                    {userCountry && (
+                        <button
+                            onClick={() => setScope('country')}
+                            className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'country'
+                                ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
+                                : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
+                                }`}
+                        >
+                            <Compass size={14} /> {userCountry}
+                        </button>
+                    )}
+                    {userState && userState.toLowerCase() !== userCountry.toLowerCase() && (
+                        <button
+                            onClick={() => setScope('state')}
+                            className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'state'
+                                ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
+                                : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
+                                }`}
+                        >
+                            <MapPin size={14} /> {userState}
+                        </button>
+                    )}
+                    {userCity && userCity.toLowerCase() !== userState.toLowerCase() && userCity.toLowerCase() !== userCountry.toLowerCase() && (
+                        <button
+                            onClick={() => setScope('city')}
+                            className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${scope === 'city'
+                                ? 'bg-[#8C5A35] text-white  shadow-amber-500/20'
+                                : 'text-stone-600 hover:bg-[#F2EFE9] :bg-stone-800/50'
+                                }`}
+                        >
+                            <MapPin size={14} /> {userCity}
+                        </button>
+                    )}
                 </div>
 
                 {/* Top 3 Cards Showcase */}

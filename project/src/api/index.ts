@@ -805,6 +805,31 @@ export const registerUser = async (payload: {
   return response.data;
 };
 
+export interface LocationsResponse {
+    countries: string[];
+    states: string[];
+    cities: string[];
+}
+
+export const getLocations = async (): Promise<LocationsResponse> => {
+    try {
+        const response = await apiClient.get('/auth/locations');
+        return response.data;
+    } catch (e) {
+        return { countries: [], states: [], cities: [] };
+    }
+};
+
+export const getParentCredentials = async () => {
+  const response = await apiClient.get('/auth/parent-credentials');
+  return response.data;
+};
+
+export const sendParentCredentials = async () => {
+  const response = await apiClient.post('/auth/send-parent-credentials');
+  return response.data;
+};
+
 export const loginUser = async (payload: {
   name: string;
   password: string;

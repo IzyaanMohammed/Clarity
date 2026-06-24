@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Brain, ArrowRight, User, Sparkles } from 'lucide-react';
+import { Brain, ArrowRight, ArrowLeft, User, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Card } from '../components/ui/Card';
 import { loginUser } from '../api';
@@ -34,7 +34,11 @@ export const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#8C5A35]/5 via-stone-50 to-amber-50/30 flex items-center justify-center p-4">
+        <div className="min-h-screen relative bg-gradient-to-br from-[#8C5A35]/5 via-stone-50 to-amber-50/30 flex items-center justify-center p-4">
+            <Link to="/" className="absolute top-6 left-6 md:top-8 md:left-8 flex items-center gap-2 text-stone-500 hover:text-[#8C5A35] font-bold text-sm transition-colors">
+                <ArrowLeft size={16} />
+                Back to Home
+            </Link>
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-20 h-20 rounded-[28px] bg-gradient-to-br from-[#8C5A35]/20 to-amber-100 mb-6">

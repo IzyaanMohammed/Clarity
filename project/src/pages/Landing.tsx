@@ -697,6 +697,9 @@ export const Landing = () => {
                 {/* Nanobana Doodles */}
                 <img src="/doodle_sticky.png" className="absolute top-32 left-12 w-56 h-56 opacity-90 animate-float z-0 pointer-events-none hidden md:block" alt="sticky" />
                 <img src="/doodle_pen.png" className="absolute top-[60vh] right-20 w-64 h-64 opacity-90 animate-wobble z-0 pointer-events-none hidden md:block" alt="pen" />
+                <img src="/doodle_ripped_paper.png" className="absolute top-20 right-48 w-52 h-52 opacity-85 animate-float z-0 pointer-events-none hidden md:block" style={{ transform: 'rotate(15deg)', animationDelay: '1s' }} alt="ripped paper" />
+                <img src="/doodle_paper_clip.png" className="absolute top-[45vh] left-[25vw] w-24 h-24 opacity-80 z-0 pointer-events-none hidden md:block" style={{ transform: 'rotate(-45deg)' }} alt="paper clip" />
+                <img src="/doodle_coffee_stain.png" className="absolute top-[75vh] left-40 w-44 h-44 opacity-40 z-0 pointer-events-none hidden md:block" alt="coffee stain" />
 
                 {/* Background Ruled Lines */}
                 <div className="ruled h" style={{ top: '25%' }} />
@@ -714,12 +717,13 @@ export const Landing = () => {
                             className="select-none flex justify-center items-center gap-1 cursor-none"
                             style={{
                                 fontFamily: "'Syne', sans-serif",
-                                fontSize: 'clamp(70px, 13vw, 180px)',
+                                fontSize: 'clamp(100px, 16vw, 240px)',
                                 fontWeight: 800,
                                 letterSpacing: '-0.025em',
                                 color: '#1a1a2e',
                                 transform: `rotateY(${tilt.y}deg) rotateX(${tilt.x}deg)`,
                                 transformStyle: 'preserve-3d',
+                                zIndex: 5,
                             }}
                         >
                             {Array.from("Clarity").map((char, i) => {
@@ -757,21 +761,6 @@ export const Landing = () => {
                                 );
                             })}
                         </div>
-                        <div 
-                            id="focus-ring" 
-                            style={{
-                                position: 'absolute',
-                                top: '50%', left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                border: '1.5px solid rgba(26,26,46,0.12)',
-                                borderRadius: '4px',
-                                pointerEvents: 'none',
-                                opacity: lettersVisible ? 1 : 0,
-                                width: `${focusRingSize.width}px`,
-                                height: `${focusRingSize.height}px`,
-                                transition: 'opacity .5s ease, width .3s ease, height .3s ease',
-                            }}
-                        />
                         <div id="flare" className={introPhase === 'reveal' || introPhase === 'finished' ? 'active-flare' : ''} />
                     </div>
 
