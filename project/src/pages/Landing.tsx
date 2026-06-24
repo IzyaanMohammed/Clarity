@@ -695,15 +695,13 @@ export const Landing = () => {
                 style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
             >
                 {/* Stationery Border Background */}
-                <div 
-                    className="absolute inset-0 z-0 pointer-events-none mix-blend-multiply opacity-90" 
-                    style={{ 
-                        backgroundImage: 'url(/stationary_bg.png)', 
-                        backgroundSize: 'cover', 
-                        backgroundPosition: 'center', 
-                        backgroundRepeat: 'no-repeat' 
-                    }}
-                />
+                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-80 mix-blend-multiply">
+                    <img 
+                        src="/stationary_bg.png" 
+                        alt="Stationery background" 
+                        className="w-[100vw] md:w-[700px] h-auto object-contain"
+                    />
+                </div>
 
                 {/* Background Ruled Lines */}
                 <div className="ruled h" style={{ top: '25%' }} />
@@ -720,13 +718,14 @@ export const Landing = () => {
                             id="clarity"
                             className="select-none flex justify-center items-center gap-1 cursor-none"
                             style={{
+                                position: 'relative',
+                                zIndex: 50,
                                 fontFamily: "'Syne', sans-serif",
                                 fontSize: 'clamp(60px, 18vw, 260px)',
                                 fontWeight: 900,
                                 letterSpacing: '-0.035em',
                                 transform: `rotateY(${tilt.y}deg) rotateX(${tilt.x}deg)`,
                                 transformStyle: 'preserve-3d',
-                                zIndex: 5,
                                 backgroundImage: 'linear-gradient(to right, #2C241B, #8C5A35, #B37D4A, #2C241B)',
                                 backgroundSize: '200% auto',
                                 color: 'transparent',
