@@ -9,6 +9,7 @@ import { Sparkles } from 'lucide-react';
 type MarkdownContentProps = {
     content: string;
     className?: string;
+    textSize?: 'sm' | 'base' | 'lg' | 'xl';
 };
 
 /**
@@ -58,7 +59,12 @@ const preprocessMath = (text: string): string => {
     return processed;
 };
 
-export const MarkdownContent = memo(({ content, className = '' }: MarkdownContentProps) => {
+export const MarkdownContent = memo(({ content, className = '', textSize = 'base' }: MarkdownContentProps) => {
+    const pSizeClass = textSize === 'xl' ? 'text-xl md:text-2xl font-bold text-[#2C241B]' :
+                       textSize === 'lg' ? 'text-lg md:text-xl font-semibold text-stone-700' :
+                       textSize === 'sm' ? 'text-xs md:text-sm font-medium text-stone-500' :
+                       'text-sm md:text-base font-medium text-stone-600';
+
     return (
         <div className={`prose max-w-none ${className}`}>
             <ReactMarkdown
@@ -87,9 +93,9 @@ export const MarkdownContent = memo(({ content, className = '' }: MarkdownConten
                     h2: ({ ...props }) => <h2 className="text-xl md:text-2xl font-extrabold text-[#3E352B] mt-6 mb-3 tracking-tight border-b border-stone-100 pb-1" {...props} />,
                     h3: ({ ...props }) => <h3 className="text-lg md:text-xl font-bold text-stone-700 mt-5 mb-2" {...props} />,
                     h4: ({ ...props }) => <h4 className="text-base md:text-lg font-bold text-stone-650 mt-4 mb-2" {...props} />,
-                    p: ({ ...props }) => <p className="text-sm md:text-base leading-relaxed text-stone-600 mb-4 font-medium whitespace-pre-line" {...props} />,
-                    ul: ({ ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2 text-stone-600 text-sm md:text-base font-medium" {...props} />,
-                    ol: ({ ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2 text-stone-600 text-sm md:text-base font-medium" {...props} />,
+                    p: ({ ...props }) => <p className={`${pSizeClass} leading-relaxed mb-4 whitespace-pre-line`} {...props} />,
+                    ul: ({ ...props }) => <ul className={`list-disc pl-6 mb-4 space-y-2 ${pSizeClass}`} {...props} />,
+                    ol: ({ ...props }) => <ol className={`list-decimal pl-6 mb-4 space-y-2 ${pSizeClass}`} {...props} />,
                     li: ({ ...props }) => <li className="pl-1 leading-relaxed" {...props} />,
                     blockquote: ({ ...props }) => <blockquote className="pl-4 py-2 my-5 border-l-4 border-[#8C5A35] bg-[#FCFAF8]/50 rounded-r-xl italic text-stone-500 " {...props} />,
                     hr: ({ ...props }) => <hr className="my-6 border-t border-stone-200 " {...props} />,

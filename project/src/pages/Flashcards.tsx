@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { addBookmark, getUser, saveStudyMaterialIfNew, updateFlashcardSet } from '../utils/storage';
 import { generateFlashcardsStream, FlashcardItem, saveMaterialToDatabase } from '../api';
 import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
@@ -336,9 +337,13 @@ export const Flashcards = () => {
                                     <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-4">
                                         {showAnswer ? 'Answer' : 'Question'}
                                     </p>
-                                    <p className="text-xl md:text-2xl font-bold text-[#2C241B] leading-relaxed">
-                                        {showAnswer ? activeCard.answer : activeCard.question}
-                                    </p>
+                                    <div className="flex justify-center w-full">
+                                        <MarkdownContent 
+                                            content={showAnswer ? activeCard.answer : activeCard.question} 
+                                            textSize="xl" 
+                                            className="text-center"
+                                        />
+                                    </div>
                                     <p className="text-xs text-stone-400 mt-5">Tap card to flip instantly</p>
                                 </div>
                             </div>
