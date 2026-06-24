@@ -755,12 +755,12 @@ export const Landing = () => {
                                                     ? `opacity 0.8s cubic-bezier(.16,1,.3,1) ${i * 90}ms, filter 0.9s cubic-bezier(.16,1,.3,1) ${i * 90}ms, transform 0.5s cubic-bezier(.16,1,.3,1)`
                                                     : 'none'),
                                             transformStyle: 'preserve-3d',
-                                            backgroundImage: 'linear-gradient(to right, #2C241B, #8C5A35, #B37D4A, #2C241B)',
+                                            backgroundImage: 'linear-gradient(to right, #1a1a2e, #2C241B, #1a1a2e)',
                                             backgroundSize: '200% auto',
                                             color: 'transparent',
                                             WebkitBackgroundClip: 'text',
                                             backgroundClip: 'text',
-                                            animation: `gradientShift 5s ease infinite ${i * 0.1}s`,
+                                            animation: `gradientShift 8s ease infinite ${i * 0.15}s`,
                                         }}
                                     >
                                         {char}
