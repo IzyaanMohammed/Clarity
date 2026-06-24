@@ -694,12 +694,16 @@ export const Landing = () => {
                 className="relative min-h-screen z-10 w-full flex flex-col transition-opacity duration-1000"
                 style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
             >
-                {/* Nanobana Doodles */}
-                <img src="/doodle_sticky.png" className="absolute top-32 left-12 w-56 h-56 opacity-90 animate-float z-0 pointer-events-none hidden md:block" alt="sticky" />
-                <img src="/doodle_pen.png" className="absolute top-[60vh] right-20 w-64 h-64 opacity-90 animate-wobble z-0 pointer-events-none hidden md:block" alt="pen" />
-                <img src="/doodle_ripped_paper.png" className="absolute top-20 right-48 w-52 h-52 opacity-85 animate-float z-0 pointer-events-none hidden md:block" style={{ transform: 'rotate(15deg)', animationDelay: '1s' }} alt="ripped paper" />
-                <img src="/doodle_paper_clip.png" className="absolute top-[45vh] left-[25vw] w-24 h-24 opacity-80 z-0 pointer-events-none hidden md:block" style={{ transform: 'rotate(-45deg)' }} alt="paper clip" />
-                <img src="/doodle_coffee_stain.png" className="absolute top-[75vh] left-40 w-44 h-44 opacity-40 z-0 pointer-events-none hidden md:block" alt="coffee stain" />
+                {/* Stationery Border Background */}
+                <div 
+                    className="absolute inset-0 z-0 pointer-events-none mix-blend-multiply opacity-90" 
+                    style={{ 
+                        backgroundImage: 'url(/stationary_bg.png)', 
+                        backgroundSize: 'cover', 
+                        backgroundPosition: 'center', 
+                        backgroundRepeat: 'no-repeat' 
+                    }}
+                />
 
                 {/* Background Ruled Lines */}
                 <div className="ruled h" style={{ top: '25%' }} />
@@ -717,13 +721,18 @@ export const Landing = () => {
                             className="select-none flex justify-center items-center gap-1 cursor-none"
                             style={{
                                 fontFamily: "'Syne', sans-serif",
-                                fontSize: 'clamp(100px, 16vw, 240px)',
-                                fontWeight: 800,
-                                letterSpacing: '-0.025em',
-                                color: '#1a1a2e',
+                                fontSize: 'clamp(60px, 18vw, 260px)',
+                                fontWeight: 900,
+                                letterSpacing: '-0.035em',
                                 transform: `rotateY(${tilt.y}deg) rotateX(${tilt.x}deg)`,
                                 transformStyle: 'preserve-3d',
                                 zIndex: 5,
+                                backgroundImage: 'linear-gradient(to right, #2C241B, #8C5A35, #B37D4A, #2C241B)',
+                                backgroundSize: '200% auto',
+                                color: 'transparent',
+                                WebkitBackgroundClip: 'text',
+                                backgroundClip: 'text',
+                                animation: 'gradientShift 5s ease infinite',
                             }}
                         >
                             {Array.from("Clarity").map((char, i) => {
