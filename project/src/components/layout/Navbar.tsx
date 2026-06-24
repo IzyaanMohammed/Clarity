@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { BookOpen, MessageCircle, ClipboardList, Book, FileText, Layers, CalendarClock, User, Sparkles, ScanText, FolderOpen, ChevronLeft, ChevronRight, BarChart3, Timer, Brain, Video, Trophy } from 'lucide-react';
+import { BookOpen, MessageCircle, ClipboardList, Book, FileText, Layers, CalendarClock, User, Sparkles, ScanText, FolderOpen, ChevronLeft, ChevronRight, BarChart3, Timer, Brain, Video, Trophy, Zap } from 'lucide-react';
 import { getUser } from '../../utils/storage';
 
 export const Navbar = () => {
@@ -50,6 +50,7 @@ export const Navbar = () => {
   const practiceLinks = [
     { to: '/practice', label: 'Practice Lab', icon: ClipboardList },
     { to: '/exam-simulator', label: 'Exam Simulator', icon: Timer },
+    { to: '/active-recall', label: 'Active Recall', icon: Zap },
   ];
 
   const aiLinks = [
