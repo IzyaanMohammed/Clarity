@@ -693,16 +693,6 @@ export const Landing = () => {
                 ref={stageRef}
                 className="relative min-h-screen z-10 w-full flex flex-col transition-opacity duration-1000"
                 style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
-            >
-                {/* Stationery Border Background */}
-                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-80">
-                    <img 
-                        src="/stationary_bg.png" 
-                        alt="Stationery background" 
-                        className="w-[100vw] md:w-[700px] h-auto object-contain"
-                    />
-                </div>
-
                 {/* Background Ruled Lines */}
                 <div className="ruled h" style={{ top: '25%' }} />
                 <div className="ruled h" style={{ top: '37.5%' }} />
@@ -711,7 +701,16 @@ export const Landing = () => {
                 <div className="ruled v" style={{ left: '6%' }} />
 
                 {/* Full-screen Hero Header */}
-                <section className="min-h-screen w-full relative flex items-center justify-center flex-col select-none">
+                <section className="min-h-screen w-full relative flex items-center justify-center flex-col select-none overflow-hidden">
+                    {/* Stationery Border Background */}
+                    <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-80">
+                        <img 
+                            src="/stationary_bg.png" 
+                            alt="Stationery background" 
+                            className="w-[95vw] md:w-[1000px] aspect-[4/3] md:aspect-[16/9] object-fill opacity-90"
+                        />
+                    </div>
+                    
                     <div className="relative text-center">
                         <div 
                             ref={wordElRef}
