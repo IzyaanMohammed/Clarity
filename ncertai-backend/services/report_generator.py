@@ -143,6 +143,8 @@ def generate_parent_report(user_id: str):
             reset_parent_credentials(user_id, p_pass)
         parent_creds_block = f"\n    PARENT LOGIN CREDENTIALS:\n    - Email: {p_email}\n    - Password: {p_pass}\n"
 
+    actions_str = chr(10).join(f'- {item}' for item in corrective_actions)
+
     report = f"""
     CLARITY WEEKLY PROGRESS REPORT
     Student: {user_id}
@@ -161,7 +163,7 @@ def generate_parent_report(user_id: str):
     - Weak Areas: {', '.join(weak_topics) if weak_topics else 'None detected'}
 
     CORRECTIVE ACTIONS:
-    - {chr(10).join(f'- {item}' for item in corrective_actions)}
+    {actions_str}
     
     Thank you for using Clarity for your child's CBSE preparation.
     """
