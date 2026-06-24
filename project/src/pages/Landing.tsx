@@ -693,6 +693,7 @@ export const Landing = () => {
                 ref={stageRef}
                 className="relative min-h-screen z-10 w-full flex flex-col transition-opacity duration-1000"
                 style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
+            >
                 {/* Background Ruled Lines */}
                 <div className="ruled h" style={{ top: '25%' }} />
                 <div className="ruled h" style={{ top: '37.5%' }} />
