@@ -169,7 +169,7 @@ def generate_parent_report(user_id: str):
 
 
 def send_parent_report_email(user_id: str, parent_email: str, report_text: str):
-    api_key = os.getenv("MAILERSEND_API_KEY", "mlsn.60c3eabba7672f349e45e12f0085775a0d1e1073a5b4043ceccc42d44a1e8588")
+    api_key = os.getenv("MAILERSEND_API_KEY")
     from_email = os.getenv("MAILERSEND_FROM_EMAIL", "info@trial-z86org8yvjmpew13.mlsender.net")
 
     subject = f"Clarity Weekly Progress Report - {user_id}"
@@ -209,7 +209,7 @@ def send_parent_report_email(user_id: str, parent_email: str, report_text: str):
 
 
 def send_parent_welcome_credentials_email(student_id: str, parent_email: str, parent_password: str):
-    api_key = os.getenv("MAILERSEND_API_KEY", "mlsn.60c3eabba7672f349e45e12f0085775a0d1e1073a5b4043ceccc42d44a1e8588")
+    api_key = os.getenv("MAILERSEND_API_KEY")
     from_email = os.getenv("MAILERSEND_FROM_EMAIL", "info@trial-z86org8yvjmpew13.mlsender.net")
 
     subject = f"Clarity Parent Access Credentials - {student_id}"
