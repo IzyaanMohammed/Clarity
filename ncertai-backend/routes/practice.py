@@ -1521,7 +1521,7 @@ def _is_valid_question(text: str) -> bool:
 
 def _extract_questions(raw_response: str) -> list[str]:
     numbered_blocks = re.findall(r"(?:^|\n)\s*\d+[\.)]\s+([\s\S]*?)(?=(?:\n\s*\d+[\.)]\s+)|$)", raw_response)
-    questions = [re.sub(r"\s+", " ", q).strip() for q in numbered_blocks if q.strip()]
+    questions = [q.strip() for q in numbered_blocks if q.strip()]
 
     if not questions:
         questions = [
