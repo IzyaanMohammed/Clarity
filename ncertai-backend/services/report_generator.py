@@ -144,23 +144,27 @@ def generate_parent_report(user_id: str):
         parent_creds_block = f"\n    PARENT LOGIN CREDENTIALS:\n    - Email: {p_email}\n    - Password: {p_pass}\n"
 
     actions_str = chr(10).join(f'- {item}' for item in corrective_actions)
+    date_str = datetime.now().strftime('%Y-%m-%d')
+    subjects_str = ', '.join(subjects) if subjects else 'None'
+    avg_score_str = avg_score if avg_score else 'No graded attempts yet'
+    weak_topics_str = ', '.join(weak_topics) if weak_topics else 'None detected'
 
     report = f"""
     CLARITY WEEKLY PROGRESS REPORT
     Student: {user_id}
-    Generated on: {datetime.now().strftime('%Y-%m-%d')}
+    Generated on: {date_str}
     {parent_creds_block}
     OVERVIEW:
     - Questions Asked: {total_q}
     - Practice Sessions: {total_p}
-    - Subjects Covered: {', '.join(subjects) if subjects else 'None'}
-    - Average Practice Score: {avg_score if avg_score else 'No graded attempts yet'}
+    - Subjects Covered: {subjects_str}
+    - Average Practice Score: {avg_score_str}
     
     MASTERY INSIGHTS:
     - Activity is concentrated in {attention_subject}.
     - Confidence Meter: {confidence}/100
     - Risk Meter: {risk}/100
-    - Weak Areas: {', '.join(weak_topics) if weak_topics else 'None detected'}
+    - Weak Areas: {weak_topics_str}
 
     CORRECTIVE ACTIONS:
     {actions_str}
