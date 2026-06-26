@@ -112,7 +112,7 @@ const parseMatch = (qText: string) => {
     let isColB = false;
 
     for (const line of lines) {
-      let cleanLine = line.replace(/[\*\#\_\-]/g, '').trim();
+      let cleanLine = line.replace(/[\*\#\_]/g, '').trim();
       const lineLower = cleanLine.toLowerCase();
       
       if (lineLower.startsWith('column a')) {
@@ -1040,10 +1040,25 @@ export const Practice = () => {
                 )}
               </Button>
 
-              {isLoading && generationPreview && (
-                <div className="mt-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] p-4">
-                  <p className="text-xs font-black uppercase tracking-wider text-[#8C5A35] mb-2">Streaming Question Builder</p>
-                  <MarkdownContent content={generationPreview} className="text-sm text-stone-700 " />
+              {isLoading && (
+                <div className="mt-8 p-8 bg-gradient-to-br from-[#FCFAF8] to-white rounded-3xl border-2 border-[#8C5A35]/20 shadow-xl relative overflow-hidden">
+                  <h3 className="font-bold text-[#2C241B] mb-8 flex items-center gap-3 text-xl">
+                    <Sparkles className="w-7 h-7 text-[#8C5A35] animate-pulse" />
+                    AI is crafting your perfect questions...
+                  </h3>
+                  <div className="space-y-6">
+                    <div className="space-y-3">
+                      <div className="h-5 bg-stone-200/80 rounded-full w-3/4 animate-pulse"></div>
+                      <div className="h-5 bg-stone-200/80 rounded-full w-full animate-pulse delay-75"></div>
+                      <div className="h-5 bg-stone-200/80 rounded-full w-5/6 animate-pulse delay-150"></div>
+                    </div>
+                    <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                       <div className="h-16 bg-stone-200/60 rounded-2xl animate-pulse"></div>
+                       <div className="h-16 bg-stone-200/60 rounded-2xl animate-pulse delay-75"></div>
+                       <div className="h-16 bg-stone-200/60 rounded-2xl animate-pulse delay-150"></div>
+                       <div className="h-16 bg-stone-200/60 rounded-2xl animate-pulse delay-200"></div>
+                    </div>
+                  </div>
                 </div>
               )}
             </Card>
