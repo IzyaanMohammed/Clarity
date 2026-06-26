@@ -11,7 +11,7 @@ parent_dir = os.path.dirname(current_dir)
 load_dotenv(os.path.join(parent_dir, '.env'))
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyAp61AuPpC8QLHFZt1ZTVbK6wADfVoEcEM")
 
 # ── Model Routing Table ────────────────────────────────────────────────────────
 # fast   → Mistral-family free model : 1-mark Q&A, MCQs, flashcards

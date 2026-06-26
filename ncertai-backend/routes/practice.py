@@ -2369,6 +2369,7 @@ Grade this answer. Be supportive, lenient, and use common sense like a kind teac
   * In "WHAT WAS MISSING", list the pairs that the student got wrong, explain why, and write out the correct pairings.
   * In "MODEL ANSWER", output the complete, correct matching list (e.g., a - 2, b - 4, c - 1, d - 3).
 - For short answers/fill-in-the-blanks, be extremely lenient with typos, spelling variations, plural/singular forms (e.g., accepting "dendrites" for "dendrite"), and grammar as long as the concept is correct.
+- CRITICAL INSTRUCTION: For mathematical answers, you MUST treat mathematically equivalent expressions (e.g. "-d/a" vs "-\frac{d}{a}" or "1/2" vs "0.5") as EXACTLY THE SAME and COMPLETELY CORRECT. Do not penalize formatting, missing spaces, or lack of LaTeX under any circumstances. Failure to mark equivalent math as correct is a severe error!
 
 Return your response in this EXACT format (no extra text):
 MARKS: X/{request.marks_available}
