@@ -8,6 +8,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const user = getUser();
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('clarity_sidebar_collapsed') === '1');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const sidebarWidth = collapsed ? '5rem' : '18rem';
@@ -66,13 +67,11 @@ export const Navbar = () => {
     { to: '/materials', label: 'My Uploads', icon: FolderOpen },
   ];
 
-  const mobileLinks = [
     { to: '/dashboard', label: 'Home', icon: BookOpen },
-    { to: '/ask', label: 'Clarifier', icon: Sparkles },
+    { to: '/ask', label: 'Ask AI', icon: Sparkles },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
     { to: '/textbook-hub', label: 'Chapters', icon: Book },
-    { to: '/profile', label: 'Profile', icon: User },
-  ];
+    { to: '#menu', label: 'Menu', icon: Layers }, // Changed Profile to Menu
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -180,14 +179,113 @@ export const Navbar = () => {
         </div>
       </nav>
 
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#FCFAF8] border-t border-gray-200 z-50">
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 bg-[#FCFAF8] z-[60] overflow-y-auto pb-24 px-6 pt-8 animate-in slide-in-from-bottom-4 duration-300">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-black text-[#2C241B]">All Sections</h2>
+            <button 
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2 bg-stone-100 rounded-full text-stone-600 font-bold text-sm"
+            >
+              Close
+            </button>
+          </div>
+          
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-wider text-stone-500 mb-4">Home</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {homeLinks.map(link => (
+                  <Link key={link.to} to={link.to} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-stone-200 shadow-sm">
+                    <link.icon className="w-5 h-5 text-[#8C5A35]" />
+                    <span className="font-bold text-stone-800 text-sm">{link.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-wider text-stone-500 mb-4">Study</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {studyLinks.map(link => (
+                  <Link key={link.to} to={link.to} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-stone-200 shadow-sm">
+                    <link.icon className="w-5 h-5 text-[#8C5A35]" />
+                    <span className="font-bold text-stone-800 text-sm">{link.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-wider text-stone-500 mb-4">Practice</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {practiceLinks.map(link => (
+                  <Link key={link.to} to={link.to} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-stone-200 shadow-sm">
+                    <link.icon className="w-5 h-5 text-[#8C5A35]" />
+                    <span className="font-bold text-stone-800 text-sm">{link.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-wider text-stone-500 mb-4">AI Tools</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {aiLinks.map(link => (
+                  <Link key={link.to} to={link.to} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-stone-200 shadow-sm">
+                    <link.icon className="w-5 h-5 text-[#8C5A35]" />
+                    <span className="font-bold text-stone-800 text-sm">{link.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-wider text-stone-500 mb-4">Utilities</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {toolsLinks.map(link => (
+                  <Link key={link.to} to={link.to} onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-stone-200 shadow-sm">
+                    <link.icon className="w-5 h-5 text-[#8C5A35]" />
+                    <span className="font-bold text-stone-800 text-sm">{link.label}</span>
+                  </Link>
+                ))}
+                <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 p-3 bg-white rounded-xl border border-stone-200 shadow-sm">
+                  <User className="w-5 h-5 text-[#8C5A35]" />
+                  <span className="font-bold text-stone-800 text-sm">Profile</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#FCFAF8] border-t border-gray-200 z-[70]">
         <div className="flex items-center justify-around h-full px-2">
           {mobileLinks.map((link) => {
             const Icon = link.icon;
+            
+            if (link.to === '#menu') {
+              return (
+                <button
+                  key={link.to}
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className={`flex flex-col items-center justify-center space-y-1 px-2 py-2 rounded-lg min-w-0 ${mobileMenuOpen
+                    ? 'text-[#8C5A35]'
+                    : 'text-gray-600 '
+                    }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-[10px] leading-none">{link.label}</span>
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={link.to}
                 to={link.to}
+                onClick={() => setMobileMenuOpen(false)}
                 className={`flex flex-col items-center justify-center space-y-1 px-2 py-2 rounded-lg min-w-0 ${isActive(link.to)
                   ? 'text-[#8C5A35]'
                   : 'text-gray-600 '

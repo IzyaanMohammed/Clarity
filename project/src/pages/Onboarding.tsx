@@ -63,7 +63,7 @@ export const Onboarding = () => {
     const existingToken = getAuthToken();
     const isEditing = !!existingUser && !!existingToken;
 
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(1);
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [loginName, setLoginName] = useState('');
@@ -486,50 +486,7 @@ export const Onboarding = () => {
                 </div>
 
                 <Card className="p-6 md:p-10 bg-[#FCFAF8] border-none shadow-2xl rounded-[32px]">
-                    {step === 0 && (
-                        <div className="text-center py-6">
-                            <div className="inline-flex items-center justify-center w-24 h-24 rounded-[28px] bg-gradient-to-br from-[#8C5A35]/20 to-amber-100 mb-6">
-                                <BookOpen className="text-[#8C5A35]" size={44} />
-                            </div>
-                            <h2 className="text-4xl font-black text-[#2C241B] mb-3">Welcome to Clarity</h2>
-                            <p className="text-stone-600 font-semibold max-w-xl mx-auto leading-relaxed">
-                                This setup asks 12+ personalization inputs through guided choices so every answer, plan, and practice set feels tutor-level personalized.
-                            </p>
-                            <div className="mt-8 grid grid-cols-3 gap-3 max-w-md mx-auto text-sm font-bold">
-                                <div className="rounded-xl bg-[#F2EFE9] py-3">AI Tutor</div>
-                                <div className="rounded-xl bg-[#F2EFE9] py-3">Board Focus</div>
-                                <div className="rounded-xl bg-[#F2EFE9] py-3">Action Plan</div>
-                            </div>
 
-                            {!isEditing && (
-                                <div className="mt-8 max-w-md mx-auto text-left p-4 rounded-2xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] ">
-                                    <p className="text-xs font-black uppercase tracking-wider text-stone-500 mb-3">Already have an account? <Link to="/login" className="text-[#8C5A35] hover:underline">Login here</Link></p>
-                                    <div className="space-y-3">
-                                        <input
-                                            type="text"
-                                            value={loginName}
-                                            onChange={(e) => setLoginName(e.target.value)}
-                                            placeholder="Name"
-                                            className="w-full px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm font-semibold"
-                                        />
-                                        <input
-                                            type="password"
-                                            value={loginPassword}
-                                            onChange={(e) => setLoginPassword(e.target.value)}
-                                            placeholder="Password"
-                                            className="w-full px-3 py-2 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-sm font-semibold"
-                                        />
-                                        <button
-                                            onClick={handleLogin}
-                                            className="w-full py-2 rounded-xl bg-stone-900 text-white text-xs font-black uppercase tracking-wider"
-                                        >
-                                            Login
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
 
                     {step === 1 && (
                         <div className="space-y-5">
