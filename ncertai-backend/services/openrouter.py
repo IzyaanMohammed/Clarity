@@ -18,10 +18,10 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 # smart  → larger free model         : summaries, 5-mark answers, predictions
 # fallback → free image-capable model
 MODELS = {
-    "fast":     "google/gemini-2.0-flash-lite-preview-02-05:free",
+    "fast":     "meta-llama/llama-3.3-70b-instruct:free",
     "vision":   "google/gemini-2.0-flash-exp:free",
-    "smart":    "google/gemini-2.0-flash-exp:free",
-    "fallback": "meta-llama/llama-3.3-70b-instruct:free",
+    "smart":    "meta-llama/llama-3.3-70b-instruct:free",
+    "fallback": "google/gemini-2.0-flash-lite-preview-02-05:free",
 }
 
 FREE_FALLBACK_MODELS = [
