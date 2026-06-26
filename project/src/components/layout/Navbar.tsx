@@ -66,13 +66,13 @@ export const Navbar = () => {
     { to: '/ocr', label: 'Scan & Digitize', icon: ScanText },
     { to: '/materials', label: 'My Uploads', icon: FolderOpen },
   ];
-
+  const mobileLinks = [
     { to: '/dashboard', label: 'Home', icon: BookOpen },
     { to: '/ask', label: 'Ask AI', icon: Sparkles },
     { to: '/practice', label: 'Practice', icon: ClipboardList },
-    { to: '/textbook-hub', label: 'Chapters', icon: Book },
-    { to: '#menu', label: 'Menu', icon: Layers }, // Changed Profile to Menu
-
+    { to: '#menu', label: 'Menu', icon: Layers },
+    { to: '/profile', label: 'Profile', icon: User },
+  ];
   const isActive = (path: string) => location.pathname === path;
 
   const renderLink = (link: { to: string; label: string; icon: typeof BookOpen }) => {
