@@ -1268,7 +1268,9 @@ export const Practice = () => {
                                   }`}>
                                     {opt.label}
                                   </span>
-                                  <span>{opt.text}</span>
+                                  <div className="flex-1 overflow-hidden">
+                                    <MarkdownContent content={opt.text} className="inline-block text-sm sm:text-base font-medium" />
+                                  </div>
                                 </button>
                               );
                             })}
