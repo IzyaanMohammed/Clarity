@@ -11,6 +11,7 @@ parent_dir = os.path.dirname(current_dir)
 load_dotenv(os.path.join(parent_dir, '.env'))
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # ── Model Routing Table ────────────────────────────────────────────────────────
 # fast   → Mistral-family free model : 1-mark Q&A, MCQs, flashcards
@@ -41,18 +42,20 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-async def _call_model(messages: list, model: str, attempt: int = 1) -> tuple[str | None, int]:
+async def _call_model(messages: list, model: str, attempt: int = 1, api_key: str = None, api_base: str = "https://openrouter.ai/api/v1") -> tuple[str | None, int]:
     """
     Single attempt to call a model with exponential backoff retry.
     Returns (response, attempts_used) or (None, attempts_used) on final failure.
     """
-    if not OPENROUTER_API_KEY:
-        logger.error("❌ OPENROUTER_API_KEY is not set in .env")
+    if not api_key:
+        api_key = OPENROUTER_API_KEY
+    if not api_key:
+        logger.error("❌ API_KEY is not set")
         return None, 1
 
-    url = "https://openrouter.ai/api/v1/chat/completions"
+    url = f"{api_base}/chat/completions"
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://clarity.ai",
         "X-Title": "Clarity - CBSE Study Assistant",
@@ -162,6 +165,17 @@ async def ask_openrouter(messages: list, task_type: str = "fast") -> str:
     Each model automatically retries up to 3 times with exponential backoff before fallback.
     """
     messages = _adapt_messages(messages)
+
+    if GEMINI_API_KEY:
+        gemini_model = "gemini-2.5-flash" if task_type != "vision" else "gemini-2.0-flash"
+        gemini_base = "https://generativelanguage.googleapis.com/v1beta/openai"
+        logger.info(f"🔄 Trying Google API directly with [{gemini_model}]")
+        result, attempts = await _call_model(messages, gemini_model, api_key=GEMINI_API_KEY, api_base=gemini_base)
+        if result:
+            logger.info(f"✅ PRIMARY GEMINI SUCCESS [{gemini_model}] after {attempts} attempt(s)")
+            return result
+        logger.warning(f"⚠️ Primary Gemini model failed after {attempts} attempts → trying OpenRouter fallback")
+
     primary = MODELS.get(task_type, MODELS["fast"])
     result, attempts = await _call_model(messages, primary)
     if result:
@@ -199,15 +213,17 @@ async def ask_openrouter(messages: list, task_type: str = "fast") -> str:
     )
 
 
-async def _stream_model(messages: list, model: str) -> AsyncGenerator[str, None]:
+async def _stream_model(messages: list, model: str, api_key: str = None, api_base: str = "https://openrouter.ai/api/v1") -> AsyncGenerator[str, None]:
     """Stream tokens from a single model with retry on transient errors. Yields token chunks."""
-    if not OPENROUTER_API_KEY:
-        logger.error("OPENROUTER_API_KEY missing for stream request")
+    if not api_key:
+        api_key = OPENROUTER_API_KEY
+    if not api_key:
+        logger.error("❌ API_KEY is not set")
         return
 
-    url = "https://openrouter.ai/api/v1/chat/completions"
+    url = f"{api_base}/chat/completions"
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://clarity.ai",
         "X-Title": "Clarity - CBSE Study Assistant",
@@ -284,17 +300,28 @@ async def _stream_model(messages: list, model: str) -> AsyncGenerator[str, None]
                 return
 
 
-async def ask_openrouter_stream(
-    messages: list, task_type: str = "fast"
-) -> AsyncGenerator[str, None]:
+async def ask_openrouter_stream(messages: list, task_type: str = "fast") -> AsyncGenerator[str, None]:
     """
-    Route and stream tokens from OpenRouter with automatic fallback and retry logic.
+    Stream tokens back to the client.
     Each model gets retried before fallback. Streams tokens as they arrive.
     """
     messages = _adapt_messages(messages)
+
+    if GEMINI_API_KEY:
+        gemini_model = "gemini-2.5-flash" if task_type != "vision" else "gemini-2.0-flash"
+        gemini_base = "https://generativelanguage.googleapis.com/v1beta/openai"
+        logger.info(f"🔄 Streaming from Google API directly with [{gemini_model}]")
+        success = False
+        async for chunk in _stream_model(messages, gemini_model, api_key=GEMINI_API_KEY, api_base=gemini_base):
+            success = True
+            yield chunk
+        if success:
+            return
+        logger.warning("Gemini API failed to stream → trying OpenRouter fallback chain")
+
     primary = MODELS.get(task_type, MODELS["fast"])
     tried_any = False
-
+    
     # Step 1 — try primary model
     logger.info(f"🔄 Streaming from primary model [{primary}]")
     async for chunk in _stream_model(messages, primary):
