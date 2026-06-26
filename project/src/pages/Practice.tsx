@@ -589,7 +589,7 @@ export const Practice = () => {
         const parsedBlank = parseBlank(q);
         const parsedMatch = parseMatch(q);
         
-        let questionMaxMarks = 5;
+        let questionMaxMarks = questionType === '1-mark' ? 1 : questionType === '3-mark' ? 3 : 5;
         if (parsedMcq) questionMaxMarks = 1;
         else if (parsedBlank) questionMaxMarks = 1;
         else if (parsedMatch) questionMaxMarks = 3;
@@ -605,45 +605,9 @@ export const Practice = () => {
                 : `Incorrect. You selected Option ${ans}, but the correct option is ${parsedMcq.answer}.`,
               model_answer: `Option ${parsedMcq.answer} is correct.`,
             };
-          } else if (parsedBlank) {
-            const correct = parsedBlank.answer.toLowerCase().trim() === ans.toLowerCase().trim();
-            res = {
-              marks_awarded: correct ? 1 : 0,
-              total_marks: 1,
-              feedback: correct
-                ? `Correct! The blank should be filled with "${parsedBlank.answer}".`
-                : `Incorrect. You filled with "${ans}", but the correct answer is "${parsedBlank.answer}".`,
-              model_answer: parsedBlank.answer,
-            };
-          } else if (parsedMatch) {
-            const userPairs: Record<string, string> = {};
-            const pairs = ans.split(',');
-            for (const p of pairs) {
-              const split = p.split('-');
-              if (split.length === 2) {
-                userPairs[split[0].trim()] = split[1].trim().toUpperCase();
-              }
-            }
-            
-            let correctCount = 0;
-            const totalPairs = Object.keys(parsedMatch.matches).length;
-            for (const [key, val] of Object.entries(parsedMatch.matches)) {
-              if (userPairs[key] === val) {
-                correctCount += 1;
-              }
-            }
-            
-            const marksAwarded = totalPairs > 0 ? Math.round((correctCount / totalPairs) * 3) : 0;
-            const isCorrect = correctCount === totalPairs;
-            
-            res = {
-              marks_awarded: marksAwarded,
-              total_marks: 3,
-              feedback: isCorrect
-                ? `Correct! All matching pairs are correct.`
-                : `Incorrect. You matched ${correctCount} of ${totalPairs} correctly. Correct matches: ${Object.entries(parsedMatch.matches).map(([k, v]) => `${k}-${v}`).join(', ')}`,
-              model_answer: Object.entries(parsedMatch.matches).map(([k, v]) => `${k} -> ${v}`).join(', '),
-            };
+          } else if (parsedBlank || parsedMatch) {
+            // Let the AI grader evaluate Blanks and Matches for maximum leniency
+            res = await handleGradeAnswer(i, ans);
           } else {
             res = await handleGradeAnswer(i, ans);
           }
@@ -748,9 +712,12 @@ export const Practice = () => {
   void detectDoubtSignal;
 
   const handleNextQuestion = () => {
+    const newAnswers = { ...userAnswers, [currentQuestionIndex]: userAnswer };
+    setUserAnswers(newAnswers);
+
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
-      setUserAnswer(userAnswers[currentQuestionIndex + 1] || '');
+      setUserAnswer(newAnswers[currentQuestionIndex + 1] || '');
       setGradeResult(null);
       setExplainResult('');
       setDoubtSignal(null);

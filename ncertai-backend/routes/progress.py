@@ -533,7 +533,7 @@ async def send_parent_report(authorization: Optional[str] = Header(default=None)
 @router.get("/stats/{user_id}")
 async def get_stats(user_id: str, authorization: Optional[str] = Header(default=None)):
     username = require_auth_username(authorization)
-    if user_id != username:
+    if user_id.lower() != username.lower():
         raise HTTPException(status_code=403, detail="Forbidden")
     user_data = get_augmented_user_data(username)
     
