@@ -98,6 +98,17 @@ export const Onboarding = () => {
     const [locationOptions, setLocationOptions] = useState<{countries: string[], states: string[], cities: string[]}>({countries: [], states: [], cities: []});
 
     useEffect(() => {
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                if (data.country_name) setCountry(data.country_name);
+                if (data.region) setState(data.region);
+                if (data.city) setCity(data.city);
+            })
+            .catch(console.error);
+    }, []);
+
+    useEffect(() => {
         getLocations().then(res => setLocationOptions(res));
     }, []);
 
@@ -300,10 +311,10 @@ export const Onboarding = () => {
             subscriptionTier: 'free',
             teacherPersonality: 'Kind',
             focusChapters: {},
-            parentEmail: '',
-            country: 'India',
-            state: 'Tamil Nadu',
-            city: 'Chennai',
+            parentEmail: parentEmail.trim(),
+            country: country,
+            state: state,
+            city: city,
         };
 
         try {
@@ -468,6 +479,19 @@ export const Onboarding = () => {
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
                                     placeholder={isEditing ? 'Keep unchanged unless re-registering' : 'At least 6 characters'}
+                                />
+                            </div>
+                            <div>
+                                <label className="flex items-center gap-2 text-sm font-black text-stone-700 uppercase tracking-wide mb-2">
+                                    <User size={16} className="text-[#8C5A35]" />
+                                    Parent Email (Optional)
+                                </label>
+                                <input
+                                    type="email"
+                                    value={parentEmail}
+                                    onChange={(e) => setParentEmail(e.target.value)}
+                                    className="w-full px-4 py-3 rounded-xl border-3 border-[#2C241B] shadow-neo bg-[#FCFAF8] text-[#2C241B] font-semibold outline-none focus:ring-4 focus:ring-[#8C5A35]/20 focus:border-[#8C5A35]"
+                                    placeholder="parent@example.com"
                                 />
                             </div>
                         </div>
