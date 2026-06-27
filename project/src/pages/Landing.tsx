@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
     ArrowRight, 
     Brain, 
@@ -15,8 +15,14 @@ import {
     LineChart,
     Video,
     FileText,
-    Flame
+    Flame,
+    Clock,
+    Target,
+    ChevronRight,
+    Play,
+    MessageSquare
 } from 'lucide-react';
+import DemoWidget from '../components/landing/DemoWidget';
 
 const tiers = [
     {
@@ -82,52 +88,6 @@ const faqsList = [
     }
 ];
 
-const PROMPTS = {
-    'wave-optics': {
-        input: 'Show me Wave Optics PYQs from CBSE 2024',
-        output: [
-            '[Clarity AI] Question: Derive expression for fringe width in YDSE.',
-            '----------------------------------------',
-            '✔ Concept: Fringe Width β = λD/d',
-            '⚠️ CBSE EXAM TRAP IDENTIFIED:',
-            'Students often forget to explicitly state the path difference condition (Δx = nλ) for constructive interference.',
-            'Skipping this formulation loses 0.5 marks under CBSE marking scheme.',
-            '💡 Active Recall Tip: Practice drawing the wavefront diagram. The layout of waves determines 1.5 marks of the grade!'
-        ]
-    },
-    'biology': {
-        input: 'Grade my notes on Double Fertilization',
-        output: [
-            '[Clarity OCR Vision] Processing note image...',
-            '✔ Handwriting recognition: 98.2% confidence',
-            '✔ Text read: "...syngamy forms zygote. Second sperm cell fertilizes polar nuclei..."',
-            '----------------------------------------',
-            '✔ Checked against CBSE Answer Key:',
-            '1. Syngamy identified (+1.0 Mark)',
-            '2. Zygote formation identified (+1.0 Mark)',
-            '✖ Triple Fusion: Term "Triple Fusion" not explicitly written (-0.5 Mark)',
-            '----------------------------------------',
-            'GRADE: 2.5 / 3.0 (B+)',
-            'RECOVERY MISSION: Speak "Triple Fusion" to explain polar nuclei fusion.'
-        ]
-    },
-    'simulator': {
-        input: 'Start a timed Board Exam simulator',
-        output: [
-            '[Simulator] Launching Board-Style Physics Exam...',
-            '✔ Time remaining: 03:00:00 (Locked)',
-            '✔ Anti-Cheat active. NCERT chapter search disabled.',
-            '----------------------------------------',
-            'Q1: State Coulomb\'s Law. (2 Marks)',
-            'Your Voice Answer: "Force is directly proportional to product of charges..."',
-            '✔ Step-Marking analysis:',
-            '  - State F = k * q1 * q2 / r² (+1.0 Mark)',
-            '  - State definition of variables & vacuum permittivity (+1.0 Mark)',
-            '✔ Verified Grade: 2.0 / 2.0 Marks'
-        ]
-    }
-};
-
 export const Landing = () => {
     // Intro & Reveal stage states
     const [introPhase, setIntroPhase] = useState<'loading' | 'text' | 'line' | 'wipe' | 'reveal' | 'finished'>('loading');
@@ -140,13 +100,6 @@ export const Landing = () => {
     // Interactive mockup states
     const [activeTab, setActiveTab] = useState<'workspace' | 'tutor' | 'simulator' | 'parent'>('workspace');
     const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(null);
-
-    // Interactive chat simulator states
-    const [terminalPrompt, setTerminalPrompt] = useState<string>('');
-    const [terminalOutput, setTerminalOutput] = useState<string>('');
-    const [isTyping, setIsTyping] = useState<boolean>(false);
-    const [visibleLinesCount, setVisibleLinesCount] = useState<number>(0);
-    const [activePrompt, setActivePrompt] = useState<string | null>(null);
 
     // Scroll dilemma words switcher states
     const [isProblemVisible, setIsProblemVisible] = useState(false);
@@ -369,56 +322,6 @@ export const Landing = () => {
             active = false;
             window.removeEventListener('mousemove', handleMouseMove);
         };
-    }, [introPhase]);
-
-    // Dynamic typewriter simulation console
-    const simulateTerminal = (key: 'wave-optics' | 'biology' | 'simulator') => {
-        if (isTyping) return;
-        setIsTyping(true);
-        setActivePrompt(key);
-        setTerminalPrompt('');
-        setTerminalOutput('');
-        setVisibleLinesCount(0);
-
-        const data = PROMPTS[key];
-        let currentInput = '';
-        let inputIdx = 0;
-
-        const inputInterval = setInterval(() => {
-            if (inputIdx < data.input.length) {
-                currentInput += data.input[inputIdx];
-                setTerminalPrompt(currentInput);
-                inputIdx++;
-            } else {
-                clearInterval(inputInterval);
-                setTimeout(() => {
-                    let lineIdx = 0;
-                    let currentLines: string[] = [];
-
-                    const outputInterval = setInterval(() => {
-                        if (lineIdx < data.output.length) {
-                            currentLines.push(data.output[lineIdx]);
-                            setTerminalOutput(currentLines.join('\n'));
-                            setVisibleLinesCount(lineIdx + 1);
-                            lineIdx++;
-                        } else {
-                            clearInterval(outputInterval);
-                            setIsTyping(false);
-                        }
-                    }, 120);
-                }, 150);
-            }
-        }, 15);
-    };
-
-    // Auto-play the first simulation after entrance
-    useEffect(() => {
-        if (introPhase === 'finished') {
-            const timer = setTimeout(() => {
-                simulateTerminal('wave-optics');
-            }, 1200);
-            return () => clearTimeout(timer);
-        }
     }, [introPhase]);
 
     // Dilemma Switcher scroll observer
@@ -787,9 +690,14 @@ export const Landing = () => {
                         }}
                     >
                         <p style={{ fontSize: '15px', fontWeight: 300, color: 'rgba(26,26,46,0.48)', letterSpacing: '0.06em', lineHeight: 1.9 }}>
-                            The AI tutor that brings<br/>
-                            <em style={{ fontStyle: 'italic', color: 'rgba(26,26,46,0.7)' }}>absolute clarity</em> to every subject.
+                            Master the CBSE syllabus with AI-driven clarity.<br/>
+                            <em style={{ fontStyle: 'italic', color: 'rgba(26,26,46,0.7)' }}>Score your best board results.</em>
                         </p>
+                        <div className="flex gap-4 justify-center mt-8">
+                            <Link to="/onboarding" className="flat-btn-ink px-8 py-3.5 text-base flex items-center gap-2">
+                                Start Free Trial <ArrowRight size={18} />
+                            </Link>
+                        </div>
                         <div id="sub-line" style={{ width: '40px', height: '1px', background: '#1a1a2e', opacity: 0.15, margin: '16px auto 0' }} />
                         <div className="mt-8 animate-bounce flex flex-col items-center justify-center gap-1 text-[9px] uppercase tracking-widest text-[#1a1a2e]/40">
                             <span>Scroll down to study</span>
@@ -820,16 +728,7 @@ export const Landing = () => {
                                 onMouseEnter={() => setIsHoveredWord(true)}
                                 onMouseLeave={() => setIsHoveredWord(false)}
                             >
-                                Student Login
-                            </Link>
-                            <Link 
-                                to="/parent-portal" 
-                                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 border border-[#1a1a2e]/20 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5 text-sm font-black rounded-lg transition-colors"
-                                onMouseEnter={() => setIsHoveredWord(true)}
-                                onMouseLeave={() => setIsHoveredWord(false)}
-                            >
-                                <Users size={14} />
-                                Parent Portal
+                                Login
                             </Link>
                             <Link 
                                 to="/onboarding" 
@@ -858,21 +757,31 @@ export const Landing = () => {
                             </div>
 
                             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800 }}>
-                                The only AI that studies NCERT with you — not instead of you.
+                                Score 95+ in CBSE boards. Your AI tutor that actually knows the marking scheme.
                             </h2>
 
                             <p className="text-sm md:text-base text-[#1a1a2e]/70 font-semibold leading-relaxed max-w-xl">
                                 Clear concepts, focused daily missions, active recall voice recovery, and timed board exam simulators. Designed to guarantee your best CBSE syllabus prep in one beautiful system.
                             </p>
 
+                            {/* Social Proof */}
+                            <div className="flex items-center gap-3 bg-[#fdfdfb] border border-[#1a1a2e]/10 px-4 py-2 rounded-xl">
+                                <div className="flex -space-x-2">
+                                    <img src="https://i.pravatar.cc/100?img=1" alt="Student" className="w-8 h-8 rounded-full border-2 border-white" />
+                                    <img src="https://i.pravatar.cc/100?img=5" alt="Student" className="w-8 h-8 rounded-full border-2 border-white" />
+                                    <img src="https://i.pravatar.cc/100?img=3" alt="Student" className="w-8 h-8 rounded-full border-2 border-white" />
+                                </div>
+                                <p className="text-xs font-semibold text-[#1a1a2e]/80 italic">"I got 88 in Physics last term, used Clarity to prep this week." <br/><span className="text-[#1a1a2e] font-black not-italic">— Rahul, Class 12</span></p>
+                            </div>
+
                             <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
                                 <Link 
                                     to="/onboarding" 
-                                    className="px-6 py-3 bg-[#1a1a2e] text-[#f7f5f0] font-black inline-flex items-center gap-2 rounded-xl border border-[#1a1a2e]  hover:transtone-x-[2px] hover:transtone-y-[2px] hover: transition-all"
+                                    className="px-6 py-3 bg-[#1a1a2e] text-[#f7f5f0] font-black inline-flex items-center gap-2 rounded-xl border border-[#1a1a2e] transition-all hover:translate-x-[2px] hover:translate-y-[2px]"
                                     onMouseEnter={() => setIsHoveredWord(true)}
                                     onMouseLeave={() => setIsHoveredWord(false)}
                                 >
-                                    Build My Study OS
+                                    Start free — board exams don't wait
                                     <ArrowRight size={16} />
                                 </Link>
                                 <Link 
@@ -882,202 +791,22 @@ export const Landing = () => {
                                     onMouseLeave={() => setIsHoveredWord(false)}
                                 >
                                     <Users size={16} />
-                                    Open Parent Portal
+                                    Parent Portal
                                 </Link>
                             </div>
                         </div>
 
                         {/* Top Right: Simulated workspace widget */}
                         <div className="lg:col-span-5 w-full flex flex-col justify-center">
-                            <div className="w-full bg-[#FCFAF8] border-1.5 border-[#1a1a2e] rounded-3xl  overflow-hidden flex flex-col">
+                            <div className="w-full bg-[#FCFAF8] border-1.5 border-[#1a1a2e] rounded-3xl overflow-hidden flex flex-col shadow-[8px_8px_0px_0px_rgba(26,26,46,1)]">
                                 {/* Snippet Header */}
                                 <div className="bg-[#fcfbf9] px-4 py-3 flex items-center justify-between border-b border-[#1a1a2e]/10">
                                     <div className="flex items-center gap-1.5">
                                         <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
-                                        <span className="text-[10px] font-black text-[#1a1a2e] uppercase tracking-wider">Clarity Study Workspace</span>
+                                        <span className="text-[10px] font-black text-[#1a1a2e] uppercase tracking-wider">Live Demo Widget</span>
                                     </div>
-                                    <span className="text-[9px] font-mono text-[#1a1a2e]/40 uppercase tracking-widest font-black">Live Console</span>
                                 </div>
-
-                                {/* Dynamic Query selector tabs */}
-                                <div className="bg-[#fdfdfb] p-3 border-b border-[#1a1a2e]/10 flex flex-wrap gap-1.5">
-                                    {(['wave-optics', 'biology', 'simulator'] as const).map((key) => (
-                                        <button 
-                                            key={key}
-                                            type="button"
-                                            onClick={() => simulateTerminal(key)}
-                                            disabled={isTyping}
-                                            className={`px-3 py-1 rounded-lg text-[10px] font-black border transition-all ${
-                                                activePrompt === key
-                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e] '
-                                                    : 'bg-[#FCFAF8] text-[#1a1a2e]/60 border-[#1a1a2e]/15 hover:text-[#1a1a2e] hover:border-[#1a1a2e]/30'
-                                            }`}
-                                            onMouseEnter={() => setIsHoveredWord(true)}
-                                            onMouseLeave={() => setIsHoveredWord(false)}
-                                        >
-                                            {key === 'wave-optics' ? '💡 Wave Optics' : key === 'biology' ? '🌿 Biology Grading' : '⏱ Physics Exam'}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                {/* Console content - Styled like a ruled worksheet sheet card */}
-                                <div className="p-4 bg-[#FCFAF8] min-h-[300px] max-h-[360px] overflow-y-auto flex flex-col justify-start gap-4 text-xs font-semibold leading-relaxed">
-                                    {terminalPrompt && (
-                                        <>
-                                            {/* User prompt write-in card */}
-                                            <div className="flex justify-end w-full">
-                                                <div className="bg-[#1a1a2e]/5 text-[#1a1a2e] px-4 py-2 rounded-2xl rounded-tr-none border border-[#1a1a2e]/10 max-w-[85%] text-left font-black">
-                                                    {terminalPrompt}
-                                                    {isTyping && <span className="animate-pulse ml-0.5">|</span>}
-                                                </div>
-                                            </div>
-
-                                            {/* AI responses cards */}
-                                            {terminalOutput && (
-                                                <div className="flex flex-col gap-2 items-start w-full">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-5 h-5 border border-[#1a1a2e] bg-[#FCFAF8] flex items-center justify-center rounded-full text-[9px] font-black">
-                                                            C
-                                                        </div>
-                                                        <span className="text-[9px] text-[#1a1a2e]/50 font-black uppercase tracking-wider">Clarity Coach</span>
-                                                    </div>
-
-                                                    <div className="bg-[#fcfbf9] text-[#1a1a2e] p-4 rounded-2xl rounded-tl-none border border-[#1a1a2e]/15  text-left w-full space-y-4 font-mono text-[11px] leading-relaxed">
-                                                        {activePrompt === 'wave-optics' && (
-                                                            <div className="space-y-4">
-                                                                <p className="font-bold text-xs border-b border-[#1a1a2e]/10 pb-2">
-                                                                    Derive expression for fringe width in YDSE (CBSE 2024)
-                                                                </p>
-                                                                
-                                                                {visibleLinesCount >= 2 && (
-                                                                    <div className="p-3 bg-[#FCFAF8] border border-[#1a1a2e]/10 rounded-xl space-y-1">
-                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/50 tracking-wider">Concept Formula</p>
-                                                                        <p className="text-xs font-bold text-[#1a1a2e]">Fringe Width (β) = λD/d</p>
-                                                                    </div>
-                                                                )}
-
-                                                                {visibleLinesCount >= 3 && (
-                                                                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl space-y-1">
-                                                                        <p className="text-[8px] font-black uppercase text-red-700 tracking-wider flex items-center gap-1">
-                                                                            ⚠️ CBSE Exam Trap Identified
-                                                                        </p>
-                                                                        <p className="text-[10px] text-red-800 font-bold leading-relaxed">
-                                                                            Students often omit stating the path difference condition (Δx = nλ). Loss of <strong>0.5 Marks</strong> in grading rubric.
-                                                                        </p>
-                                                                    </div>
-                                                                )}
-
-                                                                {visibleLinesCount >= 4 && (
-                                                                    <div className="space-y-2">
-                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">CBSE Step-Marking Scheme</p>
-                                                                        <div className="border border-[#1a1a2e]/10 rounded-lg overflow-hidden text-[10px] bg-[#FCFAF8]">
-                                                                            <table className="w-full text-left">
-                                                                                <thead>
-                                                                                    <tr className="bg-[#fcfbf9] border-b border-[#1a1a2e]/10 font-bold text-[#1a1a2e]/60">
-                                                                                        <th className="p-2">Step</th>
-                                                                                        <th className="p-2 text-right">Value</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody className="divide-y divide-[#1a1a2e]/5 text-[#1a1a2e]/80">
-                                                                                    <tr>
-                                                                                        <td className="p-2">Path Difference Formulation</td>
-                                                                                        <td className="p-2 text-right text-amber-700 font-bold">+0.5 M</td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td className="p-2">Geometric Wavefront Construction</td>
-                                                                                        <td className="p-2 text-right text-amber-700 font-bold">+1.5 M</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-
-                                                        {activePrompt === 'biology' && (
-                                                            <div className="space-y-4">
-                                                                <div className="flex justify-between items-center bg-[#FCFAF8] p-2 rounded-lg border border-[#1a1a2e]/10 text-[9px]">
-                                                                    <span className="font-black text-[#1a1a2e]/50 uppercase">OCR Handwritten Grading</span>
-                                                                    <span className="text-[#1a1a2e] font-black">98.2% Confidence</span>
-                                                                </div>
-
-                                                                {visibleLinesCount >= 3 && (
-                                                                    <div className="p-3 bg-[#fdfcf9] rounded-lg border border-[#1a1a2e]/5 italic text-[#1a1a2e]/70">
-                                                                        "...syngamy forms zygote. Second sperm cell fertilizes polar nuclei..."
-                                                                    </div>
-                                                                )}
-
-                                                                {visibleLinesCount >= 4 && (
-                                                                    <div className="space-y-2">
-                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">Answer Key Checklist</p>
-                                                                        <div className="space-y-1 text-[10px]">
-                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-amber-500/5 text-amber-800 border border-amber-500/10">
-                                                                                <span>✔ Syngamy identified</span>
-                                                                                <span className="font-bold">+1.0 M</span>
-                                                                            </div>
-                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-amber-500/5 text-amber-800 border border-amber-500/10">
-                                                                                <span>✔ Zygote formation described</span>
-                                                                                <span className="font-bold">+1.0 M</span>
-                                                                            </div>
-                                                                            <div className="flex items-center justify-between p-1.5 rounded bg-rose-500/5 text-rose-800 border border-rose-500/10">
-                                                                                <span>✖ "Triple Fusion" omitted</span>
-                                                                                <span className="font-bold text-rose-700">-0.5 M</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                {visibleLinesCount >= 5 && (
-                                                                    <div className="flex items-center justify-between pt-2 border-t border-[#1a1a2e]/10">
-                                                                        <div>
-                                                                            <span className="text-[8px] font-black uppercase text-[#1a1a2e]/40">Notes Grade</span>
-                                                                            <p className="text-xs font-black">2.5 / 3.0 (B+)</p>
-                                                                        </div>
-                                                                        <button type="button" className="px-2.5 py-1 bg-[#1a1a2e] text-[#f7f5f0] rounded-lg text-[9px] font-black uppercase">
-                                                                            🎙️ Speak to Recover
-                                                                        </button>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-
-                                                        {activePrompt === 'simulator' && (
-                                                            <div className="space-y-4">
-                                                                <div className="flex justify-between items-center border-b border-[#1a1a2e]/10 pb-2">
-                                                                    <span className="text-xs font-bold">Coulomb's Law (2 Marks)</span>
-                                                                    <span className="text-[9px] bg-red-100 text-red-800 font-bold px-1.5 py-0.5 rounded">02:14:55</span>
-                                                                </div>
-
-                                                                {visibleLinesCount >= 3 && (
-                                                                    <div className="p-3 bg-[#fdfcf9] border border-[#1a1a2e]/10 rounded-xl space-y-1">
-                                                                        <p className="text-[8px] font-black uppercase text-[#1a1a2e]/40 tracking-wider">Voice Input Transcription</p>
-                                                                        <p className="text-[10px] text-[#1a1a2e]/80">"Force is proportional to product of charges..."</p>
-                                                                    </div>
-                                                                )}
-
-                                                                {visibleLinesCount >= 4 && (
-                                                                    <div className="space-y-1.5 text-[9px]">
-                                                                        <div className="flex items-center gap-1.5 text-amber-800">
-                                                                            <Check size={10} /> <span>State formula: F = k*q1*q2/r² (+1.0 M)</span>
-                                                                        </div>
-                                                                        <div className="flex items-center gap-1.5 text-amber-800">
-                                                                            <Check size={10} /> <span>Define vacuum permittivity (+1.0 M)</span>
-                                                                        </div>
-                                                                        <div className="flex items-center justify-between border-t border-[#1a1a2e]/5 pt-1.5 mt-1 text-[11px] font-black">
-                                                                            <span>Total Grade</span>
-                                                                            <span>2.0 / 2.0 Marks</span>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </>
-                                    )}
-                                </div>
+                                <DemoWidget />
                             </div>
                         </div>
                     </section>

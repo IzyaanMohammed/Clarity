@@ -8,7 +8,7 @@ import { Button } from '../components/ui/Button';
 import { MarkdownContent } from '../components/ui/MarkdownContent';
 import { PremiumModal } from '../components/PremiumModal';
 import { addBookmark, getUser, incrementDailyQuestion, checkDailyLimits, incrementDailyUpload, saveStudyMaterialIfNew, type StudyMaterialItem } from '../utils/storage';
-import { askQuestionStream, uploadFile, logProgress, saveMaterialToDatabase } from '../api';
+import { askQuestionStream, uploadFile, logProgress, saveMaterialToDatabase, apiClient } from '../api';
 import { Message } from '../types';
 import { useCurriculumCatalog } from '../hooks/useCurriculumCatalog';
 import { buildClarifiSystemPrompt } from '../lib/ai';
@@ -50,7 +50,7 @@ export const AskAI = () => {
     setShowPersonalityModal(false);
     toast.success(`Clarifier personality set to: ${personality}`);
     try {
-      await api.put('/me', { teacherPersonality: personality });
+      await apiClient.put('/me', { teacherPersonality: personality });
       if (user) {
         saveUser({ ...user, teacherPersonality: personality });
       }
@@ -486,11 +486,11 @@ export const AskAI = () => {
                       <div
                         className={`p-8 rounded-[32px] leading-relaxed font-bold text-[15px] border ${
                           m.role === 'user'
-                            ? 'bg-[#FCFAF8] border-stone-100 text-[#3E352B] rounded-tr-none '
+                            ? 'bg-stone-900 border-stone-900 text-white rounded-tr-none '
                             : 'bg-[#8C5A35]/5 border-[#8C5A35]/10 text-[#3E352B] rounded-tl-none'
                         }`}
                       >
-                        <MarkdownContent content={m.content} className="prose prose-sm " />
+                        <MarkdownContent content={m.content} className={`prose prose-sm max-w-none ${m.role === 'user' ? 'prose-invert' : ''}`} />
                       </div>
                     </div>
                   ))

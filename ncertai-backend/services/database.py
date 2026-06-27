@@ -200,6 +200,20 @@ def init_db() -> None:
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS daily_missions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                subject TEXT NOT NULL,
+                mission_date TEXT NOT NULL,
+                chapter TEXT NOT NULL,
+                task_description TEXT NOT NULL,
+                completed INTEGER DEFAULT 0,
+                UNIQUE(username, subject, mission_date)
+            )
+            """
+        )
         # Lightweight migration for older databases
         user_columns = [row[1] for row in conn.execute("PRAGMA table_info(users)").fetchall()]
         if "subscription_tier" not in user_columns:
@@ -1093,3 +1107,30 @@ def delete_custom_textbook(username: str, textbook_id: int) -> bool:
             (username, textbook_id),
         )
         return cursor.rowcount > 0
+
+def fetch_daily_missions(username: str, mission_date: str) -> list[dict[str, Any]]:
+    with _connect() as conn:
+        rows = conn.execute(
+            """SELECT * FROM daily_missions WHERE username = ? AND mission_date = ?""",
+            (username.strip().lower(), mission_date)
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+def upsert_daily_mission(username: str, subject: str, mission_date: str, chapter: str, task_description: str, completed: int = 0) -> None:
+    username = username.strip().lower()
+    with _connect() as conn:
+        conn.execute(
+            """INSERT OR REPLACE INTO daily_missions (id, username, subject, mission_date, chapter, task_description, completed)
+             VALUES (
+                (SELECT id FROM daily_missions WHERE username = ? AND subject = ? AND mission_date = ?),
+                ?, ?, ?, ?, ?, ?
+             )""",
+            (username, subject, mission_date, username, subject, mission_date, chapter, task_description, completed)
+        )
+
+def complete_daily_mission(mission_id: int) -> None:
+    with _connect() as conn:
+        conn.execute(
+            "UPDATE daily_missions SET completed = 1 WHERE id = ?",
+            (mission_id,)
+        )

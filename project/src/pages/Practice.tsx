@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CheckCircle2, AlertCircle, ArrowRight, Award, Zap, Clock, Target, BookOpen, ArrowLeft, TrendingUp, Brain, Lightbulb, type LucideIcon } from 'lucide-react';
+import { CheckCircle2, AlertCircle, ArrowRight, Award, Zap, Clock, Target, BookOpen, ArrowLeft, TrendingUp, Brain, Lightbulb, Sparkles, type LucideIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
@@ -297,7 +297,7 @@ export const Practice = () => {
     if (parseMcq(q)) return acc + 1;
     if (parseBlank(q)) return acc + 1;
     if (parseMatch(q)) return acc + 3;
-    return acc + 5;
+    return acc + (questionType === '1-mark' ? 1 : questionType === '3-mark' ? 3 : 5);
   }, 0);
   const classKey = String(user?.class || '10');
   const { chaptersForSubject } = useCurriculumCatalog(classKey);
@@ -618,6 +618,17 @@ export const Practice = () => {
             totalAttemptedMarks += res.total_marks;
             totalAttemptedQs += 1;
             if (res.weak_skill) skills.push(res.weak_skill);
+          } else {
+            // Fallback if API crashed
+            const fallbackRes: GradeResponse = {
+              marks_awarded: 0,
+              total_marks: questionMaxMarks,
+              feedback: "Error grading answer. Please check your network or try again.",
+              model_answer: "Refer to textbook."
+            };
+            grades[i] = fallbackRes;
+            totalAttemptedMarks += questionMaxMarks;
+            totalAttemptedQs += 1;
           }
         } else {
           // Unattempted question - populate anyway so it shows in review

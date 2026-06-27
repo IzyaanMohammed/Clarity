@@ -99,7 +99,16 @@ export const Login = () => {
                             }}
                             className="text-[#8C5A35] font-black text-sm uppercase tracking-wider hover:underline"
                         >
-                            Create Student Account
+                            Start Free Trial
+                        </Link>
+                    </div>
+                    <div className="mt-6 pt-6 border-t border-stone-100 text-center">
+                        <p className="text-sm text-stone-500 font-bold mb-3">Are you a parent?</p>
+                        <Link
+                            to="/parent-portal"
+                            className="text-stone-600 font-black text-sm uppercase tracking-wider hover:text-[#8C5A35] hover:underline flex items-center justify-center gap-1"
+                        >
+                            Access Parent Portal <ArrowRight size={14} />
                         </Link>
                     </div>
                 </Card>

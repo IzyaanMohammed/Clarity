@@ -47,41 +47,11 @@ ALLOWED_SUBSCRIPTION_TIERS = {"free", "pro", "pro_max"}
 
 @router.get("/locations")
 async def get_locations():
-    from services.database import users_collection
-    if users_collection is None:
-        return {
-            "countries": ["India", "UAE", "USA", "UK"],
-            "states": ["Tamil Nadu", "Delhi", "Maharashtra", "Dubai", "Abu Dhabi"],
-            "cities": ["Chennai", "New Delhi", "Mumbai", "Dubai", "Abu Dhabi"]
-        }
-
-    pipeline = [
-        {"$group": {
-            "_id": None,
-            "countries": {"$addToSet": "$profile.country"},
-            "states": {"$addToSet": "$profile.state"},
-            "cities": {"$addToSet": "$profile.city"}
-        }}
-    ]
-    
-    try:
-        res = list(users_collection.aggregate(pipeline))
-        if res:
-            doc = res[0]
-            countries = [c for c in doc.get("countries", []) if c]
-            states = [s for s in doc.get("states", []) if s]
-            cities = [c for c in doc.get("cities", []) if c]
-            return {"countries": sorted(countries), "states": sorted(states), "cities": sorted(cities)}
-    except Exception as e:
-        print(f"Error fetching locations: {e}")
-
     return {
         "countries": ["India", "UAE", "USA", "UK"],
         "states": ["Tamil Nadu", "Delhi", "Maharashtra", "Dubai", "Abu Dhabi"],
         "cities": ["Chennai", "New Delhi", "Mumbai", "Dubai", "Abu Dhabi"]
     }
-
-
 @router.get("/parent-credentials")
 async def get_parent_credentials(x_user_id: str = Header(...)):
     from services.database import get_parent_account_by_student, reset_parent_credentials
@@ -1674,7 +1644,7 @@ async def update_me(profile: AuthProfile, authorization: Optional[str] = Header(
     update_user_profile(username, profile_data)
 
     existing_parent = get_parent_account_by_student(username)
-    if not existing_parent or str(existing_parent.get("parent_email") or "").lower() != parent_email:
+    if parent_email and (not existing_parent or str(existing_parent.get("parent_email") or "").lower() != parent_email):
         parent_password = secrets.token_urlsafe(9)
         try:
             upsert_parent_account(username, parent_email, parent_password)

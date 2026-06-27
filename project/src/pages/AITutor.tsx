@@ -554,7 +554,7 @@ export const AITutor = ({ initialTab = 'chat' }: { initialTab?: 'chat' | 'planne
                         : 'bg-[#FCFAF8] text-[#3E352B] border-3 border-[#2C241B] shadow-neo rounded-tl-none'
                     }`}
                   >
-                    <MarkdownContent content={msg.content} className="prose prose-sm " />
+                    <MarkdownContent content={msg.content} className={`prose prose-sm max-w-none ${msg.role === 'user' ? 'prose-invert' : ''}`} />
                   </div>
                 </div>
               ))}

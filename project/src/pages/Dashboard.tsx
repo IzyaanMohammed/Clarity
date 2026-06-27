@@ -5,13 +5,33 @@ import toast from 'react-hot-toast';
 import { Navbar } from '../components/layout/Navbar';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { getActivities, getBookmarks, getChatHistory, getStudyMaterials, getSubjectStats, getUser } from '../utils/storage';
-import { getStats, sendParentReport, getDailyMission, getStudyNotifications, getMockSchedule, getResourceStack, getChapterReadiness, saveMaterialToDatabase, syncUserSnapshot, getRecommendations, getParentCredentials, sendParentCredentials, type StatsResponse, type DailyMissionResponse, type StudyNotificationResponse, type MockScheduleResponse, type ResourceStackResponse, type ChapterReadinessResponse, type RecommendationItem } from '../api';
+import { getActivities, getBookmarks, getChatHistory, getStudyMaterials, getSubjectStats, getUser, saveUser } from '../utils/storage';
+import { getStats, sendParentReport, getDailyMission, getStudyNotifications, getMockSchedule, getResourceStack, getChapterReadiness, saveMaterialToDatabase, syncUserSnapshot, getRecommendations, getParentCredentials, sendParentCredentials, type StatsResponse, type DailyMissionResponse, type StudyNotificationResponse, type MockScheduleResponse, type ResourceStackResponse, type ChapterReadinessResponse, type RecommendationItem, apiClient } from '../api';
 
 export const Dashboard = () => {
   const navigate = useNavigate();
   const user = getUser();
   const [stats, setStats] = useState<StatsResponse | null>(null);
+  const [showTutorModal, setShowTutorModal] = useState(false);
+  const [tutorPersonality, setTutorPersonality] = useState(user?.teacherPersonality || 'Kind');
+  const [tutorPace, setTutorPace] = useState(user?.preferredPace || 'Balanced');
+  const [isUpdatingTutor, setIsUpdatingTutor] = useState(false);
+
+  const handleUpdateTutor = async () => {
+    setIsUpdatingTutor(true);
+    try {
+      await apiClient.put('/me', { teacherPersonality: tutorPersonality, preferredPace: tutorPace });
+      if (user) {
+         saveUser({ ...user, teacherPersonality: tutorPersonality, preferredPace: tutorPace });
+      }
+      toast.success("Tutor customized successfully!");
+      setShowTutorModal(false);
+    } catch {
+      toast.error("Failed to update tutor settings");
+    } finally {
+      setIsUpdatingTutor(false);
+    }
+  };
   const [dismissedParentNote, setDismissedParentNote] = useState(() => localStorage.getItem('clarity_parent_note_dismissed') || '');
   const [dailyMission, setDailyMission] = useState<DailyMissionResponse | null>(null);
   const [missionLoading, setMissionLoading] = useState(false);
@@ -276,7 +296,7 @@ export const Dashboard = () => {
     // Automated weekly report logic
     const lastReport = localStorage.getItem('ncertai_last_report');
     const oneWeek = 7 * 24 * 60 * 60 * 1000;
-    if (!lastReport || (Date.now() - parseInt(lastReport)) > oneWeek) {
+    if (user?.parentEmail && (!lastReport || (Date.now() - parseInt(lastReport)) > oneWeek)) {
       sendParentReport().then(() => {
         localStorage.setItem('ncertai_last_report', Date.now().toString());
       }).catch(() => {});
@@ -374,12 +394,21 @@ export const Dashboard = () => {
               <p className="text-[#ecfdf5]/90 text-lg font-medium leading-relaxed mb-4">
                 Class {user.class} • {user.school || 'CBSE Student'} • {user.parentEmail ? 'Parent-linked account active' : 'No parent email on file'}
               </p>
-              <Button 
-                onClick={() => window.open('/parent-portal', '_blank')} 
-                className="bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-bold py-2 px-6"
-              >
-                Access Parent Portal ↗
-              </Button>
+              <div className="flex gap-3 mt-4">
+                <Button 
+                  onClick={() => window.open('/parent-portal', '_blank')} 
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-bold py-2 px-6"
+                >
+                  Access Parent Portal ↗
+                </Button>
+                <Button 
+                  onClick={() => setShowTutorModal(true)} 
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-bold py-2 px-6 flex items-center gap-2"
+                >
+                  <Brain size={18} />
+                  Customize Tutor
+                </Button>
+              </div>
             </div>
 
             <div className="flex flex-col items-center bg-[#FCFAF8]/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20 text-center min-w-[200px] relative group">
@@ -741,9 +770,12 @@ export const Dashboard = () => {
                         <div className="w-8 h-8 rounded-full border-2 border-[#8C5A35] flex items-center justify-center bg-[#FCFAF8] ">
                           <input type="checkbox" className="w-5 h-5 accent-[#8C5A35] cursor-pointer" readOnly />
                         </div>
-                        <div>
+                        <div className="flex-1">
                           <span className="text-base font-bold text-stone-700 ">{task.title}</span>
-                          <p className="text-xs text-stone-500 font-medium">{task.subject} • 30 mins</p>
+                          <p className="text-xs text-stone-500 font-medium mb-2">{task.subject} • 30 mins</p>
+                          <div className="h-1.5 w-full bg-stone-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-[#8C5A35] rounded-full transition-all duration-1000" style={{ width: `${chapterReadiness?.readiness_score || 25}%` }} />
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -875,6 +907,36 @@ export const Dashboard = () => {
           </section>
         </div>
       </main>
+
+      {showTutorModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-[#FCFAF8] p-8 rounded-3xl max-w-md w-full shadow-2xl border-3 border-[#2C241B]">
+            <h2 className="text-2xl font-black text-[#2C241B] mb-4">Customize Tutor</h2>
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="text-sm font-bold text-stone-600 block mb-2">Personality</label>
+                <select className="w-full p-3 rounded-xl border-2 border-stone-200" value={tutorPersonality} onChange={(e) => setTutorPersonality(e.target.value)}>
+                  <option value="Kind">Kind & Encouraging</option>
+                  <option value="Socratic">Socratic (Questions)</option>
+                  <option value="Direct">Direct & Strict</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-bold text-stone-600 block mb-2">Pacing</label>
+                <select className="w-full p-3 rounded-xl border-2 border-stone-200" value={tutorPace} onChange={(e) => setTutorPace(e.target.value)}>
+                  <option value="Balanced">Balanced</option>
+                  <option value="Fast">Fast & Challenging</option>
+                  <option value="Slow">Slow & Detailed</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end">
+              <button className="px-5 py-2 font-bold text-stone-500 hover:bg-stone-200 rounded-xl" onClick={() => setShowTutorModal(false)}>Cancel</button>
+              <button className="px-5 py-2 font-bold bg-[#8C5A35] text-white rounded-xl" disabled={isUpdatingTutor} onClick={handleUpdateTutor}>{isUpdatingTutor ? 'Saving...' : 'Save'}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -335,3 +335,33 @@ async def chat_tutor_stream(request: TutorChatRequest, authorization: Optional[s
             yield f"data: {json.dumps({'token': 'Streaming failed. Please retry.', 'done': True})}\n\n"
             
     return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+class DemoQARequest(BaseModel):
+    question: str
+    class_num: int
+    subject: str
+    chapter: str = "Core Concepts"
+
+@router.post("/demo-ask-stream")
+async def demo_ask_question_stream(request: DemoQARequest):
+    async def event_generator():
+        try:
+            system_prompt = (
+                f"You are Clarity, a world-class AI tutor for CBSE Class {request.class_num} {request.subject}. "
+                "The student has asked a question in the live demo widget on the homepage. "
+                "CRITICAL INSTRUCTION: You MUST provide the answer strictly following the CBSE marking scheme. "
+                "You MUST highlight exactly where marks are awarded (e.g., [1 mark for formula], [0.5 marks for unit]). "
+                "Keep your answer extremely concise, punchy, and formatted beautifully with markdown. Make it INSANELY GOOD and fast."
+            )
+            messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": request.question}]
+            
+            async for token in ask_openrouter_stream(messages, task_type="fast"):
+                data = json.dumps({"token": token, "done": False})
+                yield f"data: {data}\n\n"
+            
+            yield f"data: {json.dumps({'token': '', 'done': True})}\n\n"
+        except Exception as e:
+            logger.error(f"Error in demo stream gen: {str(e)}")
+            yield f"data: {json.dumps({'token': 'Error', 'done': True})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")

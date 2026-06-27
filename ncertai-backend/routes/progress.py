@@ -637,138 +637,86 @@ async def get_stats(user_id: str, authorization: Optional[str] = Header(default=
 @router.post("/daily-mission")
 async def get_daily_mission(request: DailyMissionRequest, authorization: Optional[str] = Header(default=None)):
     username = require_auth_username(authorization)
-    user_data = get_augmented_user_data(username)
-
-    chapter_subject_map = _build_chapter_subject_map(user_data)
-    weak_topics: list[str] = []
-    all_chapters: list[str] = []
-    for item in user_data:
-        score = item.get("score")
-        chapter = str(item.get("chapter") or "").strip()
-        if chapter and chapter not in all_chapters:
-            all_chapters.append(chapter)
-        if isinstance(score, (int, float)) and score < 50 and chapter:
-            weak_topics.append(chapter)
-
-    # Preserve order while deduping
-    seen = set()
-    dedup_weak = []
-    for topic in weak_topics:
-        if topic not in seen:
-            seen.add(topic)
-            dedup_weak.append(topic)
-
-    focus_pool = dedup_weak if dedup_weak else all_chapters
-    if not focus_pool:
-        focus_pool = ["Core Concepts"]
-
-    ranked_focus = _rank_chapters_by_readiness(user_data, focus_pool)
-    focus_chapters = [item["chapter"] for item in ranked_focus] or _pick_focus_chapters(user_data, dedup_weak)
-    default_subject = request.subjects[0] if request.subjects else "Science"
-
-    if focus_chapters:
-        learn_chapter = focus_chapters[0]
-        practice_chapter = focus_chapters[0]
-        review_chapter = focus_chapters[1] if len(focus_chapters) > 1 else focus_chapters[0]
-    else:
-        learn_chapter = "Core Concepts"
-        practice_chapter = "Core Concepts"
-        review_chapter = "Core Concepts"
-
-    learn_subject = chapter_subject_map.get(learn_chapter, default_subject)
-    practice_subject = chapter_subject_map.get(practice_chapter, learn_subject)
-    review_subject = chapter_subject_map.get(review_chapter, learn_subject)
-
-    learn_readiness = _chapter_readiness_metrics(user_data, learn_chapter)
-    practice_readiness = _chapter_readiness_metrics(user_data, practice_chapter)
-    review_readiness = _chapter_readiness_metrics(user_data, review_chapter)
-
-    total_minutes = max(30, min(int(request.available_minutes or 60), 180))
-    weak_focus_multiplier = 1.15 if int(learn_readiness["readiness_score"]) < 45 else 1.0
-    learn_minutes = max(12, int(total_minutes * 0.35 * weak_focus_multiplier))
-    practice_minutes = max(12, int(total_minutes * 0.4 * weak_focus_multiplier))
-    review_minutes = max(8, total_minutes - learn_minutes - practice_minutes)
-    if review_minutes < 8:
-        review_minutes = 8
-
+    from services.database import fetch_daily_missions, upsert_daily_mission, get_user_profile, update_streak
+    from datetime import date
     mission_date = date.today().isoformat()
-    mission_id = f"mission_{username}_{mission_date}"
+    
+    # Update streak whenever they fetch daily mission (simplest way to track activity)
+    update_streak(username)
+    
+    existing_missions = fetch_daily_missions(username, mission_date)
+    
+    if existing_missions:
+        tasks = []
+        for em in existing_missions:
+            tasks.append({
+                "id": str(em["id"]),
+                "kind": "practice",
+                "title": em["task_description"],
+                "reason": "Daily practice for retention",
+                "subject": em["subject"],
+                "chapter": em["chapter"],
+                "completed": bool(em["completed"]),
+                "destination": "practice",
+                "route": "/practice",
+                "route_state": {
+                    "subject": em["subject"],
+                    "chapter": em["chapter"],
+                },
+            })
+        profile = get_user_profile(username)
+        return {
+            "date": mission_date,
+            "tasks": tasks,
+            "streak": profile.get("streak_count", 0) if profile else 0,
+            "total_minutes_assigned": len(tasks) * 15,
+            "theme": "Consistent Practice"
+        }
 
-    tasks = [
-        {
-            "id": f"{mission_id}_learn",
-            "kind": "learn",
-            "title": f"Learn new chapter: {learn_chapter}",
-            "reason": "Start with concept clarity before attempting graded work.",
-            "subject": learn_subject,
-            "chapter": learn_chapter,
-            "readiness_score": int(learn_readiness["readiness_score"]),
-            "priority": str(learn_readiness["priority"]),
-            "duration_minutes": learn_minutes,
-            "destination": "library",
-            "route": "/library",
-            "route_state": {
-                "subject": learn_subject,
-                "chapter": learn_chapter,
-                "readiness_score": int(learn_readiness["readiness_score"]),
-                "priority": str(learn_readiness["priority"]),
-            },
-        },
-        {
-            "id": f"{mission_id}_practice",
+    user_data = get_augmented_user_data(username)
+    chapter_subject_map = _build_chapter_subject_map(user_data)
+    
+    tasks = []
+    subjects = request.subjects if request.subjects else ["Physics", "Chemistry", "Math"]
+    for idx, subj in enumerate(subjects):
+        # find a chapter for this subject
+        chaps = [k for k, v in chapter_subject_map.items() if v == subj]
+        chap = chaps[0] if chaps else "Core Concepts"
+        desc = f"Solve 3 {chap} problems"
+        
+        upsert_daily_mission(username, subj, mission_date, chap, desc)
+    
+    existing_missions = fetch_daily_missions(username, mission_date)
+    for em in existing_missions:
+        tasks.append({
+            "id": str(em["id"]),
             "kind": "practice",
-            "title": f"Practice Q&A drill: {practice_chapter}",
-            "reason": "Convert understanding into marks with timed board-style questions.",
-            "subject": practice_subject,
-            "chapter": practice_chapter,
-            "readiness_score": int(practice_readiness["readiness_score"]),
-            "priority": str(practice_readiness["priority"]),
-            "duration_minutes": practice_minutes,
+            "title": em["task_description"],
+            "reason": "Daily practice for retention",
+            "subject": em["subject"],
+            "chapter": em["chapter"],
+            "completed": bool(em["completed"]),
             "destination": "practice",
             "route": "/practice",
             "route_state": {
-                "subject": practice_subject,
-                "chapter": practice_chapter,
-                "questionType": "past-paper",
-                "numQuestions": 5,
-                "readiness_score": int(practice_readiness["readiness_score"]),
-                "priority": str(practice_readiness["priority"]),
+                "subject": em["subject"],
+                "chapter": em["chapter"],
             },
-        },
-        {
-            "id": f"{mission_id}_review",
-            "kind": "review",
-            "title": f"Learn this question with AI: {review_chapter}",
-            "reason": "Use AI explain mode to close conceptual gaps from weak/questioned areas.",
-            "subject": review_subject,
-            "chapter": review_chapter,
-            "readiness_score": int(review_readiness["readiness_score"]),
-            "priority": str(review_readiness["priority"]),
-            "duration_minutes": review_minutes,
-            "destination": "ask",
-            "route": "/ask",
-            "route_state": {
-                "subject": review_subject,
-                "chapter": review_chapter,
-                "readiness_score": int(review_readiness["readiness_score"]),
-                "priority": str(review_readiness["priority"]),
-            },
-        },
-    ]
+        })
 
-    weak_count = len(dedup_weak)
-    confidence = "high" if weak_count == 0 else "medium" if weak_count <= 2 else "focused"
+    profile = get_user_profile(username)
+    streak = profile.get("streak_count", 0) if profile else 0
 
     return {
-        "mission_id": mission_id,
         "date": mission_date,
-        "headline": "Daily Auto Mission",
-        "summary": f"3-step autonomous flow: Learn -> Practice -> Review. Top priority: {learn_chapter}.",
-        "confidence": confidence,
-        "estimated_total_minutes": total_minutes,
-        "chapter_ranking": ranked_focus,
         "tasks": tasks,
+        "streak": streak,
+        "total_minutes_assigned": len(tasks) * 15,
+        "theme": "Consistent Practice"
     }
+
+
+
 
 
 def _compile_parent_summary(username: str, parent_email: Optional[str], user_data: list[dict], chosen_subjects: list[str]) -> dict:
