@@ -50,7 +50,7 @@ def _is_rate_limit_enabled() -> bool:
 
 def get_user_tier(user_id: str) -> str:
     profile = get_user_profile(user_id) or {}
-    tier = str(profile.get("subscription_tier") or "free").strip().lower()
+    tier = str(profile.get("subscription_tier") or "pro").strip().lower()
     if tier not in LIMITS:
         return "free"
     return tier

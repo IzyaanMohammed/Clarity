@@ -48,7 +48,7 @@ export const Dashboard = () => {
   const [isEditingDate, setIsEditingDate] = useState(false);
   const [editDateValue, setEditDateValue] = useState(() => localStorage.getItem('clarity_exam_date') || '');
   const [otherDates, setOtherDates] = useState<Array<{ id: string; label: string; date: string }>>([]);
-  const planTier = user?.subscriptionTier || 'free';
+  const planTier = user?.subscriptionTier || 'pro';
   const isPaidPlan = planTier === 'pro' || planTier === 'pro_max';
   const isTrial = user?.subscriptionStatus === 'trialing';
   let trialDaysLeft = 0;
@@ -353,7 +353,7 @@ export const Dashboard = () => {
 
   const handleUpdateFocus = () => {
     localStorage.setItem('ncertai_last_focus_update', Date.now().toString());
-    navigate('/onboarding', { state: { editFocus: true } });
+    navigate('/focus');
   };
 
   const focusChaptersMap = user?.focusChapters || {};
@@ -527,7 +527,7 @@ export const Dashboard = () => {
               </Button>
               <Button
                 className="bg-rose-600 hover:bg-rose-700 text-white font-black px-8 py-6 rounded-2xl"
-                onClick={() => navigate('/onboarding', { state: { editFocus: true } })}
+                onClick={() => navigate('/focus')}
               >
                 Finish Setup
               </Button>

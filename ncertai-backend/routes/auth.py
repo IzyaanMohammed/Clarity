@@ -90,9 +90,9 @@ async def send_parent_credentials(x_user_id: str = Header(...)):
 
 
 def _normalize_subscription_tier(value: Optional[str]) -> str:
-    tier = str(value or "free").strip().lower()
+    tier = str(value or "pro").strip().lower()
     if tier not in ALLOWED_SUBSCRIPTION_TIERS:
-        return "free"
+        return "pro"
     return tier
 
 
@@ -1559,7 +1559,7 @@ async def login(request: LoginRequest):
             "name": username,
             "class": row.get("class_num") or 10,
             "subjects": subjects,
-            "subscriptionTier": row.get("subscription_tier") or "free",
+            "subscriptionTier": row.get("subscription_tier") or "pro",
             "subscriptionStatus": row.get("subscription_status") or "inactive",
             "trialStart": row.get("trial_start"),
             "trialEnd": row.get("trial_end"),
@@ -1602,7 +1602,7 @@ async def me(authorization: Optional[str] = Header(default=None)):
         "name": username,
         "class": row.get("class_num") or 10,
         "subjects": subjects,
-        "subscriptionTier": row.get("subscription_tier") or "free",
+        "subscriptionTier": row.get("subscription_tier") or "pro",
         "subscriptionStatus": row.get("subscription_status") or "inactive",
         "trialStart": row.get("trial_start"),
         "trialEnd": row.get("trial_end"),

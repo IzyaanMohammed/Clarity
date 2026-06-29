@@ -23,7 +23,7 @@ async def extract_ocr(
     if x_user_id:
         profile = get_user_profile(x_user_id)
         if profile:
-            tier = profile.get("subscription_tier", "free")
+            tier = profile.get("subscription_tier", "pro")
             ocr_count = profile.get("ocr_uploads_count", 0)
             if tier == "free" and ocr_count >= 20:
                 raise HTTPException(

@@ -20,7 +20,7 @@ export const Studio = () => {
     const user = getUser();
     const username = user?.name || 'student';
     const classNum = (user?.class || 10).toString();
-    const planTier = user?.subscriptionTier || 'free';
+    const planTier = user?.subscriptionTier || 'pro';
     const videoAssistEnabled = true; // Enabled for all users in hardening phase
 
     const { subjectsForClass, chaptersForSubject } = useCurriculumCatalog(classNum);

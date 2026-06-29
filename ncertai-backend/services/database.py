@@ -217,7 +217,7 @@ def init_db() -> None:
         # Lightweight migration for older databases
         user_columns = [row[1] for row in conn.execute("PRAGMA table_info(users)").fetchall()]
         if "subscription_tier" not in user_columns:
-            conn.execute("ALTER TABLE users ADD COLUMN subscription_tier TEXT DEFAULT 'free'")
+            conn.execute("ALTER TABLE users ADD COLUMN subscription_tier TEXT DEFAULT 'pro'")
         if "subscription_status" not in user_columns:
             conn.execute("ALTER TABLE users ADD COLUMN subscription_status TEXT DEFAULT 'inactive'")
         if "trial_start" not in user_columns:
@@ -451,7 +451,7 @@ def create_user(username: str, password: str, profile: dict[str, Any]) -> bool:
                 profile.get("school"),
                 profile.get("class"),
                 profile.get("subjects_json"),
-                profile.get("subscriptionTier") or "free",
+                profile.get("subscriptionTier") or "pro",
                 profile.get("learningStyle"),
                 profile.get("goal"),
                 profile.get("studyHours"),
@@ -532,7 +532,7 @@ def update_user_profile(username: str, profile: dict[str, Any]) -> None:
                 profile.get("school"),
                 profile.get("class"),
                 profile.get("subjects_json"),
-                profile.get("subscriptionTier") or "free",
+                profile.get("subscriptionTier") or "pro",
                 profile.get("learningStyle"),
                 profile.get("goal"),
                 profile.get("studyHours"),
@@ -573,12 +573,12 @@ def get_user_profile(username: str) -> Optional[dict[str, Any]]:
                     conn.execute(
                         """
                         UPDATE users
-                        SET subscription_tier = 'free', subscription_status = 'expired', updated_at = ?
+                        SET subscription_tier = 'pro', subscription_status = 'expired', updated_at = ?
                         WHERE username = ?
                         """,
                         (_utc_now_iso(), username),
                     )
-                    profile["subscription_tier"] = "free"
+                    profile["subscription_tier"] = "pro"
                     profile["subscription_status"] = "expired"
             except Exception as e:
                 print("Error checking trial expiration:", e)
@@ -646,9 +646,9 @@ def update_streak(username: str) -> None:
 
 def set_user_subscription_tier(username: str, subscription_tier: str) -> None:
     username = username.strip().lower()
-    tier = str(subscription_tier or "free").strip().lower()
+    tier = str(subscription_tier or "pro").strip().lower()
     if tier not in {"free", "pro", "pro_max"}:
-        tier = "free"
+        tier = "pro"
 
     status = "active" if tier in {"pro", "pro_max"} else "inactive"
     with _connect() as conn:

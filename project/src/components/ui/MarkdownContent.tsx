@@ -69,7 +69,7 @@ export const MarkdownContent = memo(({ content, className = '', textSize = 'base
         <div className={`prose max-w-none ${className}`}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[rehypeKatex]}
+                rehypePlugins={[[rehypeKatex, { strict: false, throwOnError: false, trust: true }]]}
                 components={{
                     a: ({ href, children, ...props }) => {
                         if (href && href.startsWith('page://')) {

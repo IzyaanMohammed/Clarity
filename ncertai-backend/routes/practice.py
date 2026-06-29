@@ -78,7 +78,7 @@ def _resolve_user_tier(username: str) -> str:
     profile = get_user_profile(username)
     if not profile:
         return "free"
-    return profile.get("subscription_tier") or profile.get("subscriptionTier") or "free"
+    return profile.get("subscription_tier") or profile.get("subscriptionTier") or "pro"
 
 
 def _extract_youtube_video_id(video_id: str = "", video_url: str = "") -> str:

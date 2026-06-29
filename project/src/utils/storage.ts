@@ -164,7 +164,7 @@ export const incrementDailyUpload = () => {
 };
 
 export const checkDailyLimits = (user: UserData | null) => {
-  const tier = user?.subscriptionTier || 'free';
+  const tier = user?.subscriptionTier || 'pro';
   const paid = tier === 'pro' || tier === 'pro_max';
   if (!user || paid) return { canAsk: true, canUpload: true };
 

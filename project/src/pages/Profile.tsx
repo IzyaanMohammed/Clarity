@@ -26,7 +26,7 @@ export const Profile = () => {
     const [goal, setGoal] = useState(user?.goal || 'Score 95+');
     const [studyHours, setStudyHours] = useState(user?.studyHours || '2 hours/day');
     const [parentEmail, setParentEmail] = useState(user?.parentEmail || '');
-    const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'pro' | 'pro_max'>(user?.subscriptionTier || 'free');
+    const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'pro' | 'pro_max'>(user?.subscriptionTier || 'pro');
     const [focusAreas, setFocusAreas] = useState((user?.focusAreas || '').split(',').map(x => x.trim()).filter(Boolean));
     const [focusInput, setFocusInput] = useState('');
 
@@ -370,7 +370,7 @@ export const Profile = () => {
                                     <p className="text-xs text-stone-500 mt-1">Select the chapters you are covering in class this week to personalize your AI tutor.</p>
                                 </div>
                                 <Button
-                                    onClick={() => navigate('/onboarding', { state: { editFocus: true } })}
+                                    onClick={() => navigate('/focus')}
                                     className="bg-amber-50 text-[#8C5A35] hover:bg-[#8C5A35]/10 border border-[#8C5A35]/30 font-bold px-4 py-2 rounded-xl text-sm"
                                 >
                                     Select / Edit Chapters

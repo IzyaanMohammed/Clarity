@@ -756,7 +756,7 @@ export const Landing = () => {
                                 CBSE Class 9-12 Student OS
                             </div>
 
-                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800 }}>
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800 }}>
                                 Score 95+ in CBSE boards. Your AI tutor that actually knows the marking scheme.
                             </h2>
 
@@ -803,10 +803,10 @@ export const Landing = () => {
                                 <div className="bg-[#fcfbf9] px-4 py-3 flex items-center justify-between border-b border-[#1a1a2e]/10">
                                     <div className="flex items-center gap-1.5">
                                         <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
-                                        <span className="text-[10px] font-black text-[#1a1a2e] uppercase tracking-wider">Live Demo Widget</span>
+                                        <span className="text-[10px] font-black text-[#1a1a2e] uppercase tracking-wider">Clarity Study Environment</span>
                                     </div>
                                 </div>
-                                <DemoWidget />
+                                <img src="/hero_image.png" alt="Student Studying" className="w-full h-auto object-cover" />
                             </div>
                         </div>
                     </section>

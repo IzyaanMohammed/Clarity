@@ -17,7 +17,7 @@ export const ExamSimulator = () => {
   const navigate = useNavigate();
   const user = getUser();
   const classNum = String(user?.class || 10);
-  const plan = user?.subscriptionTier || 'free';
+  const plan = user?.subscriptionTier || 'pro';
   const { subjectsForClass, chaptersForSubject } = useCurriculumCatalog(classNum);
 
   // Load state from localStorage

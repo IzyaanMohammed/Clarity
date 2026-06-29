@@ -155,6 +155,15 @@ def _adapt_messages(messages: list) -> list:
                     "However, keep mathematical formulas, numerical units, and specific English words in English "
                     "alongside their Tamil translation when necessary to maintain scientific accuracy."
                 )
+            
+            # Inject math and chemistry formatting instructions in the system prompt
+            if role == "system":
+                content += (
+                    "\n\nSTRICT MATH & CHEMISTRY FORMATTING RULES:\n"
+                    "1. You MUST wrap ALL inline math, angles, ratios, functions like sin/cos/tan, variables, and chemical formulas/equations in single dollar signs $ (e.g. $\\sin 30^\\circ$, $x:y$, $H_2O$, $\\angle ABC$, $C + O_2 \\rightarrow CO_2$).\n"
+                    "2. You MUST wrap ALL block equations in double dollar signs $$ (e.g. $$ E = mc^2 $$).\n"
+                    "3. Never output raw unformatted LaTeX outside of $ or $$.\n"
+                )
         adapted.append({"role": role, "content": content})
     return adapted
 

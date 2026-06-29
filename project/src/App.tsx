@@ -27,6 +27,7 @@ import { ActiveRecall } from './pages/ActiveRecall';
 import { Leaderboard } from './pages/Leaderboard';
 import { AnswerChecker } from './pages/AnswerChecker';
 import { Dump } from './pages/Dump';
+import { SchoolFocus } from './pages/SchoolFocus';
 import { getMaterialsFromDatabase, getMyProfile, getUserSnapshot } from './api';
 import { clearAuthToken, clearUser, getAuthToken, getUser, hydrateLocalStateFromSnapshot, saveUser, type StudyMaterialItem } from './utils/storage';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -99,6 +100,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/focus" element={<SchoolFocus />} />
             <Route path="/login" element={<Login />} />
             
             <Route

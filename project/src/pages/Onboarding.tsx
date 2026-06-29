@@ -80,7 +80,7 @@ export const Onboarding = () => {
     const [preferredPace, setPreferredPace] = useState('Balanced');
     const [confidenceLevel, setConfidenceLevel] = useState('Average confidence');
     const [revisionFrequency, setRevisionFrequency] = useState('Alternate days');
-    const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'pro' | 'pro_max'>('free');
+    const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'pro' | 'pro_max'>('pro');
     const [teacherPersonality, setTeacherPersonality] = useState('Kind');
     const [focusChapters, setFocusChapters] = useState<Record<string, string[]>>({});
     const [parentEmail, setParentEmail] = useState('');
@@ -145,7 +145,7 @@ export const Onboarding = () => {
             setPreferredPace('Balanced');
             setConfidenceLevel('Average confidence');
             setRevisionFrequency('Alternate days');
-            setSubscriptionTier('free');
+            setSubscriptionTier('pro');
             setTeacherPersonality('Kind');
             setFocusChapters({});
             setParentEmail('');
@@ -166,7 +166,7 @@ export const Onboarding = () => {
             setPreferredPace(existingUser?.preferredPace || 'Balanced');
             setConfidenceLevel(existingUser?.confidenceLevel || 'Average confidence');
             setRevisionFrequency(existingUser?.revisionFrequency || 'Alternate days');
-            setSubscriptionTier((existingUser?.subscriptionTier || 'free') as 'free' | 'pro' | 'pro_max');
+            setSubscriptionTier((existingUser?.subscriptionTier || 'pro') as 'free' | 'pro' | 'pro_max');
             setTeacherPersonality(existingUser?.teacherPersonality || 'Kind');
             setFocusChapters(existingUser?.focusChapters || {});
             setParentEmail(existingUser?.parentEmail || '');
@@ -176,11 +176,7 @@ export const Onboarding = () => {
         }
     }, [isEditing]);
 
-    useEffect(() => {
-        if (location.state?.editFocus) {
-            setStep(10);
-        }
-    }, [location.state]);
+
 
     const pickDiagnosticSubject = (): string | undefined => {
         // Exclude English from diagnostic subject selection
@@ -279,10 +275,6 @@ export const Onboarding = () => {
 
     const handleNext = () => {
         if (!validateStep()) return;
-        if (location.state?.editFocus && step === 10) {
-            handleComplete();
-            return;
-        }
         setStep((prev) => Math.min(prev + 1, steps.length - 1));
     };
 
@@ -308,7 +300,7 @@ export const Onboarding = () => {
             preferredPace: 'Balanced',
             confidenceLevel: 'Average confidence',
             revisionFrequency: 'Alternate days',
-            subscriptionTier: 'free',
+            subscriptionTier: 'pro',
             teacherPersonality: 'Kind',
             focusChapters: {},
             parentEmail: parentEmail.trim(),
@@ -554,7 +546,7 @@ export const Onboarding = () => {
                         </button>
                     )}
 
-                    {step < steps.length - 1 && !(location.state?.editFocus && step === 10) ? (
+                    {step < steps.length - 1 ? (
                         <button
                             onClick={handleNext}
                             className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 "
@@ -564,12 +556,12 @@ export const Onboarding = () => {
                         </button>
                     ) : (
                         <button
-                            onClick={step === 10 && location.state?.editFocus ? handleComplete : handleComplete}
+                            onClick={handleComplete}
                             disabled={isSubmitting}
                             className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5A35] to-amber-600 text-white font-black hover:from-[#178764] hover:to-amber-700 flex items-center gap-2 "
                         >
-                            {isSubmitting ? 'Saving...' : (location.state?.editFocus && step === 10 ? 'Save Focus' : 'Enter Dashboard')}
-                            {location.state?.editFocus && step === 10 ? <Check size={18} /> : <Sparkles size={18} />}
+                            {isSubmitting ? 'Saving...' : 'Enter Dashboard'}
+                            <Sparkles size={18} />
                         </button>
                     )}
                 </div>

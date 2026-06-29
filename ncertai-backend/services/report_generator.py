@@ -90,8 +90,8 @@ def generate_parent_report(user_id: str):
 
 
 def send_parent_report_email(user_id: str, parent_email: str, report_text: str):
-    api_key = os.getenv("MAILERSEND_API_KEY")
-    from_email = os.getenv("MAILERSEND_FROM_EMAIL", "info@trial-z86org8yvjmpew13.mlsender.net")
+    api_key = os.getenv("RESEND_API_KEY")
+    from_email = os.getenv("PARENT_REPORT_FROM_EMAIL", "onboarding@resend.dev")
 
     subject = f"Clarity Weekly Progress Report - {user_id}"
     html = (
@@ -106,23 +106,23 @@ def send_parent_report_email(user_id: str, parent_email: str, report_text: str):
 
     try:
         resp = httpx.post(
-            "https://api.mailersend.com/v1/email",
+            "https://api.resend.com/emails",
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json"
             },
             json={
-                "from": {"email": from_email, "name": "Clarity"},
-                "to": [{"email": parent_email}],
+                "from": f"Clarity <{from_email}>",
+                "to": [parent_email],
                 "subject": subject,
                 "html": html
             },
             timeout=10.0
         )
         if resp.status_code in (200, 202):
-            return {"sent": True, "message": "Email sent successfully via MailerSend."}
+            return {"sent": True, "message": "Email sent successfully via Resend."}
         else:
-            logger.error(f"MailerSend error: {resp.text}")
+            logger.error(f"Resend error: {resp.text}")
             return {"sent": False, "message": "Failed to send email."}
     except Exception as e:
         logger.error(f"Exception sending email: {e}")
@@ -130,8 +130,8 @@ def send_parent_report_email(user_id: str, parent_email: str, report_text: str):
 
 
 def send_parent_welcome_credentials_email(student_id: str, parent_email: str, parent_password: str):
-    api_key = os.getenv("MAILERSEND_API_KEY")
-    from_email = os.getenv("MAILERSEND_FROM_EMAIL", "info@trial-z86org8yvjmpew13.mlsender.net")
+    api_key = os.getenv("RESEND_API_KEY")
+    from_email = os.getenv("PARENT_REPORT_FROM_EMAIL", "onboarding@resend.dev")
 
     subject = f"Clarity Parent Access Credentials - {student_id}"
     portal_url = _public_parent_portal_url()
@@ -150,14 +150,14 @@ def send_parent_welcome_credentials_email(student_id: str, parent_email: str, pa
 
     try:
         resp = httpx.post(
-            "https://api.mailersend.com/v1/email",
+            "https://api.resend.com/emails",
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json"
             },
             json={
-                "from": {"email": from_email, "name": "Clarity"},
-                "to": [{"email": parent_email}],
+                "from": f"Clarity <{from_email}>",
+                "to": [parent_email],
                 "subject": subject,
                 "html": html
             },
@@ -166,8 +166,9 @@ def send_parent_welcome_credentials_email(student_id: str, parent_email: str, pa
         if resp.status_code in (200, 202):
             return {"sent": True, "message": "Credentials sent successfully."}
         else:
-            logger.error(f"MailerSend error: {resp.text}")
+            logger.error(f"Resend error: {resp.text}")
             return {"sent": False, "message": "Failed to send credentials."}
     except Exception as e:
         logger.error(f"Exception sending email: {e}")
         return {"sent": False, "message": "Failed to send credentials."}
+

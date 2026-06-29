@@ -81,7 +81,7 @@ export const ActiveRecall = () => {
         const token = getAuthToken();
         const fallbackUrl = `${getBaseUrl()}/api/v1/upload/custom-textbook/${matchingCustom.id}/pdf?token=${token}`;
         setViewerPdfUrl(fallbackUrl);
-        setViewerPdfLoading(false);
+        setViewerPdfLoading(true);
         return;
       }
     } catch (err) {
@@ -101,7 +101,7 @@ export const ActiveRecall = () => {
     const apiPath = `${getBaseUrl()}/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${chapterIdx}`;
 
     setViewerPdfUrl(apiPath);
-    setViewerPdfLoading(false);
+    setViewerPdfLoading(true);
   };
 
   // Revoke blob URL on unmount to prevent memory leaks
@@ -654,22 +654,26 @@ export const ActiveRecall = () => {
                     <div className={`flex flex-col relative border-r border-stone-200 bg-[#FCFAF8] transition-all duration-300 ${
                       layoutMode === 'split' ? 'w-full h-1/2 md:h-full md:w-1/2' : layoutMode === 'pdf' ? 'w-full h-full' : 'hidden'
                     }`}>
-                      {viewerPdfLoading ? (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-500 bg-[#FCFAF8] ">
-                          <Loader2 className="animate-spin text-[#8C5A35]" size={32} />
-                          <p className="text-xs font-bold">Loading textbook PDF...</p>
-                        </div>
-                      ) : viewerPdfError ? (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-500 p-6 bg-[#FCFAF8] text-center">
+                      {viewerPdfError ? (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-500 p-6 bg-[#FCFAF8] text-center z-20">
                           <AlertCircle className="text-rose-500" size={24} />
                           <p className="text-xs font-bold">{viewerPdfError}</p>
                         </div>
                       ) : viewerPdfUrl ? (
-                        <iframe
-                          src={viewerPdfUrl}
-                          className="w-full h-full border-none"
-                          title="Active Recall PDF Viewer"
-                        />
+                        <>
+                          {viewerPdfLoading && (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-500 bg-[#FCFAF8] z-20">
+                              <Loader2 className="animate-spin text-[#8C5A35]" size={32} />
+                              <p className="text-xs font-bold">Loading textbook PDF...</p>
+                            </div>
+                          )}
+                          <iframe
+                            src={viewerPdfUrl}
+                            className="w-full h-full border-none z-10 relative"
+                            title="Active Recall PDF Viewer"
+                            onLoad={() => setViewerPdfLoading(false)}
+                          />
+                        </>
                       ) : (
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-stone-400 bg-[#FCFAF8] ">
                           <BookOpen size={32} className="opacity-30" />

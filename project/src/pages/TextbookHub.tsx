@@ -266,7 +266,7 @@ export const TextbookHub = () => {
         // Point iframe directly to proxy endpoint — enables native incremental streaming
         const apiPath = `${getBaseUrl()}/api/v1/upload/ncert-pdf-proxy?book_code=${bookCode}&chapter_num=${safeChapterNum}`;
         setViewerPdfUrl(apiPath);
-        setViewerPdfLoading(false);
+        setViewerPdfLoading(true);
 
         // Load text in background — extracted from the actual NCERT PDF
         // Use a large limit so full chapter text is included
@@ -296,7 +296,7 @@ export const TextbookHub = () => {
         const token = getAuthToken();
         const fallbackUrl = `${getBaseUrl()}/api/v1/upload/custom-textbook/${book.id}/pdf?token=${token}`;
         setViewerPdfUrl(fallbackUrl);
-        setViewerPdfLoading(false);
+        setViewerPdfLoading(true);
 
         setLoadingViewerText(true);
         try {
@@ -1081,24 +1081,28 @@ export const TextbookHub = () => {
                             <div className={`flex flex-col relative border-r border-stone-200 transition-all duration-300 ${
                                 layoutMode === 'split' ? 'w-full h-1/2 md:h-full md:w-1/2' : layoutMode === 'pdf' ? 'w-full h-full' : 'hidden'
                             }`}>
-                                {viewerPdfLoading ? (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-stone-500 bg-[#FCFAF8] ">
-                                        <div className="animate-spin h-10 w-10 border-4 border-[#8C5A35] border-t-transparent rounded-full" />
-                                        <p className="font-bold text-sm">Loading PDF...</p>
-                                        <p className="text-xs text-stone-400">Fetching securely from the NCERT servers</p>
-                                    </div>
-                                ) : viewerPdfError ? (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-500 px-8 bg-[#FCFAF8] ">
+                                {viewerPdfError ? (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-500 px-8 bg-[#FCFAF8] z-20">
                                         <FileText size={40} className="opacity-30" />
                                         <p className="font-bold text-sm">PDF could not be loaded</p>
                                         <p className="text-xs text-center text-stone-400">{viewerPdfError}</p>
                                     </div>
                                 ) : viewerPdfUrl ? (
-                                    <iframe
-                                        src={viewerPdfUrl}
-                                        className="w-full h-full border-none"
-                                        title="Textbook PDF Viewer"
-                                    />
+                                    <>
+                                        {viewerPdfLoading && (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-stone-500 bg-[#FCFAF8] z-20">
+                                                <div className="animate-spin h-10 w-10 border-4 border-[#8C5A35] border-t-transparent rounded-full" />
+                                                <p className="font-bold text-sm">Loading PDF...</p>
+                                                <p className="text-xs text-stone-400">Fetching securely from the server</p>
+                                            </div>
+                                        )}
+                                        <iframe
+                                            src={viewerPdfUrl}
+                                            className="w-full h-full border-none z-10 relative"
+                                            title="Textbook PDF Viewer"
+                                            onLoad={() => setViewerPdfLoading(false)}
+                                        />
+                                    </>
                                 ) : (
                                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-400 bg-[#FCFAF8] ">
                                         <FileText size={40} className="opacity-30" />

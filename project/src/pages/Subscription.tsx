@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 export const Subscription = () => {
   const navigate = useNavigate();
   const user = getUser();
-  const currentTier = user?.subscriptionTier || 'free';
+  const currentTier = user?.subscriptionTier || 'pro';
 
   const [checkoutPlan, setCheckoutPlan] = useState<any | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
