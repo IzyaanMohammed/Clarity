@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
-    ArrowRight, 
-    Brain, 
-    Rocket, 
-    Trophy, 
-    CheckCircle2, 
-    ChevronDown, 
-    Mail, 
-    Users, 
-    Check, 
-    AlertTriangle, 
-    BookOpen, 
+import {
+    ArrowRight,
+    Brain,
+    Rocket,
+    Trophy,
+    CheckCircle2,
+    ChevronDown,
+    Mail,
+    Users,
+    Check,
+    AlertTriangle,
+    BookOpen,
     LineChart,
     Video,
     FileText,
@@ -22,7 +22,7 @@ import {
     Play,
     MessageSquare
 } from 'lucide-react';
-import DemoWidget from '../components/landing/DemoWidget';
+import ClarityOrbitWidget from '../components/landing/ClarityOrbitWidget';
 
 const tiers = [
     {
@@ -105,7 +105,7 @@ export const Landing = () => {
     const [isProblemVisible, setIsProblemVisible] = useState(false);
     const [problemWordIdx, setProblemWordIdx] = useState(0);
     const problemWords = ['CONFUSION', 'CHAOS', 'OVERWHELM', 'BOARD STRESS'];
-    
+
     // Refs
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const wordElRef = useRef<HTMLDivElement>(null);
@@ -378,11 +378,10 @@ export const Landing = () => {
     };
 
     return (
-        <div 
+        <div
             onClick={handleStageClick}
-            className={`min-h-screen text-[#1a1a2e] transition-all selection:bg-[#1a1a2e]/10 selection:text-[#1a1a2e] overflow-x-hidden ${
-                introPhase !== 'finished' ? 'h-screen overflow-hidden' : 'relative'
-            }`}
+            className={`min-h-screen text-[#1a1a2e] transition-all selection:bg-[#1a1a2e]/10 selection:text-[#1a1a2e] overflow-x-hidden ${introPhase !== 'finished' ? 'h-screen overflow-hidden' : 'relative'
+                }`}
             style={{ backgroundColor: '#f7f5f0' }}
         >
             <style>{`
@@ -535,7 +534,7 @@ export const Landing = () => {
 
             {/* Cinematic loading intro */}
             {introPhase !== 'finished' && (
-                <div 
+                <div
                     id="intro"
                     style={{
                         position: 'fixed', inset: 0, zIndex: 200,
@@ -544,7 +543,7 @@ export const Landing = () => {
                         flexDirection: 'column',
                     }}
                 >
-                    <div 
+                    <div
                         id="ink"
                         style={{
                             width: introPhase === 'wipe' || introPhase === 'reveal' ? '250vmax' : '0vmax',
@@ -557,7 +556,7 @@ export const Landing = () => {
                             transition: 'width .9s cubic-bezier(.7,0,.3,1), height .9s cubic-bezier(.7,0,.3,1)',
                         }}
                     />
-                    <div 
+                    <div
                         id="intro-text"
                         style={{
                             fontFamily: "'Syne', sans-serif",
@@ -574,7 +573,7 @@ export const Landing = () => {
                     >
                         Clarity
                     </div>
-                    <div 
+                    <div
                         id="intro-line"
                         style={{
                             width: introPhase === 'line' ? '120px' : '0px',
@@ -591,8 +590,8 @@ export const Landing = () => {
             )}
 
             {/* Notebook margins and vertical layout wrapper */}
-            <div 
-                id="stage" 
+            <div
+                id="stage"
                 ref={stageRef}
                 className="relative min-h-screen z-10 w-full flex flex-col transition-opacity duration-1000"
                 style={{ opacity: introPhase === 'reveal' || introPhase === 'finished' ? 1 : 0 }}
@@ -608,15 +607,15 @@ export const Landing = () => {
                 <section className="min-h-screen w-full relative flex items-center justify-center flex-col select-none overflow-hidden">
                     {/* Stationery Border Background */}
                     <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
-                        <img 
-                            src="/stationary_bg.png" 
-                            alt="Stationery background" 
+                        <img
+                            src="/stationary_bg.png"
+                            alt="Stationery background"
                             className="w-full h-full object-cover md:object-fill opacity-90"
                         />
                     </div>
-                    
+
                     <div className="relative text-center">
-                        <div 
+                        <div
                             ref={wordElRef}
                             id="clarity"
                             className="select-none flex justify-center items-center gap-1 cursor-none"
@@ -634,8 +633,8 @@ export const Landing = () => {
                             {Array.from("Clarity").map((char, i) => {
                                 const isHovered = hoveredLetterIdx === i;
                                 return (
-                                    <span 
-                                        key={i} 
+                                    <span
+                                        key={i}
                                         className="L"
                                         onMouseEnter={() => {
                                             setHoveredLetterIdx(i);
@@ -650,12 +649,12 @@ export const Landing = () => {
                                             position: 'relative',
                                             opacity: lettersVisible ? 1 : 0,
                                             filter: lettersVisible ? 'blur(0px)' : 'blur(8px)',
-                                            transform: isHovered 
-                                                ? 'translateZ(30px) scale(1.07)' 
+                                            transform: isHovered
+                                                ? 'translateZ(30px) scale(1.07)'
                                                 : (lettersVisible ? 'translateZ(0px) scale(1)' : 'translateZ(0px) scale(1.08)'),
-                                            transition: isHovered 
-                                                ? 'transform 0.15s ease' 
-                                                : (lettersVisible 
+                                            transition: isHovered
+                                                ? 'transform 0.15s ease'
+                                                : (lettersVisible
                                                     ? `opacity 0.8s cubic-bezier(.16,1,.3,1) ${i * 90}ms, filter 0.9s cubic-bezier(.16,1,.3,1) ${i * 90}ms, transform 0.5s cubic-bezier(.16,1,.3,1)`
                                                     : 'none'),
                                             transformStyle: 'preserve-3d',
@@ -675,7 +674,7 @@ export const Landing = () => {
                         <div id="flare" className={introPhase === 'reveal' || introPhase === 'finished' ? 'active-flare' : ''} />
                     </div>
 
-                    <div 
+                    <div
                         id="sub"
                         style={{
                             position: 'absolute',
@@ -690,7 +689,7 @@ export const Landing = () => {
                         }}
                     >
                         <p style={{ fontSize: '15px', fontWeight: 300, color: 'rgba(26,26,46,0.48)', letterSpacing: '0.06em', lineHeight: 1.9 }}>
-                            Master the CBSE syllabus with AI-driven clarity.<br/>
+                            Master the CBSE syllabus with AI-driven clarity.<br />
                             <em style={{ fontStyle: 'italic', color: 'rgba(26,26,46,0.7)' }}>Score your best board results.</em>
                         </p>
                         <div className="flex gap-4 justify-center mt-8">
@@ -707,7 +706,7 @@ export const Landing = () => {
                 </section>
 
                 {/* Sub-Header bar revealed post-intro */}
-                <header 
+                <header
                     className="sticky top-0 z-50 border-b border-[#1a1a2e]/10 px-6 py-4 transition-all"
                     style={{ backgroundColor: 'rgba(247, 245, 240, 0.95)', backdropFilter: 'blur(8px)' }}
                 >
@@ -722,16 +721,16 @@ export const Landing = () => {
                             </div>
                         </div>
                         <div className="flex items-center gap-2 md:gap-3">
-                            <Link 
-                                to="/login" 
+                            <Link
+                                to="/login"
                                 className="px-4 py-2 text-[#1a1a2e]/70 hover:text-[#1a1a2e] text-sm font-black transition-colors"
                                 onMouseEnter={() => setIsHoveredWord(true)}
                                 onMouseLeave={() => setIsHoveredWord(false)}
                             >
                                 Login
                             </Link>
-                            <Link 
-                                to="/onboarding" 
+                            <Link
+                                to="/onboarding"
                                 className="px-5 py-2.5 bg-[#1a1a2e] text-[#f7f5f0] text-sm font-black rounded-lg hover:bg-[#1a1a2e]/90 "
                                 onMouseEnter={() => setIsHoveredWord(true)}
                                 onMouseLeave={() => setIsHoveredWord(false)}
@@ -771,12 +770,12 @@ export const Landing = () => {
                                     <img src="https://i.pravatar.cc/100?img=5" alt="Student" className="w-8 h-8 rounded-full border-2 border-white" />
                                     <img src="https://i.pravatar.cc/100?img=3" alt="Student" className="w-8 h-8 rounded-full border-2 border-white" />
                                 </div>
-                                <p className="text-xs font-semibold text-[#1a1a2e]/80 italic">"I got 88 in Physics last term, used Clarity to prep this week." <br/><span className="text-[#1a1a2e] font-black not-italic">— Rahul, Class 12</span></p>
+                                <p className="text-xs font-semibold text-[#1a1a2e]/80 italic">"I got 88 in Physics last term, used Clarity to prep this week." <br /><span className="text-[#1a1a2e] font-black not-italic">— Rahul, Class 12</span></p>
                             </div>
 
                             <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
-                                <Link 
-                                    to="/onboarding" 
+                                <Link
+                                    to="/onboarding"
                                     className="px-6 py-3 bg-[#1a1a2e] text-[#f7f5f0] font-black inline-flex items-center gap-2 rounded-xl border border-[#1a1a2e] transition-all hover:translate-x-[2px] hover:translate-y-[2px]"
                                     onMouseEnter={() => setIsHoveredWord(true)}
                                     onMouseLeave={() => setIsHoveredWord(false)}
@@ -784,8 +783,8 @@ export const Landing = () => {
                                     Start free — board exams don't wait
                                     <ArrowRight size={16} />
                                 </Link>
-                                <Link 
-                                    to="/parent-portal" 
+                                <Link
+                                    to="/parent-portal"
                                     className="px-6 py-3 border border-[#1a1a2e]/30 hover:bg-[#1a1a2e]/5 text-[#1a1a2e] font-black inline-flex items-center gap-2 rounded-xl transition-all"
                                     onMouseEnter={() => setIsHoveredWord(true)}
                                     onMouseLeave={() => setIsHoveredWord(false)}
@@ -806,15 +805,15 @@ export const Landing = () => {
                                         <span className="text-[10px] font-black text-[#1a1a2e] uppercase tracking-wider">Clarity Study Environment</span>
                                     </div>
                                 </div>
-                                <img src="/hero_image.png" alt="Student Studying" className="w-full h-auto object-cover" />
+                                <ClarityOrbitWidget />
                             </div>
                         </div>
                     </section>
 
                     {/* Section: The Student Dilemma (Animated Word Switcher) */}
-                    <section 
-                        ref={problemSectionRef} 
-                        id="problem-section" 
+                    <section
+                        ref={problemSectionRef}
+                        id="problem-section"
                         className="py-20 bg-[#1a1a2e] text-[#f7f5f0] rounded-3xl border border-[#1a1a2e] relative overflow-hidden text-center pl-[clamp(24px, 7vw, 90px)] pr-6 "
                     >
                         <div className="relative z-10 space-y-6">
@@ -878,11 +877,10 @@ export const Landing = () => {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id as any)}
-                                        className={`w-full text-left p-5 border transition-all flex flex-col gap-1 rounded-xl ${
-                                            activeTab === tab.id 
-                                                ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  scale-[1.01]' 
+                                        className={`w-full text-left p-5 border transition-all flex flex-col gap-1 rounded-xl ${activeTab === tab.id
+                                                ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  scale-[1.01]'
                                                 : 'bg-[#FCFAF8] border-[#1a1a2e]/10 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5'
-                                        }`}
+                                            }`}
                                         onMouseEnter={() => setIsHoveredWord(true)}
                                         onMouseLeave={() => setIsHoveredWord(false)}
                                     >
@@ -1132,7 +1130,7 @@ export const Landing = () => {
                                         <span className="px-2.5 py-0.5 bg-[#1a1a2e]/5 border border-[#1a1a2e]/10 rounded-full">Recall (+30 pts)</span>
                                     </div>
                                 </div>
-                                
+
                                 {/* Mini Leaderboard Scoreboard */}
                                 <div className="w-full md:w-72 bg-[#FCFAF8] border border-[#1a1a2e]/15 p-4 rounded-xl shrink-0 space-y-3">
                                     <p className="text-[9px] font-black uppercase tracking-wider text-[#1a1a2e]/55 flex justify-between items-center border-b border-[#1a1a2e]/10 pb-1.5">
@@ -1205,8 +1203,8 @@ export const Landing = () => {
                                     </div>
                                 </div>
                                 <div className="pt-2">
-                                    <Link 
-                                        to="/parent-portal" 
+                                    <Link
+                                        to="/parent-portal"
                                         className="px-5 py-3 bg-[#1a1a2e] text-[#f7f5f0] text-xs font-black inline-flex items-center gap-2 rounded-xl  hover:transtone-x-[2px] hover:transtone-y-[2px] hover: transition-all"
                                         onMouseEnter={() => setIsHoveredWord(true)}
                                         onMouseLeave={() => setIsHoveredWord(false)}
@@ -1275,13 +1273,12 @@ export const Landing = () => {
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
                             {tiers.map((tier) => (
-                                <div 
-                                    key={tier.name} 
-                                    className={`p-6 border flex flex-col justify-between transition-all rounded-3xl ${
-                                        tier.highlight 
-                                            ? 'border-2 border-[#1a1a2e] bg-[#fcfbf9]/50  relative' 
+                                <div
+                                    key={tier.name}
+                                    className={`p-6 border flex flex-col justify-between transition-all rounded-3xl ${tier.highlight
+                                            ? 'border-2 border-[#1a1a2e] bg-[#fcfbf9]/50  relative'
                                             : 'border-[#1a1a2e]/15 bg-[#FCFAF8]  hover:'
-                                    }`}
+                                        }`}
                                 >
                                     {tier.highlight && (
                                         <span className="absolute -top-3 left-1/2 transform -transtone-x-1/2 px-3 py-0.5 bg-[#1a1a2e] text-[#f7f5f0] text-[8px] font-black uppercase tracking-widest shadow border border-[#1a1a2e] rounded-full">
@@ -1310,13 +1307,12 @@ export const Landing = () => {
                                         </ul>
                                     </div>
                                     <div className="pt-5">
-                                        <Link 
-                                            to="/onboarding" 
-                                            className={`inline-flex w-full items-center justify-center gap-1.5 py-3 text-xs font-black  rounded-xl transition-all border ${
-                                                tier.highlight 
-                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  hover:transtone-x-[1px] hover:transtone-y-[1px]' 
+                                        <Link
+                                            to="/onboarding"
+                                            className={`inline-flex w-full items-center justify-center gap-1.5 py-3 text-xs font-black  rounded-xl transition-all border ${tier.highlight
+                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  hover:transtone-x-[1px] hover:transtone-y-[1px]'
                                                     : 'bg-transparent text-[#1a1a2e] border-[#1a1a2e]/25 hover:bg-[#1a1a2e]/5'
-                                            }`}
+                                                }`}
                                             onMouseEnter={() => setIsHoveredWord(true)}
                                             onMouseLeave={() => setIsHoveredWord(false)}
                                         >
@@ -1338,8 +1334,8 @@ export const Landing = () => {
 
                         <div className="space-y-2.5">
                             {faqsList.map((faq, index) => (
-                                <div 
-                                    key={index} 
+                                <div
+                                    key={index}
                                     className="border border-[#1a1a2e]/15 bg-[#FCFAF8] overflow-hidden  rounded-xl"
                                 >
                                     <button
@@ -1349,11 +1345,10 @@ export const Landing = () => {
                                         onMouseLeave={() => setIsHoveredWord(false)}
                                     >
                                         <span>{faq.q}</span>
-                                        <ChevronDown 
-                                            size={16} 
-                                            className={`text-[#1a1a2e]/40 transition-transform duration-300 ${
-                                                openFaqIdx === index ? 'transform rotate-180 text-[#1a1a2e]' : ''
-                                            }`}
+                                        <ChevronDown
+                                            size={16}
+                                            className={`text-[#1a1a2e]/40 transition-transform duration-300 ${openFaqIdx === index ? 'transform rotate-180 text-[#1a1a2e]' : ''
+                                                }`}
                                         />
                                     </button>
                                     {openFaqIdx === index && (
