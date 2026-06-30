@@ -62,7 +62,6 @@ export default function ClarityOrbitWidget() {
                     </div>
                     <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.24em] text-[#1a1a2e]/45">
                         <Sparkles size={12} className="text-amber-600" />
-                        Mouse-linked study field
                     </div>
                 </div>
 

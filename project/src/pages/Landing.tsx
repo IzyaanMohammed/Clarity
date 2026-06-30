@@ -802,7 +802,6 @@ export const Landing = () => {
                                 <div className="bg-[#fcfbf9] px-4 py-3 flex items-center justify-between border-b border-[#1a1a2e]/10">
                                     <div className="flex items-center gap-1.5">
                                         <span className="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] inline-block" />
-                                        <span className="text-[10px] font-black text-[#1a1a2e] uppercase tracking-wider">Clarity Study Environment</span>
                                     </div>
                                 </div>
                                 <ClarityOrbitWidget />
@@ -878,8 +877,8 @@ export const Landing = () => {
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id as any)}
                                         className={`w-full text-left p-5 border transition-all flex flex-col gap-1 rounded-xl ${activeTab === tab.id
-                                                ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  scale-[1.01]'
-                                                : 'bg-[#FCFAF8] border-[#1a1a2e]/10 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5'
+                                            ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  scale-[1.01]'
+                                            : 'bg-[#FCFAF8] border-[#1a1a2e]/10 text-[#1a1a2e]/80 hover:bg-[#1a1a2e]/5'
                                             }`}
                                         onMouseEnter={() => setIsHoveredWord(true)}
                                         onMouseLeave={() => setIsHoveredWord(false)}
@@ -1276,8 +1275,8 @@ export const Landing = () => {
                                 <div
                                     key={tier.name}
                                     className={`p-6 border flex flex-col justify-between transition-all rounded-3xl ${tier.highlight
-                                            ? 'border-2 border-[#1a1a2e] bg-[#fcfbf9]/50  relative'
-                                            : 'border-[#1a1a2e]/15 bg-[#FCFAF8]  hover:'
+                                        ? 'border-2 border-[#1a1a2e] bg-[#fcfbf9]/50  relative'
+                                        : 'border-[#1a1a2e]/15 bg-[#FCFAF8]  hover:'
                                         }`}
                                 >
                                     {tier.highlight && (
@@ -1310,8 +1309,8 @@ export const Landing = () => {
                                         <Link
                                             to="/onboarding"
                                             className={`inline-flex w-full items-center justify-center gap-1.5 py-3 text-xs font-black  rounded-xl transition-all border ${tier.highlight
-                                                    ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  hover:transtone-x-[1px] hover:transtone-y-[1px]'
-                                                    : 'bg-transparent text-[#1a1a2e] border-[#1a1a2e]/25 hover:bg-[#1a1a2e]/5'
+                                                ? 'bg-[#1a1a2e] text-[#f7f5f0] border-[#1a1a2e]  hover:transtone-x-[1px] hover:transtone-y-[1px]'
+                                                : 'bg-transparent text-[#1a1a2e] border-[#1a1a2e]/25 hover:bg-[#1a1a2e]/5'
                                                 }`}
                                             onMouseEnter={() => setIsHoveredWord(true)}
                                             onMouseLeave={() => setIsHoveredWord(false)}
